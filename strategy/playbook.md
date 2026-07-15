@@ -74,6 +74,13 @@ python3 scripts/signals.py signal \
 条件: `strategy/learning.json` 的 `enabled=true` 且 `state/learning.json` 有 `status=validating` 的挑战者。
 实盘步骤 1-5 全部完成后才执行; **影子环节任何失败只记日志, 不得影响实盘结果**。
 
+0. 一次性重置 (仅当 `state/paper_positions.json` 有 `pending_reset` 键):
+   a. `python3 scripts/paper.py liquidate --all` — 清算 paper 账户全部存量持仓 (含期权), 撤销挂单。
+   b. `python3 scripts/paper.py account` 取清算后 `equity` →
+      `python3 scripts/learn.py restart-validation --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天> --start-capital <equity>`
+      (账本以全账户资金重开, 挑战者参数不变, 验证期重新起算; 该命令会自动清除 pending_reset)。
+   c. 清算结果与新起始资金记入 journal, 通知用户。然后继续下面步骤 1-7。
+
 1. 生成挑战者配置:
    `python3 scripts/learn.py challenger-config --config strategy/config.json --state-learn state/learning.json --out <scratchpad>/challenger_config.json`
 2. 算挑战者净值: `python3 scripts/paper.py equity --ledger state/paper_positions.json --quotes <报价映射文件>` → 记下 equity/cash。

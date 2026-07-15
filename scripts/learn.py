@@ -347,6 +347,24 @@ def cmd_promote(a):
                      indent=2, ensure_ascii=False))
 
 
+def cmd_restart_validation(a):
+    """账本换规模重开 (如 paper 账户清算后升级为全账户资金): 挑战者参数不变, 验证期重新起算。"""
+    sl = load_json(a.state_learn)
+    ch = sl.get("challenger")
+    if not ch:
+        raise SystemExit("无活跃挑战者")
+    old_started = ch["started"]
+    ch["started"] = a.date
+    save_json(a.state_learn, sl)
+    ledger = {"start_capital": round(float(a.start_capital), 2), "challenger_started": a.date,
+              "high_water_mark": round(float(a.start_capital), 2), "halted": False,
+              "strategy_positions": {}, "legacy_positions": {}, "trades": []}
+    save_json(a.paper_ledger, ledger)
+    print(json.dumps({"restarted": a.date, "previous_started": old_started,
+                      "start_capital": ledger["start_capital"],
+                      "challenger": ch["params"]}, indent=2, ensure_ascii=False))
+
+
 def cmd_reject(a):
     sl = load_json(a.state_learn)
     ch = sl.get("challenger")
@@ -408,6 +426,13 @@ def main():
     pr.add_argument("--paper-ledger", required=True)
     pr.add_argument("--date", required=True)
     pr.set_defaults(func=cmd_promote)
+
+    rv = sub.add_parser("restart-validation")
+    rv.add_argument("--state-learn", required=True)
+    rv.add_argument("--paper-ledger", required=True)
+    rv.add_argument("--date", required=True)
+    rv.add_argument("--start-capital", required=True)
+    rv.set_defaults(func=cmd_restart_validation)
 
     rj = sub.add_parser("reject")
     rj.add_argument("--state-learn", required=True)

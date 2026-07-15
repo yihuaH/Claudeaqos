@@ -2,6 +2,10 @@
   "enabled": true,
   "auto_promote": true,
   "paper_account": "PA3QW78QT1O7",
+  "paper_authorization": {
+    "scope": "股票 + 期权 (Level 3), 账户内全部持仓可处置",
+    "granted": "2026-07-15 (用户对话确认)"
+  },
   "learnable_bounds": {
     "entry.rsi2_max": [5.0, 15.0],
     "exit.rsi2_min": [55.0, 80.0],

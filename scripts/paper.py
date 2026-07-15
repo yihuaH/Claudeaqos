@@ -6,15 +6,19 @@ Alpaca 纸面账户执行器 — 只用于挑战者参数的影子验证。
   equity  按本地账本 + 实时报价计算挑战者净值/现金 (不受 paper 账户里其他持仓干扰)
   account 打印 paper 账户基本状态
 
+  positions  列出 paper 账户全部持仓 (股票 + 期权)
+  liquidate  清仓 (--all 或 --symbols A,B), 含期权; 需开市
+
 硬约束:
 - BASE 硬编码为 paper-api.alpaca.markets, 绝不接入 Alpaca 实盘接口。
-- 只交易订单文件里的符号, 绝不动 paper 账户里的其他持仓。
-- 挑战者的持仓/盈亏以本地账本 (state/paper_positions.json) 为准, Alpaca 只提供真实成交价。
+- paper 账户内股票与期权均可交易、全部持仓均可处置 (用户 2026-07-15 授权)。
+- 挑战者的持仓/盈亏以本地账本 (state/paper_positions.json) 为准, Alpaca 提供真实成交价。
 密钥从环境变量读取 (ALPACA_API_KEY_ID / ALPACA_API_SECRET_KEY), 不入库。
 """
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -57,6 +61,9 @@ def _submit(order, coid):
         raise SystemExit(f"下单失败 {order.get('symbol')}: HTTP {e.code} {detail}")
 
 
+OCC_RE = re.compile(r"^[A-Z.]{1,6}\d{6}[CP]\d{8}$")  # 期权 OCC 符号, 整张合约交易
+
+
 def _wait_fill(coid, timeout_s):
     deadline = time.time() + timeout_s
     while True:
@@ -91,7 +98,9 @@ def cmd_run(a):
         sym = o["symbol"]
         coid = f"cq-{a.date}-{sym}-{side}"
         body = {"symbol": sym, "side": side}
-        if side == "sell":
+        if OCC_RE.match(sym):
+            body["qty"] = str(int(o["qty"]))  # 期权只能整张
+        elif side == "sell":
             body["qty"] = str(o["qty"])
         else:
             body["notional"] = str(o["dollar_amount"])
@@ -139,8 +148,37 @@ def cmd_equity(a):
 def cmd_account(a):
     acct = _req("GET", "/v2/account")
     print(json.dumps({k: acct.get(k) for k in
-                      ("account_number", "status", "equity", "cash",
-                       "buying_power", "trading_blocked")}, indent=2))
+                      ("account_number", "status", "equity", "cash", "buying_power",
+                       "options_trading_level", "options_buying_power",
+                       "trading_blocked")}, indent=2))
+
+
+def cmd_positions(a):
+    pos = _req("GET", "/v2/positions")
+    print(json.dumps([{k: p.get(k) for k in
+                       ("symbol", "asset_class", "qty", "market_value", "unrealized_pl")}
+                      for p in pos], indent=2))
+
+
+def cmd_liquidate(a):
+    if not (a.all or a.symbols):
+        raise SystemExit("需要 --all 或 --symbols")
+    if not _req("GET", "/v2/clock")["is_open"]:
+        raise SystemExit("Alpaca 时钟显示市场未开盘, 拒绝清仓 (顺延下一交易日)")
+    if a.all:
+        res = _req("DELETE", "/v2/positions?cancel_orders=true")
+        closed = [r.get("symbol") for r in res]
+    else:
+        closed = []
+        for sym in a.symbols.split(","):
+            _req("DELETE", f"/v2/positions/{sym.strip()}")
+            closed.append(sym.strip())
+    # 等订单落地后汇报剩余持仓
+    time.sleep(5)
+    left = _req("GET", "/v2/positions")
+    print(json.dumps({"close_submitted": closed,
+                      "remaining": [p["symbol"] for p in left]},
+                     indent=2, ensure_ascii=False))
 
 
 def main():
@@ -162,6 +200,14 @@ def main():
 
     ac = sub.add_parser("account")
     ac.set_defaults(func=cmd_account)
+
+    ps = sub.add_parser("positions")
+    ps.set_defaults(func=cmd_positions)
+
+    lq = sub.add_parser("liquidate")
+    lq.add_argument("--all", action="store_true", help="清空全部持仓 (含期权), 撤销挂单")
+    lq.add_argument("--symbols", help="只清指定符号, 逗号分隔")
+    lq.set_defaults(func=cmd_liquidate)
 
     a = p.parse_args()
     a.func(a)
