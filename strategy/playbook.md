@@ -86,11 +86,20 @@ python3 scripts/signals.py signal \
 2. 算挑战者净值: `python3 scripts/paper.py equity --ledger state/paper_positions.json --quotes <报价映射文件>` → 记下 equity/cash。
 3. 用**当天同一批数据**算挑战者信号 (换 config/state/资金三项, 其余与实盘完全一致):
    `python3 scripts/signals.py signal --config <challenger_config> --state state/paper_positions.json --historicals <同实盘> --quotes <同实盘> --macro <同实盘> --date <今天> --portfolio-value <paper equity> --buying-power <paper cash> --out <scratchpad>/paper_orders.json`
-4. 纸面下单: `python3 scripts/paper.py run --orders <paper_orders> --date <今天> --fills-out <scratchpad>/paper_fills.json`
-5. 回写账本: `python3 scripts/signals.py apply --state state/paper_positions.json --fills <paper_fills> --date <今天> --portfolio-value <paper equity>`
-6. 记录净值 (成交后重算一次 equity):
-   `python3 scripts/learn.py record --state-learn state/learning.json --date <今天> --live-equity <实盘 total_value> --paper-equity <重算 equity>`
-7. 评估: `python3 scripts/learn.py evaluate --learning strategy/learning.json --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天>`, 结果记入 journal。
+4. 备兑信号 (strategy/options.json `enabled=true` 时; 仅当账本有期权持仓或有 ≥100 股整手持仓, 否则跳到步骤 5):
+   a. 拉链: `python3 scripts/integrations.py chains --underlyings <相关正股逗号分隔> --date <今天> --dte-max 35 --out <scratchpad>/chains.json`
+   b. `python3 scripts/options_overlay.py signal --config strategy/options.json --ledger state/paper_positions.json --quotes <报价映射> --chains <chains> --orders <paper_orders> --date <今天> --out-closes <scratchpad>/opt_closes.json --out-opens <scratchpad>/opt_opens.json`
+5. 纸面执行 (顺序不可乱: 先平期权 → 正股 → 再开备兑):
+   a. `paper.py run --orders <opt_closes> --date <今天> --fills-out <scratchpad>/opt_close_fills.json` (期权平仓单被拒 = 可能已被指派 → 记异常、通知用户)
+   b. `paper.py run --orders <paper_orders> --date <今天> --fills-out <scratchpad>/paper_fills.json`
+   c. `paper.py run --orders <opt_opens> --date <今天> --fills-out <scratchpad>/opt_open_fills.json`
+6. 回写账本:
+   a. 正股: `python3 scripts/signals.py apply --state state/paper_positions.json --fills <paper_fills> --date <今天> --portfolio-value <paper equity>`
+   b. 期权: 对 opt_close_fills 和 opt_open_fills 分别 `python3 scripts/options_overlay.py apply --ledger state/paper_positions.json --fills <文件> --date <今天>`
+7. 记录净值 (成交后重算: `paper.py equity --ledger ... --quotes ... --chains <chains>`):
+   `python3 scripts/learn.py record --state-learn state/learning.json --date <今天> --live-equity <实盘 total_value> --paper-equity <equity_ex_options>`
+   **注意: record 必须用 `equity_ex_options`** (剔除期权轨道, 保持参数 A/B 对比干净); `overlay_pnl` 单独记入 journal 的备兑一栏。
+8. 评估: `python3 scripts/learn.py evaluate --learning strategy/learning.json --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天>`, 结果记入 journal。
    - `pass` 且 `auto_promote=true` → `learn.py promote ...`, 在 journal 显著标注**参数晋级**并**通知用户** (新旧参数、验证期表现)。
    - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。

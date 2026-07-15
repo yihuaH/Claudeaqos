@@ -98,6 +98,8 @@ def cmd_run(a):
         sym = o["symbol"]
         coid = f"cq-{a.date}-{sym}-{side}"
         body = {"symbol": sym, "side": side}
+        if o.get("position_intent"):
+            body["position_intent"] = o["position_intent"]
         if OCC_RE.match(sym):
             body["qty"] = str(int(o["qty"]))  # 期权只能整张
         elif side == "sell":
@@ -126,10 +128,15 @@ def cmd_run(a):
 def cmd_equity(a):
     led = load_json(a.ledger)
     quotes = parse_quotes(a.quotes)
-    cash = float(led["start_capital"])
+    chains = json.load(open(a.chains)) if a.chains else {}
+    stock_flow = opt_flow = 0.0
     for t in led.get("trades", []):
-        v = float(t["qty"]) * float(t["price"])
-        cash += v if t["side"] == "sell" else -v
+        mult = 100.0 if t.get("bucket") == "options" else 1.0
+        v = float(t["qty"]) * float(t["price"]) * mult
+        if t.get("bucket") == "options":
+            opt_flow += v if t["side"] == "sell" else -v
+        else:
+            stock_flow += v if t["side"] == "sell" else -v
     mv, missing = 0.0, []
     for sym, pos in led.get("strategy_positions", {}).items():
         if sym in quotes:
@@ -137,9 +144,27 @@ def cmd_equity(a):
         else:
             missing.append(sym)
             mv += float(pos["qty"]) * float(pos["entry_price"])
-    out = {"equity": round(cash + mv, 2), "cash": round(cash, 2),
+    # 未平空头 call 的负债: 有链报价用 ask (平仓成本), 否则按内在价值
+    liability = 0.0
+    for occ, p in led.get("option_positions", {}).items():
+        chain = chains.get(p["underlying"], {})
+        ask = (chain.get(occ) or {}).get("ask")
+        if ask is None:
+            ask = max(0.0, quotes.get(p["underlying"], p["strike"]) - p["strike"])
+        liability += float(ask) * 100.0 * p["contracts"]
+
+    start = float(led["start_capital"])
+    cash = start + stock_flow + opt_flow
+    ex_options = start + stock_flow + mv           # 参数验证用: 剔除期权轨道
+    overlay_pnl = opt_flow - liability             # 备兑轨道独立盈亏
+    out = {"equity": round(cash + mv - liability, 2), "cash": round(cash, 2),
+           "equity_ex_options": round(ex_options, 2),
+           "overlay_pnl": round(overlay_pnl, 2),
+           "option_liability": round(liability, 2),
            "positions": {s: round(float(p["qty"]), 6)
-                         for s, p in led.get("strategy_positions", {}).items()}}
+                         for s, p in led.get("strategy_positions", {}).items()},
+           "option_positions": {o: p["contracts"]
+                                for o, p in led.get("option_positions", {}).items()}}
     if missing:
         out["warning"] = f"无报价, 按成本计: {missing}"
     print(json.dumps(out, ensure_ascii=False))
@@ -196,6 +221,7 @@ def main():
     e = sub.add_parser("equity")
     e.add_argument("--ledger", required=True, help="state/paper_positions.json")
     e.add_argument("--quotes", required=True)
+    e.add_argument("--chains", help="期权链文件, 用于给未平 call 估值 (缺省按内在价值)")
     e.set_defaults(func=cmd_equity)
 
     ac = sub.add_parser("account")

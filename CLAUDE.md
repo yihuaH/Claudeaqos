@@ -6,7 +6,7 @@
 ## 硬性红线 (任何情况下不得违反)
 
 1. 只允许操作账户 **802095265** (nickname "Agentic", agentic_allowed=true)。绝不触碰其他账户。
-2. 所有买卖必须来自 `scripts/signals.py` 的输出。不得基于自己的市场观点新增、放大或修改订单。
+2. 所有买卖必须来自确定性引擎的输出: 实盘与 paper 正股来自 `scripts/signals.py`, paper 期权来自 `scripts/options_overlay.py`。不得基于自己的市场观点新增、放大或修改订单。
 3. `strategy/config.json` 的风控限制 (仓位上限、单量上限、熔断) 是上限, 不是建议。
 4. `enabled=false` 或 `halted=true` 时只允许读数据和写日志。
 5. API 密钥、secret 一律不得写入本仓库 (用户提供的 Alpaca/FRED 密钥只存在会话环境中)。
@@ -19,10 +19,12 @@
 - `strategy/config.json` — 策略与风控参数 (用户可改)
 - `strategy/playbook.md` — 每日执行步骤
 - `strategy/learning.json` — 自学习策略: 可学参数边界、搜索网格、晋级标准 (用户可改)
+- `strategy/options.json` — 备兑开仓实验参数 (仅 paper, 用户可改)
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境)
+- `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `state/positions.json` — 实盘持仓与净值状态 (引擎回写)
 - `state/learning.json` — 学习状态 (冠军/挑战者、净值曲线、晋级历史)
 - `state/paper_positions.json` — 挑战者纸面账本 (与实盘 state 同构)

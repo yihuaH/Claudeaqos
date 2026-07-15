@@ -8,6 +8,9 @@
   python3 scripts/integrations.py bars --symbols SPY,QQQ --start 2021-01-01 --out FILE
                                                     # 拉取 Alpaca 日线 (split 调整, IEX),
                                                     # 输出与 get_equity_historicals 同构, 供 learn.py 搜索
+  python3 scripts/integrations.py chains --underlyings XLF,XLE --date 2026-07-16 --dte-max 35 --out FILE
+                                                    # 拉取 call 期权链快照 (indicative feed),
+                                                    # 输出 {underlying: {occ: {bid, ask}}}, 供 options_overlay.py
 
 数据源不可用时优雅降级: macro 失败则引擎不带宏观过滤运行, 交易照常。
 密钥从环境变量读取 (ALPACA_API_KEY_ID / ALPACA_API_SECRET_KEY / FRED_API_KEY), 不入库。
@@ -107,6 +110,38 @@ def bars(symbols, start, out_path):
     return 0
 
 
+def chains(underlyings, date_str, dte_max, out_path):
+    from datetime import date as _d, timedelta
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    lte = (_d.fromisoformat(date_str) + timedelta(days=int(dte_max))).isoformat()
+    out = {}
+    for u in underlyings:
+        acc = {}
+        token = None
+        while True:
+            url = (f"https://data.alpaca.markets/v1beta1/options/snapshots/{u}"
+                   f"?feed=indicative&type=call&limit=1000"
+                   f"&expiration_date_gte={date_str}&expiration_date_lte={lte}")
+            if token:
+                url += f"&page_token={token}"
+            j = _get(url, hdrs, timeout=60)
+            for occ, s in (j.get("snapshots") or {}).items():
+                q = s.get("latestQuote") or {}
+                acc[occ] = {"bid": q.get("bp"), "ask": q.get("ap")}
+            token = j.get("next_page_token")
+            if not token:
+                break
+        out[u] = acc
+    with open(out_path, "w") as f:
+        json.dump(out, f)
+    print(json.dumps({u: len(c) for u, c in out.items()}, ensure_ascii=False))
+    return 0
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     if args[:1] == ["status"]:
@@ -117,5 +152,10 @@ if __name__ == "__main__":
         sys.exit(bars(args[args.index("--symbols") + 1].split(","),
                       args[args.index("--start") + 1],
                       args[args.index("--out") + 1]))
+    if args[:1] == ["chains"] and all(f in args for f in ("--underlyings", "--date", "--dte-max", "--out")):
+        sys.exit(chains(args[args.index("--underlyings") + 1].split(","),
+                        args[args.index("--date") + 1],
+                        args[args.index("--dte-max") + 1],
+                        args[args.index("--out") + 1]))
     print(__doc__)
     sys.exit(1)
