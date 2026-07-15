@@ -34,13 +34,15 @@
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,
-    "note": "VIX 高位只影响新开仓; 止损/出场任何时候照常执行。宏观数据不可用时跳过过滤。"
+    "vix_max_staleness_days": 5,
+    "note": "VIX 高位只影响新开仓; 止损/出场任何时候照常执行。宏观数据不可用或过旧时跳过过滤, 交易照常。"
   },
   "circuit_breaker": {
     "max_drawdown_pct_from_hwm": 10.0
   },
   "integrations": {
-    "alpaca_paper": "blocked_by_network_policy_2026-07-15",
-    "fred": "blocked_by_network_policy_2026-07-15"
+    "alpaca_paper": "active_2026-07-15",
+    "fred": "active_2026-07-15",
+    "macro_filter_confirmed_by_user": "2026-07-15"
   }
 }

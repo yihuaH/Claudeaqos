@@ -17,5 +17,6 @@
 - `strategy/config.json` — 策略与风控参数 (用户可改)
 - `strategy/playbook.md` — 每日执行步骤
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
+- `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断与宏观数据拉取
 - `state/positions.json` — 持仓与净值状态 (引擎回写)
 - `journal/` — 每日运行日志 (git 记录, 可审计)

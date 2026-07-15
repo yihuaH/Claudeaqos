@@ -12,6 +12,7 @@ Claudeaqos 每日自动交易 — 确定性信号引擎 (RSI-2 均值回归 + �
 import argparse
 import json
 import sys
+from datetime import date as _date
 
 
 # ---------- IO helpers ----------
@@ -217,11 +218,23 @@ def cmd_signal(a):
                                      "reason": "legacy_protective_stop", "est_price": i["close"]})
 
     # --- 宏观风控: VIX 高位时暂停新开仓 (卖出/止损不受影响) ---
+    # FRED 数据有发布延迟; 超过 vix_max_staleness_days 的旧数据不用于风控, 只告警。
     risk_off = False
     if macro and "vix" in macro:
         out["macro"] = macro
-        vix_cap = cfg.get("macro", {}).get("vix_no_new_entries_above")
-        if vix_cap is not None and macro["vix"] >= vix_cap:
+        mc = cfg.get("macro", {})
+        vix_cap = mc.get("vix_no_new_entries_above")
+        max_stale = int(mc.get("vix_max_staleness_days", 5))
+        stale = False
+        if macro.get("vix_date"):
+            try:
+                age = (_date.fromisoformat(today) - _date.fromisoformat(macro["vix_date"])).days
+            except ValueError:
+                age = None
+            if age is None or age < 0 or age > max_stale:
+                stale = True
+                warnings.append(f"宏观: VIX 数据过旧或日期异常 (vix_date={macro['vix_date']}), 本日跳过宏观过滤")
+        if not stale and vix_cap is not None and float(macro["vix"]) >= vix_cap:
             risk_off = True
             out["note"] = f"宏观风控: VIX {macro['vix']} ≥ {vix_cap}, 今日暂停新开仓"
 

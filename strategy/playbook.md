@@ -8,10 +8,12 @@
 1. `git pull` 拉取本分支最新代码与状态。
 2. `strategy/config.json` 里 `enabled` 必须为 `true`; `state/positions.json` 里 `halted` 必须为 `false`。
 3. 幂等: 如果 `journal/<今天>.md` 已存在且标记 `status: completed`, 说明今天已跑过, 直接结束。
-4. 开市检查: `get_equity_quotes(["SPY"])`, 若 `venue_last_trade_time` 的日期不是今天(UTC), 视为休市日 → 写日志"休市"并结束。
+4. 数据源自诊断: `python3 scripts/integrations.py status`, 输出记入当天 journal 的"系统事件"。
+   (Alpaca/FRED 集成已于 2026-07-15 经用户确认转正; 任一数据源不可用只降级, 不阻断交易。)
 
-5. 数据源自诊断: `python3 scripts/integrations.py status`, 输出记入当天 journal 的"系统事件"。
-   `all_ok` 首次变为 true 时在日志中显著标注并通知用户 (宏观过滤在用户确认后才接入交易逻辑)。
+5. 开市检查:
+   - 首选: 上一步 status 里 alpaca `ok=true` 时, 以 Alpaca 时钟为准 — `market_is_open=false` 视为休市 → 写日志"休市"并结束。
+   - 回退 (alpaca 不可用): `get_equity_quotes(["SPY"])`, 若 `venue_last_trade_time` 的日期不是今天(UTC), 视为休市日 → 写日志"休市"并结束。
 
 ## 1. 取数
 
@@ -19,9 +21,9 @@
 2. `get_equity_positions(802095265)` → 与 `state/positions.json` 核对; 数量不一致以券商为准, 先修正 state。把结果整理成简单映射存到 scratchpad: `{"SYM": {"qty": x, "available": y, "intraday": z}}`。
 3. `get_equity_quotes(ETF池 + 全部持仓符号)` → 整理成 `{"SYM": price}` 存到 scratchpad (只收录 state=active 的)。
 4. `get_equity_historicals(ETF池10只, start=今天-450天, interval=day)` 和 `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` → 原始输出会自动存到 tool-results 文件, 记下路径。
-5. 宏观数据 (可选): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
+5. 宏观数据 (标准步骤): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
    成功则在算信号时加 `--macro <macro.json>`; 失败则省略该参数, 交易照常, 在日志注明。
-   另: 若 status 显示 alpaca ok 且 `market_is_open=false`, 以 Alpaca 时钟为准判定休市。
+   (VIX ≥ 配置阈值时引擎只停新开仓, 卖出/止损照常; VIX 数据过旧时引擎自动跳过过滤并告警。)
 
 ## 2. 算信号
 
@@ -65,7 +67,7 @@ python3 scripts/signals.py signal \
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
    `python3 scripts/signals.py apply --state state/positions.json --fills <fills.json> --date <今天> --portfolio-value <最新total_value>`
 2. 写 `journal/<今天>.md`: 状态(completed/halted/closed/error)、组合净值、回撤、信号表、订单与成交、告警/异常。
-3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin claude/cash-printer-validation-tz067h`。
+3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin <当前工作分支>` (用 `git rev-parse --abbrev-ref HEAD` 获取, 不得推到其他分支)。
 
 ## 6. 异常总原则
 

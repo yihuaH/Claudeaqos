@@ -60,7 +60,7 @@ def macro(out_path):
         return 1
     try:
         j = _get("https://api.stlouisfed.org/fred/series/observations"
-                 f"?series_id=VIXCLS&api_key={fred_key}&file_type=json&sort_order=desc&limit=5")
+                 f"?series_id=VIXCLS&api_key={fred_key}&file_type=json&sort_order=desc&limit=10")
         obs = next(o for o in j["observations"] if o["value"] != ".")
         data = {"vix": float(obs["value"]), "vix_date": obs["date"], "source": "FRED VIXCLS"}
     except Exception as e:
