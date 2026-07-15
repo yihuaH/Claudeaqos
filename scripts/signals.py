@@ -109,6 +109,7 @@ def cmd_signal(a):
     hist = parse_historicals(a.historicals)
     quotes = parse_quotes(a.quotes)
     broker = parse_positions(a.positions) if a.positions else None
+    macro = load_json(a.macro) if a.macro else None
     today = a.date
     warnings = []
 
@@ -215,8 +216,20 @@ def cmd_signal(a):
                 out["sells"].append({"symbol": sym, "qty": round(qty, 6), "bucket": "legacy",
                                      "reason": "legacy_protective_stop", "est_price": i["close"]})
 
+    # --- 宏观风控: VIX 高位时暂停新开仓 (卖出/止损不受影响) ---
+    risk_off = False
+    if macro and "vix" in macro:
+        out["macro"] = macro
+        vix_cap = cfg.get("macro", {}).get("vix_no_new_entries_above")
+        if vix_cap is not None and macro["vix"] >= vix_cap:
+            risk_off = True
+            out["note"] = f"宏观风控: VIX {macro['vix']} ≥ {vix_cap}, 今日暂停新开仓"
+
     # --- 买入: ETF 入场信号 ---
     held = set(strat) - {s["symbol"] for s in out["sells"] if s["bucket"] == "strategy"}
+    if risk_off:
+        _emit(out, a.out)
+        return
     cands = []
     for sym in cfg["etf_universe"]:
         i = ind.get(sym)
@@ -328,6 +341,7 @@ def main():
     s.add_argument("--quotes", required=True,
                    help='实时报价: {"SYM": price} 或 get_equity_quotes 原始输出')
     s.add_argument("--positions", help="券商持仓文件(简单映射或原始输出), 用于校准可卖数量/当日买入")
+    s.add_argument("--macro", help='宏观数据文件 {"vix": 16.5, ...} (integrations.py macro 产出); 缺省则不做宏观过滤')
     s.add_argument("--date", required=True, help="今天日期 YYYY-MM-DD")
     s.add_argument("--portfolio-value", required=True)
     s.add_argument("--buying-power", required=True)

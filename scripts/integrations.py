@@ -2,9 +2,11 @@
 """
 外部数据源自诊断 (Alpaca paper / FRED)。
 
-用法: python3 scripts/integrations.py status
-每日 Routine 在前置检查时运行, 把输出记入 journal。
-三项全 ok 之前, 这些数据源不参与任何交易决策。
+用法:
+  python3 scripts/integrations.py status            # 连通性自诊断 (记入 journal)
+  python3 scripts/integrations.py macro --out FILE  # 拉取宏观数据 (VIX) 供引擎 --macro 使用
+
+数据源不可用时优雅降级: macro 失败则引擎不带宏观过滤运行, 交易照常。
 密钥从环境变量读取 (ALPACA_API_KEY_ID / ALPACA_API_SECRET_KEY / FRED_API_KEY), 不入库。
 """
 import json
@@ -51,8 +53,31 @@ def status():
     return 0
 
 
+def macro(out_path):
+    fred_key = os.environ.get("FRED_API_KEY")
+    if not fred_key:
+        print("FRED_API_KEY 未设置, 跳过宏观数据", file=sys.stderr)
+        return 1
+    try:
+        j = _get("https://api.stlouisfed.org/fred/series/observations"
+                 f"?series_id=VIXCLS&api_key={fred_key}&file_type=json&sort_order=desc&limit=5")
+        obs = next(o for o in j["observations"] if o["value"] != ".")
+        data = {"vix": float(obs["value"]), "vix_date": obs["date"], "source": "FRED VIXCLS"}
+    except Exception as e:
+        print(f"宏观数据拉取失败: {e}", file=sys.stderr)
+        return 1
+    with open(out_path, "w") as f:
+        json.dump(data, f, indent=2)
+        f.write("\n")
+    print(json.dumps(data))
+    return 0
+
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2 or sys.argv[1] != "status":
-        print(__doc__)
-        sys.exit(1)
-    sys.exit(status())
+    args = sys.argv[1:]
+    if args[:1] == ["status"]:
+        sys.exit(status())
+    if args[:1] == ["macro"] and "--out" in args:
+        sys.exit(macro(args[args.index("--out") + 1]))
+    print(__doc__)
+    sys.exit(1)

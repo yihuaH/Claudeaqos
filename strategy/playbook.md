@@ -19,6 +19,9 @@
 2. `get_equity_positions(802095265)` → 与 `state/positions.json` 核对; 数量不一致以券商为准, 先修正 state。把结果整理成简单映射存到 scratchpad: `{"SYM": {"qty": x, "available": y, "intraday": z}}`。
 3. `get_equity_quotes(ETF池 + 全部持仓符号)` → 整理成 `{"SYM": price}` 存到 scratchpad (只收录 state=active 的)。
 4. `get_equity_historicals(ETF池10只, start=今天-450天, interval=day)` 和 `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` → 原始输出会自动存到 tool-results 文件, 记下路径。
+5. 宏观数据 (可选): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
+   成功则在算信号时加 `--macro <macro.json>`; 失败则省略该参数, 交易照常, 在日志注明。
+   另: 若 status 显示 alpaca ok 且 `market_is_open=false`, 以 Alpaca 时钟为准判定休市。
 
 ## 2. 算信号
 
