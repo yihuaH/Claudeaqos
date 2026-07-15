@@ -1,0 +1,30 @@
+{
+  "enabled": true,
+  "auto_promote": true,
+  "paper_account": "PA3QW78QT1O7",
+  "learnable_bounds": {
+    "entry.rsi2_max": [5.0, 15.0],
+    "exit.rsi2_min": [55.0, 80.0],
+    "exit.stop_loss_pct": [3.0, 8.0],
+    "exit.max_holding_days": [5, 15]
+  },
+  "search_grid": {
+    "entry.rsi2_max": [5.0, 7.5, 10.0, 12.5, 15.0],
+    "exit.rsi2_min": [55.0, 65.0, 75.0],
+    "exit.stop_loss_pct": [3.0, 5.0, 8.0],
+    "exit.max_holding_days": [5, 10, 15]
+  },
+  "walk_forward": {
+    "folds": 3,
+    "test_days": 120,
+    "min_trades_per_candidate": 8
+  },
+  "validation": {
+    "min_paper_days": 15,
+    "max_paper_days": 40,
+    "min_paper_trades": 3,
+    "min_edge_vs_champion_pct": 0.0,
+    "max_paper_drawdown_pct": 10.0
+  },
+  "note": "学习器只允许修改 learnable_bounds 列出的 entry/exit 参数且必须在边界内; sizing/circuit_breaker/macro/legacy 等风控永不自学习。挑战者必须先在 Alpaca paper 账户跑完验证期并通过 evaluate 才能晋级; 每次晋级/否决写 journal 并通知用户。"
+}

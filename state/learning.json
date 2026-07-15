@@ -1,0 +1,34 @@
+{
+  "champion": {
+    "params": {
+      "entry.rsi2_max": 10.0,
+      "exit.rsi2_min": 65.0,
+      "exit.stop_loss_pct": 5.0,
+      "exit.max_holding_days": 10
+    },
+    "since": "2026-07-15"
+  },
+  "challenger": {
+    "params": {
+      "entry.rsi2_max": 10.0,
+      "exit.rsi2_min": 65.0,
+      "exit.stop_loss_pct": 3.0,
+      "exit.max_holding_days": 10
+    },
+    "started": "2026-07-15",
+    "status": "validating",
+    "sim": {
+      "score": 2.8595,
+      "champion_score": 2.7676,
+      "trades": 97
+    }
+  },
+  "equity_history": [
+    {
+      "date": "2026-07-15",
+      "live": 1952.36,
+      "paper": 1952.36
+    }
+  ],
+  "history": []
+}

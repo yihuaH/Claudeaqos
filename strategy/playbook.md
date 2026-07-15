@@ -69,6 +69,31 @@ python3 scripts/signals.py signal \
 2. 写 `journal/<今天>.md`: 状态(completed/halted/closed/error)、组合净值、回撤、信号表、订单与成交、告警/异常。
 3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin <当前工作分支>` (用 `git rev-parse --abbrev-ref HEAD` 获取, 不得推到其他分支)。
 
-## 6. 异常总原则
+## 6. 影子验证运行 (Alpaca paper — 挑战者)
+
+条件: `strategy/learning.json` 的 `enabled=true` 且 `state/learning.json` 有 `status=validating` 的挑战者。
+实盘步骤 1-5 全部完成后才执行; **影子环节任何失败只记日志, 不得影响实盘结果**。
+
+1. 生成挑战者配置:
+   `python3 scripts/learn.py challenger-config --config strategy/config.json --state-learn state/learning.json --out <scratchpad>/challenger_config.json`
+2. 算挑战者净值: `python3 scripts/paper.py equity --ledger state/paper_positions.json --quotes <报价映射文件>` → 记下 equity/cash。
+3. 用**当天同一批数据**算挑战者信号 (换 config/state/资金三项, 其余与实盘完全一致):
+   `python3 scripts/signals.py signal --config <challenger_config> --state state/paper_positions.json --historicals <同实盘> --quotes <同实盘> --macro <同实盘> --date <今天> --portfolio-value <paper equity> --buying-power <paper cash> --out <scratchpad>/paper_orders.json`
+4. 纸面下单: `python3 scripts/paper.py run --orders <paper_orders> --date <今天> --fills-out <scratchpad>/paper_fills.json`
+5. 回写账本: `python3 scripts/signals.py apply --state state/paper_positions.json --fills <paper_fills> --date <今天> --portfolio-value <paper equity>`
+6. 记录净值 (成交后重算一次 equity):
+   `python3 scripts/learn.py record --state-learn state/learning.json --date <今天> --live-equity <实盘 total_value> --paper-equity <重算 equity>`
+7. 评估: `python3 scripts/learn.py evaluate --learning strategy/learning.json --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天>`, 结果记入 journal。
+   - `pass` 且 `auto_promote=true` → `learn.py promote ...`, 在 journal 显著标注**参数晋级**并**通知用户** (新旧参数、验证期表现)。
+   - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
+   - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
+
+## 7. 参数搜索 (无活跃挑战者时执行)
+
+1. 拉长历史 (约 5 年): `python3 scripts/integrations.py bars --symbols <ETF池逗号分隔> --start <今天减5年> --out <scratchpad>/bars_5y.json`
+2. `python3 scripts/learn.py search --config strategy/config.json --learning strategy/learning.json --state-learn state/learning.json --historicals <bars_5y> --date <今天> --start-capital <实盘 total_value> --paper-ledger state/paper_positions.json`
+3. 输出记 journal: `new_challenger` → 新挑战者次日起影子运行; `champion_optimal` → 冠军仍最优, 本轮不设挑战者。
+
+## 8. 异常总原则
 
 任何预期外情况(API 报错、成交与订单不符、数据缺失过半) → **立即停止交易**, 把已发生的事写进日志, 通知用户。宁可错过一天, 不做没把握的操作。

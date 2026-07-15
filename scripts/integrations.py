@@ -5,6 +5,9 @@
 用法:
   python3 scripts/integrations.py status            # 连通性自诊断 (记入 journal)
   python3 scripts/integrations.py macro --out FILE  # 拉取宏观数据 (VIX) 供引擎 --macro 使用
+  python3 scripts/integrations.py bars --symbols SPY,QQQ --start 2021-01-01 --out FILE
+                                                    # 拉取 Alpaca 日线 (split 调整, IEX),
+                                                    # 输出与 get_equity_historicals 同构, 供 learn.py 搜索
 
 数据源不可用时优雅降级: macro 失败则引擎不带宏观过滤运行, 交易照常。
 密钥从环境变量读取 (ALPACA_API_KEY_ID / ALPACA_API_SECRET_KEY / FRED_API_KEY), 不入库。
@@ -73,11 +76,46 @@ def macro(out_path):
     return 0
 
 
+def bars(symbols, start, out_path):
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    base = ("https://data.alpaca.markets/v2/stocks/bars"
+            f"?symbols={','.join(symbols)}&timeframe=1Day&adjustment=split&feed=iex"
+            f"&limit=10000&start={start}T00:00:00Z")
+    acc = {}
+    token = None
+    while True:
+        j = _get(base + (f"&page_token={token}" if token else ""), hdrs, timeout=60)
+        for sym, bs in (j.get("bars") or {}).items():
+            acc.setdefault(sym, []).extend(bs)
+        token = j.get("next_page_token")
+        if not token:
+            break
+    results = [{"symbol": sym,
+                "bars": [{"begins_at": b["t"][:10] + "T00:00:00Z",
+                          "close_price": str(b["c"]), "session": "reg"} for b in bs]}
+               for sym, bs in acc.items()]
+    with open(out_path, "w") as f:
+        json.dump({"data": {"results": results}}, f)
+    print(json.dumps({s: len(b["bars"]) for s, b in zip(acc, results)}, ensure_ascii=False))
+    missing = [s for s in symbols if s not in acc]
+    if missing:
+        print(f"警告: 无数据符号 {missing}", file=sys.stderr)
+    return 0
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     if args[:1] == ["status"]:
         sys.exit(status())
     if args[:1] == ["macro"] and "--out" in args:
         sys.exit(macro(args[args.index("--out") + 1]))
+    if args[:1] == ["bars"] and "--symbols" in args and "--start" in args and "--out" in args:
+        sys.exit(bars(args[args.index("--symbols") + 1].split(","),
+                      args[args.index("--start") + 1],
+                      args[args.index("--out") + 1]))
     print(__doc__)
     sys.exit(1)
