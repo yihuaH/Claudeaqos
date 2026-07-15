@@ -10,6 +10,9 @@
 3. 幂等: 如果 `journal/<今天>.md` 已存在且标记 `status: completed`, 说明今天已跑过, 直接结束。
 4. 开市检查: `get_equity_quotes(["SPY"])`, 若 `venue_last_trade_time` 的日期不是今天(UTC), 视为休市日 → 写日志"休市"并结束。
 
+5. 数据源自诊断: `python3 scripts/integrations.py status`, 输出记入当天 journal 的"系统事件"。
+   `all_ok` 首次变为 true 时在日志中显著标注并通知用户 (宏观过滤在用户确认后才接入交易逻辑)。
+
 ## 1. 取数
 
 1. `get_portfolio(802095265)` → 记下 `total_value` 和 `buying_power`。
