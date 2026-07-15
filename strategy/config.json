@@ -1,0 +1,42 @@
+{
+  "enabled": true,
+  "mode": "live",
+  "account_number": "802095265",
+  "live_trading_authorized": true,
+  "authorization": {
+    "granted_by": "用户 (对话确认, 2026-07-15)",
+    "scope": "按 strategy/playbook.md 每日自主执行, 资金池为全部账户(含存量持仓), 受本文件风控限制约束",
+    "revoke": "把 enabled 改为 false, 或暂停 Routine, 或直接告诉 agent 停止"
+  },
+  "etf_universe": ["SPY", "QQQ", "IWM", "DIA", "XLK", "XLF", "XLE", "SMH", "GLD", "TLT"],
+  "entry": {
+    "rsi2_max": 10.0,
+    "trend": "close_above_sma200"
+  },
+  "exit": {
+    "rsi2_min": 65.0,
+    "close_above_sma5": true,
+    "stop_loss_pct": 5.0,
+    "max_holding_days": 10
+  },
+  "sizing": {
+    "position_pct_of_portfolio": 15.0,
+    "max_strategy_positions": 4,
+    "max_new_entries_per_day": 2,
+    "min_cash_reserve_usd": 5.0,
+    "min_order_usd": 5.0
+  },
+  "legacy": {
+    "protective_stop_pct": 7.0,
+    "funding_sales_allowed": true,
+    "max_funding_sales_per_day": 2,
+    "avoid_selling_same_day_buys": true
+  },
+  "circuit_breaker": {
+    "max_drawdown_pct_from_hwm": 10.0
+  },
+  "integrations": {
+    "alpaca_paper": "blocked_by_network_policy_2026-07-15",
+    "fred": "blocked_by_network_policy_2026-07-15"
+  }
+}

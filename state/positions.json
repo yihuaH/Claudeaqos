@@ -1,0 +1,23 @@
+{
+  "high_water_mark": 1952.36,
+  "halted": false,
+  "strategy_positions": {},
+  "legacy_positions": {
+    "ABBV": {"qty": 0.942873, "avg_cost": 246.82, "adoption_ref_price": 244.22, "adoption_date": "2026-07-15"},
+    "BAC":  {"qty": 0.944985, "avg_cost": 60.71,  "adoption_ref_price": 61.475, "adoption_date": "2026-07-15"},
+    "NVO":  {"qty": 1.812025, "avg_cost": 49.17,  "adoption_ref_price": 50.4573, "adoption_date": "2026-07-15"},
+    "DASH": {"qty": 0.24253,  "avg_cost": 195.44, "adoption_ref_price": 189.295, "adoption_date": "2026-07-15"},
+    "SNOW": {"qty": 0.181326, "avg_cost": 260.97, "adoption_ref_price": 271.13, "adoption_date": "2026-07-15"},
+    "SE":   {"qty": 0.908207, "avg_cost": 105.01, "adoption_ref_price": 111.18, "adoption_date": "2026-07-15"},
+    "NET":  {"qty": 0.366226, "avg_cost": 258.31, "adoption_ref_price": 272.63, "adoption_date": "2026-07-15"},
+    "FTNT": {"qty": 1.419734, "avg_cost": 164.65, "adoption_ref_price": 164.345, "adoption_date": "2026-07-15"},
+    "ALLT": {"qty": 4.186145, "avg_cost": 8.92,   "adoption_ref_price": 8.585, "adoption_date": "2026-07-15"},
+    "ABNB": {"qty": 0.33281,  "avg_cost": 146.72, "adoption_ref_price": 148.08, "adoption_date": "2026-07-15"},
+    "ETSY": {"qty": 2.073344, "avg_cost": 84.07,  "adoption_ref_price": 85.69, "adoption_date": "2026-07-15"},
+    "DT":   {"qty": 5.140514, "avg_cost": 45.18,  "adoption_ref_price": 45.125, "adoption_date": "2026-07-15"},
+    "IKT":  {"qty": 23.934897, "avg_cost": 2.09,  "adoption_ref_price": 2.05, "adoption_date": "2026-07-15"},
+    "KLAR": {"qty": 9.142563, "avg_cost": 19.47,  "adoption_ref_price": 19.62, "adoption_date": "2026-07-15"},
+    "AFRM": {"qty": 1.353369, "avg_cost": 81.69,  "adoption_ref_price": 81.64, "adoption_date": "2026-07-15"}
+  },
+  "trades": []
+}
