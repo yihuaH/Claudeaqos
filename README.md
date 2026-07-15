@@ -39,7 +39,16 @@ GitHub Routine   →   scripts/signals.py (确定性)   →   Claude 会话 + Ro
 | Alpaca paper API | 模拟盘影子交易 / 市场日历 | ⛔ 被环境出站网络策略拦截 (2026-07-15), 需在环境设置放行 `*.alpaca.markets` |
 | FRED API | 宏观风控 (VIX/利率 regime 过滤) | ⛔ 同上, 需放行 `api.stlouisfed.org` |
 
-密钥管理: 任何 API key/secret 不入库, 只存在会话环境。
+## 密钥管理
+
+- 任何 key/secret 一律不写入仓库 (.gitignore 已拦截常见密钥文件)。
+- 代码统一从环境变量读取, 约定名称:
+  - `ALPACA_API_KEY_ID` / `ALPACA_API_SECRET_KEY` — Alpaca paper API
+  - `FRED_API_KEY` — FRED API
+- 注入位置按运行环境选择 (互不相通):
+  - **Claude Code 云会话 (本系统运行处)**: claude.ai/code → 该环境的设置 → Environment variables
+  - GitHub Codespaces: repo Settings → Secrets and variables → **Codespaces** (只注入 Codespaces)
+  - GitHub Actions: repo Settings → Secrets and variables → **Actions** (只注入 Actions workflow)
 
 ## 风险声明
 
