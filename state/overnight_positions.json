@@ -2,7 +2,24 @@
   "track": "overnight_live_v1",
   "started": "2026-07-16",
   "halted": false,
-  "strategy_positions": {},
+  "strategy_positions": {
+    "DIA": {
+      "qty": 0.370419,
+      "entry_price": 523.1899,
+      "entry_date": "2026-07-16",
+      "cost": 193.8
+    }
+  },
   "legacy_positions": {},
-  "trades": []
+  "trades": [
+    {
+      "date": "2026-07-16",
+      "symbol": "DIA",
+      "side": "buy",
+      "qty": 0.370419,
+      "price": 523.1899,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    }
+  ]
 }

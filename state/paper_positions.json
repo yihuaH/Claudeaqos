@@ -1,8 +1,7 @@
 {
-  "pending_reset": "2026-07-15 用户放开全账户授权: 下一交易日开市后清算 paper 账户全部存量持仓, 再以全账户 equity 重开验证 (playbook 第6节步骤0)",
-  "start_capital": 1952.36,
-  "challenger_started": "2026-07-15",
-  "high_water_mark": 1952.36,
+  "start_capital": 100877.65,
+  "challenger_started": "2026-07-16",
+  "high_water_mark": 100877.65,
   "halted": false,
   "strategy_positions": {},
   "legacy_positions": {},
