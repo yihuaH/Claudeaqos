@@ -65,7 +65,7 @@ python3 scripts/signals.py signal \
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
    `python3 scripts/signals.py apply --state state/positions.json --fills <fills.json> --date <今天> --portfolio-value <最新total_value>`
 2. 写 `journal/<今天>.md`: 状态(completed/halted/closed/error)、组合净值、回撤、信号表、订单与成交、告警/异常。
-3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin claude/cash-printer-validation-tz067h`。
+3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin claude/new-session-ty4g79`。
 
 ## 6. 异常总原则
 

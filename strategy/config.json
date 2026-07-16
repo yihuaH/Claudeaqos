@@ -40,7 +40,7 @@
     "max_drawdown_pct_from_hwm": 10.0
   },
   "integrations": {
-    "alpaca_paper": "blocked_by_network_policy_2026-07-15",
-    "fred": "blocked_by_network_policy_2026-07-15"
+    "alpaca_paper": "ok_2026-07-16",
+    "fred": "ok_2026-07-16"
   }
 }
