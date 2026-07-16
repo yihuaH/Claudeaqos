@@ -78,6 +78,8 @@ python3 scripts/signals.py signal \
 用户校准 (2026-07-15): 目标 ~10笔/天 (晨间 ~5 卖 + 收盘 ~5 买), 换仓卖出不设 2 只/日限制, 持仓数不设上限。
 
 **晨间窗口 (9:35 ET, 独立 Routine, exit.window=next_open 时)**:
+0. **时段校验** (防调度器误触发): 当前 ET 时间必须在 09:30–10:15 之间才允许执行卖出;
+   时段外触发 → 只做只读核查 (分支同步/持仓状态), 不交易, 异常才通知。
 1. `git pull` → `integrations.py status`: Alpaca 时钟 `is_open` 必须为 true, 否则写日志结束。
 2. `state/overnight_positions.json` 无隔夜持仓 → 直接结束。
 3. 持仓符号拉快照 → `overnight.py signal --window open --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --snapshots <snaps> --positions <券商映射> --date <今天> --portfolio-value <pv> --buying-power 0`
