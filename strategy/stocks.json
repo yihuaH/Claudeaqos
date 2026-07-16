@@ -229,7 +229,8 @@
       "LYV": "Consumer Services",
       "UAL": "Transportation",
       "RVMD": "Health Technology"
-    }
+    },
+    "allow_unknown_earnings": true
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,
@@ -244,6 +245,6 @@
   "circuit_breaker": {
     "max_drawdown_pct_from_hwm": 10.0
   },
-  "note": "个股防御实验 (仅 paper): universe 由 screen.py 周度筛选产出 (1000池→100股, 见 strategy/screen.json / universe.json)。与 ETF 策略同引擎, 入场更严 (RSI2<5), 止损更紧 (4%), 持有更短 (7天)。防御层: 财报前10天不入场且财报日未知一律不入场、财报前1天强制出场、近20日有单日 ≥8% 异动不入场、每行业最多3仓。持股数量不设上限 (用户 2026-07-15 指示), 实际由资金约束 (~10仓)。虚拟资金 $25,000, 独立账本。转正需 ≥20 交易日实验数据 + 用户决定。",
+  "note": "个股防御实验 (仅 paper): universe 由 screen.py 周度筛选产出 (1000池→100股, 见 strategy/screen.json / universe.json)。与 ETF 策略同引擎, 入场更严 (RSI2<5), 止损更紧 (4%), 持有更短 (7天)。防御层: 财报前10天不入场 (财报日未知仍可候选, 用户 2026-07-16 指示)、财报前1天强制出场、近20日有单日 ≥8% 异动不入场、每行业最多3仓。持股数量不设上限 (用户 2026-07-15 指示), 实际由资金约束 (~10仓)。虚拟资金 $25,000, 独立账本。转正需 ≥20 交易日实验数据 + 用户决定。",
   "universe_generated": "2026-07-15"
 }

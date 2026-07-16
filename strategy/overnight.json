@@ -29,10 +29,12 @@
   },
   "defense": {
     "earnings_blackout_days": 10,
+    "allow_unknown_earnings": true,
     "max_daily_move_pct": 8.0,
     "move_lookback_days": 20,
     "max_per_sector": 3,
-    "etfs_exempt": true
+    "etfs_exempt": true,
+    "note": "allow_unknown_earnings=true (用户 2026-07-16 指示): 财报日查不到的个股仍可候选; 查得到且在 blackout 内的照旧拦截"
   },
   "funding": {
     "allowed": true,

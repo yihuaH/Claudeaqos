@@ -117,10 +117,14 @@ def cmd_signal(a):
     universe = cfg.get("universe", cfg.get("etf_universe", []))
     # 防御层 (个股轨道): 财报回避 / 异动过滤 / 行业上限。cfg 无 defense 时行为与原引擎完全一致。
     defense = cfg.get("defense")
+    allow_unknown_earnings = bool((defense or {}).get("allow_unknown_earnings"))
     earnings = load_json(a.earnings) if a.earnings else None
     no_earnings_data = defense is not None and earnings is None
     if no_earnings_data:
-        warnings.append("防御: 无财报日数据, 今日跳过全部新入场 (出场照常)")
+        if allow_unknown_earnings:
+            warnings.append("防御: 无财报日数据, 按配置个股仍可入场 (仅失去财报回避保护)")
+        else:
+            warnings.append("防御: 无财报日数据, 今日跳过全部新入场 (出场照常)")
 
     def days_to_earnings(sym):
         """返回距下次财报的天数; None = 数据缺失或无近期财报 (值为 null)。"""
@@ -272,9 +276,9 @@ def cmd_signal(a):
         if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
             continue
         if defense is not None:
-            if no_earnings_data:
+            if no_earnings_data and not allow_unknown_earnings:
                 continue
-            if sym not in earnings:
+            if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
                 warnings.append(f"{sym}: 财报日未知, 防御性跳过入场")
                 continue
             ed = days_to_earnings(sym)

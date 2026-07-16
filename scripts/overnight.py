@@ -156,9 +156,11 @@ def cmd_signal(a):
 
     # --- 入场 ---
     d = cfg["defense"]
+    allow_unknown = bool(d.get("allow_unknown_earnings"))
     no_earnings_data = earnings is None
     if no_earnings_data:
-        warnings.append("无财报日数据: 个股全部跳过, 仅 ETF 可入场")
+        warnings.append("无财报日数据: 按配置个股仍可入场 (仅失去财报回避保护)" if allow_unknown
+                        else "无财报日数据: 个股全部跳过, 仅 ETF 可入场")
     held = set(pos_book) - sold_today
     cands = []
     if not risk_off:
@@ -178,7 +180,7 @@ def cmd_signal(a):
                 continue
             is_etf = sym in etfs
             if not is_etf:
-                if no_earnings_data or sym not in (earnings or {}):
+                if not allow_unknown and (no_earnings_data or sym not in (earnings or {})):
                     continue
                 ed = days_to_earnings(sym)
                 if ed is not None and 0 <= ed <= int(d["earnings_blackout_days"]):

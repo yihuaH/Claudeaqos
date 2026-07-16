@@ -89,7 +89,7 @@ python3 scripts/signals.py signal \
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
-2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 个股自动全停, 仅 ETF 可入场。
+2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 财报日未知的个股仍可候选 (allow_unknown_earnings=true), 仅失去财报回避保护, 引擎会告警注明。
 3. 重新取 `get_portfolio` 的最新 buying_power (RSI-2 执行后剩余的), 然后:
    `python3 scripts/overnight.py signal --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --bars <bars> --snapshots <snaps> --earnings <earnings> --macro <macro> --positions <券商持仓映射> --date <今天> --portfolio-value <total_value> --buying-power <剩余bp> --out <scratchpad>/overnight_orders.json`
 4. 执行: 与第 4 节完全相同的规则 (先卖后买、review→place、ref_id 幂等、15:55 截止)。
@@ -148,7 +148,7 @@ python3 scripts/signals.py signal \
    h. universe 变动 (新增/剔除的符号) 记入 journal。**已持仓但被剔除出 universe 的股票不强制卖出, 按正常出场规则走完。**
 
 1. 数据 (全部走 Alpaca): `python3 scripts/integrations.py bars --symbols <stocks universe> --start <今天-450天> --out <scratchpad>/stock_hist.json` 和 `integrations.py quotes --symbols <同> --out <scratchpad>/stock_quotes.json`。
-2. 财报日: 用 cash_printer 的 `get_earnings_calendar` / `get_earnings_results` 查 universe 内个股, 整理成 `{"SYM": "YYYY-MM-DD"}` (确认近期无财报的记 `null`, 查不到的**不要写入**) 存 earnings.json。**整体取不到就不传 --earnings** — 引擎会自动跳过全部新入场, 出场照常 (防御性默认)。
+2. 财报日: 用 cash_printer 的 `get_earnings_calendar` / `get_earnings_results` 查 universe 内个股, 整理成 `{"SYM": "YYYY-MM-DD"}` (确认近期无财报的记 `null`, 查不到的**不要写入**) 存 earnings.json。**整体取不到就不传 --earnings** — 财报日未知的个股仍可候选 (allow_unknown_earnings=true, 用户指示), 仅失去财报回避保护; 引擎会告警注明。
 3. 净值: `python3 scripts/paper.py equity --ledger state/stock_positions.json --quotes <stock_quotes>` → equity/cash。
 4. 信号: `python3 scripts/signals.py signal --config strategy/stocks.json --state state/stock_positions.json --historicals <stock_hist> --quotes <stock_quotes> --macro <同实盘> --earnings <earnings> --date <今天> --portfolio-value <equity> --buying-power <cash> --out <scratchpad>/stock_orders.json`
 5. 执行与回写 (同第 6 节模式): `paper.py run` → `signals.py apply --state state/stock_positions.json`。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
