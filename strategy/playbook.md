@@ -80,6 +80,10 @@ python3 scripts/signals.py signal \
 3. 持仓符号拉快照 → `overnight.py signal --window open --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --snapshots <snaps> --positions <券商映射> --date <今天> --portfolio-value <pv> --buying-power 0`
 4. 按第 4 节规则执行卖单 → fills 回写 `signals.py apply --state state/overnight_positions.json`。
 5. journal 附记 + push。晨间窗口失败不影响主窗口 (15:30 会 close_backstop_exit 兜底清仓)。
+6. 结算合规 (账户 802095265 为现金账户, T+1 结算, GFV 规则适用):
+   - review 返回 GFV/结算类警告 → 该卖单跳过, 留给 15:30 兜底窗口, 记 journal 并通知用户;
+   - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
+   - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
