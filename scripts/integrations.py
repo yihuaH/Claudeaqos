@@ -104,7 +104,7 @@ def bars(symbols, start, out_path, quiet=False):
     results = [{"symbol": sym,
                 "bars": [{"begins_at": b["t"][:10] + "T00:00:00Z",
                           "close_price": str(b["c"]), "volume": b.get("v"),
-                          "high": b.get("h"), "low": b.get("l"),
+                          "open": b.get("o"), "high": b.get("h"), "low": b.get("l"),
                           "session": "reg"} for b in bs]}
                for sym, bs in acc.items()]
     with open(out_path, "w") as f:

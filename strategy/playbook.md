@@ -80,7 +80,9 @@ python3 scripts/signals.py signal \
 3. 持仓符号拉快照 → `overnight.py signal --window open --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --snapshots <snaps> --positions <券商映射> --date <今天> --portfolio-value <pv> --buying-power 0`
 4. 按第 4 节规则执行卖单 → fills 回写 `signals.py apply --state state/overnight_positions.json`。
 5. journal 附记 + push。晨间窗口失败不影响主窗口 (15:30 会 close_backstop_exit 兜底清仓)。
-6. 结算合规 (账户 802095265 为现金账户, T+1 结算, GFV 规则适用):
+6. 学习账本开盘卖出: 凡学习账本对应配置的 exit.window=next_open (当前: 冠军孪生), 对该账本同样执行
+   `overnight.py signal --window open` → `paper.py run` (Alpaca 纸面) → `signals.py apply` 回写该账本。
+7. 结算合规 (账户 802095265 为现金账户, T+1 结算, GFV 规则适用):
    - review 返回 GFV/结算类警告 → 该卖单跳过, 留给 15:30 兜底窗口, 记 journal 并通知用户;
    - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
    - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
@@ -132,6 +134,22 @@ python3 scripts/signals.py signal \
    - `pass` 且 `auto_promote=true` → `learn.py promote ...`, 在 journal 显著标注**参数晋级**并**通知用户** (新旧参数、验证期表现)。
    - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
+
+## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B)
+
+条件: `strategy/learning_overnight.json` enabled=true 且 `state/learning_overnight.json` 有 validating 挑战者。
+第 6 节完成后执行, 失败只记日志。数据复用第 5B 节的 bars/snapshots/earnings/macro。
+
+1. 配置: `learn_overnight.py challenger-config --config strategy/overnight.json --state-learn state/learning_overnight.json --out <scratchpad>/ch_overnight.json` 和 `learn_overnight.py twin-config --config strategy/overnight.json --out <scratchpad>/twin_overnight.json` (两者均自动禁换仓)。
+2. 对两本账分别执行 (冠军孪生: twin 配置 + `state/paper_overnight_champion.json`; 挑战者: ch 配置 + `state/paper_overnight_positions.json`):
+   a. `paper.py equity --ledger <账本> --quotes <收盘价映射>` → equity/cash
+   b. `overnight.py signal --config <各自配置> --state <各自账本> --main-state state/positions.json --bars <同5B> --snapshots <同5B> --earnings <同> --macro <同> --date <今天> --portfolio-value <equity> --buying-power <cash>` (不传 --positions, 账本即真相)
+   c. `paper.py run` (Alpaca 纸面, 幂等) → `signals.py apply --state <各自账本>`
+3. `learn_overnight.py record --state-learn state/learning_overnight.json --date <今天> --live-equity <冠军孪生 equity> --paper-equity <挑战者 equity>` (live 字段=冠军孪生, 构成干净 A/B)。
+4. `learn_overnight.py evaluate ... --paper-ledger state/paper_overnight_positions.json`:
+   - `pass` 且 auto_promote → `learn_overnight.py promote` (写 strategy/overnight.json, **实盘隔夜参数随之切换**), journal 显著标注并**通知用户**;
+   - `fail` → reject + 通知, 然后重新 search (`integrations.py bars --start 今天-3.5年` + universe);
+   - 其余继续验证。
 
 ## 7. 个股防御实验 (仅 paper, strategy/stocks.json enabled=true 时)
 
