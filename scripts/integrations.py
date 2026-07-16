@@ -104,6 +104,7 @@ def bars(symbols, start, out_path, quiet=False):
     results = [{"symbol": sym,
                 "bars": [{"begins_at": b["t"][:10] + "T00:00:00Z",
                           "close_price": str(b["c"]), "volume": b.get("v"),
+                          "high": b.get("h"), "low": b.get("l"),
                           "session": "reg"} for b in bs]}
                for sym, bs in acc.items()]
     with open(out_path, "w") as f:
@@ -166,6 +167,28 @@ def latest_quotes(symbols, out_path):
     return 0
 
 
+def snapshots(symbols, out_path):
+    """当日实时 OHLC (算 IBS 用) → {"SYM": {open, high, low, close}}"""
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    out = {}
+    for i in range(0, len(symbols), 200):
+        j = _get("https://data.alpaca.markets/v2/stocks/snapshots"
+                 f"?symbols={','.join(symbols[i:i + 200])}&feed=iex", hdrs, timeout=60)
+        for sym, v in j.items():
+            db = v.get("dailyBar") or {}
+            if db:
+                out[sym] = {"open": db["o"], "high": db["h"], "low": db["l"],
+                            "close": db["c"], "date": db["t"][:10]}
+    with open(out_path, "w") as f:
+        json.dump(out, f)
+    print(json.dumps({"requested": len(symbols), "got": len(out)}))
+    return 0
+
+
 def chains(underlyings, date_str, dte_max, out_path):
     from datetime import date as _d, timedelta
     ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
@@ -213,6 +236,12 @@ if __name__ == "__main__":
                       args[args.index("--out") + 1], quiet="--symbols-file" in args))
     if args[:1] == ["assets"] and "--out" in args:
         sys.exit(assets(args[args.index("--out") + 1]))
+    if args[:1] == ["snapshots"] and "--out" in args:
+        if "--symbols-file" in args:
+            ss = json.load(open(args[args.index("--symbols-file") + 1]))["symbols"]
+        else:
+            ss = args[args.index("--symbols") + 1].split(",")
+        sys.exit(snapshots(ss, args[args.index("--out") + 1]))
     if args[:1] == ["quotes"] and "--symbols" in args and "--out" in args:
         sys.exit(latest_quotes(args[args.index("--symbols") + 1].split(","),
                                args[args.index("--out") + 1]))

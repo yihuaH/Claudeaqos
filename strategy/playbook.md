@@ -69,6 +69,21 @@ python3 scripts/signals.py signal \
 2. 写 `journal/<今天>.md`: 状态(completed/halted/closed/error)、组合净值、回撤、信号表、订单与成交、告警/异常。
 3. `git add -A && git commit -m "journal: <今天> trading run" && git push -u origin <当前工作分支>` (用 `git rev-parse --abbrev-ref HEAD` 获取, 不得推到其他分支)。
 
+## 5B. 隔夜轨道 (实盘, ETF + 个股, strategy/overnight.json enabled=true 时)
+
+第 5 节完成后执行 (RSI-2 策略优先用资金)。独立账本 `state/overnight_positions.json`。
+
+1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
+   `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
+2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 个股自动全停, 仅 ETF 可入场。
+3. 重新取 `get_portfolio` 的最新 buying_power (RSI-2 执行后剩余的), 然后:
+   `python3 scripts/overnight.py signal --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --bars <bars> --snapshots <snaps> --earnings <earnings> --macro <macro> --positions <券商持仓映射> --date <今天> --portfolio-value <total_value> --buying-power <剩余bp> --out <scratchpad>/overnight_orders.json`
+4. 执行: 与第 4 节完全相同的规则 (先卖后买、review→place、ref_id 幂等、15:55 截止)。
+5. 回写 (按 bucket 分两次):
+   - strategy 桶成交 → `signals.py apply --state state/overnight_positions.json --fills <strategy fills> --date <今天>`
+   - legacy 桶成交 (换仓卖出) → `signals.py apply --state state/positions.json --fills <legacy fills> --date <今天>`
+6. journal 加"隔夜轨道"小节: 每笔进出、IBS 值、顺延/止损标注。**上线首周 (至 2026-07-23) 每笔交易单独列明盈亏。**
+
 ## 6. 影子验证运行 (Alpaca paper — 挑战者)
 
 条件: `strategy/learning.json` 的 `enabled=true` 且 `state/learning.json` 有 `status=validating` 的挑战者。

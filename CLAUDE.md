@@ -6,7 +6,7 @@
 ## 硬性红线 (任何情况下不得违反)
 
 1. 只允许操作账户 **802095265** (nickname "Agentic", agentic_allowed=true)。绝不触碰其他账户。
-2. 所有买卖必须来自确定性引擎的输出: 实盘与 paper 正股来自 `scripts/signals.py`, paper 期权来自 `scripts/options_overlay.py`。不得基于自己的市场观点新增、放大或修改订单。
+2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 期权来自 `scripts/options_overlay.py`。不得基于自己的市场观点新增、放大或修改订单。
 3. `strategy/config.json` 的风控限制 (仓位上限、单量上限、熔断) 是上限, 不是建议。
 4. `enabled=false` 或 `halted=true` 时只允许读数据和写日志。
 5. API 密钥、secret 一律不得写入本仓库 (用户提供的 Alpaca/FRED 密钥只存在会话环境中)。
@@ -24,6 +24,7 @@
 - `strategy/screen.json` — 个股池周度筛选标准 (用户可改); `strategy/universe.json` — 筛选产出的当前 100 股池 (screen.py 回写)
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
+- `scripts/overnight.py` — 隔夜均值回归引擎 (实盘, ETF+个股, IBS 收盘买/次日收盘卖); `strategy/overnight.json` 参数; `state/overnight_positions.json` 账本
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境)
