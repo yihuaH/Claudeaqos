@@ -38,7 +38,9 @@ def cmd_signal(a):
     cfg = load_json(a.config)
     state = load_json(a.state)
     main_state = load_json(a.main_state)
-    hist = parse_historicals(a.bars if isinstance(a.bars, list) else [a.bars])
+    if a.window == "close" and not a.bars:
+        raise SystemExit("close 窗口需要 --bars")
+    hist = parse_historicals(a.bars if isinstance(a.bars, list) else [a.bars]) if a.bars else {}
     snaps = load_json(a.snapshots)
     earnings = load_json(a.earnings) if a.earnings else None
     macro = load_json(a.macro) if a.macro else None
@@ -87,6 +89,7 @@ def cmd_signal(a):
             return None
 
     # --- 出场 ---
+    exit_window = cfg["exit"].get("window", "next_close")
     pos_book = state.get("strategy_positions", {})
     sold_today = set()
     for sym, pos in sorted(pos_book.items()):
@@ -96,20 +99,25 @@ def cmd_signal(a):
         if px is None:
             warnings.append(f"{sym}: 无今日快照, 持仓顺延一天 (人工留意)")
             continue
-        cur_ibs = ibs_of(snaps[sym])
-        reason = None
-        ed = days_to_earnings(sym)
-        if px <= float(pos["entry_price"]) * (1 - cfg["exit"]["stop_loss_pct"] / 100.0):
-            reason = "stop_loss"
-        elif ed is not None and 0 <= ed <= int(cfg["exit"]["earnings_exit_days"]):
-            reason = "earnings_exit"
-        elif (cur_ibs is not None and cur_ibs < cfg["exit"]["extend_once_if_ibs_below"]
-              and not pos.get("extended")):
-            pos["extended"] = True  # 仅标记在输出里, 由 apply 后手工同步? 不 — 见下
-            out.setdefault("extends", []).append(sym)
-            continue
+        if a.window == "open":
+            # 晨间窗口: 隔夜仓位无条件开盘卖出
+            reason = "open_exit"
         else:
-            reason = "overnight_exit"
+            cur_ibs = ibs_of(snaps[sym])
+            reason = None
+            ed = days_to_earnings(sym)
+            if px <= float(pos["entry_price"]) * (1 - cfg["exit"]["stop_loss_pct"] / 100.0):
+                reason = "stop_loss"
+            elif ed is not None and 0 <= ed <= int(cfg["exit"]["earnings_exit_days"]):
+                reason = "earnings_exit"
+            elif (exit_window == "next_close"
+                  and cur_ibs is not None and cur_ibs < cfg["exit"]["extend_once_if_ibs_below"]
+                  and not pos.get("extended")):
+                # 顺延仅在"次日收盘卖"模式下启用; next_open 模式的收盘窗口只做兜底清仓
+                out.setdefault("extends", []).append(sym)
+                continue
+            else:
+                reason = "overnight_exit" if exit_window == "next_close" else "close_backstop_exit"
         qty = float(pos["qty"])
         if sym in broker:
             qty = min(qty, float(broker[sym].get("available", qty)))
@@ -117,6 +125,11 @@ def cmd_signal(a):
             sold_today.add(sym)
             out["sells"].append({"symbol": sym, "qty": round(qty, 6), "bucket": "strategy",
                                  "reason": reason, "est_price": px})
+
+    if a.window == "open":
+        out["note"] = f"晨间窗口: {len(out['sells'])} 笔开盘卖出, 不开新仓"
+        _emit(out, a.out)
+        return
 
     # 顺延标记持久化 (extends 直接写回 state, 与订单无关且确定性)
     if out.get("extends"):
@@ -261,7 +274,9 @@ def main():
     s.add_argument("--config", required=True, help="strategy/overnight.json")
     s.add_argument("--state", required=True, help="state/overnight_positions.json")
     s.add_argument("--main-state", required=True, help="state/positions.json (读存量/halted)")
-    s.add_argument("--bars", nargs="+", required=True, help="日线历史 (integrations.py bars)")
+    s.add_argument("--bars", nargs="+", help="日线历史 (integrations.py bars); open 窗口可省略")
+    s.add_argument("--window", choices=["open", "close"], default="close",
+                   help="open=晨间窗口(只卖不买), close=主窗口(入场+兜底出场)")
     s.add_argument("--snapshots", required=True, help="当日实时 OHLC (integrations.py snapshots)")
     s.add_argument("--earnings", help="财报日映射; 缺省则个股全部不入场")
     s.add_argument("--macro", help="VIX 宏观文件")

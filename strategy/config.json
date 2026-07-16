@@ -29,7 +29,7 @@
   "legacy": {
     "protective_stop_pct": 7.0,
     "funding_sales_allowed": true,
-    "max_funding_sales_per_day": 2,
+    "max_funding_sales_per_day": 10,
     "avoid_selling_same_day_buys": true
   },
   "macro": {

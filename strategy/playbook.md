@@ -72,6 +72,14 @@ python3 scripts/signals.py signal \
 ## 5B. 隔夜轨道 (实盘, ETF + 个股, strategy/overnight.json enabled=true 时)
 
 第 5 节完成后执行 (RSI-2 策略优先用资金)。独立账本 `state/overnight_positions.json`。
+用户校准 (2026-07-15): 目标 ~10笔/天 (晨间 ~5 卖 + 收盘 ~5 买), 换仓卖出不设 2 只/日限制, 持仓数不设上限。
+
+**晨间窗口 (9:35 ET, 独立 Routine, exit.window=next_open 时)**:
+1. `git pull` → `integrations.py status`: Alpaca 时钟 `is_open` 必须为 true, 否则写日志结束。
+2. `state/overnight_positions.json` 无隔夜持仓 → 直接结束。
+3. 持仓符号拉快照 → `overnight.py signal --window open --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --snapshots <snaps> --positions <券商映射> --date <今天> --portfolio-value <pv> --buying-power 0`
+4. 按第 4 节规则执行卖单 → fills 回写 `signals.py apply --state state/overnight_positions.json`。
+5. journal 附记 + push。晨间窗口失败不影响主窗口 (15:30 会 close_backstop_exit 兜底清仓)。
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。

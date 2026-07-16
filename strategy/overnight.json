@@ -12,17 +12,20 @@
     "trend": "close_above_sma200"
   },
   "exit": {
+    "window": "next_open",
     "hold_days": 1,
     "extend_once_if_ibs_below": 0.2,
     "stop_loss_pct": 4.0,
-    "earnings_exit_days": 1
+    "earnings_exit_days": 1,
+    "note": "window=next_open: 次日 9:35 ET 晨间窗口开盘卖出 (顺延规则停用), 15:30 主窗口兜底卖出漏单; 改回 next_close 则恢复次日收盘卖+顺延"
   },
   "sizing": {
     "position_pct_of_portfolio": 10.0,
     "max_strategy_positions": 100,
-    "max_new_entries_per_day": 3,
+    "max_new_entries_per_day": 5,
     "min_cash_reserve_usd": 5.0,
-    "min_order_usd": 5.0
+    "min_order_usd": 5.0,
+    "note": "用户目标 ~10笔/天: 稳态 = 每日约5出+5进; 持仓数不设上限, 由资金约束"
   },
   "defense": {
     "earnings_blackout_days": 10,
@@ -33,7 +36,8 @@
   },
   "funding": {
     "allowed": true,
-    "max_sales_per_day": 2
+    "max_sales_per_day": 10,
+    "note": "用户 2026-07-15 指示取消每日2只限制; 实际卖出数由当日资金需求决定, 仍遵守 GFV 保护 (当日买入的不卖)"
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,
