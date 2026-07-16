@@ -8,7 +8,18 @@
     "scope": "按 strategy/playbook.md 每日自主执行, 资金池为全部账户(含存量持仓), 受本文件风控限制约束",
     "revoke": "把 enabled 改为 false, 或暂停 Routine, 或直接告诉 agent 停止"
   },
-  "etf_universe": ["SPY", "QQQ", "IWM", "DIA", "XLK", "XLF", "XLE", "SMH", "GLD", "TLT"],
+  "etf_universe": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "XLK",
+    "XLF",
+    "XLE",
+    "SMH",
+    "GLD",
+    "TLT"
+  ],
   "entry": {
     "rsi2_max": 10.0,
     "trend": "close_above_sma200"
@@ -44,5 +55,10 @@
     "alpaca_paper": "active_2026-07-15_reverified_2026-07-16",
     "fred": "active_2026-07-15_reverified_2026-07-16",
     "macro_filter_confirmed_by_user": "2026-07-15"
+  },
+  "execution": {
+    "mode": "confirm",
+    "since": "2026-07-16 (用户指示: 报告先审, 回复确认才下单)",
+    "rule": "实盘新买入与换仓卖单须有当日 state/approval.json (approved=true 且 trade_date=今天, 标的在 buy_candidates 内); 出场/止损卖出与纸面轨道不受限。无确认 → 只出不进, 记 journal。"
   }
 }

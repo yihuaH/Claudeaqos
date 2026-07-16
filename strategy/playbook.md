@@ -52,7 +52,10 @@ python3 scripts/signals.py signal \
 2. 无异常告警 → `place_equity_order(同参数, ref_id=新UUID)`; 出现**预期外**告警(停牌、限制等) → 跳过该单并记入日志的 anomalies。
 3. `get_equity_orders` 确认成交, 记录实际 qty/price。
 
-全部卖单确认后, 对 `buys` 里每一单:
+全部卖单确认后, 检查确认闸门 (`strategy/config.json` execution.mode=confirm 时):
+`state/approval.json` 必须 `approved=true` 且 `trade_date=今天`; 买单标的必须在 `buy_candidates` 内,
+换仓卖单标的必须在 `funding_sell_order` 内。不满足 → 跳过该买单及其换仓卖单, journal 记"未获确认, 只出不进"。
+**出场/止损类卖单永不受此闸门限制** (风险只减不增)。闸门通过后, 对 `buys` 里每一单:
 1. `review_equity_order(..., side=buy, type=market, dollar_amount)`。
 2. 若告警显示购买力不足 → 按告警金额下调 `dollar_amount`(不低于 min_order_usd, 否则跳过)。
 3. `place_equity_order(..., ref_id=新UUID)`, 确认成交。
@@ -177,6 +180,13 @@ python3 scripts/signals.py signal \
 1. 拉长历史 (约 5 年): `python3 scripts/integrations.py bars --symbols <ETF池逗号分隔> --start <今天减5年> --out <scratchpad>/bars_5y.json`
 2. `python3 scripts/learn.py search --config strategy/config.json --learning strategy/learning.json --state-learn state/learning.json --historicals <bars_5y> --date <今天> --start-capital <实盘 total_value> --paper-ledger state/paper_positions.json`
 3. 输出记 journal: `new_challenger` → 新挑战者次日起影子运行; `champion_optimal` → 冠军仍最优, 本轮不设挑战者。
+
+## 8B. 次日预审报告 (execution.mode=confirm 时, 每日收盘后)
+
+1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
+2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
+3. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
+4. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。
 
 ## 9. 异常总原则
 
