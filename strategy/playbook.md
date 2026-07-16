@@ -183,6 +183,9 @@ python3 scripts/signals.py signal \
 
 ## 8B. 次日预审报告 (execution.mode=confirm 时, 每日收盘后)
 
+0. **先查资金**: `get_portfolio(802095265)` 取实时 buying_power 与 cash。报告必须以资金段开头,
+   并按资金分两层出计划: ①立即可执行层 (仅用现有购买力能买什么) ②依赖换仓层 (需卖存量腾资金的部分,
+   注明依赖"当日卖出款即时可用"这一结算假设)。计划总额不得超过 现有BP + 计划换仓卖出估值。
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
 2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
 3. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。

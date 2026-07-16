@@ -63,5 +63,14 @@
       "ibs": 0.1148
     }
   ],
-  "note": "用户回复确认后置 approved=true; 无确认则 2026-07-16 只出不进。ETF 10 只为 RSI-2 与隔夜双策略的常备候选。"
+  "note": "用户回复确认后置 approved=true; 无确认则 2026-07-16 只出不进。ETF 10 只为 RSI-2 与隔夜双策略的常备候选。",
+  "funds": {
+    "checked_at": "2026-07-16T04:20Z",
+    "buying_power": 144.97,
+    "cash": 209.56,
+    "total_value": 1950.39,
+    "plan_total": 974.7,
+    "tier1_immediate": "现有购买力仅够 1 笔缩量买入 (~$140)",
+    "tier2_with_funding": "5 笔全额需换仓卖出 ~6 只存量 (~$846), 依赖当日卖出款即时可用 (T+1 结算假设)"
+  }
 }
