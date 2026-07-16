@@ -8,6 +8,8 @@
   python3 scripts/integrations.py bars --symbols SPY,QQQ --start 2021-01-01 --out FILE
                                                     # 拉取 Alpaca 日线 (split 调整, IEX),
                                                     # 输出与 get_equity_historicals 同构, 供 learn.py 搜索
+  python3 scripts/integrations.py quotes --symbols AAPL,MSFT --out FILE
+                                                    # 最新成交价 (IEX) → {"SYM": price}
   python3 scripts/integrations.py chains --underlyings XLF,XLE --date 2026-07-16 --dte-max 35 --out FILE
                                                     # 拉取 call 期权链快照 (indicative feed),
                                                     # 输出 {underlying: {occ: {bid, ask}}}, 供 options_overlay.py
@@ -110,6 +112,23 @@ def bars(symbols, start, out_path):
     return 0
 
 
+def latest_quotes(symbols, out_path):
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    j = _get("https://data.alpaca.markets/v2/stocks/trades/latest"
+             f"?symbols={','.join(symbols)}&feed=iex", hdrs, timeout=30)
+    out = {sym: t["p"] for sym, t in (j.get("trades") or {}).items()}
+    with open(out_path, "w") as f:
+        json.dump(out, f, indent=2)
+        f.write("\n")
+    missing = [s for s in symbols if s not in out]
+    print(json.dumps({"quotes": len(out), "missing": missing}, ensure_ascii=False))
+    return 0
+
+
 def chains(underlyings, date_str, dte_max, out_path):
     from datetime import date as _d, timedelta
     ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
@@ -152,6 +171,9 @@ if __name__ == "__main__":
         sys.exit(bars(args[args.index("--symbols") + 1].split(","),
                       args[args.index("--start") + 1],
                       args[args.index("--out") + 1]))
+    if args[:1] == ["quotes"] and "--symbols" in args and "--out" in args:
+        sys.exit(latest_quotes(args[args.index("--symbols") + 1].split(","),
+                               args[args.index("--out") + 1]))
     if args[:1] == ["chains"] and all(f in args for f in ("--underlyings", "--date", "--dte-max", "--out")):
         sys.exit(chains(args[args.index("--underlyings") + 1].split(","),
                         args[args.index("--date") + 1],

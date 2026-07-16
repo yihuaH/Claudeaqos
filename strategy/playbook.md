@@ -104,12 +104,23 @@ python3 scripts/signals.py signal \
    - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
 
-## 7. 参数搜索 (无活跃挑战者时执行)
+## 7. 个股防御实验 (仅 paper, strategy/stocks.json enabled=true 时)
+
+第 6 节完成后执行, 独立账本 `state/stock_positions.json`, 任何失败只记日志。
+
+1. 数据 (全部走 Alpaca): `python3 scripts/integrations.py bars --symbols <stocks universe> --start <今天-450天> --out <scratchpad>/stock_hist.json` 和 `integrations.py quotes --symbols <同> --out <scratchpad>/stock_quotes.json`。
+2. 财报日: 用 cash_printer 的 `get_earnings_calendar` / `get_earnings_results` 查 universe 内个股, 整理成 `{"SYM": "YYYY-MM-DD"}` (确认近期无财报的记 `null`, 查不到的**不要写入**) 存 earnings.json。**整体取不到就不传 --earnings** — 引擎会自动跳过全部新入场, 出场照常 (防御性默认)。
+3. 净值: `python3 scripts/paper.py equity --ledger state/stock_positions.json --quotes <stock_quotes>` → equity/cash。
+4. 信号: `python3 scripts/signals.py signal --config strategy/stocks.json --state state/stock_positions.json --historicals <stock_hist> --quotes <stock_quotes> --macro <同实盘> --earnings <earnings> --date <今天> --portfolio-value <equity> --buying-power <cash> --out <scratchpad>/stock_orders.json`
+5. 执行与回写 (同第 6 节模式): `paper.py run` → `signals.py apply --state state/stock_positions.json`。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
+6. journal 记录: 当日净值、持仓、信号、防御过滤触发明细 (warnings)。实验累计 ≥20 交易日后与用户复盘决定去留。
+
+## 8. 参数搜索 (无活跃挑战者时执行)
 
 1. 拉长历史 (约 5 年): `python3 scripts/integrations.py bars --symbols <ETF池逗号分隔> --start <今天减5年> --out <scratchpad>/bars_5y.json`
 2. `python3 scripts/learn.py search --config strategy/config.json --learning strategy/learning.json --state-learn state/learning.json --historicals <bars_5y> --date <今天> --start-capital <实盘 total_value> --paper-ledger state/paper_positions.json`
 3. 输出记 journal: `new_challenger` → 新挑战者次日起影子运行; `champion_optimal` → 冠军仍最优, 本轮不设挑战者。
 
-## 8. 异常总原则
+## 9. 异常总原则
 
 任何预期外情况(API 报错、成交与订单不符、数据缺失过半) → **立即停止交易**, 把已发生的事写进日志, 通知用户。宁可错过一天, 不做没把握的操作。

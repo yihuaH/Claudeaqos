@@ -20,6 +20,7 @@
 - `strategy/playbook.md` — 每日执行步骤
 - `strategy/learning.json` — 自学习策略: 可学参数边界、搜索网格、晋级标准 (用户可改)
 - `strategy/options.json` — 备兑开仓实验参数 (仅 paper, 用户可改)
+- `strategy/stocks.json` — 个股防御实验参数: universe、防御层、更紧的风控 (仅 paper, 用户可改)
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
@@ -28,4 +29,5 @@
 - `state/positions.json` — 实盘持仓与净值状态 (引擎回写)
 - `state/learning.json` — 学习状态 (冠军/挑战者、净值曲线、晋级历史)
 - `state/paper_positions.json` — 挑战者纸面账本 (与实盘 state 同构)
+- `state/stock_positions.json` — 个股防御实验纸面账本 (独立于挑战者)
 - `journal/` — 每日运行日志 (git 记录, 可审计)

@@ -1,0 +1,66 @@
+{
+  "enabled": true,
+  "paper_only": true,
+  "experiment": "stock_defense_v1",
+  "universe": ["AAPL", "MSFT", "NVDA", "AVGO", "ORCL", "CRM", "AMD",
+               "GOOGL", "META", "NFLX", "DIS",
+               "AMZN", "TSLA", "HD", "MCD", "NKE",
+               "JPM", "BAC", "GS", "V", "MA",
+               "UNH", "JNJ", "LLY", "ABBV", "MRK",
+               "PG", "KO", "PEP", "COST", "WMT",
+               "XOM", "CVX",
+               "CAT", "HON", "UNP", "GE"],
+  "entry": {
+    "rsi2_max": 5.0,
+    "trend": "close_above_sma200"
+  },
+  "exit": {
+    "rsi2_min": 70.0,
+    "close_above_sma5": true,
+    "stop_loss_pct": 4.0,
+    "max_holding_days": 7
+  },
+  "sizing": {
+    "position_pct_of_portfolio": 10.0,
+    "max_strategy_positions": 3,
+    "max_new_entries_per_day": 2,
+    "min_cash_reserve_usd": 5.0,
+    "min_order_usd": 5.0
+  },
+  "defense": {
+    "earnings_blackout_days": 10,
+    "earnings_exit_days": 1,
+    "max_daily_move_pct": 8.0,
+    "move_lookback_days": 20,
+    "max_per_sector": 1,
+    "sectors": {
+      "AAPL": "tech", "MSFT": "tech", "NVDA": "tech", "AVGO": "tech",
+      "ORCL": "tech", "CRM": "tech", "AMD": "tech",
+      "GOOGL": "comm", "META": "comm", "NFLX": "comm", "DIS": "comm",
+      "AMZN": "consumer", "TSLA": "consumer", "HD": "consumer",
+      "MCD": "consumer", "NKE": "consumer",
+      "JPM": "financial", "BAC": "financial", "GS": "financial",
+      "V": "financial", "MA": "financial",
+      "UNH": "health", "JNJ": "health", "LLY": "health",
+      "ABBV": "health", "MRK": "health",
+      "PG": "staples", "KO": "staples", "PEP": "staples",
+      "COST": "staples", "WMT": "staples",
+      "XOM": "energy", "CVX": "energy",
+      "CAT": "industrial", "HON": "industrial", "UNP": "industrial", "GE": "industrial"
+    }
+  },
+  "macro": {
+    "vix_no_new_entries_above": 30.0,
+    "vix_max_staleness_days": 5
+  },
+  "legacy": {
+    "protective_stop_pct": 7.0,
+    "funding_sales_allowed": false,
+    "max_funding_sales_per_day": 0,
+    "avoid_selling_same_day_buys": true
+  },
+  "circuit_breaker": {
+    "max_drawdown_pct_from_hwm": 10.0
+  },
+  "note": "个股防御实验 (仅 paper): 与 ETF 策略同引擎, 入场更严 (RSI2<5), 止损更紧 (4%), 持有更短 (7天)。防御层: 财报前10天不入场且财报日未知一律不入场、财报前1天强制出场、近20日有单日 ≥8% 异动不入场、每行业最多1仓。虚拟资金 $25,000, 与挑战者/备兑轨道在同一 paper 账户但独立账本。转正需 ≥20 交易日实验数据 + 用户决定。"
+}

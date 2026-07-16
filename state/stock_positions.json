@@ -1,0 +1,10 @@
+{
+  "experiment": "stock_defense_v1",
+  "start_capital": 25000.0,
+  "started": "2026-07-16",
+  "high_water_mark": 25000.0,
+  "halted": false,
+  "strategy_positions": {},
+  "legacy_positions": {},
+  "trades": []
+}
