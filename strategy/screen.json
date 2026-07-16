@@ -1,0 +1,19 @@
+{
+  "pool_size": 1000,
+  "final_size": 100,
+  "candidates_for_sectors": 150,
+  "min_price": 5.0,
+  "min_median_dollar_volume_usd": 20000000,
+  "min_history_days": 250,
+  "max_abs_daily_move_pct_60d": 15.0,
+  "max_annualized_vol20_pct": 80.0,
+  "score_weights": {
+    "dollar_volume": 0.4,
+    "trend": 0.4,
+    "low_vol": 0.2
+  },
+  "popular_bonus": 0.05,
+  "max_per_sector_in_universe": 20,
+  "refresh_days": 7,
+  "note": "个股池周度筛选标准 (用户可改)。管线: Alpaca 全市场 → 流动性前 pool_size 只 → 硬过滤(价格/异动/波动/历史) → 打分(流动性+趋势+低波动, Robinhood 热门榜加分) → 取前 candidates_for_sectors 查行业 → 行业上限内取前 final_size 只写入 stocks.json universe。筛选只决定'能买什么', 何时买/买多少仍由 signals.py 引擎决定。"
+}

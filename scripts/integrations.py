@@ -81,34 +81,71 @@ def macro(out_path):
     return 0
 
 
-def bars(symbols, start, out_path):
+def bars(symbols, start, out_path, quiet=False):
     ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
     if not (ak and asec):
         print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
         return 1
     hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
-    base = ("https://data.alpaca.markets/v2/stocks/bars"
-            f"?symbols={','.join(symbols)}&timeframe=1Day&adjustment=split&feed=iex"
-            f"&limit=10000&start={start}T00:00:00Z")
     acc = {}
-    token = None
-    while True:
-        j = _get(base + (f"&page_token={token}" if token else ""), hdrs, timeout=60)
-        for sym, bs in (j.get("bars") or {}).items():
-            acc.setdefault(sym, []).extend(bs)
-        token = j.get("next_page_token")
-        if not token:
-            break
+    for i in range(0, len(symbols), 200):  # 分批, 避免 URL 超长
+        chunk = symbols[i:i + 200]
+        base = ("https://data.alpaca.markets/v2/stocks/bars"
+                f"?symbols={','.join(chunk)}&timeframe=1Day&adjustment=split&feed=iex"
+                f"&limit=10000&start={start}T00:00:00Z")
+        token = None
+        while True:
+            j = _get(base + (f"&page_token={token}" if token else ""), hdrs, timeout=90)
+            for sym, bs in (j.get("bars") or {}).items():
+                acc.setdefault(sym, []).extend(bs)
+            token = j.get("next_page_token")
+            if not token:
+                break
     results = [{"symbol": sym,
                 "bars": [{"begins_at": b["t"][:10] + "T00:00:00Z",
-                          "close_price": str(b["c"]), "session": "reg"} for b in bs]}
+                          "close_price": str(b["c"]), "volume": b.get("v"),
+                          "session": "reg"} for b in bs]}
                for sym, bs in acc.items()]
     with open(out_path, "w") as f:
         json.dump({"data": {"results": results}}, f)
-    print(json.dumps({s: len(b["bars"]) for s, b in zip(acc, results)}, ensure_ascii=False))
-    missing = [s for s in symbols if s not in acc]
-    if missing:
-        print(f"警告: 无数据符号 {missing}", file=sys.stderr)
+    if quiet:
+        print(json.dumps({"symbols_requested": len(symbols), "symbols_with_data": len(acc)}))
+    else:
+        print(json.dumps({s: len(b["bars"]) for s, b in zip(acc, results)}, ensure_ascii=False))
+        missing = [s for s in symbols if s not in acc]
+        if missing:
+            print(f"警告: 无数据符号 {missing}", file=sys.stderr)
+    return 0
+
+
+FUND_WORDS = ("ETF", "FUND", "TRUST", "SHARES", "ETN", "INDEX", "BOND",
+              "TREASURY", "PORTFOLIO", "PROSHARES", "ISHARES", "VANGUARD",
+              "SPDR", "DIREXION", "WISDOMTREE", "INVESCO")
+
+
+def assets(out_path):
+    """Alpaca 全市场可交易正股清单 (按名称启发式剔除基金/ETF/ETN)。"""
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    j = _get("https://paper-api.alpaca.markets/v2/assets?status=active&asset_class=us_equity",
+             hdrs, timeout=120)
+    keep = []
+    for a in j:
+        sym, name = a.get("symbol", ""), (a.get("name") or "").upper()
+        if not a.get("tradable") or a.get("exchange") not in ("NYSE", "NASDAQ", "AMEX", "ARCA", "BATS"):
+            continue
+        if not sym.isalpha() or len(sym) > 5:   # 剔除优先股/权证等带点斜杠的符号
+            continue
+        if any(w in name for w in FUND_WORDS):  # 名称启发式剔除基金类
+            continue
+        keep.append(sym)
+    keep = sorted(set(keep))
+    with open(out_path, "w") as f:
+        json.dump({"symbols": keep, "count": len(keep)}, f)
+    print(json.dumps({"total_active": len(j), "kept_stocks": len(keep)}))
     return 0
 
 
@@ -167,10 +204,15 @@ if __name__ == "__main__":
         sys.exit(status())
     if args[:1] == ["macro"] and "--out" in args:
         sys.exit(macro(args[args.index("--out") + 1]))
-    if args[:1] == ["bars"] and "--symbols" in args and "--start" in args and "--out" in args:
-        sys.exit(bars(args[args.index("--symbols") + 1].split(","),
-                      args[args.index("--start") + 1],
-                      args[args.index("--out") + 1]))
+    if args[:1] == ["bars"] and "--start" in args and "--out" in args:
+        if "--symbols-file" in args:
+            syms = json.load(open(args[args.index("--symbols-file") + 1]))["symbols"]
+        else:
+            syms = args[args.index("--symbols") + 1].split(",")
+        sys.exit(bars(syms, args[args.index("--start") + 1],
+                      args[args.index("--out") + 1], quiet="--symbols-file" in args))
+    if args[:1] == ["assets"] and "--out" in args:
+        sys.exit(assets(args[args.index("--out") + 1]))
     if args[:1] == ["quotes"] and "--symbols" in args and "--out" in args:
         sys.exit(latest_quotes(args[args.index("--symbols") + 1].split(","),
                                args[args.index("--out") + 1]))

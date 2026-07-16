@@ -108,6 +108,16 @@ python3 scripts/signals.py signal \
 
 第 6 节完成后执行, 独立账本 `state/stock_positions.json`, 任何失败只记日志。
 
+0. universe 周度刷新 (每周一, 或 `strategy/stocks.json` 的 `universe_generated` 距今超过 `screen.json` 的 `refresh_days`):
+   a. `python3 scripts/integrations.py assets --out <scratchpad>/assets.json` (全市场正股, 名称启发式剔除基金)
+   b. `integrations.py bars --symbols-file <assets> --start <今天-40天> --out <scratchpad>/p1.json` → `python3 scripts/screen.py pool --config strategy/screen.json --bars <p1> --out <scratchpad>/pool.json` (流动性前1000)
+   c. `python3 -c` 把 pool 转成 {"symbols": [...]} → `integrations.py bars --symbols-file <pool_syms> --start <今天-470天> --out <scratchpad>/p2.json`
+   d. Robinhood 热门榜: `get_popular_watchlists` 找 "100 most popular" → `get_watchlist_items` → 存 `{"symbols": [...]}` 到 popular.json
+   e. `screen.py rank --config strategy/screen.json --pool <pool> --bars <p2> --popular <popular> --date <今天> --out <scratchpad>/ranked.json`
+   f. 行业: 对 ranked 候选按每批 10 只调 `get_equity_fundamentals`, 整理 `{"SYM": {"sector":..., "name":...}|null}` 存 sectors.json
+   g. `screen.py finalize --config strategy/screen.json --ranked <ranked> --sectors <sectors> --date <今天> --out strategy/universe.json --apply-stocks strategy/stocks.json`
+   h. universe 变动 (新增/剔除的符号) 记入 journal。**已持仓但被剔除出 universe 的股票不强制卖出, 按正常出场规则走完。**
+
 1. 数据 (全部走 Alpaca): `python3 scripts/integrations.py bars --symbols <stocks universe> --start <今天-450天> --out <scratchpad>/stock_hist.json` 和 `integrations.py quotes --symbols <同> --out <scratchpad>/stock_quotes.json`。
 2. 财报日: 用 cash_printer 的 `get_earnings_calendar` / `get_earnings_results` 查 universe 内个股, 整理成 `{"SYM": "YYYY-MM-DD"}` (确认近期无财报的记 `null`, 查不到的**不要写入**) 存 earnings.json。**整体取不到就不传 --earnings** — 引擎会自动跳过全部新入场, 出场照常 (防御性默认)。
 3. 净值: `python3 scripts/paper.py equity --ledger state/stock_positions.json --quotes <stock_quotes>` → equity/cash。

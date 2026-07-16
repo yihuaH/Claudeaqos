@@ -21,6 +21,8 @@
 - `strategy/learning.json` — 自学习策略: 可学参数边界、搜索网格、晋级标准 (用户可改)
 - `strategy/options.json` — 备兑开仓实验参数 (仅 paper, 用户可改)
 - `strategy/stocks.json` — 个股防御实验参数: universe、防御层、更紧的风控 (仅 paper, 用户可改)
+- `strategy/screen.json` — 个股池周度筛选标准 (用户可改); `strategy/universe.json` — 筛选产出的当前 100 股池 (screen.py 回写)
+- `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
