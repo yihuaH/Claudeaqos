@@ -1,8 +1,8 @@
 {
   "trade_date": "2026-07-16",
   "generated": "2026-07-16T04:08Z",
-  "approved": false,
-  "approved_at": null,
+  "approved": true,
+  "approved_at": "2026-07-16T04:26:44Z",
   "scope": "实盘全部新买入 + 为其服务的换仓卖单; 出场/止损卖出与纸面轨道不受限",
   "buy_candidates": [
     "SPY",
@@ -72,5 +72,6 @@
     "plan_total": 974.7,
     "tier1_immediate": "现有购买力仅够 1 笔缩量买入 (~$140)",
     "tier2_with_funding": "5 笔全额需换仓卖出 ~6 只存量 (~$846), 依赖当日卖出款即时可用 (T+1 结算假设)"
-  }
+  },
+  "approved_via": "用户对话回复「确认」(两层计划均获批)"
 }
