@@ -85,6 +85,8 @@ python3 scripts/signals.py signal \
    - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
    - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
 
+**主窗口 (15:30 ET, 第 5 节完成后执行)**:
+
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
 2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 个股自动全停, 仅 ETF 可入场。
