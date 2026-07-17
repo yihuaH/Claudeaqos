@@ -193,8 +193,9 @@ python3 scripts/signals.py signal \
    注明依赖"当日卖出款即时可用"这一结算假设)。计划总额不得超过 现有BP + 计划换仓卖出估值。
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
 2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
-3. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
-4. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。
+3. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预审), 用 SendUserFile 发送给用户。
+4. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
+5. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。
 
 ## 9. 异常总原则
 
