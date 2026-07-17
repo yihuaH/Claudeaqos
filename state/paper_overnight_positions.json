@@ -4,35 +4,35 @@
   "high_water_mark": 1949.4,
   "halted": false,
   "strategy_positions": {
-    "TGT": {
-      "qty": 1.394468766,
-      "entry_price": 139.788,
-      "entry_date": "2026-07-16",
-      "cost": 194.93
+    "D": {
+      "qty": 2.738242748,
+      "entry_price": 71.02,
+      "entry_date": "2026-07-17",
+      "cost": 194.47
     },
-    "DIA": {
-      "qty": 0.37176685,
-      "entry_price": 524.334,
-      "entry_date": "2026-07-16",
-      "cost": 194.93
+    "MRK": {
+      "qty": 1.528491707,
+      "entry_price": 127.23,
+      "entry_date": "2026-07-17",
+      "cost": 194.47
     },
-    "NVDA": {
-      "qty": 0.942519509,
-      "entry_price": 206.818,
-      "entry_date": "2026-07-16",
-      "cost": 194.93
+    "SBUX": {
+      "qty": 1.842758594,
+      "entry_price": 105.532,
+      "entry_date": "2026-07-17",
+      "cost": 194.47
     },
-    "QQQ": {
-      "qty": 0.276353769,
-      "entry_price": 705.364,
-      "entry_date": "2026-07-16",
-      "cost": 194.93
+    "USB": {
+      "qty": 3.072681308,
+      "entry_price": 63.29,
+      "entry_date": "2026-07-17",
+      "cost": 194.47
     },
-    "HUM": {
-      "qty": 0.503669061,
-      "entry_price": 387.02,
-      "entry_date": "2026-07-16",
-      "cost": 194.93
+    "ABBV": {
+      "qty": 0.760801527,
+      "entry_price": 255.612,
+      "entry_date": "2026-07-17",
+      "cost": 194.47
     }
   },
   "legacy_positions": {},
@@ -79,6 +79,96 @@
       "side": "buy",
       "qty": 0.503669061,
       "price": 387.02,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "DIA",
+      "side": "sell",
+      "qty": 0.37176685,
+      "price": 521.538,
+      "bucket": "strategy",
+      "reason": "overnight_exit"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "HUM",
+      "side": "sell",
+      "qty": 0.503669,
+      "price": 393.106,
+      "bucket": "strategy",
+      "reason": "overnight_exit"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "NVDA",
+      "side": "sell",
+      "qty": 0.942519509,
+      "price": 199.586,
+      "bucket": "strategy",
+      "reason": "overnight_exit"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "QQQ",
+      "side": "sell",
+      "qty": 0.276353769,
+      "price": 688.176,
+      "bucket": "strategy",
+      "reason": "overnight_exit"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "TGT",
+      "side": "sell",
+      "qty": 1.394468766,
+      "price": 143.33,
+      "bucket": "strategy",
+      "reason": "overnight_exit"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "D",
+      "side": "buy",
+      "qty": 2.738242748,
+      "price": 71.02,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "MRK",
+      "side": "buy",
+      "qty": 1.528491707,
+      "price": 127.23,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "SBUX",
+      "side": "buy",
+      "qty": 1.842758594,
+      "price": 105.532,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "USB",
+      "side": "buy",
+      "qty": 3.072681308,
+      "price": 63.29,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "ABBV",
+      "side": "buy",
+      "qty": 0.760801527,
+      "price": 255.612,
       "bucket": "strategy",
       "reason": "ibs_entry"
     }

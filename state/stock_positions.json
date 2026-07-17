@@ -11,17 +11,17 @@
       "entry_date": "2026-07-16",
       "cost": 2499.99
     },
-    "CDNS": {
-      "qty": 6.860565312,
-      "entry_price": 364.4,
-      "entry_date": "2026-07-16",
-      "cost": 2499.99
+    "TSM": {
+      "qty": 6.248994974,
+      "entry_price": 397.9968,
+      "entry_date": "2026-07-17",
+      "cost": 2487.08
     },
-    "RVMD": {
-      "qty": 13.960185392,
-      "entry_price": 179.08,
-      "entry_date": "2026-07-16",
-      "cost": 2499.99
+    "UAL": {
+      "qty": 21.512671914,
+      "entry_price": 115.61,
+      "entry_date": "2026-07-17",
+      "cost": 2487.08
     }
   },
   "legacy_positions": {},
@@ -50,6 +50,42 @@
       "side": "buy",
       "qty": 13.960185392,
       "price": 179.08,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "CDNS",
+      "side": "sell",
+      "qty": 6.860565,
+      "price": 331.78,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "RVMD",
+      "side": "sell",
+      "qty": 13.960185,
+      "price": 185.48,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "TSM",
+      "side": "buy",
+      "qty": 6.248994974,
+      "price": 397.9968,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "UAL",
+      "side": "buy",
+      "qty": 21.512671914,
+      "price": 115.61,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
