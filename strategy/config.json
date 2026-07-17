@@ -8,7 +8,18 @@
     "scope": "按 strategy/playbook.md 每日自主执行, 资金池为全部账户(含存量持仓), 受本文件风控限制约束",
     "revoke": "把 enabled 改为 false, 或暂停 Routine, 或直接告诉 agent 停止"
   },
-  "etf_universe": ["SPY", "QQQ", "IWM", "DIA", "XLK", "XLF", "XLE", "SMH", "GLD", "TLT"],
+  "etf_universe": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "XLK",
+    "XLF",
+    "XLE",
+    "SMH",
+    "GLD",
+    "TLT"
+  ],
   "entry": {
     "rsi2_max": 10.0,
     "trend": "close_above_sma200"
@@ -29,18 +40,25 @@
   "legacy": {
     "protective_stop_pct": 7.0,
     "funding_sales_allowed": true,
-    "max_funding_sales_per_day": 2,
+    "max_funding_sales_per_day": 10,
     "avoid_selling_same_day_buys": true
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,
-    "note": "VIX 高位只影响新开仓; 止损/出场任何时候照常执行。宏观数据不可用时跳过过滤。"
+    "vix_max_staleness_days": 5,
+    "note": "VIX 高位只影响新开仓; 止损/出场任何时候照常执行。宏观数据不可用或过旧时跳过过滤, 交易照常。"
   },
   "circuit_breaker": {
     "max_drawdown_pct_from_hwm": 10.0
   },
   "integrations": {
-    "alpaca_paper": "blocked_by_network_policy_2026-07-15",
-    "fred": "blocked_by_network_policy_2026-07-15"
+    "alpaca_paper": "active_2026-07-15_reverified_2026-07-16",
+    "fred": "active_2026-07-15_reverified_2026-07-16",
+    "macro_filter_confirmed_by_user": "2026-07-15"
+  },
+  "execution": {
+    "mode": "confirm",
+    "since": "2026-07-16 (用户指示: 报告先审, 回复确认才下单)",
+    "rule": "实盘新买入与换仓卖单须有当日 state/approval.json (approved=true 且 trade_date=今天, 标的在 buy_candidates 内); 出场/止损卖出与纸面轨道不受限。无确认 → 只出不进, 记 journal。"
   }
 }

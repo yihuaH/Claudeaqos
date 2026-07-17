@@ -1,0 +1,49 @@
+{
+  "enabled": true,
+  "mode": "live",
+  "authorization": {
+    "granted_by": "用户 (对话确认 2026-07-15: 实盘指数+个股、隔日频率、不设持仓数上限、立即应用)",
+    "note": "零纸面验证直接上实盘系用户明确指示; 首周每笔交易在 journal 单独标注"
+  },
+  "universe_etfs": ["SPY", "QQQ", "IWM", "DIA", "XLK", "XLF", "XLE", "SMH", "GLD", "TLT"],
+  "stocks_from": "strategy/universe.json",
+  "entry": {
+    "ibs_max": 0.2,
+    "trend": "close_above_sma200"
+  },
+  "exit": {
+    "window": "next_open",
+    "hold_days": 1,
+    "extend_once_if_ibs_below": 0.2,
+    "stop_loss_pct": 4.0,
+    "earnings_exit_days": 1,
+    "note": "window=next_open: 次日 9:35 ET 晨间窗口开盘卖出 (顺延规则停用), 15:30 主窗口兜底卖出漏单; 改回 next_close 则恢复次日收盘卖+顺延"
+  },
+  "sizing": {
+    "position_pct_of_portfolio": 10.0,
+    "max_strategy_positions": 100,
+    "max_new_entries_per_day": 5,
+    "min_cash_reserve_usd": 5.0,
+    "min_order_usd": 5.0,
+    "note": "用户目标 ~10笔/天: 稳态 = 每日约5出+5进; 持仓数不设上限, 由资金约束"
+  },
+  "defense": {
+    "earnings_blackout_days": 10,
+    "allow_unknown_earnings": true,
+    "max_daily_move_pct": 8.0,
+    "move_lookback_days": 20,
+    "max_per_sector": 3,
+    "etfs_exempt": true,
+    "note": "allow_unknown_earnings=true (用户 2026-07-16 指示): 财报日查不到的个股仍可候选; 查得到且在 blackout 内的照旧拦截"
+  },
+  "funding": {
+    "allowed": true,
+    "max_sales_per_day": 10,
+    "note": "用户 2026-07-15 指示取消每日2只限制; 实际卖出数由当日资金需求决定, 仍遵守 GFV 保护 (当日买入的不卖)"
+  },
+  "macro": {
+    "vix_no_new_entries_above": 30.0,
+    "vix_max_staleness_days": 5
+  },
+  "rules_note": "隔夜均值回归 (实盘): 收盘前买入 200日线上方且 IBS<0.2 的标的 (IBS=(收-低)/(高-低), 收在当日区间底部), 次日收盘前无条件卖出; 唯一例外: 次日仍 IBS<0.2 可顺延一天 (每仓限一次)。个股享受与 paper 个股轨道相同的防御层 (财报回避/异动过滤/行业上限), ETF 豁免防御但同受趋势过滤。当天买的绝不当天卖 (规避日内交易认定); 当天卖过的不当天回买。资金不足时可卖存量股 (每天≤2只, 最弱优先)。"
+}

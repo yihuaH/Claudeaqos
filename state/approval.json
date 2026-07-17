@@ -1,0 +1,68 @@
+{
+  "trade_date": "2026-07-17",
+  "generated": "2026-07-16T19:58Z",
+  "approved": true,
+  "scope": "实盘全部新买入 + 为其服务的换仓卖单; 出场/止损卖出与纸面轨道不受限",
+  "buy_candidates": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "XLK",
+    "XLF",
+    "XLE",
+    "SMH",
+    "GLD",
+    "TLT",
+    "TGT",
+    "NVDA",
+    "HUM",
+    "CRS"
+  ],
+  "funding_sell_order": [
+    "DASH",
+    "IKT",
+    "ABNB",
+    "ALLT",
+    "ABBV",
+    "FTNT",
+    "DT",
+    "BAC",
+    "SE",
+    "NVO"
+  ],
+  "preview_top5": [
+    {
+      "symbol": "TGT",
+      "ibs": 0.0326
+    },
+    {
+      "symbol": "NVDA",
+      "ibs": 0.0483
+    },
+    {
+      "symbol": "QQQ",
+      "ibs": 0.0541
+    },
+    {
+      "symbol": "HUM",
+      "ibs": 0.0598
+    },
+    {
+      "symbol": "SMH",
+      "ibs": 0.0712
+    }
+  ],
+  "note": "用户回复确认后置 approved=true; 无确认则 2026-07-17 只出不进。ETF 10 只为 RSI-2 与隔夜双策略的常备候选; 隔夜候选取 max_new_entries=10 扩展视图。",
+  "funds": {
+    "checked_at": "2026-07-16T19:58Z",
+    "buying_power": 15.76,
+    "cash": 299.37,
+    "total_value": 1939.85,
+    "plan_total": 1133.49,
+    "tier1_immediate": "现有购买力仅 $15.76, 几乎不足以覆盖任何一笔隔夜候选的完整仓位(约$194/笔), 仅够极小额分数股试探",
+    "tier2_with_funding": "扩展候选共6笔 ($1133.49), 依赖现金 $299.37 + 换仓卖出约10只存量 (弱势优先) 的当日成交款, 假设T+1结算款当日可用"
+  },
+  "approved_at": "2026-07-17T02:25:34Z",
+  "approved_via": "用户对话回复「确认」"
+}

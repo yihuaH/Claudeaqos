@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "paper_only": true,
+  "covered_call": {
+    "otm_pct": 3.0,
+    "min_dte": 7,
+    "max_dte": 21,
+    "min_premium_bid": 0.05,
+    "close_when_dte_lte": 1
+  },
+  "note": "备兑开仓实验 (仅 paper 账户): 挑战者持仓满 100 股整手时, 卖出虚值 3% 以上、7-21 天到期的备兑 call (每 100 股 1 张)。正股触发出场当日先买回 call 再卖正股; 到期剩 ≤1 天强制买回, 避免行权/指派。期权盈亏单独记账 (bucket=options), 不计入挑战者参数验证用的 equity_ex_options。实盘接入需用户另行决定, 且实盘账户须能持有 100 股整手。"
+}

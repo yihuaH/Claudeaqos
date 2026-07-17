@@ -1,0 +1,57 @@
+{
+  "experiment": "stock_defense_v1",
+  "start_capital": 25000.0,
+  "started": "2026-07-16",
+  "high_water_mark": 25000.0,
+  "halted": false,
+  "strategy_positions": {
+    "CAT": {
+      "qty": 2.849348636,
+      "entry_price": 877.39,
+      "entry_date": "2026-07-16",
+      "cost": 2499.99
+    },
+    "CDNS": {
+      "qty": 6.860565312,
+      "entry_price": 364.4,
+      "entry_date": "2026-07-16",
+      "cost": 2499.99
+    },
+    "RVMD": {
+      "qty": 13.960185392,
+      "entry_price": 179.08,
+      "entry_date": "2026-07-16",
+      "cost": 2499.99
+    }
+  },
+  "legacy_positions": {},
+  "trades": [
+    {
+      "date": "2026-07-16",
+      "symbol": "CAT",
+      "side": "buy",
+      "qty": 2.849348636,
+      "price": 877.39,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-16",
+      "symbol": "CDNS",
+      "side": "buy",
+      "qty": 6.860565312,
+      "price": 364.4,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-16",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 13.960185392,
+      "price": 179.08,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
+}

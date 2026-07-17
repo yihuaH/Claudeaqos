@@ -12,6 +12,7 @@ Claudeaqos 每日自动交易 — 确定性信号引擎 (RSI-2 均值回归 + �
 import argparse
 import json
 import sys
+from datetime import date as _date
 
 
 # ---------- IO helpers ----------
@@ -113,6 +114,27 @@ def cmd_signal(a):
     today = a.date
     warnings = []
 
+    universe = cfg.get("universe", cfg.get("etf_universe", []))
+    # 防御层 (个股轨道): 财报回避 / 异动过滤 / 行业上限。cfg 无 defense 时行为与原引擎完全一致。
+    defense = cfg.get("defense")
+    allow_unknown_earnings = bool((defense or {}).get("allow_unknown_earnings"))
+    earnings = load_json(a.earnings) if a.earnings else None
+    no_earnings_data = defense is not None and earnings is None
+    if no_earnings_data:
+        if allow_unknown_earnings:
+            warnings.append("防御: 无财报日数据, 按配置个股仍可入场 (仅失去财报回避保护)")
+        else:
+            warnings.append("防御: 无财报日数据, 今日跳过全部新入场 (出场照常)")
+
+    def days_to_earnings(sym):
+        """返回距下次财报的天数; None = 数据缺失或无近期财报 (值为 null)。"""
+        if not earnings or earnings.get(sym) is None:
+            return None
+        try:
+            return (_date.fromisoformat(earnings[sym]) - _date.fromisoformat(today)).days
+        except ValueError:
+            return None
+
     # 用实时报价补上今天的临时收盘价
     series = {}
     for sym, bars in hist.items():
@@ -186,7 +208,11 @@ def cmd_signal(a):
             continue
         px, entry = i["close"], float(pos["entry_price"])
         reason = None
-        if px <= entry * (1 - cfg["exit"]["stop_loss_pct"] / 100.0):
+        if defense is not None:
+            ed = days_to_earnings(sym)
+            if ed is not None and 0 <= ed <= int(defense.get("earnings_exit_days", 1)):
+                reason = "earnings_exit"
+        if reason is None and px <= entry * (1 - cfg["exit"]["stop_loss_pct"] / 100.0):
             reason = "stop_loss"
         elif (i["sma5"] is not None and px > i["sma5"]) or i["rsi2"] >= cfg["exit"]["rsi2_min"]:
             reason = "exit_strength"
@@ -217,11 +243,23 @@ def cmd_signal(a):
                                      "reason": "legacy_protective_stop", "est_price": i["close"]})
 
     # --- 宏观风控: VIX 高位时暂停新开仓 (卖出/止损不受影响) ---
+    # FRED 数据有发布延迟; 超过 vix_max_staleness_days 的旧数据不用于风控, 只告警。
     risk_off = False
     if macro and "vix" in macro:
         out["macro"] = macro
-        vix_cap = cfg.get("macro", {}).get("vix_no_new_entries_above")
-        if vix_cap is not None and macro["vix"] >= vix_cap:
+        mc = cfg.get("macro", {})
+        vix_cap = mc.get("vix_no_new_entries_above")
+        max_stale = int(mc.get("vix_max_staleness_days", 5))
+        stale = False
+        if macro.get("vix_date"):
+            try:
+                age = (_date.fromisoformat(today) - _date.fromisoformat(macro["vix_date"])).days
+            except ValueError:
+                age = None
+            if age is None or age < 0 or age > max_stale:
+                stale = True
+                warnings.append(f"宏观: VIX 数据过旧或日期异常 (vix_date={macro['vix_date']}), 本日跳过宏观过滤")
+        if not stale and vix_cap is not None and float(macro["vix"]) >= vix_cap:
             risk_off = True
             out["note"] = f"宏观风控: VIX {macro['vix']} ≥ {vix_cap}, 今日暂停新开仓"
 
@@ -231,16 +269,53 @@ def cmd_signal(a):
         _emit(out, a.out)
         return
     cands = []
-    for sym in cfg["etf_universe"]:
+    for sym in universe:
         i = ind.get(sym)
         if not i or sym in held or i["sma200"] is None or i["rsi2"] is None:
             continue
-        if i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]:
-            cands.append((i["rsi2"], sym))
+        if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
+            continue
+        if defense is not None:
+            if no_earnings_data and not allow_unknown_earnings:
+                continue
+            if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
+                warnings.append(f"{sym}: 财报日未知, 防御性跳过入场")
+                continue
+            ed = days_to_earnings(sym)
+            if ed is not None and 0 <= ed <= int(defense.get("earnings_blackout_days", 10)):
+                continue
+            look = int(defense.get("move_lookback_days", 20))
+            thr = float(defense.get("max_daily_move_pct", 8.0))
+            w = series[sym][1][-(look + 1):]
+            if any(w[j - 1] and abs(w[j] / w[j - 1] - 1) * 100.0 >= thr
+                   for j in range(1, len(w))):
+                warnings.append(f"{sym}: 近{look}日有单日异动 ≥{thr}%, 防御性跳过入场")
+                continue
+        cands.append((i["rsi2"], sym))
     cands.sort()
 
     slots = max(0, min(cfg["sizing"]["max_strategy_positions"] - len(held),
                        cfg["sizing"]["max_new_entries_per_day"]))
+
+    # 行业上限: 已持仓 + 今日已选 计数
+    sec_map = (defense or {}).get("sectors", {})
+    sec_cap = (defense or {}).get("max_per_sector")
+    sec_count = {}
+    for s in held:
+        sc = sec_map.get(s)
+        if sc:
+            sec_count[sc] = sec_count.get(sc, 0) + 1
+    picked = []
+    for _, sym in cands:
+        if len(picked) >= slots:
+            break
+        sc = sec_map.get(sym)
+        if sec_cap and sc and sec_count.get(sc, 0) >= sec_cap:
+            warnings.append(f"{sym}: 行业 {sc} 已达持仓上限 {sec_cap}, 跳过")
+            continue
+        picked.append(sym)
+        if sc:
+            sec_count[sc] = sec_count.get(sc, 0) + 1
     pos_usd = round(pv * cfg["sizing"]["position_pct_of_portfolio"] / 100.0, 2)
     cash = bp - cfg["sizing"]["min_cash_reserve_usd"]
     cash += sum(s["qty"] * s["est_price"] for s in out["sells"])
@@ -259,7 +334,7 @@ def cmd_signal(a):
          and ind.get(s) and not (cfg["legacy"]["avoid_selling_same_day_buys"] and bought_today(s))],
         key=weakness)
 
-    for _, sym in cands[:slots]:
+    for sym in picked:
         need = pos_usd
         while (cash < need and cfg["legacy"]["funding_sales_allowed"]
                and funding_sales < cfg["legacy"]["max_funding_sales_per_day"] and fundable):
@@ -342,6 +417,8 @@ def main():
                    help='实时报价: {"SYM": price} 或 get_equity_quotes 原始输出')
     s.add_argument("--positions", help="券商持仓文件(简单映射或原始输出), 用于校准可卖数量/当日买入")
     s.add_argument("--macro", help='宏观数据文件 {"vix": 16.5, ...} (integrations.py macro 产出); 缺省则不做宏观过滤')
+    s.add_argument("--earnings", help='财报日映射 {"SYM": "YYYY-MM-DD" 或 null=近期无财报}; '
+                                      'config 含 defense 而未提供此文件时, 防御性跳过全部新入场')
     s.add_argument("--date", required=True, help="今天日期 YYYY-MM-DD")
     s.add_argument("--portfolio-value", required=True)
     s.add_argument("--buying-power", required=True)

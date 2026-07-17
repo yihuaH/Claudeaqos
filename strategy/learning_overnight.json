@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "auto_promote": true,
+  "learnable": {
+    "entry.ibs_max": {"bounds": [0.05, 0.35], "grid": [0.1, 0.15, 0.2, 0.25, 0.3]},
+    "exit.stop_loss_pct": {"bounds": [2.0, 8.0], "grid": [3.0, 4.0, 6.0]},
+    "exit.window": {"choices": ["next_open", "next_close"], "grid": ["next_open", "next_close"]}
+  },
+  "walk_forward": {
+    "folds": 3,
+    "test_days": 120,
+    "min_trades_per_candidate": 30
+  },
+  "validation": {
+    "min_paper_days": 10,
+    "max_paper_days": 30,
+    "min_paper_trades": 15,
+    "min_edge_vs_champion_pct": 0.0,
+    "max_paper_drawdown_pct": 8.0
+  },
+  "note": "隔夜策略参数学习 (用户 2026-07-16 指示提前接入)。A/B 设计: 挑战者与冠军孪生各持独立纸面账本, 同日同数据在 Alpaca paper 影子跑, equity_history 的 live 字段=冠军孪生净值。只学三个形状参数且必须在 bounds/choices 内; 仓位/频率/防御等风控永不自学习。已知局限: 回测模拟不含点差成本, 以纸面真实成交为最终裁判; universe 用当前池回看存在幸存者偏差, 只用于参数相对比较。"
+}

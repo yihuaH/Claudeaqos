@@ -1,0 +1,32 @@
+{
+  "champion": {
+    "params": {
+      "entry.ibs_max": 0.2,
+      "exit.stop_loss_pct": 4.0,
+      "exit.window": "next_open"
+    },
+    "since": "2026-07-16"
+  },
+  "challenger": {
+    "params": {
+      "entry.ibs_max": 0.15,
+      "exit.stop_loss_pct": 3.0,
+      "exit.window": "next_close"
+    },
+    "started": "2026-07-15",
+    "status": "validating",
+    "sim": {
+      "score": 5.1286,
+      "champion_score": 2.474,
+      "trades": 1403
+    }
+  },
+  "equity_history": [
+    {
+      "date": "2026-07-16",
+      "live": 1948.86,
+      "paper": 1948.86
+    }
+  ],
+  "history": []
+}
