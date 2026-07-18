@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-07-20",
   "generated": "2026-07-17T19:57Z",
-  "approved": false,
+  "approved": true,
   "scope": "实盘全部新买入 + 为其服务的换仓卖单; 出场/止损卖出与纸面轨道不受限",
   "buy_candidates": [
     "SPY",
@@ -36,11 +36,26 @@
     "NET"
   ],
   "preview_top5": [
-    {"symbol": "D", "ibs": 0.0199},
-    {"symbol": "MRK", "ibs": 0.0587},
-    {"symbol": "SBUX", "ibs": 0.0752},
-    {"symbol": "USB", "ibs": 0.1054},
-    {"symbol": "ABBV", "ibs": 0.1198}
+    {
+      "symbol": "D",
+      "ibs": 0.0199
+    },
+    {
+      "symbol": "MRK",
+      "ibs": 0.0587
+    },
+    {
+      "symbol": "SBUX",
+      "ibs": 0.0752
+    },
+    {
+      "symbol": "USB",
+      "ibs": 0.1054
+    },
+    {
+      "symbol": "ABBV",
+      "ibs": 0.1198
+    }
   ],
   "note": "用户回复确认后置 approved=true; 无确认则 2026-07-20 只出不进。ETF 10 只为 RSI-2 与隔夜双策略的常备候选; 隔夜候选取 max_new_entries=10 扩展视图 (D/MRK/SBUX/USB/ABBV/WBD/KO/BMY/UNH, 其中 XLF 已在ETF池)。**重要**: 2026-07-17 RSI-2 买单 (QQQ/SMH) 连续第2天被 Claude Code auto-mode 分类器拦截未能实际下单 (卖单不受影响); 即使明日获得确认, 若分类器限制未解除, 买单仍可能无法执行, 需用户协助排查权限设置。",
   "funds": {
@@ -51,5 +66,7 @@
     "plan_total": 2518.65,
     "tier1_immediate": "现有购买力 $299.37 仅够覆盖 RSI-2 两笔候选 (QQQ+SMH, 各约$290.5, 合计$581.1) 中的一笔多一点, 不足以两笔都买",
     "tier2_with_funding": "全部候选 (RSI-2 2笔 $581.10 + 隔夜扩展10笔 $1937.00 ≈ $2518.65) 依赖现金 $847.21 + 换仓卖出存量 (弱势优先: SE/BAC/NVO/FTNT/ABBV/SNOW/ETSY/IKT/NET) 当日成交款即时可用假设"
-  }
+  },
+  "approved_at": "2026-07-18T15:11:01Z",
+  "approved_via": "用户对话回复「确认」(战报窗口会话)"
 }
