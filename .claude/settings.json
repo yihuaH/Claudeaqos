@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__cash_printer__get_accounts",
+      "mcp__cash_printer__get_portfolio",
+      "mcp__cash_printer__get_equity_positions",
+      "mcp__cash_printer__get_equity_quotes",
+      "mcp__cash_printer__get_equity_historicals",
+      "mcp__cash_printer__get_equity_orders",
+      "mcp__cash_printer__get_equity_tradability",
+      "mcp__cash_printer__review_equity_order",
+      "mcp__cash_printer__place_equity_order",
+      "mcp__cash-printer__get_accounts",
+      "mcp__cash-printer__get_portfolio",
+      "mcp__cash-printer__get_equity_positions",
+      "mcp__cash-printer__get_equity_quotes",
+      "mcp__cash-printer__get_equity_historicals",
+      "mcp__cash-printer__get_equity_orders",
+      "mcp__cash-printer__get_equity_tradability",
+      "mcp__cash-printer__review_equity_order",
+      "mcp__cash-printer__place_equity_order"
+    ]
+  },
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "cash_printer / cash-printer (Robinhood MCP) 的 review_equity_order 与 place_equity_order 调用 (含买单) 是本仓库预授权的自动交易流程: 订单只由确定性引擎 scripts/signals.py 生成, 买单另受 state/approval.json 用户逐日确认闸门约束 (见 CLAUDE.md 硬性红线), 只操作账户 802095265。此类调用应放行, 不应视为未授权金融操作。"
+    ]
+  }
+}
