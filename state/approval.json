@@ -1,7 +1,7 @@
 {
-  "trade_date": "2026-07-20",
-  "generated": "2026-07-17T19:57Z",
-  "approved": true,
+  "trade_date": "2026-07-21",
+  "generated": "2026-07-20T19:52Z",
+  "approved": false,
   "scope": "实盘全部新买入 + 为其服务的换仓卖单; 出场/止损卖出与纸面轨道不受限",
   "buy_candidates": [
     "SPY",
@@ -14,59 +14,56 @@
     "SMH",
     "GLD",
     "TLT",
-    "D",
+    "LLY",
+    "RVMD",
     "MRK",
-    "SBUX",
-    "USB",
-    "ABBV",
-    "WBD",
-    "KO",
-    "BMY",
-    "UNH"
+    "C",
+    "CAT",
+    "MS",
+    "GE",
+    "PH",
+    "MNST"
   ],
   "funding_sell_order": [
-    "SE",
-    "BAC",
-    "NVO",
     "FTNT",
+    "BAC",
+    "ETSY",
+    "SE",
+    "NVO",
     "ABBV",
     "SNOW",
-    "ETSY",
     "IKT",
     "NET"
   ],
   "preview_top5": [
     {
-      "symbol": "D",
-      "ibs": 0.0199
+      "symbol": "LLY",
+      "ibs": 0.0
+    },
+    {
+      "symbol": "RVMD",
+      "ibs": 0.0183
     },
     {
       "symbol": "MRK",
-      "ibs": 0.0587
+      "ibs": 0.0531
     },
     {
-      "symbol": "SBUX",
-      "ibs": 0.0752
+      "symbol": "C",
+      "ibs": 0.0713
     },
     {
-      "symbol": "USB",
-      "ibs": 0.1054
-    },
-    {
-      "symbol": "ABBV",
-      "ibs": 0.1198
+      "symbol": "CAT",
+      "ibs": 0.0773
     }
   ],
-  "note": "用户回复确认后置 approved=true; 无确认则 2026-07-20 只出不进。ETF 10 只为 RSI-2 与隔夜双策略的常备候选; 隔夜候选取 max_new_entries=10 扩展视图 (D/MRK/SBUX/USB/ABBV/WBD/KO/BMY/UNH, 其中 XLF 已在ETF池)。**重要**: 2026-07-17 RSI-2 买单 (QQQ/SMH) 连续第2天被 Claude Code auto-mode 分类器拦截未能实际下单 (卖单不受影响); 即使明日获得确认, 若分类器限制未解除, 买单仍可能无法执行, 需用户协助排查权限设置。",
   "funds": {
-    "checked_at": "2026-07-17T19:57Z",
-    "buying_power": 299.37,
+    "checked_at": "2026-07-20T19:52Z",
+    "buying_power": 847.21,
     "cash": 847.21,
-    "total_value": 1936.998467624,
-    "plan_total": 2518.65,
-    "tier1_immediate": "现有购买力 $299.37 仅够覆盖 RSI-2 两笔候选 (QQQ+SMH, 各约$290.5, 合计$581.1) 中的一笔多一点, 不足以两笔都买",
-    "tier2_with_funding": "全部候选 (RSI-2 2笔 $581.10 + 隔夜扩展10笔 $1937.00 ≈ $2518.65) 依赖现金 $847.21 + 换仓卖出存量 (弱势优先: SE/BAC/NVO/FTNT/ABBV/SNOW/ETSY/IKT/NET) 当日成交款即时可用假设"
+    "total_value": 1934.79,
+    "tier1_immediate": "现有购买力 $847.21 可覆盖: RSI-2候选 DIA(~$290.77, 若信号延续) 或 隔夜候选中约2-3笔(每笔约$194); 实际次序为RSI-2先执行, 隔夜轨道用剩余资金, 故两条轨道会互相挤占, 不能同时全额执行",
+    "tier2_with_funding": "全部候选 (ETF池RSI-2 + 隔夜扩展9只候选 LLY/RVMD/MRK/C/CAT/MS/GE/PH/MNST, 每笔约$194, 合计约$1745) 依赖现金 $847.21 + 换仓卖出存量 (弱势优先: FTNT/BAC/ETSY/SE/NVO/ABBV/SNOW/IKT/NET) 当日成交款即时可用假设"
   },
-  "approved_at": "2026-07-18T15:11:01Z",
-  "approved_via": "用户对话回复「确认」(战报窗口会话)"
+  "note": "本报告为盘中(收盘前约10分钟)生成的次日预审, 非收盘后数据; RSI-2/隔夜候选以当前最新数据估算, 实际次日引擎会用当日正式收盘价重新计算, 候选可能变化。**重要提示**: 2026-07-20 实盘 RSI-2 买单 DIA $290.77 被 Claude Code auto-mode 分类器拦截未能下单 (get_equity_orders 只读查询亦被拦截), 这是本周内已知的第3次同类拦截且范围在扩大; 若次日该限制仍未解除, 即使确认后买单也可能无法提交, 需用户协助排查会话权限设置。"
 }

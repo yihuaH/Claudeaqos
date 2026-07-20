@@ -4,35 +4,35 @@
   "high_water_mark": 1949.4,
   "halted": false,
   "strategy_positions": {
-    "D": {
-      "qty": 2.738242748,
-      "entry_price": 71.02,
-      "entry_date": "2026-07-17",
-      "cost": 194.47
+    "LLY": {
+      "qty": 0.168008278,
+      "entry_price": 1151.848,
+      "entry_date": "2026-07-20",
+      "cost": 193.52
     },
-    "MRK": {
-      "qty": 1.528491707,
-      "entry_price": 127.23,
-      "entry_date": "2026-07-17",
-      "cost": 194.47
+    "RVMD": {
+      "qty": 1.062712795,
+      "entry_price": 182.1,
+      "entry_date": "2026-07-20",
+      "cost": 193.52
     },
-    "SBUX": {
-      "qty": 1.842758594,
-      "entry_price": 105.532,
-      "entry_date": "2026-07-17",
-      "cost": 194.47
+    "C": {
+      "qty": 1.502951227,
+      "entry_price": 128.76,
+      "entry_date": "2026-07-20",
+      "cost": 193.52
     },
-    "USB": {
-      "qty": 3.072681308,
-      "entry_price": 63.29,
-      "entry_date": "2026-07-17",
-      "cost": 194.47
+    "CAT": {
+      "qty": 0.224062911,
+      "entry_price": 863.686,
+      "entry_date": "2026-07-20",
+      "cost": 193.52
     },
-    "ABBV": {
-      "qty": 0.760801527,
-      "entry_price": 255.612,
-      "entry_date": "2026-07-17",
-      "cost": 194.47
+    "MS": {
+      "qty": 0.916539579,
+      "entry_price": 211.142,
+      "entry_date": "2026-07-20",
+      "cost": 193.52
     }
   },
   "legacy_positions": {},
@@ -169,6 +169,96 @@
       "side": "buy",
       "qty": 0.760801527,
       "price": 255.612,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "ABBV",
+      "side": "sell",
+      "qty": 0.760801,
+      "price": 252.98,
+      "bucket": "strategy",
+      "reason": "close_backstop_exit"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "D",
+      "side": "sell",
+      "qty": 2.738242,
+      "price": 70.31,
+      "bucket": "strategy",
+      "reason": "close_backstop_exit"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "MRK",
+      "side": "sell",
+      "qty": 1.528491,
+      "price": 124.45,
+      "bucket": "strategy",
+      "reason": "close_backstop_exit"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "SBUX",
+      "side": "sell",
+      "qty": 1.842758,
+      "price": 105.02,
+      "bucket": "strategy",
+      "reason": "close_backstop_exit"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "USB",
+      "side": "sell",
+      "qty": 3.072681,
+      "price": 63.156746,
+      "bucket": "strategy",
+      "reason": "close_backstop_exit"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "LLY",
+      "side": "buy",
+      "qty": 0.168008278,
+      "price": 1151.848,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 1.062712795,
+      "price": 182.1,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "C",
+      "side": "buy",
+      "qty": 1.502951227,
+      "price": 128.76,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "CAT",
+      "side": "buy",
+      "qty": 0.224062911,
+      "price": 863.686,
+      "bucket": "strategy",
+      "reason": "ibs_entry"
+    },
+    {
+      "date": "2026-07-20",
+      "symbol": "MS",
+      "side": "buy",
+      "qty": 0.916539579,
+      "price": 211.142,
       "bucket": "strategy",
       "reason": "ibs_entry"
     }
