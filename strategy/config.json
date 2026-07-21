@@ -57,8 +57,8 @@
     "macro_filter_confirmed_by_user": "2026-07-15"
   },
   "execution": {
-    "mode": "confirm",
-    "since": "2026-07-16 (用户指示: 报告先审, 回复确认才下单)",
-    "rule": "实盘新买入与换仓卖单须有当日 state/approval.json (approved=true 且 trade_date=今天, 标的在 buy_candidates 内); 出场/止损卖出与纸面轨道不受限。无确认 → 只出不进, 记 journal。"
+    "mode": "semi_auto",
+    "since": "2026-07-20 (用户指示: 买入半自动 — 无人值守买单被平台分类器拦截, 属平台安全边界)",
+    "rule": "出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation 换仓卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行; 当日 15:55 ET 未执行即过期 (只出不进)。approval.json 闸门已退役。"
   }
 }

@@ -15,6 +15,12 @@ import sys
 from datetime import date as _date
 
 
+def floor6(qty):
+    """卖单数量取 6 位小数且绝不向上进位 — round() 半数进位会超出券商可用数量导致拒单。"""
+    r = round(qty, 6)
+    return r if r <= qty + 1e-12 else round(r - 1e-6, 6)
+
+
 # ---------- IO helpers ----------
 
 def load_json(path):
@@ -222,7 +228,7 @@ def cmd_signal(a):
             qty = broker_qty(sym, float(pos["qty"]))
             if qty > 0:
                 exiting.add(sym)
-                out["sells"].append({"symbol": sym, "qty": round(qty, 6), "bucket": "strategy",
+                out["sells"].append({"symbol": sym, "qty": floor6(qty), "bucket": "strategy",
                                      "reason": reason, "est_price": i["close"]})
 
     # --- 卖出: 存量持仓保护性止损 (相对纳管基准价) ---
@@ -239,7 +245,7 @@ def cmd_signal(a):
             qty = broker_qty(sym, float(pos["qty"]))
             if qty > 0:
                 exiting.add(sym)
-                out["sells"].append({"symbol": sym, "qty": round(qty, 6), "bucket": "legacy",
+                out["sells"].append({"symbol": sym, "qty": floor6(qty), "bucket": "legacy",
                                      "reason": "legacy_protective_stop", "est_price": i["close"]})
 
     # --- 宏观风控: VIX 高位时暂停新开仓 (卖出/止损不受影响) ---
@@ -343,7 +349,7 @@ def cmd_signal(a):
             if lqty <= 0:
                 continue
             lpx = ind[lsym]["close"]
-            out["sells"].append({"symbol": lsym, "qty": round(lqty, 6), "bucket": "legacy",
+            out["sells"].append({"symbol": lsym, "qty": floor6(lqty), "bucket": "legacy",
                                  "reason": "funding_rotation", "est_price": lpx})
             exiting.add(lsym)
             cash += lqty * lpx

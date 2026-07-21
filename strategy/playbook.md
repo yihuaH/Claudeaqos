@@ -48,22 +48,61 @@ python3 scripts/signals.py signal \
 如果输出里 `circuit_breaker_triggered: true`:
 把 `state/positions.json` 的 `halted` 改为 `true`, 写日志, **通知用户**, 结束。不执行任何订单。
 
-## 4. 执行订单 (先卖后买, 逐单执行)
+## 4. 执行订单 (execution.mode=semi_auto: 卖出全自动, 买入半自动)
 
-对 `sells` 里每一单:
+背景 (2026-07-20 定型): 无人值守会话的实盘**买单**会被 Claude Code auto-mode 分类器拦截
+(连续 3 个交易日复现, 卖单与有人值守会话不受影响), 属平台级安全边界, 仓库配置无法解除。
+故买入改为半自动: 无人值守会话只生成待执行清单, 由用户在场时触发执行 (见 4C)。
+
+**4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
+出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`overnight_exit`/`close_backstop_exit` 等,
+即除 `funding_rotation` 外的全部) 逐单:
 1. `review_equity_order(account=802095265, symbol, side=sell, type=market, quantity, market_hours=regular_hours)`。
 2. 无异常告警 → `place_equity_order(同参数, ref_id=新UUID)`; 出现**预期外**告警(停牌、限制等) → 跳过该单并记入日志的 anomalies。
-3. `get_equity_orders` 确认成交, 记录实际 qty/price。
+3. `get_equity_orders` 确认成交, 记录实际 qty/price。风险只减不增, 此类卖单永不需要用户确认。
 
-全部卖单确认后, 检查确认闸门 (`strategy/config.json` execution.mode=confirm 时):
-`state/approval.json` 必须 `approved=true` 且 `trade_date=今天`; 买单标的必须在 `buy_candidates` 内,
-换仓卖单标的必须在 `funding_sell_order` 内。不满足 → 跳过该买单及其换仓卖单, journal 记"未获确认, 只出不进"。
-**出场/止损类卖单永不受此闸门限制** (风险只减不增)。闸门通过后, 对 `buys` 里每一单:
-1. `review_equity_order(..., side=buy, type=market, dollar_amount)`。
-2. 若告警显示购买力不足 → 按告警金额下调 `dollar_amount`(不低于 min_order_usd, 否则跳过)。
-3. `place_equity_order(..., ref_id=新UUID)`, 确认成交。
+**4B. 生成待执行清单 (无人值守)** — `buys` 全部订单 + `sells` 中 reason=`funding_rotation` 的换仓卖单,
+**不做 review/place** (会被分类器拦截, 不要再尝试), 改为写入 `state/pending_orders.json`:
 
-规则:
+```json
+{
+  "trade_date": "YYYY-MM-DD", "generated_at": "<ISO UTC>",
+  "status": "awaiting_execution",
+  "valid_until_et": "15:55",
+  "buying_power_at_generation": 0.0,
+  "orders": [
+    {"seq": 1, "action": "sell", "symbol": "X", "qty": 1.234567, "bucket": "legacy",
+     "reason": "funding_rotation", "est_price": 0.0, "state_file": "state/positions.json"},
+    {"seq": 2, "action": "buy", "symbol": "Y", "dollar_amount": 290.77, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 0.0, "state_file": "state/positions.json"},
+    {"seq": 3, "action": "buy", "symbol": "Z", "dollar_amount": 194.48, "bucket": "strategy",
+     "reason": "ibs_entry", "est_price": 0.0, "state_file": "state/overnight_positions.json"}
+  ]
+}
+```
+
+- 内容必须逐字段来自引擎输出 (signals.py / overnight.py), 换仓卖单排在买单前 (seq 升序 = 执行顺序);
+  隔夜轨道 (5B 主窗口) 的入场买单同样并入此文件 (state_file 指向对应账本)。
+- 写完 commit+push, 并用 PushNotification 通知用户:
+  "今日待执行订单 N 笔已就绪 (总额 $X), 15:55 ET 前到报告窗口回复「执行」即可; 不执行则今日只出不进"。
+- 当日无买单信号 → 不生成文件, 不打扰用户。
+
+**4C. 半自动执行协议 (有人值守, 用户触发)** — 仅当用户在任一有人值守会话中明确下达
+"执行"(或等义指令) 时进行, 执行者通常为报告窗口会话:
+0. `git fetch` 交易分支取最新 `state/pending_orders.json`。
+1. 校验 (任一不满足 → 不执行并告知用户原因): `trade_date` = 今天(ET); `status` = `awaiting_execution`;
+   当前 ET 时间在 09:30–15:55 常规时段内; 开市 (Alpaca 时钟或 SPY 报价)。
+   过期文件 → status 改 `expired`, journal 注明 "当日只出不进", 提交推送。
+2. 按 seq 顺序执行 (先换仓卖后买): 每单 `review_equity_order` → 无预期外告警 → `place_equity_order`
+   (market, regular_hours, ref_id=每单一个 UUID, 重试必须复用)。
+   买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
+3. **只执行文件里的订单, 逐字段照抄, 绝不放大、绝不加单、绝不改标的** — 此文件是红线 2
+   "所有买卖必须来自引擎输出"的唯一合法载体。
+4. 回写: fills 按 `state_file` 分组, 分别 `signals.py apply`; `pending_orders.json` status 改
+   `executed` (附逐笔成交); journal 加"半自动买入执行"小节; commit+push 交易分支。
+5. 任何预期外告警/报错 → 停止剩余订单, 已成交的如实回写, 记 journal, 报告用户。
+
+规则 (4A/4C 通用):
 - ref_id 每个逻辑订单生成一次, 网络重试必须复用同一个 ref_id, 防止重复下单。
 - 引擎没输出的单**绝不下**; 引擎输出的金额/数量**绝不放大**。
 - 收盘前 5 分钟(15:55 ET)后不再提交新单, 未执行的记入日志顺延。
@@ -102,8 +141,9 @@ python3 scripts/signals.py signal \
 2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 财报日未知的个股仍可候选 (allow_unknown_earnings=true), 仅失去财报回避保护, 引擎会告警注明。
 3. 重新取 `get_portfolio` 的最新 buying_power (RSI-2 执行后剩余的), 然后:
    `python3 scripts/overnight.py signal --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --bars <bars> --snapshots <snaps> --earnings <earnings> --macro <macro> --positions <券商持仓映射> --date <今天> --portfolio-value <total_value> --buying-power <剩余bp> --out <scratchpad>/overnight_orders.json`
-4. 执行: 与第 4 节完全相同的规则 (先卖后买、review→place、ref_id 幂等、15:55 截止)。
-5. 回写 (按 bucket 分两次):
+4. 执行 (semi_auto 拆分): 出场/兜底类卖单按 **4A** 直接执行; 入场买单与 funding_rotation 换仓卖单
+   并入 **4B** 的 `state/pending_orders.json` (state_file=state/overnight_positions.json, 与 RSI-2 订单同一文件同一次通知), 由用户按 **4C** 触发执行。
+5. 回写 (仅对实际成交, 按 bucket 分两次):
    - strategy 桶成交 → `signals.py apply --state state/overnight_positions.json --fills <strategy fills> --date <今天>`
    - legacy 桶成交 (换仓卖出) → `signals.py apply --state state/positions.json --fills <legacy fills> --date <今天>`
 6. journal 加"隔夜轨道"小节: 每笔进出、IBS 值、顺延/止损标注。**上线首周 (至 2026-07-23) 每笔交易单独列明盈亏。**
@@ -186,16 +226,16 @@ python3 scripts/signals.py signal \
 2. `python3 scripts/learn.py search --config strategy/config.json --learning strategy/learning.json --state-learn state/learning.json --historicals <bars_5y> --date <今天> --start-capital <实盘 total_value> --paper-ledger state/paper_positions.json`
 3. 输出记 journal: `new_challenger` → 新挑战者次日起影子运行; `champion_optimal` → 冠军仍最优, 本轮不设挑战者。
 
-## 8B. 次日预审报告 (execution.mode=confirm 时, 每日收盘后)
+## 8B. 次日预览报告 (每日收盘后)
+
+> 2026-07-20 起 execution.mode=semi_auto: 原"预审确认"闸门 (`state/approval.json`) **退役** —
+> 买入的最终确认改由用户按 4C 亲手触发执行承担, 无需每日回复确认。approval.json 保留存档, 不再读写。
 
 0. **先查资金**: `get_portfolio(802095265)` 取实时 buying_power 与 cash。报告必须以资金段开头,
    并按资金分两层出计划: ①立即可执行层 (仅用现有购买力能买什么) ②依赖换仓层 (需卖存量腾资金的部分,
    注明依赖"当日卖出款即时可用"这一结算假设)。计划总额不得超过 现有BP + 计划换仓卖出估值。
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
-2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
-3. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预审), 用 SendUserFile 发送给用户。
-4. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
-5. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。
+2. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预览), 用 SendUserFile 发送给用户。报告为信息性质, 不需要用户回复。
 
 ## 9. 异常总原则
 

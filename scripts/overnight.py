@@ -24,7 +24,7 @@ import sys
 from datetime import date as _date
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
-from signals import load_json, sma, parse_historicals  # noqa: E402
+from signals import load_json, sma, parse_historicals, floor6  # noqa: E402
 
 
 def ibs_of(snap):
@@ -123,7 +123,7 @@ def cmd_signal(a):
             qty = min(qty, float(broker[sym].get("available", qty)))
         if qty > 0:
             sold_today.add(sym)
-            out["sells"].append({"symbol": sym, "qty": round(qty, 6), "bucket": "strategy",
+            out["sells"].append({"symbol": sym, "qty": floor6(qty), "bucket": "strategy",
                                  "reason": reason, "est_price": px})
 
     if a.window == "open":
@@ -245,7 +245,7 @@ def cmd_signal(a):
             lpx = price(lsym)
             if lqty <= 0 or lpx is None:
                 continue
-            out["sells"].append({"symbol": lsym, "qty": round(lqty, 6), "bucket": "legacy",
+            out["sells"].append({"symbol": lsym, "qty": floor6(lqty), "bucket": "legacy",
                                  "reason": "funding_rotation", "est_price": lpx})
             sold_today.add(lsym)
             cash += lqty * lpx
