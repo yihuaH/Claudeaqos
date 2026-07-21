@@ -161,6 +161,9 @@ python3 scripts/signals.py signal \
 用户校准 (2026-07-15): 目标 ~10笔/天 (晨间 ~5 卖 + 收盘 ~5 买), 换仓卖出不设 2 只/日限制, 持仓数不设上限。
 
 **晨间窗口 (9:35 ET, 独立 Routine, exit.window=next_open 时)**:
+
+> **Routine 已停用** (2026-07-21 用户指示, token 精简): 隔夜实盘暂停 + 6B 学习暂停后本窗口无剩余职责;
+> 4C 盘外残单撤销改由报告窗口 10:45 ET 晨检代行。恢复隔夜实盘时需同时重新启用本 Routine。
 0. **时段校验** (防调度器误触发): 当前 ET 时间必须在 09:30–10:15 之间才允许执行卖出;
    时段外触发 → 只做只读核查 (分支同步/持仓状态), 不交易, 异常才通知。
 1. `git pull` → `integrations.py status`: Alpaca 时钟 `is_open` 必须为 true, 否则写日志结束。
@@ -231,7 +234,10 @@ python3 scripts/signals.py signal \
    - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
 
-## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B)
+## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B; learning_overnight.json paused=true 时跳过本节)
+
+> **暂停中** (2026-07-21 用户指示, token 精简): 隔夜实盘入场已暂停, 学习无实盘出口。
+> 两本纸面账本与冠军/挑战者状态冻结保留, 删除 paused 标志即恢复。
 
 条件: `strategy/learning_overnight.json` enabled=true 且 `state/learning_overnight.json` 有 validating 挑战者。
 第 6 节完成后执行, 失败只记日志。数据复用第 5B 节的 bars/snapshots/earnings/macro。
