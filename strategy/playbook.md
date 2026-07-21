@@ -22,8 +22,15 @@
 
 1. `get_portfolio(802095265)` → 记下 `total_value` 和 `buying_power`。
 2. `get_equity_positions(802095265)` → 与 `state/positions.json` 核对; 数量不一致以券商为准, 先修正 state。把结果整理成简单映射存到 scratchpad: `{"SYM": {"qty": x, "available": y, "intraday": z}}`。
-3. `get_equity_quotes(ETF池 + 全部持仓符号)` → 整理成 `{"SYM": price}` 存到 scratchpad (只收录 state=active 的)。
-4. `get_equity_historicals(ETF池10只, start=今天-450天, interval=day)` 和 `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` → 原始输出会自动存到 tool-results 文件, 记下路径。
+3. 报价 (候选池 = ETF池9只 + universe.json 100只, 2026-07-21 起):
+   `get_equity_quotes(ETF池 + 全部持仓符号)` (Robinhood, 只收录 state=active) +
+   `integrations.py quotes --symbols <universe 100只>` (Alpaca IEX) → 合并成一个 `{"SYM": price}` 映射存 scratchpad
+   (同名以 Robinhood 为准; universe 中某符号无报价 → 该符号自然落选, 引擎会告警)。
+4. 历史:
+   - `integrations.py bars --symbols <ETF池 + universe 100只> --start 今天-660天` → 一个文件 (SMA200 需 ≥200 交易日);
+   - `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` (Robinhood) → 持仓文件。
+4B. 财报日: 生成/复用当日 `earnings.json` (与 5B/7 节共用同一份, 每天只拉一次) — 个股防御层需要;
+   取不到则不传 `--earnings`, 引擎按 allow_unknown_earnings 继续 (仅失去财报回避, 会告警)。
 5. 宏观数据 (标准步骤): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
    成功则在算信号时加 `--macro <macro.json>`; 失败则省略该参数, 交易照常, 在日志注明。
    (VIX ≥ 配置阈值时引擎只停新开仓, 卖出/止损照常; VIX 数据过旧时引擎自动跳过过滤并告警。)
@@ -34,14 +41,19 @@
 python3 scripts/signals.py signal \
   --config strategy/config.json \
   --state state/positions.json \
-  --historicals <ETF历史文件> <持仓历史文件...> \
-  --quotes <报价映射文件> \
+  --historicals <Alpaca bars文件(ETF池+universe)> <持仓历史文件...> \
+  --quotes <合并报价映射文件> \
   --positions <持仓映射文件> \
+  --earnings <earnings.json (有则传)> \
   --date <YYYY-MM-DD> \
   --portfolio-value <total_value> \
   --buying-power <buying_power> \
   --out <scratchpad>/orders.json
 ```
+
+候选池 (2026-07-21 起) = config `etf_universe` 9 只低价孪生 ETF + `stock_universe_file` (universe.json) 100 只个股,
+同一引擎按 RSI2 从低到高竞争 4 个仓位槽 (个股不设槽位上限, 用户 2026-07-21 指示)。
+防御层对个股强制生效 (财报回避/单日异动过滤/行业上限≤3), ETF 在 exempt_symbols 中豁免。
 
 ## 3. 熔断处理
 
@@ -113,7 +125,8 @@ python3 scripts/signals.py signal \
    - **晚间限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单排队次日开盘。
      **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
      include fractional shares"), 故本模式仅执行买单且:
-     - limit_price = round(est_price×1.005, 2) (信号价+0.5%容差, 开盘跳空超出即不成交、不追价), time_in_force=gfd;
+     - limit_price = round(est_price×1.010, 2) (信号价+1.0%容差 [2026-07-21 回测调优: ETF/个股两组回测中
+       +1.0% 均优于 +0.5%, 被挡掉的跳空高开多为最强反弹], 开盘超出即不成交、不追价), time_in_force=gfd;
      - 数量 = floor(dollar_amount ÷ limit_price) **整股** — 只向下取整 (等效于规则允许的金额下调);
        为凑整股向上加钱属放大, **绝不允许**。结果为 0 股 → 该单无法夜间执行, 跳过记 journal, 等次日新信号
        (注意: 账户规模较小时, 高价 ETF 的 15% 仓位常不足一整股, 此类买单实际只有当日市价窗口一条路);
@@ -163,6 +176,10 @@ python3 scripts/signals.py signal \
    任其存续即可); 已成交/部分成交的按 4C 步骤4 回写对应账本; 结果记 journal。
 
 **主窗口 (15:30 ET, 第 5 节完成后执行)**:
+
+> **实盘入场暂停中** (overnight.json `live_entries_paused=true`, 2026-07-21 用户指示): IBS 收盘买与异步
+> 半自动结构性不兼容。引擎强制 slots=0 只出不进 — 本窗口照常跑信号与出场/兜底, 但不会产生实盘新入场;
+> 6B 纸面 A/B 学习不受影响 (learn_overnight 生成账本配置时自动剥离该标志)。恢复: 删除该标志即可。
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。

@@ -196,6 +196,9 @@ def cmd_signal(a):
     # 行业上限 (ETF 豁免) + 数量选择
     slots = max(0, min(cfg["sizing"]["max_strategy_positions"] - len(held),
                        cfg["sizing"]["max_new_entries_per_day"]))
+    if cfg.get("live_entries_paused"):
+        slots = 0
+        out["warnings"].append("live_entries_paused=true: 实盘隔夜入场暂停 (2026-07-21 用户指示), 只出不进")
     sec_count = {}
     for s in held:
         sc = sectors.get(s)

@@ -123,6 +123,19 @@ def cmd_signal(a):
     universe = cfg.get("universe", cfg.get("etf_universe", []))
     # 防御层 (个股轨道): 财报回避 / 异动过滤 / 行业上限。cfg 无 defense 时行为与原引擎完全一致。
     defense = cfg.get("defense")
+    # 个股池并入 (2026-07-21 用户授权): stock_universe_file 的 symbols 并入候选池, sectors 供行业上限。
+    suf = cfg.get("stock_universe_file")
+    if suf:
+        try:
+            su = load_json(suf)
+            universe = list(dict.fromkeys(list(universe) + list(su.get("symbols", []))))
+            if defense is not None and isinstance(su.get("sectors"), dict):
+                defense["sectors"] = {**su["sectors"], **defense.get("sectors", {})}
+        except (OSError, ValueError):
+            warnings.append(f"股票池文件 {suf} 读取失败, 本次候选仅 ETF 池")
+    # defense.exempt_symbols (通常为 ETF 池): 豁免财报回避与异动过滤 — 指数类标的的恐慌大跌
+    # 正是均值回归入场点, 不应被单票防御规则挡掉; 行业上限天然不命中 (无 sector 映射)。
+    exempt_syms = set((defense or {}).get("exempt_symbols", []))
     allow_unknown_earnings = bool((defense or {}).get("allow_unknown_earnings"))
     earnings = load_json(a.earnings) if a.earnings else None
     no_earnings_data = defense is not None and earnings is None
@@ -281,7 +294,7 @@ def cmd_signal(a):
             continue
         if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
             continue
-        if defense is not None:
+        if defense is not None and sym not in exempt_syms:
             if no_earnings_data and not allow_unknown_earnings:
                 continue
             if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
