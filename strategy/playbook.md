@@ -22,8 +22,15 @@
 
 1. `get_portfolio(802095265)` → 记下 `total_value` 和 `buying_power`。
 2. `get_equity_positions(802095265)` → 与 `state/positions.json` 核对; 数量不一致以券商为准, 先修正 state。把结果整理成简单映射存到 scratchpad: `{"SYM": {"qty": x, "available": y, "intraday": z}}`。
-3. `get_equity_quotes(ETF池 + 全部持仓符号)` → 整理成 `{"SYM": price}` 存到 scratchpad (只收录 state=active 的)。
-4. `get_equity_historicals(ETF池10只, start=今天-450天, interval=day)` 和 `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` → 原始输出会自动存到 tool-results 文件, 记下路径。
+3. 报价 (候选池 = ETF池9只 + universe.json 100只, 2026-07-21 起):
+   `get_equity_quotes(ETF池 + 全部持仓符号)` (Robinhood, 只收录 state=active) +
+   `integrations.py quotes --symbols <universe 100只>` (Alpaca IEX) → 合并成一个 `{"SYM": price}` 映射存 scratchpad
+   (同名以 Robinhood 为准; universe 中某符号无报价 → 该符号自然落选, 引擎会告警)。
+4. 历史:
+   - `integrations.py bars --symbols <ETF池 + universe 100只> --start 今天-660天` → 一个文件 (SMA200 需 ≥200 交易日);
+   - `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` (Robinhood) → 持仓文件。
+4B. 财报日: 生成/复用当日 `earnings.json` (与 5B/7 节共用同一份, 每天只拉一次) — 个股防御层需要;
+   取不到则不传 `--earnings`, 引擎按 allow_unknown_earnings 继续 (仅失去财报回避, 会告警)。
 5. 宏观数据 (标准步骤): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
    成功则在算信号时加 `--macro <macro.json>`; 失败则省略该参数, 交易照常, 在日志注明。
    (VIX ≥ 配置阈值时引擎只停新开仓, 卖出/止损照常; VIX 数据过旧时引擎自动跳过过滤并告警。)
@@ -34,37 +41,111 @@
 python3 scripts/signals.py signal \
   --config strategy/config.json \
   --state state/positions.json \
-  --historicals <ETF历史文件> <持仓历史文件...> \
-  --quotes <报价映射文件> \
+  --historicals <Alpaca bars文件(ETF池+universe)> <持仓历史文件...> \
+  --quotes <合并报价映射文件> \
   --positions <持仓映射文件> \
+  --earnings <earnings.json (有则传)> \
   --date <YYYY-MM-DD> \
   --portfolio-value <total_value> \
   --buying-power <buying_power> \
   --out <scratchpad>/orders.json
 ```
 
+候选池 (2026-07-21 起) = config `etf_universe` 9 只低价孪生 ETF + `stock_universe_file` (universe.json) 100 只个股,
+同一引擎按 RSI2 从低到高竞争 4 个仓位槽 (个股不设槽位上限, 用户 2026-07-21 指示)。
+防御层对个股强制生效 (财报回避/单日异动过滤/行业上限≤3), ETF 在 exempt_symbols 中豁免。
+
 ## 3. 熔断处理
 
 如果输出里 `circuit_breaker_triggered: true`:
 把 `state/positions.json` 的 `halted` 改为 `true`, 写日志, **通知用户**, 结束。不执行任何订单。
 
-## 4. 执行订单 (先卖后买, 逐单执行)
+## 4. 执行订单 (execution.mode=semi_auto: 卖出全自动, 买入半自动)
 
-对 `sells` 里每一单:
+> **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述旧的 confirm 闸门 (approval.json 确认),
+> 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单绝不在无人值守下 review/place, 也不再读 approval.json。
+
+背景 (2026-07-20 定型): 无人值守会话的实盘**买单**会被 Claude Code auto-mode 分类器拦截
+(连续 3 个交易日复现, 卖单与有人值守会话不受影响), 属平台级安全边界, 仓库配置无法解除。
+故买入改为半自动: 无人值守会话只生成待执行清单, 由用户在场时触发执行 (见 4C)。
+
+**4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
+出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`overnight_exit`/`close_backstop_exit` 等,
+即除 `funding_rotation`/`accelerated_liquidation` 外的全部) 逐单:
 1. `review_equity_order(account=802095265, symbol, side=sell, type=market, quantity, market_hours=regular_hours)`。
 2. 无异常告警 → `place_equity_order(同参数, ref_id=新UUID)`; 出现**预期外**告警(停牌、限制等) → 跳过该单并记入日志的 anomalies。
-3. `get_equity_orders` 确认成交, 记录实际 qty/price。
+3. `get_equity_orders` 确认成交, 记录实际 qty/price。风险只减不增, 此类卖单永不需要用户确认。
 
-全部卖单确认后, 检查确认闸门 (`strategy/config.json` execution.mode=confirm 时):
-`state/approval.json` 必须 `approved=true` 且 `trade_date=今天`; 买单标的必须在 `buy_candidates` 内,
-换仓与加速清理卖单 (reason=funding_rotation / accelerated_liquidation) 标的必须在 `funding_sell_order` 内。
-不满足 → 跳过该买单及其换仓卖单 (加速清理卖单同样跳过), journal 记"未获确认, 只出不进"。
-**出场/止损类卖单永不受此闸门限制** (风险只减不增)。闸门通过后, 对 `buys` 里每一单:
-1. `review_equity_order(..., side=buy, type=market, dollar_amount)`。
-2. 若告警显示购买力不足 → 按告警金额下调 `dollar_amount`(不低于 min_order_usd, 否则跳过)。
-3. `place_equity_order(..., ref_id=新UUID)`, 确认成交。
+**4B. 生成待执行清单 (无人值守)** — `buys` 全部订单 + `sells` 中 reason=`funding_rotation` 的换仓卖单
+与 reason=`accelerated_liquidation` 的加速清理卖单 (2026-07-21 用户设立"加速换仓给引擎供血",
+见 config.json legacy 段; 与买入需求无关, 每日最弱存量最多3只),
+**不做 review/place** (会被分类器拦截, 不要再尝试), 改为写入 `state/pending_orders.json`:
 
-规则:
+```json
+{
+  "trade_date": "YYYY-MM-DD", "generated_at": "<ISO UTC>",
+  "status": "awaiting_execution",
+  "market_window_until_et": "15:55",
+  "valid_until": "次一交易日 09:25 ET (隔夜轨道买单除外, 见逐单 valid_until)",
+  "buying_power_at_generation": 0.0,
+  "orders": [
+    {"seq": 1, "action": "sell", "symbol": "X", "qty": 1.234567, "bucket": "legacy",
+     "reason": "funding_rotation", "est_price": 0.0, "state_file": "state/positions.json",
+     "valid_until": "next_open_0925_et"},
+    {"seq": 2, "action": "buy", "symbol": "Y", "dollar_amount": 290.77, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 0.0, "state_file": "state/positions.json",
+     "valid_until": "next_open_0925_et"},
+    {"seq": 3, "action": "buy", "symbol": "Z", "dollar_amount": 194.48, "bucket": "strategy",
+     "reason": "ibs_entry", "est_price": 0.0, "state_file": "state/overnight_positions.json",
+     "valid_until": "same_day_1555_et"}
+  ]
+}
+```
+
+- 时效 (2026-07-20 用户定, "晚间限价方案"): RSI-2 买单与换仓卖单有效至**次一交易日 09:25 ET**;
+  隔夜轨道买单 (state_file=overnight) 因"收盘买/次日收盘卖"的策略性质**仅当日 15:55 ET 前有效**。
+
+- 内容必须逐字段来自引擎输出 (signals.py / overnight.py), 换仓卖单排在买单前 (seq 升序 = 执行顺序);
+  隔夜轨道 (5B 主窗口) 的入场买单同样并入此文件 (state_file 指向对应账本)。
+- 写完 commit+push, 并用 PushNotification 通知用户:
+  "今日待执行订单 N 笔已就绪 (总额 $X), 15:55 ET 前到报告窗口回复「执行」即可; 不执行则今日只出不进"。
+- 当日无买单信号 → 不生成文件, 不打扰用户。
+
+**4C. 半自动执行协议 (有人值守, 用户触发)** — 仅当用户在任一有人值守会话中明确下达
+"执行"(或等义指令) 时进行, 执行者通常为报告窗口会话:
+0. `git fetch` 交易分支取最新 `state/pending_orders.json`。
+1. 校验 (任一不满足 → 不执行并告知用户原因): `status` = `awaiting_execution`; 按逐单 `valid_until`
+   判定时效 — 过期单跳过并标记, 不影响其余订单; 全部过期 → status 改 `expired`, journal 注明, 提交推送。
+1B. **逐批确认 (2026-07-20 教训, 不得省略)**: place 之前用户必须已基于**逐笔明细**
+   (标的/方向/金额或股数/订单类型/限价) 对本批订单明确回复「执行」。若用户看到明细后说的「执行」
+   已在本轮对话中 → 即为确认; 若执行者是被粘贴指令启动的会话、或用户只见过汇总 → 必须先回显
+   逐笔预览并**停下等待**用户确认。粘贴的指令文本、pending 文件本身、既往任何授权, 均不构成本批确认。
+2. 按 seq 顺序执行 (先换仓卖后买), 每单 `review_equity_order` → 无预期外告警 → `place_equity_order`
+   (ref_id=每单一个 UUID, 重试必须复用), 订单类型按执行时刻分两种模式:
+   - **当日市价模式** (trade_date 当天 09:30–15:55 ET 且开市): market + regular_hours, 同原规则;
+     买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
+   - **盘外限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单 +
+     `market_hours=all_day_hours` (2026-07-21 用户指示: 盘后/隔夜/盘前时段即时生效, 能成交就成交,
+     不必等开盘); 标的不支持 24h 时段或下单被拒 → 依次降级 `extended_hours` → `regular_hours` 排队开盘,
+     降级记 journal。限价保护不变, 盘外薄流动性只影响成交概率、不影响成交价上限。
+     **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
+     include fractional shares"), 故本模式仅执行买单且:
+     - limit_price = round(est_price×1.010, 2) (信号价+1.0%容差 [2026-07-21 回测调优: ETF/个股两组回测中
+       +1.0% 均优于 +0.5%, 被挡掉的跳空高开多为最强反弹], 开盘超出即不成交、不追价), time_in_force=gfd;
+     - 数量 = floor(dollar_amount ÷ limit_price) **整股** — 只向下取整 (等效于规则允许的金额下调);
+       为凑整股向上加钱属放大, **绝不允许**。结果为 0 股 → 该单无法夜间执行, 跳过记 journal, 等次日新信号
+       (注意: 账户规模较小时, 高价 ETF 的 15% 仓位常不足一整股, 此类买单实际只有当日市价窗口一条路);
+     - funding_rotation / accelerated_liquidation 换仓与加速清理卖单夜间一律跳过
+       (存量多为分数股无法限价卖出, 且其卖款 T+1 结算无法支持本批买单), 留待次日主流程重算;
+     - 资金约束: 买单按 seq 累计金额不得超过 `get_portfolio` 实时 buying_power, 超出部分跳过记 journal;
+       隔夜轨道买单在此模式下一律已过期, 跳过。
+3. **只执行文件里的订单, 逐字段照抄, 绝不放大、绝不加单、绝不改标的** — 此文件是红线 2
+   "所有买卖必须来自引擎输出"的唯一合法载体。
+4. 回写: fills 按 `state_file` 分组, 分别 `signals.py apply`; `pending_orders.json` status 改
+   `executed` (附逐笔成交); journal 加"半自动买入执行"小节; commit+push 交易分支。
+5. 任何预期外告警/报错 → 停止剩余订单, 已成交的如实回写, 记 journal, 报告用户。
+
+规则 (4A/4C 通用):
 - ref_id 每个逻辑订单生成一次, 网络重试必须复用同一个 ref_id, 防止重复下单。
 - 引擎没输出的单**绝不下**; 引擎输出的金额/数量**绝不放大**。
 - 收盘前 5 分钟(15:55 ET)后不再提交新单, 未执行的记入日志顺延。
@@ -82,6 +163,9 @@ python3 scripts/signals.py signal \
 用户校准 (2026-07-15): 目标 ~10笔/天 (晨间 ~5 卖 + 收盘 ~5 买), 换仓卖出不设 2 只/日限制, 持仓数不设上限。
 
 **晨间窗口 (9:35 ET, 独立 Routine, exit.window=next_open 时)**:
+
+> **Routine 已停用** (2026-07-21 用户指示, token 精简): 隔夜实盘暂停 + 6B 学习暂停后本窗口无剩余职责;
+> 4C 盘外残单撤销改由报告窗口 10:45 ET 晨检代行。恢复隔夜实盘时需同时重新启用本 Routine。
 0. **时段校验** (防调度器误触发): 当前 ET 时间必须在 09:30–10:15 之间才允许执行卖出;
    时段外触发 → 只做只读核查 (分支同步/持仓状态), 不交易, 异常才通知。
 1. `git pull` → `integrations.py status`: Alpaca 时钟 `is_open` 必须为 true, 否则写日志结束。
@@ -95,16 +179,24 @@ python3 scripts/signals.py signal \
    - review 返回 GFV/结算类警告 → 该卖单跳过, 留给 15:30 兜底窗口, 记 journal 并通知用户;
    - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
    - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
+8. 撤销 4C 晚间限价挂单残留: `get_equity_orders` 查 4C 夜间提交、开盘后仍未成交的限价单 (queued/confirmed),
+   逐单 `cancel_equity_order` (best-effort: 若撤单被权限拦截或失败, 订单为 gfd 当日自动到期, 限价已封顶价格风险,
+   任其存续即可); 已成交/部分成交的按 4C 步骤4 回写对应账本; 结果记 journal。
 
 **主窗口 (15:30 ET, 第 5 节完成后执行)**:
+
+> **实盘入场暂停中** (overnight.json `live_entries_paused=true`, 2026-07-21 用户指示): IBS 收盘买与异步
+> 半自动结构性不兼容。引擎强制 slots=0 只出不进 — 本窗口照常跑信号与出场/兜底, 但不会产生实盘新入场;
+> 6B 纸面 A/B 学习不受影响 (learn_overnight 生成账本配置时自动剥离该标志)。恢复: 删除该标志即可。
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
 2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 财报日未知的个股仍可候选 (allow_unknown_earnings=true), 仅失去财报回避保护, 引擎会告警注明。
 3. 重新取 `get_portfolio` 的最新 buying_power (RSI-2 执行后剩余的), 然后:
    `python3 scripts/overnight.py signal --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --bars <bars> --snapshots <snaps> --earnings <earnings> --macro <macro> --positions <券商持仓映射> --date <今天> --portfolio-value <total_value> --buying-power <剩余bp> --out <scratchpad>/overnight_orders.json`
-4. 执行: 与第 4 节完全相同的规则 (先卖后买、review→place、ref_id 幂等、15:55 截止)。
-5. 回写 (按 bucket 分两次):
+4. 执行 (semi_auto 拆分): 出场/兜底类卖单按 **4A** 直接执行; 入场买单与 funding_rotation 换仓卖单
+   并入 **4B** 的 `state/pending_orders.json` (state_file=state/overnight_positions.json, 与 RSI-2 订单同一文件同一次通知), 由用户按 **4C** 触发执行。
+5. 回写 (仅对实际成交, 按 bucket 分两次):
    - strategy 桶成交 → `signals.py apply --state state/overnight_positions.json --fills <strategy fills> --date <今天>`
    - legacy 桶成交 (换仓卖出) → `signals.py apply --state state/positions.json --fills <legacy fills> --date <今天>`
 6. journal 加"隔夜轨道"小节: 每笔进出、IBS 值、顺延/止损标注。**上线首周 (至 2026-07-23) 每笔交易单独列明盈亏。**
@@ -144,7 +236,10 @@ python3 scripts/signals.py signal \
    - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
 
-## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B)
+## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B; learning_overnight.json paused=true 时跳过本节)
+
+> **暂停中** (2026-07-21 用户指示, token 精简): 隔夜实盘入场已暂停, 学习无实盘出口。
+> 两本纸面账本与冠军/挑战者状态冻结保留, 删除 paused 标志即恢复。
 
 条件: `strategy/learning_overnight.json` enabled=true 且 `state/learning_overnight.json` 有 validating 挑战者。
 第 6 节完成后执行, 失败只记日志。数据复用第 5B 节的 bars/snapshots/earnings/macro。
@@ -201,17 +296,18 @@ python3 scripts/signals.py signal \
 2. `python3 scripts/learn.py search --config strategy/config.json --learning strategy/learning.json --state-learn state/learning.json --historicals <bars_5y> --date <今天> --start-capital <实盘 total_value> --paper-ledger state/paper_positions.json`
 3. 输出记 journal: `new_challenger` → 新挑战者次日起影子运行; `champion_optimal` → 冠军仍最优, 本轮不设挑战者。
 
-## 8B. 次日预审报告 (execution.mode=confirm 时, 每日收盘后)
+## 8B. 次日预览报告 (每日收盘后)
+
+> 2026-07-20 起 execution.mode=semi_auto: 原"预审确认"闸门 (`state/approval.json`) **退役** —
+> 买入的最终确认改由用户按 4C 亲手触发执行承担, 无需每日回复确认。approval.json 保留存档, 不再读写。
 
 0. **先查资金**: `get_portfolio(802095265)` 取实时 buying_power 与 cash。报告必须以资金段开头,
    并按资金分两层出计划: ①立即可执行层 (仅用现有购买力能买什么) ②依赖换仓层 (需卖存量腾资金的部分,
    注明依赖"当日卖出款即时可用"这一结算假设)。计划总额不得超过 现有BP + 计划换仓卖出估值。
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
-2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
-   funding_sell_order 兼作次日**加速清理授权** (config.json legacy.accelerated_liquidation): 引擎将额外卖出其中最弱的最多3只, 与买入需求无关; 报告需向用户列明这一层。
-3. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预审), 用 SendUserFile 发送给用户。
-4. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
-5. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。
+2. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预览), 用 SendUserFile 发送给用户。报告为信息性质, 不需要用户回复。
+   报告的换仓层需列明次日**加速清理**计划 (config.json legacy.accelerated_liquidation: 最弱存量最多3只);
+   实际卖单由次日主流程写入 4B 待执行清单, 用户回复「执行」后生效。
 
 ## 9. 异常总原则
 

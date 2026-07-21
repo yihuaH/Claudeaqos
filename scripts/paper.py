@@ -2,7 +2,8 @@
 """
 Alpaca 纸面账户执行器 — 只用于挑战者参数的影子验证。
 
-  run     执行 signals.py 产出的订单 (先卖后买, 市价, 幂等 client_order_id)
+  run     执行 signals.py 产出的订单 (先卖后买, 市价, 幂等 client_order_id);
+          整仓出场自动改走 close-position 接口全量平掉, 不留小数残渣
   equity  按本地账本 + 实时报价计算挑战者净值/现金 (不受 paper 账户里其他持仓干扰)
   account 打印 paper 账户基本状态
 
@@ -73,6 +74,57 @@ def _wait_fill(coid, timeout_s):
         time.sleep(3)
 
 
+def _wait_fill_by_id(oid, timeout_s):
+    deadline = time.time() + timeout_s
+    while True:
+        o = _req("GET", f"/v2/orders/{oid}")
+        if o["status"] in ("filled", "canceled", "rejected", "expired") or time.time() > deadline:
+            return o
+        time.sleep(3)
+
+
+# 整仓出场判定: 卖量与账户全仓之差在 FULL_EXIT_EPS 股内、且覆盖 ≥FULL_EXIT_RATIO 持仓。
+# 比例下限保护共享账户: 多本账本同持一标的时 (如个股实验与隔夜账本都持 CAT),
+# 单本账本的出场卖量远小于账户全仓, 必须走普通限量卖单, 绝不能整仓平掉。
+FULL_EXIT_EPS = 0.001
+FULL_EXIT_RATIO = 0.999
+
+
+def _position_qty(sym):
+    try:
+        return float(_req("GET", f"/v2/positions/{sym}")["qty"])
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def _latest_filled_sell(sym, date):
+    orders = _req("GET", f"/v2/orders?status=closed&symbols={sym}"
+                         f"&after={date}T00:00:00Z&direction=desc&limit=10")
+    for o in orders:
+        if o["side"] == "sell" and o["status"] == "filled":
+            return o
+    return None
+
+
+def _sell_full_or_none(sym, want, date, timeout_s):
+    """整仓出场改走 close-position 接口 (DELETE /v2/positions/{sym}), 按账户实际
+    持仓 (9位小数) 全量平掉 — 根治买入按 notional 成交 9 位小数、卖出 floor6 截断
+    留下百万分之一股残渣的问题。非整仓 (卖量明显小于账户持仓) 返回 None 走原限量
+    卖单; 仓位已不存在时复用当日最近已成交卖单 (幂等重跑)。"""
+    apos = _position_qty(sym)
+    if apos is None:
+        return _latest_filled_sell(sym, date) or {"status": "position_missing"}
+    if abs(apos - want) > FULL_EXIT_EPS or want < apos * FULL_EXIT_RATIO:
+        return None
+    try:
+        closed = _req("DELETE", f"/v2/positions/{sym}")
+    except urllib.error.HTTPError as e:
+        raise SystemExit(f"平仓失败 {sym}: HTTP {e.code} {e.read().decode()[:200]}")
+    return _wait_fill_by_id(closed["id"], timeout_s)
+
+
 def cmd_run(a):
     orders = load_json(a.orders)
     if orders.get("halted") or orders.get("circuit_breaker_triggered"):
@@ -97,17 +149,21 @@ def cmd_run(a):
     for side, o in plan:
         sym = o["symbol"]
         coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
-        body = {"symbol": sym, "side": side}
-        if o.get("position_intent"):
-            body["position_intent"] = o["position_intent"]
-        if OCC_RE.match(sym):
-            body["qty"] = str(int(o["qty"]))  # 期权只能整张
-        elif side == "sell":
-            body["qty"] = str(o["qty"])
-        else:
-            body["notional"] = str(o["dollar_amount"])
-        _submit(body, coid)
-        done = _wait_fill(coid, a.timeout)
+        done = None
+        if side == "sell" and not OCC_RE.match(sym):
+            done = _sell_full_or_none(sym, float(o["qty"]), a.date, a.timeout)
+        if done is None:
+            body = {"symbol": sym, "side": side}
+            if o.get("position_intent"):
+                body["position_intent"] = o["position_intent"]
+            if OCC_RE.match(sym):
+                body["qty"] = str(int(o["qty"]))  # 期权只能整张
+            elif side == "sell":
+                body["qty"] = str(o["qty"])
+            else:
+                body["notional"] = str(o["dollar_amount"])
+            _submit(body, coid)
+            done = _wait_fill(coid, a.timeout)
         fq = float(done.get("filled_qty") or 0)
         if fq > 0:
             fills.append({"symbol": sym, "side": side, "qty": fq,
