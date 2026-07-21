@@ -259,6 +259,7 @@ def cmd_search(a):
 
 def cmd_challenger_config(a):
     cfg = load_json(a.config)
+    cfg.pop("live_entries_paused", None)  # 实盘入场暂停不影响纸面学习账本
     sl = load_json(a.state_learn)
     ch = sl.get("challenger")
     if not ch:
@@ -277,6 +278,7 @@ def cmd_challenger_config(a):
 def cmd_twin_config(a):
     """冠军孪生配置 = 当前 overnight.json + 禁止换仓 (供学习账本影子跑)"""
     cfg = load_json(a.config)
+    cfg.pop("live_entries_paused", None)  # 实盘入场暂停不影响纸面学习账本
     cfg["funding"] = {**cfg.get("funding", {}), "allowed": False,
                       "note": "学习账本不做换仓 (不得触碰实盘存量)"}
     cfg["_twin"] = True

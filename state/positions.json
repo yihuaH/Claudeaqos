@@ -21,12 +21,6 @@
       "adoption_ref_price": 50.4573,
       "adoption_date": "2026-07-15"
     },
-    "DASH": {
-      "qty": 0.24253,
-      "avg_cost": 195.44,
-      "adoption_ref_price": 189.295,
-      "adoption_date": "2026-07-15"
-    },
     "SNOW": {
       "qty": 0.181326,
       "avg_cost": 260.97,
@@ -51,28 +45,10 @@
       "adoption_ref_price": 164.345,
       "adoption_date": "2026-07-15"
     },
-    "ALLT": {
-      "qty": 4.186145,
-      "avg_cost": 8.92,
-      "adoption_ref_price": 8.585,
-      "adoption_date": "2026-07-15"
-    },
-    "ABNB": {
-      "qty": 0.33281,
-      "avg_cost": 146.72,
-      "adoption_ref_price": 148.08,
-      "adoption_date": "2026-07-15"
-    },
     "ETSY": {
       "qty": 2.073344,
       "avg_cost": 84.07,
       "adoption_ref_price": 85.69,
-      "adoption_date": "2026-07-15"
-    },
-    "DT": {
-      "qty": 5.140514,
-      "avg_cost": 45.18,
-      "adoption_ref_price": 45.125,
       "adoption_date": "2026-07-15"
     },
     "IKT": {
@@ -98,6 +74,42 @@
       "side": "sell",
       "qty": 1.353369,
       "price": 79.9497,
+      "bucket": "legacy",
+      "reason": "funding_rotation"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "ALLT",
+      "side": "sell",
+      "qty": 4.186145,
+      "price": 8.07,
+      "bucket": "legacy",
+      "reason": "funding_rotation"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "DASH",
+      "side": "sell",
+      "qty": 0.24253,
+      "price": 183.5801,
+      "bucket": "legacy",
+      "reason": "funding_rotation"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "ABNB",
+      "side": "sell",
+      "qty": 0.33281,
+      "price": 146.0201,
+      "bucket": "legacy",
+      "reason": "funding_rotation"
+    },
+    {
+      "date": "2026-07-17",
+      "symbol": "DT",
+      "side": "sell",
+      "qty": 5.140514,
+      "price": 44.3732,
       "bucket": "legacy",
       "reason": "funding_rotation"
     }
