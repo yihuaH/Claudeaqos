@@ -1,0 +1,54 @@
+{
+  "trade_date": "2026-07-21",
+  "generated_at": "2026-07-21T19:44:02Z",
+  "status": "awaiting_execution",
+  "market_window_until_et": "15:55",
+  "valid_until": "次一交易日 09:25 ET (隔夜轨道买单除外, 见逐单 valid_until)",
+  "buying_power_at_generation": 847.21,
+  "orders": [
+    {
+      "seq": 1,
+      "action": "sell",
+      "symbol": "FTNT",
+      "qty": 1.419734,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation",
+      "est_price": 157.71,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 2,
+      "action": "sell",
+      "symbol": "NVO",
+      "qty": 1.812025,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation",
+      "est_price": 49.245,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 3,
+      "action": "sell",
+      "symbol": "ABBV",
+      "qty": 0.942873,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation",
+      "est_price": 255.69,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "NEE",
+      "dollar_amount": 289.17,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 87.75,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    }
+  ]
+}
