@@ -122,7 +122,10 @@ python3 scripts/signals.py signal \
    (ref_id=每单一个 UUID, 重试必须复用), 订单类型按执行时刻分两种模式:
    - **当日市价模式** (trade_date 当天 09:30–15:55 ET 且开市): market + regular_hours, 同原规则;
      买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
-   - **晚间限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单排队次日开盘。
+   - **盘外限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单 +
+     `market_hours=all_day_hours` (2026-07-21 用户指示: 盘后/隔夜/盘前时段即时生效, 能成交就成交,
+     不必等开盘); 标的不支持 24h 时段或下单被拒 → 依次降级 `extended_hours` → `regular_hours` 排队开盘,
+     降级记 journal。限价保护不变, 盘外薄流动性只影响成交概率、不影响成交价上限。
      **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
      include fractional shares"), 故本模式仅执行买单且:
      - limit_price = round(est_price×1.010, 2) (信号价+1.0%容差 [2026-07-21 回测调优: ETF/个股两组回测中
