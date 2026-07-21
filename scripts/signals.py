@@ -265,7 +265,41 @@ def cmd_signal(a):
 
     # --- 买入: ETF 入场信号 ---
     held = set(strat) - {s["symbol"] for s in out["sells"] if s["bucket"] == "strategy"}
+
+    # 弱势排序的可卖存量持仓 (价格/SMA20 比值最低 = 最弱); 换仓与加速清理共用
+    def weakness(sym):
+        i = ind.get(sym) or {}
+        if i.get("sma20"):
+            return i["close"] / i["sma20"]
+        return 1.0
+
+    fundable = sorted(
+        [s for s in legacy
+         if s not in exiting and s not in cfg["etf_universe"]
+         and ind.get(s) and not (cfg["legacy"]["avoid_selling_same_day_buys"] and bought_today(s))],
+        key=weakness)
+
+    def accelerated_liquidation():
+        # 存量加速清理 (用户 2026-07-21 指示"加速换仓给引擎供血"): 与当日买入需求无关,
+        # 每日额外卖出最弱存量最多 N 只, 卖出款 T+1 结算后归入引擎购买力。
+        # 与换仓卖单同受确认闸门约束 (执行层核对 funding_sell_order); VIX 风控不拦卖出。
+        acc = cfg["legacy"].get("accelerated_liquidation") or {}
+        if not acc.get("enabled"):
+            return
+        n = 0
+        while n < int(acc.get("max_sales_per_day", 0)) and fundable:
+            lsym = fundable.pop(0)
+            lqty = broker_qty(lsym, float(legacy[lsym]["qty"]))
+            if lqty <= 0:
+                continue
+            out["sells"].append({"symbol": lsym, "qty": round(lqty, 6), "bucket": "legacy",
+                                 "reason": "accelerated_liquidation",
+                                 "est_price": ind[lsym]["close"]})
+            exiting.add(lsym)
+            n += 1
+
     if risk_off:
+        accelerated_liquidation()
         _emit(out, a.out)
         return
     cands = []
@@ -321,19 +355,6 @@ def cmd_signal(a):
     cash += sum(s["qty"] * s["est_price"] for s in out["sells"])
 
     funding_sales = 0
-    # 弱势排序的可卖存量持仓 (价格/SMA20 比值最低 = 最弱)
-    def weakness(sym):
-        i = ind.get(sym) or {}
-        if i.get("sma20"):
-            return i["close"] / i["sma20"]
-        return 1.0
-
-    fundable = sorted(
-        [s for s in legacy
-         if s not in exiting and s not in cfg["etf_universe"]
-         and ind.get(s) and not (cfg["legacy"]["avoid_selling_same_day_buys"] and bought_today(s))],
-        key=weakness)
-
     for sym in picked:
         need = pos_usd
         while (cash < need and cfg["legacy"]["funding_sales_allowed"]
@@ -357,6 +378,7 @@ def cmd_signal(a):
         else:
             warnings.append(f"{sym}: 有入场信号但可用资金不足 (${cash:.2f}), 跳过")
 
+    accelerated_liquidation()
     _emit(out, a.out)
 
 

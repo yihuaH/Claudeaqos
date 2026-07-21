@@ -41,7 +41,13 @@
     "protective_stop_pct": 7.0,
     "funding_sales_allowed": true,
     "max_funding_sales_per_day": 10,
-    "avoid_selling_same_day_buys": true
+    "avoid_selling_same_day_buys": true,
+    "accelerated_liquidation": {
+      "enabled": true,
+      "max_sales_per_day": 3,
+      "since": "2026-07-21",
+      "note": "用户指示加速换仓给引擎供血: 每日在按需换仓之外额外清理最多3只最弱存量 (价格/SMA20 最低), 卖出款 T+1 结算后成为引擎购买力。卖单与换仓同受确认闸门约束 (标的须在当日 funding_sell_order 内), 同受 GFV 保护 (当日买入的不卖)。"
+    }
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,
@@ -59,6 +65,6 @@
   "execution": {
     "mode": "confirm",
     "since": "2026-07-16 (用户指示: 报告先审, 回复确认才下单)",
-    "rule": "实盘新买入与换仓卖单须有当日 state/approval.json (approved=true 且 trade_date=今天, 标的在 buy_candidates 内); 出场/止损卖出与纸面轨道不受限。无确认 → 只出不进, 记 journal。"
+    "rule": "实盘新买入与换仓/加速清理卖单须有当日 state/approval.json (approved=true 且 trade_date=今天, 买单标的在 buy_candidates 内, 换仓/加速清理卖单标的在 funding_sell_order 内); 出场/止损卖出与纸面轨道不受限。无确认 → 只出不进, 记 journal。"
   }
 }

@@ -96,7 +96,7 @@ def cmd_run(a):
     fills, warnings = [], []
     for side, o in plan:
         sym = o["symbol"]
-        coid = f"cq-{a.date}-{sym}-{side}"
+        coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
         body = {"symbol": sym, "side": side}
         if o.get("position_intent"):
             body["position_intent"] = o["position_intent"]
@@ -215,6 +215,8 @@ def main():
     r.add_argument("--date", required=True)
     r.add_argument("--fills-out", help="成交输出 (供 signals.py apply 回写 paper 账本)")
     r.add_argument("--timeout", type=int, default=90, help="单笔订单等待成交秒数")
+    r.add_argument("--coid-prefix", default="cq",
+                   help="幂等ID前缀; 不同 paper 轨道用不同前缀, 避免同日同标的订单冲突")
     r.add_argument("--dry-run", action="store_true")
     r.set_defaults(func=cmd_run)
 

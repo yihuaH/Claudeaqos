@@ -57,7 +57,8 @@ python3 scripts/signals.py signal \
 
 全部卖单确认后, 检查确认闸门 (`strategy/config.json` execution.mode=confirm 时):
 `state/approval.json` 必须 `approved=true` 且 `trade_date=今天`; 买单标的必须在 `buy_candidates` 内,
-换仓卖单标的必须在 `funding_sell_order` 内。不满足 → 跳过该买单及其换仓卖单, journal 记"未获确认, 只出不进"。
+换仓与加速清理卖单 (reason=funding_rotation / accelerated_liquidation) 标的必须在 `funding_sell_order` 内。
+不满足 → 跳过该买单及其换仓卖单 (加速清理卖单同样跳过), journal 记"未获确认, 只出不进"。
 **出场/止损类卖单永不受此闸门限制** (风险只减不增)。闸门通过后, 对 `buys` 里每一单:
 1. `review_equity_order(..., side=buy, type=market, dollar_amount)`。
 2. 若告警显示购买力不足 → 按告警金额下调 `dollar_amount`(不低于 min_order_usd, 否则跳过)。
@@ -180,6 +181,20 @@ python3 scripts/signals.py signal \
 5. 执行与回写 (同第 6 节模式): `paper.py run` → `signals.py apply --state state/stock_positions.json`。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
 6. journal 记录: 当日净值、持仓、信号、防御过滤触发明细 (warnings)。实验累计 ≥20 交易日后与用户复盘决定去留。
 
+## 7B. 动量轮动实验 (仅 paper, strategy/momentum.json enabled=true 时)
+
+第 7 节完成后执行, 独立账本 `state/momentum_positions.json`, 任何失败只记日志。
+周度节奏: 每周一为调仓日 (账本从未调仓过时立即调仓; 节假日错过由 max_days_between=8 兜底补调);
+非调仓日只查硬止损, 通常无单。
+
+1. 数据 (Alpaca): `python3 scripts/integrations.py bars --symbols <momentum universe 逗号分隔> --start <今天-550天> --out <scratchpad>/mom_bars.json` 和 `integrations.py quotes --symbols <同> --out <scratchpad>/mom_quotes.json`。
+2. 净值: `python3 scripts/paper.py equity --ledger state/momentum_positions.json --quotes <mom_quotes>` → equity/cash。
+3. 信号: `python3 scripts/momentum.py signal --config strategy/momentum.json --state state/momentum_positions.json --bars <mom_bars> --quotes <mom_quotes> --date <今天> --portfolio-value <equity> --buying-power <cash> --out <scratchpad>/mom_orders.json`
+4. 执行与回写: `paper.py run --orders <mom_orders> --date <今天> --coid-prefix cqm --fills-out <mom_fills>` → `signals.py apply --state state/momentum_positions.json --fills <mom_fills> --date <今天> --portfolio-value <equity>`。
+   (`--coid-prefix cqm` 隔离幂等ID, 防止与其他 paper 轨道同日同标的订单冲突。)
+5. journal 记录: 是否调仓日、动量分数榜前5、目标持仓 vs 实际、净值。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
+6. 评估: 实验累计 ≥60 交易日 (约12次周度调仓) 后与用户复盘决定去留; 期间不并入任何实盘决策。
+
 ## 8. 参数搜索 (无活跃挑战者时执行)
 
 1. 拉长历史 (约 5 年): `python3 scripts/integrations.py bars --symbols <ETF池逗号分隔> --start <今天减5年> --out <scratchpad>/bars_5y.json`
@@ -193,6 +208,7 @@ python3 scripts/signals.py signal \
    注明依赖"当日卖出款即时可用"这一结算假设)。计划总额不得超过 现有BP + 计划换仓卖出估值。
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
 2. 生成 `state/approval.json`: trade_date=次一交易日, approved=false, buy_candidates=[ETF池10只 + 隔夜扩展候选], funding_sell_order=[存量按弱势排序], preview_top5。
+   funding_sell_order 兼作次日**加速清理授权** (config.json legacy.accelerated_liquidation): 引擎将额外卖出其中最弱的最多3只, 与买入需求无关; 报告需向用户列明这一层。
 3. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预审), 用 SendUserFile 发送给用户。
 4. 把预审报告发给用户 (候选表 + 换仓顺序 + 风险注记), 提示"回复确认即生效"。
 5. 用户确认后: approved=true + approved_at 时间戳, 提交推送。次日闸门按此放行。

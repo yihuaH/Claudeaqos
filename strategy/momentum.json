@@ -1,0 +1,50 @@
+{
+  "enabled": true,
+  "paper_only": true,
+  "experiment": "momentum_weekly_v1",
+  "start_capital": 25000.0,
+  "universe": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "XLK",
+    "XLF",
+    "XLE",
+    "XLV",
+    "XLI",
+    "XLP",
+    "XLU",
+    "XLY",
+    "XLB",
+    "SMH",
+    "EFA",
+    "EEM",
+    "GLD",
+    "TLT",
+    "IEF"
+  ],
+  "signal": {
+    "lookback_days": [63, 126, 252],
+    "skip_recent_days": 5,
+    "abs_momentum_min": 0.0
+  },
+  "rebalance": {
+    "weekday": 0,
+    "max_days_between": 8
+  },
+  "sizing": {
+    "top_n": 3,
+    "keep_rank": 5,
+    "position_pct_of_portfolio": 30.0,
+    "min_cash_reserve_usd": 5.0,
+    "min_order_usd": 5.0
+  },
+  "risk": {
+    "hard_stop_pct": 15.0,
+    "circuit_breaker": {
+      "max_drawdown_pct_from_hwm": 15.0
+    }
+  },
+  "note": "周度动量轮动实验 (仅 paper, 用户 2026-07-21 批准): 19只流动性最高的 ETF (大盘/行业/国际/金/债) 按 3/6/12月混合动量排名, 每周一持有前3名 (各30%仓位), score≤0 的缺口留现金 (绝对动量过滤 = 熊市自动降仓, 故不设 VIX 闸门)。keep_rank=5 滞后带: 已持仓跌出前3但仍在前5的不换, 降低换手。硬止损 -15% 为灾难保险, 正常出场靠周度轮动。与均值回归两条实盘线信号相关性低, 定位为分散互补型实验。虚拟资金 $25,000, 独立账本 state/momentum_positions.json。评估: 累计 ≥60 交易日 (约12次调仓) 后与用户复盘决定去留, 期间不并入任何实盘决策。"
+}
