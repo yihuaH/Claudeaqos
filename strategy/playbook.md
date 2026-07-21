@@ -71,18 +71,25 @@ python3 scripts/signals.py signal \
 {
   "trade_date": "YYYY-MM-DD", "generated_at": "<ISO UTC>",
   "status": "awaiting_execution",
-  "valid_until_et": "15:55",
+  "market_window_until_et": "15:55",
+  "valid_until": "次一交易日 09:25 ET (隔夜轨道买单除外, 见逐单 valid_until)",
   "buying_power_at_generation": 0.0,
   "orders": [
     {"seq": 1, "action": "sell", "symbol": "X", "qty": 1.234567, "bucket": "legacy",
-     "reason": "funding_rotation", "est_price": 0.0, "state_file": "state/positions.json"},
+     "reason": "funding_rotation", "est_price": 0.0, "state_file": "state/positions.json",
+     "valid_until": "next_open_0925_et"},
     {"seq": 2, "action": "buy", "symbol": "Y", "dollar_amount": 290.77, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 0.0, "state_file": "state/positions.json"},
+     "reason": "rsi2_entry", "est_price": 0.0, "state_file": "state/positions.json",
+     "valid_until": "next_open_0925_et"},
     {"seq": 3, "action": "buy", "symbol": "Z", "dollar_amount": 194.48, "bucket": "strategy",
-     "reason": "ibs_entry", "est_price": 0.0, "state_file": "state/overnight_positions.json"}
+     "reason": "ibs_entry", "est_price": 0.0, "state_file": "state/overnight_positions.json",
+     "valid_until": "same_day_1555_et"}
   ]
 }
 ```
+
+- 时效 (2026-07-20 用户定, "晚间限价方案"): RSI-2 买单与换仓卖单有效至**次一交易日 09:25 ET**;
+  隔夜轨道买单 (state_file=overnight) 因"收盘买/次日收盘卖"的策略性质**仅当日 15:55 ET 前有效**。
 
 - 内容必须逐字段来自引擎输出 (signals.py / overnight.py), 换仓卖单排在买单前 (seq 升序 = 执行顺序);
   隔夜轨道 (5B 主窗口) 的入场买单同样并入此文件 (state_file 指向对应账本)。
@@ -93,12 +100,17 @@ python3 scripts/signals.py signal \
 **4C. 半自动执行协议 (有人值守, 用户触发)** — 仅当用户在任一有人值守会话中明确下达
 "执行"(或等义指令) 时进行, 执行者通常为报告窗口会话:
 0. `git fetch` 交易分支取最新 `state/pending_orders.json`。
-1. 校验 (任一不满足 → 不执行并告知用户原因): `trade_date` = 今天(ET); `status` = `awaiting_execution`;
-   当前 ET 时间在 09:30–15:55 常规时段内; 开市 (Alpaca 时钟或 SPY 报价)。
-   过期文件 → status 改 `expired`, journal 注明 "当日只出不进", 提交推送。
-2. 按 seq 顺序执行 (先换仓卖后买): 每单 `review_equity_order` → 无预期外告警 → `place_equity_order`
-   (market, regular_hours, ref_id=每单一个 UUID, 重试必须复用)。
-   买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
+1. 校验 (任一不满足 → 不执行并告知用户原因): `status` = `awaiting_execution`; 按逐单 `valid_until`
+   判定时效 — 过期单跳过并标记, 不影响其余订单; 全部过期 → status 改 `expired`, journal 注明, 提交推送。
+2. 按 seq 顺序执行 (先换仓卖后买), 每单 `review_equity_order` → 无预期外告警 → `place_equity_order`
+   (ref_id=每单一个 UUID, 重试必须复用), 订单类型按执行时刻分两种模式:
+   - **当日市价模式** (trade_date 当天 09:30–15:55 ET 且开市): market + regular_hours, 同原规则;
+     买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
+   - **晚间限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单排队次日开盘 —
+     买单 limit_price=round(est_price×1.005, 2) (信号价+0.5%容差, 开盘跳空超出即不成交、不追价);
+     换仓卖单 limit_price=round(est_price×0.995, 2); time_in_force=gfd。
+     资金约束: 买单按 seq 累计金额不得超过 `get_portfolio` 实时 buying_power, 超出部分跳过记 journal
+     (换仓卖出款 T+1 结算, **不得**假设次日开盘即时可用); 隔夜轨道买单在此模式下一律已过期, 跳过。
 3. **只执行文件里的订单, 逐字段照抄, 绝不放大、绝不加单、绝不改标的** — 此文件是红线 2
    "所有买卖必须来自引擎输出"的唯一合法载体。
 4. 回写: fills 按 `state_file` 分组, 分别 `signals.py apply`; `pending_orders.json` status 改
@@ -136,6 +148,9 @@ python3 scripts/signals.py signal \
    - review 返回 GFV/结算类警告 → 该卖单跳过, 留给 15:30 兜底窗口, 记 journal 并通知用户;
    - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
    - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
+8. 撤销 4C 晚间限价挂单残留: `get_equity_orders` 查 4C 夜间提交、开盘后仍未成交的限价单 (queued/confirmed),
+   逐单 `cancel_equity_order` (best-effort: 若撤单被权限拦截或失败, 订单为 gfd 当日自动到期, 限价已封顶价格风险,
+   任其存续即可); 已成交/部分成交的按 4C 步骤4 回写对应账本; 结果记 journal。
 
 **主窗口 (15:30 ET, 第 5 节完成后执行)**:
 
