@@ -50,6 +50,9 @@ python3 scripts/signals.py signal \
 
 ## 4. 执行订单 (execution.mode=semi_auto: 卖出全自动, 买入半自动)
 
+> **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述旧的 confirm 闸门 (approval.json 确认),
+> 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单绝不在无人值守下 review/place, 也不再读 approval.json。
+
 背景 (2026-07-20 定型): 无人值守会话的实盘**买单**会被 Claude Code auto-mode 分类器拦截
 (连续 3 个交易日复现, 卖单与有人值守会话不受影响), 属平台级安全边界, 仓库配置无法解除。
 故买入改为半自动: 无人值守会话只生成待执行清单, 由用户在场时触发执行 (见 4C)。
