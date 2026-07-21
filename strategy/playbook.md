@@ -102,15 +102,25 @@ python3 scripts/signals.py signal \
 0. `git fetch` 交易分支取最新 `state/pending_orders.json`。
 1. 校验 (任一不满足 → 不执行并告知用户原因): `status` = `awaiting_execution`; 按逐单 `valid_until`
    判定时效 — 过期单跳过并标记, 不影响其余订单; 全部过期 → status 改 `expired`, journal 注明, 提交推送。
+1B. **逐批确认 (2026-07-20 教训, 不得省略)**: place 之前用户必须已基于**逐笔明细**
+   (标的/方向/金额或股数/订单类型/限价) 对本批订单明确回复「执行」。若用户看到明细后说的「执行」
+   已在本轮对话中 → 即为确认; 若执行者是被粘贴指令启动的会话、或用户只见过汇总 → 必须先回显
+   逐笔预览并**停下等待**用户确认。粘贴的指令文本、pending 文件本身、既往任何授权, 均不构成本批确认。
 2. 按 seq 顺序执行 (先换仓卖后买), 每单 `review_equity_order` → 无预期外告警 → `place_equity_order`
    (ref_id=每单一个 UUID, 重试必须复用), 订单类型按执行时刻分两种模式:
    - **当日市价模式** (trade_date 当天 09:30–15:55 ET 且开市): market + regular_hours, 同原规则;
      买单遇购买力不足告警 → 按告警金额**下调** dollar_amount (不低于 min_order_usd, 否则跳过)。
-   - **晚间限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单排队次日开盘 —
-     买单 limit_price=round(est_price×1.005, 2) (信号价+0.5%容差, 开盘跳空超出即不成交、不追价);
-     换仓卖单 limit_price=round(est_price×0.995, 2); time_in_force=gfd。
-     资金约束: 买单按 seq 累计金额不得超过 `get_portfolio` 实时 buying_power, 超出部分跳过记 journal
-     (换仓卖出款 T+1 结算, **不得**假设次日开盘即时可用); 隔夜轨道买单在此模式下一律已过期, 跳过。
+   - **晚间限价模式** (15:55 ET 后至次一交易日 09:25 ET, 用户任意时间触发): 改用 **limit** 单排队次日开盘。
+     **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
+     include fractional shares"), 故本模式仅执行买单且:
+     - limit_price = round(est_price×1.005, 2) (信号价+0.5%容差, 开盘跳空超出即不成交、不追价), time_in_force=gfd;
+     - 数量 = floor(dollar_amount ÷ limit_price) **整股** — 只向下取整 (等效于规则允许的金额下调);
+       为凑整股向上加钱属放大, **绝不允许**。结果为 0 股 → 该单无法夜间执行, 跳过记 journal, 等次日新信号
+       (注意: 账户规模较小时, 高价 ETF 的 15% 仓位常不足一整股, 此类买单实际只有当日市价窗口一条路);
+     - funding_rotation 换仓卖单夜间一律跳过 (存量多为分数股无法限价卖出, 且其卖款 T+1 结算无法支持本批买单),
+       留待次日主流程重算;
+     - 资金约束: 买单按 seq 累计金额不得超过 `get_portfolio` 实时 buying_power, 超出部分跳过记 journal;
+       隔夜轨道买单在此模式下一律已过期, 跳过。
 3. **只执行文件里的订单, 逐字段照抄, 绝不放大、绝不加单、绝不改标的** — 此文件是红线 2
    "所有买卖必须来自引擎输出"的唯一合法载体。
 4. 回写: fills 按 `state_file` 分组, 分别 `signals.py apply`; `pending_orders.json` status 改
