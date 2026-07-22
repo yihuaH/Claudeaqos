@@ -1,112 +1,46 @@
 {
-  "trade_date": "2026-07-21",
-  "generated_at": "2026-07-21T19:44:02Z",
-  "status": "filled_reconciled",
+  "trade_date": "2026-07-22",
+  "generated_at": "2026-07-22T19:55:13Z",
+  "status": "awaiting_execution",
   "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 09:25 ET (隔夜轨道买单除外, 见逐单 valid_until)",
-  "buying_power_at_generation": 847.21,
+  "valid_until": "次一交易日 09:25 ET",
+  "buying_power_at_generation": 583.21,
   "orders": [
     {
       "seq": 1,
       "action": "sell",
-      "symbol": "FTNT",
-      "qty": 1.419734,
+      "symbol": "ETSY",
+      "qty": 2.073344,
       "bucket": "legacy",
       "reason": "accelerated_liquidation",
-      "est_price": 157.71,
+      "est_price": 80.33,
+      "review_est_price": 80.4,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a602759-e44f-4291-a223-7a8bb1c945fc",
-        "ref_id": "5aaee881-7e0e-4c50-83c5-3ad3c6cb7690",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued(排队明开盘)"
-      },
-      "fill": {
-        "side": "sell",
-        "qty": 1.419734,
-        "avg_price": 158.2,
-        "state": "filled"
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "sell",
-      "symbol": "NVO",
-      "qty": 1.812025,
+      "symbol": "SE",
+      "qty": 0.908207,
       "bucket": "legacy",
       "reason": "accelerated_liquidation",
-      "est_price": 49.245,
+      "est_price": 104.85,
+      "review_est_price": 105.07,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a60275a-58de-4ab6-a105-eb7eea6023ab",
-        "ref_id": "af47d73a-3375-4214-badc-9e7c349ef032",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued(排队明开盘)"
-      },
-      "fill": {
-        "side": "sell",
-        "qty": 1.812025,
-        "avg_price": 49.3,
-        "state": "filled"
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "sell",
-      "symbol": "ABBV",
-      "qty": 0.942873,
+      "symbol": "SNOW",
+      "qty": 0.181326,
       "bucket": "legacy",
       "reason": "accelerated_liquidation",
-      "est_price": 255.69,
+      "est_price": 267.42,
+      "review_est_price": 268.07,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a60275d-6eb1-4634-a219-b37cf281d8d8",
-        "ref_id": "2afd6a4d-857d-441a-b5f9-13c52928a6dc",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued(排队明开盘)"
-      },
-      "fill": {
-        "side": "sell",
-        "qty": 0.942873,
-        "avg_price": 256.89,
-        "state": "filled"
-      }
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "NEE",
-      "dollar_amount": 289.17,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 87.75,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a60275e-1e71-4fcf-8a8b-68b43a48dd06",
-        "ref_id": "4f416805-7fee-4331-807c-9ccff0c14404",
-        "type": "limit",
-        "limit_price": 88.63,
-        "qty": 3,
-        "market_hours": "all_day_hours",
-        "state": "unconfirmed(24h时段挂单)"
-      },
-      "fill": {
-        "side": "buy",
-        "qty": 3.0,
-        "avg_price": 88.0,
-        "state": "filled"
-      }
+      "valid_until": "next_open_0925_et"
     }
-  ],
-  "executed_at": "2026-07-22T02:14Z",
-  "executed_by": "报告窗口会话 4C (用户 2026-07-21 21:54 ET 逐笔确认「执行」)",
-  "fills_pending_note": "3笔卖单排队明早9:30开盘市价成交; NEE 24h限价挂单。实际成交由次日10:45晨检 get_equity_orders 捕获并 signals.py apply 回写账本。",
-  "reconciled_at": "2026-07-22T14:45Z (10:45 ET 晨检)"
+  ]
 }

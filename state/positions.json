@@ -1,21 +1,8 @@
 {
   "high_water_mark": 1952.36,
   "halted": false,
-  "strategy_positions": {
-    "NEE": {
-      "qty": 3.0,
-      "entry_price": 88.0,
-      "entry_date": "2026-07-22",
-      "cost": 264.0
-    }
-  },
+  "strategy_positions": {},
   "legacy_positions": {
-    "BAC": {
-      "qty": 0.944985,
-      "avg_cost": 60.71,
-      "adoption_ref_price": 61.475,
-      "adoption_date": "2026-07-15"
-    },
     "SNOW": {
       "qty": 0.181326,
       "avg_cost": 260.97,
@@ -38,12 +25,6 @@
       "qty": 2.073344,
       "avg_cost": 84.07,
       "adoption_ref_price": 85.69,
-      "adoption_date": "2026-07-15"
-    },
-    "IKT": {
-      "qty": 23.934897,
-      "avg_cost": 2.09,
-      "adoption_ref_price": 2.05,
       "adoption_date": "2026-07-15"
     }
   },
@@ -137,6 +118,33 @@
       "price": 256.89,
       "bucket": "legacy",
       "reason": "accelerated_liquidation"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "NEE",
+      "side": "sell",
+      "qty": 3.0,
+      "price": 89.5501,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "BAC",
+      "side": "sell",
+      "qty": 0.944985,
+      "price": 61.7501,
+      "bucket": "legacy",
+      "reason": "legacy_take_profit"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "IKT",
+      "side": "sell",
+      "qty": 23.934897,
+      "price": 2.1708,
+      "bucket": "legacy",
+      "reason": "legacy_take_profit"
     }
   ]
 }

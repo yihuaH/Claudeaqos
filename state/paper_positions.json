@@ -1,7 +1,7 @@
 {
   "start_capital": 100877.65,
   "challenger_started": "2026-07-16",
-  "high_water_mark": 101914.2,
+  "high_water_mark": 102241.39,
   "halted": false,
   "strategy_positions": {
     "DIA": {
@@ -9,12 +9,6 @@
       "entry_price": 518.29,
       "entry_date": "2026-07-20",
       "cost": 15134.62
-    },
-    "NEE": {
-      "qty": 174.291642914,
-      "entry_price": 87.71,
-      "entry_date": "2026-07-21",
-      "cost": 15287.12
     }
   },
   "legacy_positions": {},
@@ -72,6 +66,15 @@
       "price": 87.71,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "NEE",
+      "side": "sell",
+      "qty": 174.291642914,
+      "price": 89.600607,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }
