@@ -48,8 +48,8 @@ GitHub Routine   →   scripts/signals.py (确定性)   →   Claude 会话 + Ro
 | 数据源 | 用途 | 状态 |
 |---|---|---|
 | Robinhood MCP (cash_printer) | 行情 + 历史 + 下单 | ✅ 使用中 |
-| Alpaca paper API | 市场时钟/假期日历 (休市判定) | ✅ 网络已放行, 已接入 playbook; 等环境变量注入 (容器重启后生效) |
-| FRED API | 宏观风控: VIX ≥ 30 暂停新开仓 | ✅ 网络已放行, 过滤逻辑已进引擎 (三态验证通过); 等环境变量注入 |
+| Alpaca paper API | 市场时钟/假期日历 (休市判定) + 报价/日线/快照 | ✅ 已注入生效 (2026-07-22 确认), 已接入 playbook |
+| FRED API | 宏观风控: VIX ≥ 30 暂停新开仓 | ✅ 已注入生效 (2026-07-22 确认), 过滤逻辑已进引擎 |
 
 ## 密钥管理
 
