@@ -63,10 +63,10 @@ python3 scripts/signals.py signal \
 ## 4. 执行订单 (execution.mode=semi_auto: 卖出全自动, 买入半自动)
 
 > **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述旧的 confirm 闸门 (approval.json 确认),
-> 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单绝不在无人值守下 review/place, 也不再读 approval.json。
+> 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单在无人值守下可 review、绝不 place, 也不再读 approval.json。
 
-背景: 无人值守会话的实盘**买单**会被平台分类器拦截 (卖单与有人值守会话不受影响), 仓库配置无法解除;
-故买入半自动 — 无人值守只生成待执行清单, 由用户在场时触发 (见 4C)。
+背景: 无人值守会话的实盘**买单 place (下单)** 会被平台分类器拦截 (review 不受限; 卖单与有人值守会话不受影响),
+仓库配置无法解除; 故买入半自动 — 无人值守只生成待执行清单, 由用户在场时触发 (见 4C)。
 
 **4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
 出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`overnight_exit`/`close_backstop_exit` 等,
@@ -78,7 +78,8 @@ python3 scripts/signals.py signal \
 **4B. 生成待执行清单 (无人值守)** — `buys` 全部订单 + `sells` 中 reason=`funding_rotation` 的换仓卖单
 与 reason=`accelerated_liquidation` 的加速清理卖单 (2026-07-21 用户设立"加速换仓给引擎供血",
 见 config.json legacy 段; 与买入需求无关, 每日最弱存量最多3只),
-**不做 review/place** (会被分类器拦截, 不要再尝试), 改为写入 `state/pending_orders.json`:
+**绝不 place** (无人值守 place 会被分类器拦截, 不要再尝试下单); 如需可 review 核对报价/告警 (review 不受限),
+但结果只写入 `state/pending_orders.json`, 不下单:
 
 ```json
 {

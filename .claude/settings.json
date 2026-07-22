@@ -15,7 +15,7 @@
   "autoMode": {
     "allow": [
       "$defaults",
-      "cash_printer (Robinhood MCP) 的 review_equity_order 与 place_equity_order 调用是本仓库预授权的确定性交易流程: 订单只由确定性引擎 (scripts/signals.py / scripts/overnight.py) 生成, 只操作账户 802095265。semi_auto (2026-07-20 起, 已取代原 approval.json 逐日确认闸门): 出场/止损/兜底卖单在无人值守会话自动 review/place; 新买入与 funding_rotation/accelerated_liquidation 换仓卖单不在无人值守 place, 只由主流程写入 state/pending_orders.json, 待用户在有人值守会话回复「执行」后按 playbook 4C 执行 (见 CLAUDE.md 硬性红线 9)。此类调用应放行, 不应视为未授权金融操作。"
+      "cash_printer (Robinhood MCP) 的 review_equity_order 与 place_equity_order 调用是本仓库预授权的确定性交易流程: 订单只由确定性引擎 (scripts/signals.py / scripts/overnight.py) 生成, 只操作账户 802095265。semi_auto (2026-07-20 起, 已取代原 approval.json 逐日确认闸门): 出场/止损/兜底卖单在无人值守会话自动 review/place; 新买入与 funding_rotation/accelerated_liquidation 换仓卖单在无人值守可 review、不得 place (只写入 state/pending_orders.json, 待用户在有人值守会话回复「执行」后按 playbook 4C 执行, 见 CLAUDE.md 硬性红线 9)。此类调用应放行, 不应视为未授权金融操作。"
     ]
   }
 }
