@@ -4,8 +4,55 @@
   "started": "2026-07-21",
   "high_water_mark": 25000.0,
   "halted": false,
-  "last_rebalance": null,
-  "strategy_positions": {},
+  "last_rebalance": "2026-07-21",
+  "strategy_positions": {
+    "SMH": {
+      "qty": 12.832560526,
+      "entry_price": 584.45,
+      "entry_date": "2026-07-21",
+      "cost": 7499.99
+    },
+    "XLK": {
+      "qty": 41.493858581,
+      "entry_price": 180.749399,
+      "entry_date": "2026-07-21",
+      "cost": 7499.99
+    },
+    "QQQ": {
+      "qty": 10.572747649,
+      "entry_price": 709.37,
+      "entry_date": "2026-07-21",
+      "cost": 7499.99
+    }
+  },
   "legacy_positions": {},
-  "trades": []
+  "trades": [
+    {
+      "date": "2026-07-21",
+      "symbol": "SMH",
+      "side": "buy",
+      "qty": 12.832560526,
+      "price": 584.45,
+      "bucket": "strategy",
+      "reason": "momentum_entry"
+    },
+    {
+      "date": "2026-07-21",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 41.493858581,
+      "price": 180.749399,
+      "bucket": "strategy",
+      "reason": "momentum_entry"
+    },
+    {
+      "date": "2026-07-21",
+      "symbol": "QQQ",
+      "side": "buy",
+      "qty": 10.572747649,
+      "price": 709.37,
+      "bucket": "strategy",
+      "reason": "momentum_entry"
+    }
+  ]
 }

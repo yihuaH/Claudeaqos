@@ -244,22 +244,37 @@ def cmd_signal(a):
                 out["sells"].append({"symbol": sym, "qty": floor6(qty), "bucket": "strategy",
                                      "reason": reason, "est_price": i["close"]})
 
-    # --- 卖出: 存量持仓保护性止损 (相对纳管基准价) ---
+    # --- 卖出: 存量持仓保护性止损 + 止盈 (相对纳管基准价) ---
+    # 止损: 收盘 ≤ 纳管价×(1-stop%) → 卖 (下行保护)。
+    # 止盈 (用户 2026-07-21 设立, 与策略仓同一反弹信号但加盈利门槛): 现价 ≥ 纳管价×(1+take_profit_min%)
+    #   [默认 0=breakeven] 且触发均值回归信号 (收盘>SMA5 或 RSI2>rsi2_min) → 卖 (锁定收益)。
+    #   盈利门槛确保只卖赢家 (亏损仓留给止损兜底, 不被无差别清仓); 与止损对称, 均属"风险不增"自动执行。
+    tp_min_pct = float(cfg["legacy"].get("take_profit_min_pct", 0.0))
+    tp_rsi2_min = float(cfg["legacy"].get("take_profit_rsi2_min", cfg["exit"]["rsi2_min"]))
     for sym, pos in legacy.items():
         i = ind.get(sym)
         if not i:
             warnings.append(f"{sym}: 存量持仓无行情数据")
             continue
+        if i["close"] is None or i["sma5"] is None or i["rsi2"] is None:
+            continue
         ref = float(pos["adoption_ref_price"])
+        reason = None
         if i["close"] <= ref * (1 - cfg["legacy"]["protective_stop_pct"] / 100.0):
+            reason = "legacy_protective_stop"
+        elif (cfg["legacy"].get("take_profit_enabled", True)
+              and i["close"] >= ref * (1 + tp_min_pct / 100.0)
+              and (i["close"] > i["sma5"] or i["rsi2"] > tp_rsi2_min)):
+            reason = "legacy_take_profit"
+        if reason:
             if cfg["legacy"]["avoid_selling_same_day_buys"] and bought_today(sym):
-                warnings.append(f"{sym}: 触发保护止损但今日有买入(GFV保护), 顺延到明天")
+                warnings.append(f"{sym}: 触发{reason}但今日有买入(GFV保护), 顺延到明天")
                 continue
             qty = broker_qty(sym, float(pos["qty"]))
             if qty > 0:
                 exiting.add(sym)
                 out["sells"].append({"symbol": sym, "qty": floor6(qty), "bucket": "legacy",
-                                     "reason": "legacy_protective_stop", "est_price": i["close"]})
+                                     "reason": reason, "est_price": i["close"]})
 
     # --- 宏观风控: VIX 高位时暂停新开仓 (卖出/止损不受影响) ---
     # FRED 数据有发布延迟; 超过 vix_max_staleness_days 的旧数据不用于风控, 只告警。

@@ -1,26 +1,20 @@
 {
   "start_capital": 100877.65,
   "challenger_started": "2026-07-16",
-  "high_water_mark": 100897.55,
+  "high_water_mark": 101914.2,
   "halted": false,
   "strategy_positions": {
-    "QQQ": {
-      "qty": 21.707290829,
-      "entry_price": 697.076393,
-      "entry_date": "2026-07-17",
-      "cost": 15131.64
-    },
-    "SMH": {
-      "qty": 27.064811502,
-      "entry_price": 559.089059,
-      "entry_date": "2026-07-17",
-      "cost": 15131.64
-    },
     "DIA": {
       "qty": 29.20106504,
       "entry_price": 518.29,
       "entry_date": "2026-07-20",
       "cost": 15134.62
+    },
+    "NEE": {
+      "qty": 174.291642914,
+      "entry_price": 87.71,
+      "entry_date": "2026-07-21",
+      "cost": 15287.12
     }
   },
   "legacy_positions": {},
@@ -49,6 +43,33 @@
       "side": "buy",
       "qty": 29.20106504,
       "price": 518.29,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-21",
+      "symbol": "QQQ",
+      "side": "sell",
+      "qty": 21.707290829,
+      "price": 709.44,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-21",
+      "symbol": "SMH",
+      "side": "sell",
+      "qty": 27.064811502,
+      "price": 583.99,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-21",
+      "symbol": "NEE",
+      "side": "buy",
+      "qty": 174.291642914,
+      "price": 87.71,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
