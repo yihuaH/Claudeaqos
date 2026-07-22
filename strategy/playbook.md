@@ -69,7 +69,7 @@ python3 scripts/signals.py signal \
 故买入半自动 — 无人值守只生成待执行清单, 由用户在场时触发 (见 4C)。
 
 **4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
-出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`overnight_exit`/`close_backstop_exit` 等,
+出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`legacy_take_profit`/`overnight_exit`/`close_backstop_exit` 等,
 即除 `funding_rotation`/`accelerated_liquidation` 外的全部) 逐单:
 1. `review_equity_order(account=802095265, symbol, side=sell, type=market, quantity, market_hours=regular_hours)`。
 2. 无异常告警 → `place_equity_order(同参数, ref_id=新UUID)`; 出现**预期外**告警(停牌、限制等) → 跳过该单并记入日志的 anomalies。
