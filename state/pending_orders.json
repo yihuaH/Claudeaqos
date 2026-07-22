@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-07-21",
   "generated_at": "2026-07-21T19:44:02Z",
-  "status": "executed",
+  "status": "filled_reconciled",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 09:25 ET (隔夜轨道买单除外, 见逐单 valid_until)",
   "buying_power_at_generation": 847.21,
@@ -22,6 +22,12 @@
         "type": "market",
         "market_hours": "regular_hours",
         "state": "queued(排队明开盘)"
+      },
+      "fill": {
+        "side": "sell",
+        "qty": 1.419734,
+        "avg_price": 158.2,
+        "state": "filled"
       }
     },
     {
@@ -40,6 +46,12 @@
         "type": "market",
         "market_hours": "regular_hours",
         "state": "queued(排队明开盘)"
+      },
+      "fill": {
+        "side": "sell",
+        "qty": 1.812025,
+        "avg_price": 49.3,
+        "state": "filled"
       }
     },
     {
@@ -58,6 +70,12 @@
         "type": "market",
         "market_hours": "regular_hours",
         "state": "queued(排队明开盘)"
+      },
+      "fill": {
+        "side": "sell",
+        "qty": 0.942873,
+        "avg_price": 256.89,
+        "state": "filled"
       }
     },
     {
@@ -78,10 +96,17 @@
         "qty": 3,
         "market_hours": "all_day_hours",
         "state": "unconfirmed(24h时段挂单)"
+      },
+      "fill": {
+        "side": "buy",
+        "qty": 3.0,
+        "avg_price": 88.0,
+        "state": "filled"
       }
     }
   ],
   "executed_at": "2026-07-22T02:14Z",
   "executed_by": "报告窗口会话 4C (用户 2026-07-21 21:54 ET 逐笔确认「执行」)",
-  "fills_pending_note": "3笔卖单排队明早9:30开盘市价成交; NEE 24h限价挂单。实际成交由次日10:45晨检 get_equity_orders 捕获并 signals.py apply 回写账本。"
+  "fills_pending_note": "3笔卖单排队明早9:30开盘市价成交; NEE 24h限价挂单。实际成交由次日10:45晨检 get_equity_orders 捕获并 signals.py apply 回写账本。",
+  "reconciled_at": "2026-07-22T14:45Z (10:45 ET 晨检)"
 }
