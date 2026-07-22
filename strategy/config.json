@@ -68,7 +68,11 @@
       "max_sales_per_day": 3,
       "since": "2026-07-21",
       "note": "用户指示加速换仓给引擎供血: 每日在按需换仓之外额外清理最多3只最弱存量 (价格/SMA20 最低), 卖出款 T+1 结算后成为引擎购买力。semi_auto 下卖单与换仓同走 state/pending_orders.json, 用户回复「执行」后生效; 同受 GFV 保护 (当日买入的不卖)。"
-    }
+    },
+    "take_profit_enabled": true,
+    "take_profit_min_pct": 0.0,
+    "take_profit_rsi2_min": 65.0,
+    "take_profit_note": "止盈 (2026-07-21 用户): 现价≥纳管价×(1+min%) 且 (收盘>SMA5 或 RSI2>rsi2_min) → 自动卖 (锁定收益)。min_pct=0=breakeven, 只卖赢家; 亏损仓由 protective_stop 兜底。与止损对称, 自动执行无需确认。"
   },
   "macro": {
     "vix_no_new_entries_above": 30.0,

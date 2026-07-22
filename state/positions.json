@@ -1,24 +1,19 @@
 {
   "high_water_mark": 1952.36,
   "halted": false,
-  "strategy_positions": {},
+  "strategy_positions": {
+    "NEE": {
+      "qty": 3.0,
+      "entry_price": 88.0,
+      "entry_date": "2026-07-22",
+      "cost": 264.0
+    }
+  },
   "legacy_positions": {
-    "ABBV": {
-      "qty": 0.942873,
-      "avg_cost": 246.82,
-      "adoption_ref_price": 244.22,
-      "adoption_date": "2026-07-15"
-    },
     "BAC": {
       "qty": 0.944985,
       "avg_cost": 60.71,
       "adoption_ref_price": 61.475,
-      "adoption_date": "2026-07-15"
-    },
-    "NVO": {
-      "qty": 1.812025,
-      "avg_cost": 49.17,
-      "adoption_ref_price": 50.4573,
       "adoption_date": "2026-07-15"
     },
     "SNOW": {
@@ -37,12 +32,6 @@
       "qty": 0.366226,
       "avg_cost": 258.31,
       "adoption_ref_price": 272.63,
-      "adoption_date": "2026-07-15"
-    },
-    "FTNT": {
-      "qty": 1.419734,
-      "avg_cost": 164.65,
-      "adoption_ref_price": 164.345,
       "adoption_date": "2026-07-15"
     },
     "ETSY": {
@@ -112,6 +101,42 @@
       "price": 44.3732,
       "bucket": "legacy",
       "reason": "funding_rotation"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "NEE",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 88.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "FTNT",
+      "side": "sell",
+      "qty": 1.419734,
+      "price": 158.2,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "NVO",
+      "side": "sell",
+      "qty": 1.812025,
+      "price": 49.3,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation"
+    },
+    {
+      "date": "2026-07-22",
+      "symbol": "ABBV",
+      "side": "sell",
+      "qty": 0.942873,
+      "price": 256.89,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation"
     }
   ]
 }
