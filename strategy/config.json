@@ -79,8 +79,8 @@
     "max_drawdown_pct_from_hwm": 10.0
   },
   "integrations": {
-    "alpaca_paper": "active_2026-07-15_reverified_2026-07-16",
-    "fred": "active_2026-07-15_reverified_2026-07-16",
+    "alpaca_paper": "active_2026-07-15_reverified_2026-07-22 (env 已注入生效)",
+    "fred": "active_2026-07-15_reverified_2026-07-22 (env 已注入生效)",
     "macro_filter_confirmed_by_user": "2026-07-15"
   },
   "execution": {
