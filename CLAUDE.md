@@ -15,6 +15,21 @@
 8. 参数自学习边界: 学习器 (`scripts/learn.py` / `scripts/learn_overnight.py`) 只能修改各自 learning 配置列出的 entry/exit 形状参数且必须在边界内; sizing/熔断/宏观/legacy 等风控**永不自学习**。晋级必须先通过 paper 验证期且 evaluate 判 pass; 每次晋级/否决写 journal 并通知用户。
 9. 半自动买入 (execution.mode=semi_auto, 用户 2026-07-20 设立, 取代原 confirm 闸门): 实盘新买入与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation)**不得**在无人值守会话中 review/place (会被平台分类器拦截, 不要反复尝试) — 只能由主流程写入 `state/pending_orders.json` (逐字段来自引擎输出), 待用户在有人值守会话明确说"执行"后按 playbook 4C 原样执行 (当日窗口市价; 盘外转 all_day_hours 整股限价, 有效至次一交易日 09:25 ET; 隔夜轨道买单仅当日)。出场/止损/兜底卖出与纸面轨道不受限, 照常全自动。
 
+## 轨道状态总览
+
+(暂停/启用以各 config 的开关为准; 本表为速览, 恢复时同步更新)
+
+| 轨道 | 环境 | 状态 | 开关 |
+|---|---|---|---|
+| RSI-2 均值回归 (主策略, ETF+个股) | 实盘 | ✅ active | `config.json enabled` |
+| 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
+| 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |
+| 挑战者影子验证 | paper | 视 `learning.json` 有无 validating 挑战者 | `learning.json enabled` |
+| 隔夜参数学习 A/B | paper | ⏸ 暂停 (2026-07-21) | `learning_overnight.json paused` |
+| 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
+| 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
+| 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
+
 ## 结构
 
 - `strategy/config.json` — 策略与风控参数 (用户可改)
@@ -33,6 +48,7 @@
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境)
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
+- `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)
 - `state/positions.json` — 实盘持仓与净值状态 (引擎回写)
 - `state/learning.json` — 学习状态 (冠军/挑战者、净值曲线、晋级历史)
 - `state/paper_positions.json` — 挑战者纸面账本 (与实盘 state 同构)
