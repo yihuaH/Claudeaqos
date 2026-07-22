@@ -93,10 +93,10 @@ python3 scripts/signals.py signal \
      "reason": "funding_rotation", "est_price": 0.0, "state_file": "state/positions.json",
      "valid_until": "next_open_0925_et"},
     {"seq": 2, "action": "buy", "symbol": "Y", "dollar_amount": 290.77, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 0.0, "state_file": "state/positions.json",
+     "reason": "rsi2_entry", "est_price": 0.0, "review_est_price": 0.0, "state_file": "state/positions.json",
      "valid_until": "next_open_0925_et"},
     {"seq": 3, "action": "buy", "symbol": "Z", "dollar_amount": 194.48, "bucket": "strategy",
-     "reason": "ibs_entry", "est_price": 0.0, "state_file": "state/overnight_positions.json",
+     "reason": "ibs_entry", "est_price": 0.0, "review_est_price": 0.0, "state_file": "state/overnight_positions.json",
      "valid_until": "same_day_1555_et"}
   ]
 }
@@ -105,6 +105,14 @@ python3 scripts/signals.py signal \
 - 时效 (2026-07-20 用户定, "晚间限价方案"): RSI-2 买单与换仓卖单有效至**次一交易日 09:25 ET**;
   隔夜轨道买单 (state_file=overnight) 因"收盘买/次日收盘卖"的策略性质**仅当日 15:55 ET 前有效**。
 
+- **买单预检 (review, 无人值守允许; 绝不 place)**: 写文件前逐个买单
+  `review_equity_order(account=802095265, symbol, side=buy, type=market, dollar_amount, market_hours=regular_hours)`:
+  - 取回券商预估价 → 写入该单 `review_est_price` (供用户清单显示券商侧真实预估, 与引擎 est_price 并存);
+  - 预期外告警 (购买力不足/停牌/限制) → 该单加 `review_flag: "<告警摘要>"`, 并在通知里点名提示;
+    购买力不足**此处不下调金额** (下调留到 4C 执行时按实时 BP 处理), 停牌/限制类照写清单但标红待用户判断;
+  - review 调用失败/被拒 → 跳过该单预检, 省略 review_est_price (不阻断清单生成), journal 注明。
+  - **限价基准不变**: 4C 盘外整股限价仍以引擎 `est_price` 为基准 (确定性, 红线2); review_est_price 纯信息性,
+    不参与限价计算、不改订单金额/标的。
 - 内容必须逐字段来自引擎输出 (signals.py / overnight.py), 换仓卖单排在买单前 (seq 升序 = 执行顺序);
   隔夜轨道 (5B 主窗口) 的入场买单同样并入此文件 (state_file 指向对应账本)。
 - 写完 commit+push, 并用 PushNotification 通知用户:
