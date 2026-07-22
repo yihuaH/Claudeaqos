@@ -5,14 +5,14 @@
 
 ## 0. 前置检查 (任何一条不满足 → 只写日志, 不交易)
 
-0. **时段校验** (防调度器误触发, 2026-07-16 实证必要): 主流程实盘下单仅允许在 15:20–15:55 ET 执行;
+0. **时段校验** (防调度器误触发): 主流程实盘下单仅允许在 15:20–15:55 ET 执行;
    时段外触发 → 只读核查 (分支/状态/闸门), 不交易, 布置正点后备唤醒后结束。
 
 1. `git pull` 拉取本分支最新代码与状态。
 2. `strategy/config.json` 里 `enabled` 必须为 `true`; `state/positions.json` 里 `halted` 必须为 `false`。
 3. 幂等: 如果 `journal/<今天>.md` 已存在且标记 `status: completed`, 说明今天已跑过, 直接结束。
 4. 数据源自诊断: `python3 scripts/integrations.py status`, 输出记入当天 journal 的"系统事件"。
-   (Alpaca/FRED 集成已于 2026-07-15 经用户确认转正; 任一数据源不可用只降级, 不阻断交易。)
+   (任一数据源不可用只降级, 不阻断交易。)
 
 5. 开市检查:
    - 首选: 上一步 status 里 alpaca `ok=true` 时, 以 Alpaca 时钟为准 — `market_is_open=false` 视为休市 → 写日志"休市"并结束。
@@ -29,7 +29,7 @@
 4. 历史:
    - `integrations.py bars --symbols <ETF池 + universe 100只> --start 今天-660天` → 一个文件 (SMA200 需 ≥200 交易日);
    - `get_equity_historicals(持仓符号, start=今天-140天, interval=day)` (Robinhood) → 持仓文件。
-4B. 财报日: 生成/复用当日 `earnings.json` (与 5B/7 节共用同一份, 每天只拉一次) — 个股防御层需要;
+4B. 财报日: 生成/复用当日 `earnings.json` (供 5B 隔夜轨道复用同一份, 每天只拉一次) — 个股防御层需要;
    取不到则不传 `--earnings`, 引擎按 allow_unknown_earnings 继续 (仅失去财报回避, 会告警)。
 5. 宏观数据 (标准步骤): `python3 scripts/integrations.py macro --out <scratchpad>/macro.json`。
    成功则在算信号时加 `--macro <macro.json>`; 失败则省略该参数, 交易照常, 在日志注明。
@@ -65,9 +65,8 @@ python3 scripts/signals.py signal \
 > **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述旧的 confirm 闸门 (approval.json 确认),
 > 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单绝不在无人值守下 review/place, 也不再读 approval.json。
 
-背景 (2026-07-20 定型): 无人值守会话的实盘**买单**会被 Claude Code auto-mode 分类器拦截
-(连续 3 个交易日复现, 卖单与有人值守会话不受影响), 属平台级安全边界, 仓库配置无法解除。
-故买入改为半自动: 无人值守会话只生成待执行清单, 由用户在场时触发执行 (见 4C)。
+背景: 无人值守会话的实盘**买单**会被平台分类器拦截 (卖单与有人值守会话不受影响), 仓库配置无法解除;
+故买入半自动 — 无人值守只生成待执行清单, 由用户在场时触发 (见 4C)。
 
 **4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
 出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`overnight_exit`/`close_backstop_exit` 等,
@@ -130,8 +129,7 @@ python3 scripts/signals.py signal \
      降级记 journal。限价保护不变, 盘外薄流动性只影响成交概率、不影响成交价上限。
      **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
      include fractional shares"), 故本模式仅执行买单且:
-     - limit_price = round(est_price×1.010, 2) (信号价+1.0%容差 [2026-07-21 回测调优: ETF/个股两组回测中
-       +1.0% 均优于 +0.5%, 被挡掉的跳空高开多为最强反弹], 开盘超出即不成交、不追价), time_in_force=gfd;
+     - limit_price = round(est_price×1.010, 2) (信号价 +1.0% 容差, 开盘超出即不成交、不追价), time_in_force=gfd;
      - 数量 = floor(dollar_amount ÷ limit_price) **整股** — 只向下取整 (等效于规则允许的金额下调);
        为凑整股向上加钱属放大, **绝不允许**。结果为 0 股 → 该单无法夜间执行, 跳过记 journal, 等次日新信号
        (注意: 账户规模较小时, 高价 ETF 的 15% 仓位常不足一整股, 此类买单实际只有当日市价窗口一条路);
@@ -160,38 +158,19 @@ python3 scripts/signals.py signal \
 ## 5B. 隔夜轨道 (实盘, ETF + 个股, strategy/overnight.json enabled=true 时)
 
 第 5 节完成后执行 (RSI-2 策略优先用资金)。独立账本 `state/overnight_positions.json`。
-用户校准 (2026-07-15): 目标 ~10笔/天 (晨间 ~5 卖 + 收盘 ~5 买), 换仓卖出不设 2 只/日限制, 持仓数不设上限。
 
-**晨间窗口 (9:35 ET, 独立 Routine, exit.window=next_open 时)**:
-
-> **Routine 已停用** (2026-07-21 用户指示, token 精简): 隔夜实盘暂停 + 6B 学习暂停后本窗口无剩余职责;
-> 4C 盘外残单撤销改由报告窗口 10:45 ET 晨检代行。恢复隔夜实盘时需同时重新启用本 Routine。
-0. **时段校验** (防调度器误触发): 当前 ET 时间必须在 09:30–10:15 之间才允许执行卖出;
-   时段外触发 → 只做只读核查 (分支同步/持仓状态), 不交易, 异常才通知。
-1. `git pull` → `integrations.py status`: Alpaca 时钟 `is_open` 必须为 true, 否则写日志结束。
-2. `state/overnight_positions.json` 无隔夜持仓 → 直接结束。
-3. 持仓符号拉快照 → `overnight.py signal --window open --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --snapshots <snaps> --positions <券商映射> --date <今天> --portfolio-value <pv> --buying-power 0`
-4. 按第 4 节规则执行卖单 → fills 回写 `signals.py apply --state state/overnight_positions.json`。
-5. journal 附记 + push。晨间窗口失败不影响主窗口 (15:30 会 close_backstop_exit 兜底清仓)。
-6. 学习账本开盘卖出: 凡学习账本对应配置的 exit.window=next_open (当前: 冠军孪生), 对该账本同样执行
-   `overnight.py signal --window open` → `paper.py run` (Alpaca 纸面) → `signals.py apply` 回写该账本。
-7. 结算合规 (账户 802095265 为现金账户, T+1 结算, GFV 规则适用):
-   - review 返回 GFV/结算类警告 → 该卖单跳过, 留给 15:30 兜底窗口, 记 journal 并通知用户;
-   - 引擎只花 get_portfolio 报告的 buying_power (券商已扣除未结算部分), 不得自行放大;
-   - journal 每日记录 buying_power 与 cash 差额, 用于观察实际资金周转节奏。
-8. 撤销 4C 晚间限价挂单残留: `get_equity_orders` 查 4C 夜间提交、开盘后仍未成交的限价单 (queued/confirmed),
-   逐单 `cancel_equity_order` (best-effort: 若撤单被权限拦截或失败, 订单为 gfd 当日自动到期, 限价已封顶价格风险,
-   任其存续即可); 已成交/部分成交的按 4C 步骤4 回写对应账本; 结果记 journal。
+**晨间窗口 (9:35 ET, 独立 Routine)** — **已停用** (2026-07-21): 隔夜实盘入场暂停后本窗口无剩余职责,
+4C 盘外残单撤销已移交战报窗口 10:45 ET 晨检。完整步骤 (时段校验/开盘卖出/学习账本开盘卖/结算合规/残单撤销)
+见 git d55493a。恢复隔夜实盘时需重新启用本 Routine 并还原步骤。
 
 **主窗口 (15:30 ET, 第 5 节完成后执行)**:
 
-> **实盘入场暂停中** (overnight.json `live_entries_paused=true`, 2026-07-21 用户指示): IBS 收盘买与异步
-> 半自动结构性不兼容。引擎强制 slots=0 只出不进 — 本窗口照常跑信号与出场/兜底, 但不会产生实盘新入场;
-> 6B 纸面 A/B 学习不受影响 (learn_overnight 生成账本配置时自动剥离该标志)。恢复: 删除该标志即可。
+> **实盘入场暂停中** (overnight.json `live_entries_paused=true`, 2026-07-21): 引擎强制 slots=0 只出不进 —
+> 本窗口照常跑信号与出场/兜底, 不产生实盘新入场。恢复: 删除该标志。
 
 1. 数据 (Alpaca): `integrations.py bars` 拉 [ETF池 + universe.json 100股 + 存量持仓] 约 300 天日线;
    `integrations.py snapshots --symbols-file <同一批符号>` 拉当日实时 OHLC (IBS 用)。
-2. 财报日: 与第 7 节共用同一份 earnings.json (每天只拉一次); 取不到则不传 → 财报日未知的个股仍可候选 (allow_unknown_earnings=true), 仅失去财报回避保护, 引擎会告警注明。
+2. 财报日: 复用第 1 节 4B 生成的 earnings.json (每天只拉一次); 取不到则不传 → 财报日未知的个股仍可候选 (allow_unknown_earnings=true), 仅失去财报回避保护, 引擎会告警注明。
 3. 重新取 `get_portfolio` 的最新 buying_power (RSI-2 执行后剩余的), 然后:
    `python3 scripts/overnight.py signal --config strategy/overnight.json --state state/overnight_positions.json --main-state state/positions.json --bars <bars> --snapshots <snaps> --earnings <earnings> --macro <macro> --positions <券商持仓映射> --date <今天> --portfolio-value <total_value> --buying-power <剩余bp> --out <scratchpad>/overnight_orders.json`
 4. 执行 (semi_auto 拆分): 出场/兜底类卖单按 **4A** 直接执行; 入场买单与 funding_rotation 换仓卖单
@@ -199,7 +178,7 @@ python3 scripts/signals.py signal \
 5. 回写 (仅对实际成交, 按 bucket 分两次):
    - strategy 桶成交 → `signals.py apply --state state/overnight_positions.json --fills <strategy fills> --date <今天>`
    - legacy 桶成交 (换仓卖出) → `signals.py apply --state state/positions.json --fills <legacy fills> --date <今天>`
-6. journal 加"隔夜轨道"小节: 每笔进出、IBS 值、顺延/止损标注。**上线首周 (至 2026-07-23) 每笔交易单独列明盈亏。**
+6. journal 加"隔夜轨道"小节: 每笔进出、IBS 值、顺延/止损标注。
 
 ## 6. 影子验证运行 (Alpaca paper — 挑战者)
 
@@ -233,48 +212,21 @@ python3 scripts/signals.py signal \
    **注意: record 必须用 `equity_ex_options`** (剔除期权轨道, 保持参数 A/B 对比干净); `overlay_pnl` 单独记入 journal 的备兑一栏。
 8. 评估: `python3 scripts/learn.py evaluate --learning strategy/learning.json --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天>`, 结果记入 journal。
    - `pass` 且 `auto_promote=true` → `learn.py promote ...`, 在 journal 显著标注**参数晋级**并**通知用户** (新旧参数、验证期表现)。
-   - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 7 节搜索新挑战者。
+   - `fail` → `learn.py reject --reason <evaluate给出的原因>`, 记日志并通知用户, 然后按第 8 节搜索新挑战者。
    - 其余 (`insufficient_data`/`extend`) → 继续验证, 无需通知。
 
-## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B; learning_overnight.json paused=true 时跳过本节)
+## 6B. 隔夜参数学习 (Alpaca paper 双账本 A/B)
 
-> **暂停中** (2026-07-21 用户指示, token 精简): 隔夜实盘入场已暂停, 学习无实盘出口。
+> **暂停中** (learning_overnight.json `paused=true`, 2026-07-21): 隔夜实盘入场暂停, 学习无出口。
 > 两本纸面账本与冠军/挑战者状态冻结保留, 删除 paused 标志即恢复。
-
-条件: `strategy/learning_overnight.json` enabled=true 且 `state/learning_overnight.json` 有 validating 挑战者。
-第 6 节完成后执行, 失败只记日志。数据复用第 5B 节的 bars/snapshots/earnings/macro。
-
-1. 配置: `learn_overnight.py challenger-config --config strategy/overnight.json --state-learn state/learning_overnight.json --out <scratchpad>/ch_overnight.json` 和 `learn_overnight.py twin-config --config strategy/overnight.json --out <scratchpad>/twin_overnight.json` (两者均自动禁换仓)。
-2. 对两本账分别执行 (冠军孪生: twin 配置 + `state/paper_overnight_champion.json`; 挑战者: ch 配置 + `state/paper_overnight_positions.json`):
-   a. `paper.py equity --ledger <账本> --quotes <收盘价映射>` → equity/cash
-   b. `overnight.py signal --config <各自配置> --state <各自账本> --main-state state/positions.json --bars <同5B> --snapshots <同5B> --earnings <同> --macro <同> --date <今天> --portfolio-value <equity> --buying-power <cash>` (不传 --positions, 账本即真相)
-   c. `paper.py run` (Alpaca 纸面, 幂等) → `signals.py apply --state <各自账本>`
-3. `learn_overnight.py record --state-learn state/learning_overnight.json --date <今天> --live-equity <冠军孪生 equity> --paper-equity <挑战者 equity>` (live 字段=冠军孪生, 构成干净 A/B)。
-4. `learn_overnight.py evaluate ... --paper-ledger state/paper_overnight_positions.json`:
-   - `pass` 且 auto_promote → `learn_overnight.py promote` (写 strategy/overnight.json, **实盘隔夜参数随之切换**), journal 显著标注并**通知用户**;
-   - `fail` → reject + 通知, 然后重新 search (`integrations.py bars --start 今天-3.5年` + universe);
-   - 其余继续验证。
+> 完整 A/B runbook (challenger/twin 配置 → 双账本 signal → paper.py run → record → evaluate/promote,
+> 数据复用第 5B 节) 见 git d55493a。随隔夜实盘一并恢复。
 
 ## 7. 个股防御实验 (仅 paper, strategy/stocks.json enabled=true 时)
 
-第 6 节完成后执行, 独立账本 `state/stock_positions.json`, 任何失败只记日志。
-
-0. universe 周度刷新 (每周一, 或 `strategy/stocks.json` 的 `universe_generated` 距今超过 `screen.json` 的 `refresh_days`):
-   a. `python3 scripts/integrations.py assets --out <scratchpad>/assets.json` (全市场正股, 名称启发式剔除基金)
-   b. `integrations.py bars --symbols-file <assets> --start <今天-40天> --out <scratchpad>/p1.json` → `python3 scripts/screen.py pool --config strategy/screen.json --bars <p1> --out <scratchpad>/pool.json` (流动性前1000)
-   c. `python3 -c` 把 pool 转成 {"symbols": [...]} → `integrations.py bars --symbols-file <pool_syms> --start <今天-470天> --out <scratchpad>/p2.json`
-   d. Robinhood 热门榜: `get_popular_watchlists` 找 "100 most popular" → `get_watchlist_items` → 存 `{"symbols": [...]}` 到 popular.json
-   e. `screen.py rank --config strategy/screen.json --pool <pool> --bars <p2> --popular <popular> --date <今天> --out <scratchpad>/ranked.json`
-   f. 行业: 对 ranked 候选按每批 10 只调 `get_equity_fundamentals`, 整理 `{"SYM": {"sector":..., "name":...}|null}` 存 sectors.json
-   g. `screen.py finalize --config strategy/screen.json --ranked <ranked> --sectors <sectors> --date <今天> --out strategy/universe.json --apply-stocks strategy/stocks.json`
-   h. universe 变动 (新增/剔除的符号) 记入 journal。**已持仓但被剔除出 universe 的股票不强制卖出, 按正常出场规则走完。**
-
-1. 数据 (全部走 Alpaca): `python3 scripts/integrations.py bars --symbols <stocks universe> --start <今天-450天> --out <scratchpad>/stock_hist.json` 和 `integrations.py quotes --symbols <同> --out <scratchpad>/stock_quotes.json`。
-2. 财报日: 用 cash_printer 的 `get_earnings_calendar` / `get_earnings_results` 查 universe 内个股, 整理成 `{"SYM": "YYYY-MM-DD"}` (确认近期无财报的记 `null`, 查不到的**不要写入**) 存 earnings.json。**整体取不到就不传 --earnings** — 财报日未知的个股仍可候选 (allow_unknown_earnings=true, 用户指示), 仅失去财报回避保护; 引擎会告警注明。
-3. 净值: `python3 scripts/paper.py equity --ledger state/stock_positions.json --quotes <stock_quotes>` → equity/cash。
-4. 信号: `python3 scripts/signals.py signal --config strategy/stocks.json --state state/stock_positions.json --historicals <stock_hist> --quotes <stock_quotes> --macro <同实盘> --earnings <earnings> --date <今天> --portfolio-value <equity> --buying-power <cash> --out <scratchpad>/stock_orders.json`
-5. 执行与回写 (同第 6 节模式): `paper.py run` → `signals.py apply --state state/stock_positions.json`。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
-6. journal 记录: 当日净值、持仓、信号、防御过滤触发明细 (warnings)。实验累计 ≥20 交易日后与用户复盘决定去留。
+> **暂停中** (stocks.json `enabled=false`, 2026-07-21): 个股已并入实盘主候选池 (见第 2 节),
+> 防御层参数由 config.json defense 段沿用; 独立纸面账本 state/stock_positions.json 冻结保留。
+> 完整 runbook (universe 周度刷新 assets→pool→rank→finalize + 数据/信号/回写/复盘) 见 git d55493a。恢复: enabled=true。
 
 ## 7B. 动量轮动实验 (仅 paper, strategy/momentum.json enabled=true 时)
 
