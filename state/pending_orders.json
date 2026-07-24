@@ -2,7 +2,7 @@
   "trade_date": "2026-07-23",
   "generated_at": "2026-07-24T01:42:04Z",
   "generated_by": "盘后补跑 §0C (用户 07-23 晚「补今天」授权; 主流程 worker 重启错过窗口)",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "已过 (盘后补跑, 用最终收盘价)",
   "valid_until": "2026-07-24 09:25 ET",
   "buying_power_at_generation": 1647.78,
@@ -18,7 +18,13 @@
       "est_price": 262.32,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "note": "最后一只存量; 加速清仓, 盘外可选跳过(资金充足不依赖)"
+      "note": "最后一只存量; 加速清仓, 盘外可选跳过(资金充足不依赖)",
+      "placed": {
+        "order_id": "6a62c50b-1127-4780-aec0-3964b2efe42f",
+        "ref_id": "0a23920c-5fa5-4fb4-8e96-53aee7fb1d6f",
+        "type": "market/reg",
+        "state": "queued→次日开盘"
+      }
     },
     {
       "seq": 2,
@@ -30,7 +36,14 @@
       "est_price": 134.495,
       "rsi2": 3.27,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "placed": {
+        "order_id": "6a62c50d-dfdd-4bd5-9ea8-7487e906562b",
+        "ref_id": "93f8b889-2150-4ecd-97eb-a3abf9757a8c",
+        "type": "limit@135.84/all_day",
+        "qty": 2,
+        "state": "unconfirmed(24h挂单)"
+      }
     },
     {
       "seq": 3,
@@ -42,7 +55,17 @@
       "est_price": 82.0,
       "rsi2": 4.3,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "placed": {
+        "order_id": "6a62c510-4b93-4447-9d7c-4a3cd563a271",
+        "ref_id": "b7b4a2a9-b935-4141-b24c-ee43a524f517",
+        "type": "limit@82.82/all_day",
+        "qty": 3,
+        "state": "unconfirmed(24h挂单)"
+      }
     }
-  ]
+  ],
+  "executed_at": "2026-07-24T01:51Z (07-23 晚, 用户「全部执行」)",
+  "executed_by": "盘后补跑 §0C 执行 (报告窗口会话)",
+  "reconcile_note": "NET 市价排 07-24 开盘; TGT/DAL 24h 整股限价 (信号价+1%封顶)。实际成交由 07-24 10:45 晨检 get_equity_orders 捕获后 signals.py apply 回写。"
 }
