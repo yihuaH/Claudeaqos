@@ -1,83 +1,48 @@
 {
-  "trade_date": "2026-07-22",
-  "generated_at": "2026-07-22T19:55:13Z",
-  "status": "filled_reconciled",
-  "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 09:25 ET",
-  "buying_power_at_generation": 583.21,
+  "trade_date": "2026-07-23",
+  "generated_at": "2026-07-24T01:42:04Z",
+  "generated_by": "盘后补跑 §0C (用户 07-23 晚「补今天」授权; 主流程 worker 重启错过窗口)",
+  "status": "awaiting_execution",
+  "market_window_until_et": "已过 (盘后补跑, 用最终收盘价)",
+  "valid_until": "2026-07-24 09:25 ET",
+  "buying_power_at_generation": 1647.78,
+  "earnings_defense": "AXP(07-24)/SBUX(07-29)/LYV(07-30)/AAPL(07-30) 因财报回避被拦; TGT(08-19)/DAL(10-08) 通过",
   "orders": [
     {
       "seq": 1,
       "action": "sell",
-      "symbol": "ETSY",
-      "qty": 2.073344,
+      "symbol": "NET",
+      "qty": 0.366226,
       "bucket": "legacy",
       "reason": "accelerated_liquidation",
-      "est_price": 80.33,
-      "review_est_price": 80.4,
+      "est_price": 262.32,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a617d11-9133-4227-bc01-0de8f1deff8d",
-        "ref_id": "cdd90af2-bccc-48d7-b7c9-ab75e4f09dbd",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued→次日开盘"
-      },
-      "fill": {
-        "avg_price": 80.0,
-        "state": "filled@open"
-      }
+      "note": "最后一只存量; 加速清仓, 盘外可选跳过(资金充足不依赖)"
     },
     {
       "seq": 2,
-      "action": "sell",
-      "symbol": "SE",
-      "qty": 0.908207,
-      "bucket": "legacy",
-      "reason": "accelerated_liquidation",
-      "est_price": 104.85,
-      "review_est_price": 105.07,
+      "action": "buy",
+      "symbol": "TGT",
+      "dollar_amount": 308.08,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 134.495,
+      "rsi2": 3.27,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a617d14-90ce-40f1-83d9-3ee56b89b0b1",
-        "ref_id": "32dd5b5a-40db-43d4-8038-001c589f3d5c",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued→次日开盘"
-      },
-      "fill": {
-        "avg_price": 103.99,
-        "state": "filled@open"
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
-      "action": "sell",
-      "symbol": "SNOW",
-      "qty": 0.181326,
-      "bucket": "legacy",
-      "reason": "accelerated_liquidation",
-      "est_price": 267.42,
-      "review_est_price": 268.07,
+      "action": "buy",
+      "symbol": "DAL",
+      "dollar_amount": 308.08,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 82.0,
+      "rsi2": 4.3,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a617d16-86e3-41f4-af70-fd6f2376339a",
-        "ref_id": "b4437e81-dc1c-4288-8b67-249a10981a85",
-        "type": "market",
-        "market_hours": "regular_hours",
-        "state": "queued→次日开盘"
-      },
-      "fill": {
-        "avg_price": 274.0,
-        "state": "filled@open"
-      }
+      "valid_until": "next_open_0925_et"
     }
-  ],
-  "executed_at": "2026-07-22T22:31Z (16:31 ET 收盘战报后, 用户确认「执行」)",
-  "executed_by": "报告窗口会话 4C 盘外市价 (分数股→market/regular_hours 排队次日开盘)",
-  "reconcile_note": "3笔分数股加速清仓市价单排队 2026-07-23 开盘成交; 实际成交与回写由次日 10:45 晨检 get_equity_orders 捕获后 signals.py apply。",
-  "reconciled_at": "2026-07-23T14:46Z (10:46 ET 晨检)"
+  ]
 }
