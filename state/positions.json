@@ -1,15 +1,21 @@
 {
-  "high_water_mark": 2053.93728534,
+  "high_water_mark": 2062.065,
   "halted": false,
-  "strategy_positions": {},
-  "legacy_positions": {
-    "NET": {
-      "qty": 0.366226,
-      "avg_cost": 258.31,
-      "adoption_ref_price": 272.63,
-      "adoption_date": "2026-07-15"
+  "strategy_positions": {
+    "TGT": {
+      "qty": 2.0,
+      "entry_price": 135.335,
+      "entry_date": "2026-07-24",
+      "cost": 270.67
+    },
+    "DAL": {
+      "qty": 3.0,
+      "entry_price": 82.07,
+      "entry_date": "2026-07-24",
+      "cost": 246.21
     }
   },
+  "legacy_positions": {},
   "trades": [
     {
       "date": "2026-07-16",
@@ -152,6 +158,33 @@
       "side": "sell",
       "qty": 0.181326,
       "price": 274.0,
+      "bucket": "legacy",
+      "reason": "accelerated_liquidation"
+    },
+    {
+      "date": "2026-07-24",
+      "symbol": "TGT",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 135.335,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-24",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 82.07,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-24",
+      "symbol": "NET",
+      "side": "sell",
+      "qty": 0.366226,
+      "price": 265.87,
       "bucket": "legacy",
       "reason": "accelerated_liquidation"
     }

@@ -2,7 +2,7 @@
   "trade_date": "2026-07-23",
   "generated_at": "2026-07-24T01:42:04Z",
   "generated_by": "盘后补跑 §0C (用户 07-23 晚「补今天」授权; 主流程 worker 重启错过窗口)",
-  "status": "executed",
+  "status": "filled_reconciled",
   "market_window_until_et": "已过 (盘后补跑, 用最终收盘价)",
   "valid_until": "2026-07-24 09:25 ET",
   "buying_power_at_generation": 1647.78,
@@ -24,6 +24,10 @@
         "ref_id": "0a23920c-5fa5-4fb4-8e96-53aee7fb1d6f",
         "type": "market/reg",
         "state": "queued→次日开盘"
+      },
+      "fill": {
+        "avg_price": 265.87,
+        "state": "filled"
       }
     },
     {
@@ -43,6 +47,10 @@
         "type": "limit@135.84/all_day",
         "qty": 2,
         "state": "unconfirmed(24h挂单)"
+      },
+      "fill": {
+        "avg_price": 135.335,
+        "state": "filled"
       }
     },
     {
@@ -62,10 +70,15 @@
         "type": "limit@82.82/all_day",
         "qty": 3,
         "state": "unconfirmed(24h挂单)"
+      },
+      "fill": {
+        "avg_price": 82.07,
+        "state": "filled"
       }
     }
   ],
   "executed_at": "2026-07-24T01:51Z (07-23 晚, 用户「全部执行」)",
   "executed_by": "盘后补跑 §0C 执行 (报告窗口会话)",
-  "reconcile_note": "NET 市价排 07-24 开盘; TGT/DAL 24h 整股限价 (信号价+1%封顶)。实际成交由 07-24 10:45 晨检 get_equity_orders 捕获后 signals.py apply 回写。"
+  "reconcile_note": "NET 市价排 07-24 开盘; TGT/DAL 24h 整股限价 (信号价+1%封顶)。实际成交由 07-24 10:45 晨检 get_equity_orders 捕获后 signals.py apply 回写。",
+  "reconciled_at": "2026-07-24T14:46Z (10:46 ET 晨检)"
 }
