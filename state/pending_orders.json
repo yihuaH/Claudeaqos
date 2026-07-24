@@ -1,84 +1,39 @@
 {
-  "trade_date": "2026-07-23",
-  "generated_at": "2026-07-24T01:42:04Z",
-  "generated_by": "盘后补跑 §0C (用户 07-23 晚「补今天」授权; 主流程 worker 重启错过窗口)",
-  "status": "filled_reconciled",
-  "market_window_until_et": "已过 (盘后补跑, 用最终收盘价)",
-  "valid_until": "2026-07-24 09:25 ET",
-  "buying_power_at_generation": 1647.78,
-  "earnings_defense": "AXP(07-24)/SBUX(07-29)/LYV(07-30)/AAPL(07-30) 因财报回避被拦; TGT(08-19)/DAL(10-08) 通过",
+  "trade_date": "2026-07-24",
+  "generated_at": "2026-07-24T21:50:02Z",
+  "generated_by": "盘后补跑 §0C (自动兜底; 主流程当日未产出)",
+  "status": "awaiting_execution",
+  "market_window_until_et": "已过 (盘后补跑)",
+  "valid_until": "2026-07-27 09:25 ET (周一)",
+  "buying_power_at_generation": 1440.89,
+  "earnings_defense": "SBUX(07-29) 因财报回避被拦; WST(10-22)/QQQM(ETF) 通过",
+  "note_4A": "DAL exit_strength 3股已由补跑直接下单 (order 6a63ddd9, market 排周一开盘), 不在本 pending 中",
   "orders": [
     {
       "seq": 1,
-      "action": "sell",
-      "symbol": "NET",
-      "qty": 0.366226,
-      "bucket": "legacy",
-      "reason": "accelerated_liquidation",
-      "est_price": 262.32,
+      "action": "buy",
+      "symbol": "WST",
+      "dollar_amount": 309.64,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 328.35,
+      "rsi2": 2.98,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "note": "最后一只存量; 加速清仓, 盘外可选跳过(资金充足不依赖)",
-      "placed": {
-        "order_id": "6a62c50b-1127-4780-aec0-3964b2efe42f",
-        "ref_id": "0a23920c-5fa5-4fb4-8e96-53aee7fb1d6f",
-        "type": "market/reg",
-        "state": "queued→次日开盘"
-      },
-      "fill": {
-        "avg_price": 265.87,
-        "state": "filled"
-      }
+      "exec_note": "每股$328>单仓$309.64, 整股=0, 夜间限价无法执行; 仅当日市价窗口可买 (账户规模所限)"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "TGT",
-      "dollar_amount": 308.08,
+      "symbol": "QQQM",
+      "dollar_amount": 309.64,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 134.495,
-      "rsi2": 3.27,
+      "est_price": 281.73,
+      "rsi2": 9.56,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a62c50d-dfdd-4bd5-9ea8-7487e906562b",
-        "ref_id": "93f8b889-2150-4ecd-97eb-a3abf9757a8c",
-        "type": "limit@135.84/all_day",
-        "qty": 2,
-        "state": "unconfirmed(24h挂单)"
-      },
-      "fill": {
-        "avg_price": 135.335,
-        "state": "filled"
-      }
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "DAL",
-      "dollar_amount": 308.08,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 82.0,
-      "rsi2": 4.3,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "placed": {
-        "order_id": "6a62c510-4b93-4447-9d7c-4a3cd563a271",
-        "ref_id": "b7b4a2a9-b935-4141-b24c-ee43a524f517",
-        "type": "limit@82.82/all_day",
-        "qty": 3,
-        "state": "unconfirmed(24h挂单)"
-      },
-      "fill": {
-        "avg_price": 82.07,
-        "state": "filled"
-      }
+      "exec_note": "夜间整股限价: 1股 @$284.55 (≈$284.55)"
     }
-  ],
-  "executed_at": "2026-07-24T01:51Z (07-23 晚, 用户「全部执行」)",
-  "executed_by": "盘后补跑 §0C 执行 (报告窗口会话)",
-  "reconcile_note": "NET 市价排 07-24 开盘; TGT/DAL 24h 整股限价 (信号价+1%封顶)。实际成交由 07-24 10:45 晨检 get_equity_orders 捕获后 signals.py apply 回写。",
-  "reconciled_at": "2026-07-24T14:46Z (10:46 ET 晨检)"
+  ]
 }
