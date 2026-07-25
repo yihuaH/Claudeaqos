@@ -31,7 +31,7 @@
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
 | RSI-2 均值回归 (主策略, ETF+个股) — **每日收盘后单跑** (~17:45 ET, 全异步) | 实盘 | ✅ active | `config.json enabled` |
-| └ (已退役) 15:30 盘前主跑 | 实盘 | ⛔ 停用 (2026-07-24, 平台窗口内频繁挂起, 改收盘后单跑) | Routine disabled |
+| └ (已退役) 15:30 盘前主跑 | 实盘 | ⛔ 停用 (2026-07-24 平台窗口内频繁挂起, 改收盘后单跑; Routine 2026-07-25 已删除) | Routine 已删除 |
 | 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |
 | 挑战者影子验证 | paper | 视 `learning.json` 有无 validating 挑战者 | `learning.json enabled` |
@@ -39,6 +39,8 @@
 | 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
+
+**报告窗口时序** (2026-07-25 调整, 配合收盘后单跑): 每日战报 Routine 两次唤醒 = 晨间核查 **10:45 ET** (14:45 UTC) + 收盘战报 **18:45 ET** (22:45 UTC)。收盘战报已从原 16:45 ET 移到收盘后主跑 (17:45 ET / 21:45 UTC) 之后约 1 小时, 以汇报已完成的主跑并做主跑健康检查 (原 16:45 ET 会早于主跑、必然误报失败)。收盘后单跑为**唯一主跑**, 无独立补跑 Routine; 主跑失败时报告窗口只诊断报告、**不代跑下单**。
 
 ## 结构
 
