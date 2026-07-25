@@ -30,8 +30,8 @@
 
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
-| RSI-2 均值回归 (主策略, ETF+个股) | 实盘 | ✅ active | `config.json enabled` |
-| └ 盘后补跑 (主流程失败兜底, 17:45 ET) | 实盘 | ✅ active (条件运行, 见 playbook §0C) | 独立 Routine |
+| RSI-2 均值回归 (主策略, ETF+个股) — **每日收盘后单跑** (~17:45 ET, 全异步) | 实盘 | ✅ active | `config.json enabled` |
+| └ (已退役) 15:30 盘前主跑 | 实盘 | ⛔ 停用 (2026-07-24, 平台窗口内频繁挂起, 改收盘后单跑) | Routine disabled |
 | 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |
 | 挑战者影子验证 | paper | 视 `learning.json` 有无 validating 挑战者 | `learning.json enabled` |
