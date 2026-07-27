@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 2062.065,
+  "high_water_mark": 2078.69,
   "halted": false,
   "strategy_positions": {
     "TGT": {
@@ -7,12 +7,6 @@
       "entry_price": 135.335,
       "entry_date": "2026-07-24",
       "cost": 270.67
-    },
-    "DAL": {
-      "qty": 3.0,
-      "entry_price": 82.07,
-      "entry_date": "2026-07-24",
-      "cost": 246.21
     }
   },
   "legacy_positions": {},
@@ -187,6 +181,15 @@
       "price": 265.87,
       "bucket": "legacy",
       "reason": "accelerated_liquidation"
+    },
+    {
+      "date": "2026-07-27",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 3.0,
+      "price": 86.72,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }

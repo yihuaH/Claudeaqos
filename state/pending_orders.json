@@ -1,39 +1,41 @@
 {
-  "trade_date": "2026-07-24",
-  "generated_at": "2026-07-24T21:50:02Z",
-  "generated_by": "盘后补跑 §0C (自动兜底; 主流程当日未产出)",
+  "trade_date": "2026-07-27",
+  "generated_at": "2026-07-27T21:54:00Z",
+  "generated_by": "收盘后主跑 (post-close primary, ~17:45 ET)",
   "status": "awaiting_execution",
-  "market_window_until_et": "已过 (盘后补跑)",
-  "valid_until": "2026-07-27 09:25 ET (周一)",
-  "buying_power_at_generation": 1440.89,
-  "earnings_defense": "SBUX(07-29) 因财报回避被拦; WST(10-22)/QQQM(ETF) 通过",
-  "note_4A": "DAL exit_strength 3股已由补跑直接下单 (order 6a63ddd9, market 排周一开盘), 不在本 pending 中",
+  "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
+  "valid_until": "2026-07-28 09:25 ET (次一交易日)",
+  "buying_power_at_generation": 1538.26,
+  "earnings_defense": "候选池 52 只近14日财报者引擎已回避; NVDA/NTRA 均无临近财报, 通过",
+  "note_4A": "TGT exit_strength 2股已由主跑直接下单 (order 6a67d35e, market 排 07-28 开盘), 不在本 pending 中",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "WST",
-      "dollar_amount": 309.64,
+      "symbol": "NVDA",
+      "dollar_amount": 311.80,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 328.35,
-      "rsi2": 2.98,
+      "est_price": 196.555,
+      "review_est_price": 197.10,
+      "rsi2": 6.73,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "exec_note": "每股$328>单仓$309.64, 整股=0, 夜间限价无法执行; 仅当日市价窗口可买 (账户规模所限)"
+      "exec_note": "夜间整股限价: floor(311.80 / (196.555*1.01)) = 1 股; 当日市价窗口则按 $311.80 市价"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "QQQM",
-      "dollar_amount": 309.64,
+      "symbol": "NTRA",
+      "dollar_amount": 311.80,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 281.73,
-      "rsi2": 9.56,
+      "est_price": 258.21,
+      "review_est_price": 258.29,
+      "rsi2": 6.94,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "exec_note": "夜间整股限价: 1股 @$284.55 (≈$284.55)"
+      "exec_note": "夜间整股限价: 1 股; 盘后价差较宽 (bid 255.50 / ask 272.42), 开盘市价更稳"
     }
   ]
 }
