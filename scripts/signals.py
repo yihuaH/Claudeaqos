@@ -435,10 +435,25 @@ def cmd_apply(a):
         qty, price = float(f["qty"]), float(f["price"])
         bucket = f.get("bucket", "strategy")
         if side == "buy":
-            state.setdefault("strategy_positions", {})[sym] = {
-                "qty": qty, "entry_price": price, "entry_date": today,
-                "cost": round(qty * price, 2),
-            }
+            book = state.setdefault("strategy_positions", {})
+            if sym in book:
+                # 同标的加仓 (如 4C ②腿补零头): 加权入仓 — 量相加、成本相加、
+                # entry_price = 总成本/总量、entry_date 保留原始 (holding-days/time-stop 以首次入场起算)
+                old = book[sym]
+                old_cost = float(old.get("cost", float(old["qty"]) * float(old["entry_price"])))
+                new_qty = round(float(old["qty"]) + qty, 6)
+                new_cost = round(old_cost + qty * price, 2)
+                book[sym] = {
+                    "qty": new_qty,
+                    "entry_price": round(new_cost / new_qty, 4) if new_qty else price,
+                    "entry_date": old.get("entry_date", today),
+                    "cost": new_cost,
+                }
+            else:
+                book[sym] = {
+                    "qty": qty, "entry_price": price, "entry_date": today,
+                    "cost": round(qty * price, 2),
+                }
         else:
             book = state.get("strategy_positions" if bucket == "strategy" else "legacy_positions", {})
             if sym in book:
