@@ -5,10 +5,22 @@
   "halted": false,
   "strategy_positions": {
     "DIA": {
-      "qty": 29.20106504,
+      "qty": 0.201065,
       "entry_price": 518.29,
       "entry_date": "2026-07-20",
       "cost": 15134.62
+    },
+    "NVDA": {
+      "qty": 75.0,
+      "entry_price": 194.1,
+      "entry_date": "2026-07-28",
+      "cost": 14557.5
+    },
+    "NTRA": {
+      "qty": 57.0,
+      "entry_price": 257.475789,
+      "entry_date": "2026-07-28",
+      "cost": 14676.12
     }
   },
   "legacy_positions": {},
@@ -75,6 +87,33 @@
       "price": 89.600607,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "DIA",
+      "side": "sell",
+      "qty": 29.0,
+      "price": 524.876207,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 75.0,
+      "price": 194.1,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "NTRA",
+      "side": "buy",
+      "qty": 57.0,
+      "price": 257.475789,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }
