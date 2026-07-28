@@ -50,9 +50,9 @@
     "max_holding_days": 10
   },
   "sizing": {
-    "position_pct_of_portfolio": 15.0,
-    "max_strategy_positions": 4,
-    "max_new_entries_per_day": 2,
+    "position_pct_of_portfolio": 20.0,
+    "max_strategy_positions": 5,
+    "max_new_entries_per_day": 3,
     "min_cash_reserve_usd": 5.0,
     "min_order_usd": 5.0
   },
