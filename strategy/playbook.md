@@ -145,12 +145,19 @@ python3 scripts/signals.py signal \
      `market_hours=all_day_hours` (2026-07-21 用户指示: 盘后/隔夜/盘前时段即时生效, 能成交就成交,
      不必等开盘); 标的不支持 24h 时段或下单被拒 → 依次降级 `extended_hours` → `regular_hours` 排队开盘,
      降级记 journal。限价保护不变, 盘外薄流动性只影响成交概率、不影响成交价上限。
-     **整股约束** (2026-07-20 实测: Robinhood 限价单拒绝分数股, API 400 "Limit order quantity cannot
-     include fractional shares"), 故本模式仅执行买单且:
-     - limit_price = round(est_price×1.010, 2) (信号价 +1.0% 容差, 开盘超出即不成交、不追价), time_in_force=gfd;
-     - 数量 = floor(dollar_amount ÷ limit_price) **整股** — 只向下取整 (等效于规则允许的金额下调);
-       为凑整股向上加钱属放大, **绝不允许**。结果为 0 股 → 该单无法夜间执行, 跳过记 journal, 等次日新信号
-       (注意: 账户规模较小时, 高价 ETF 的 15% 仓位常不足一整股, 此类买单实际只有当日市价窗口一条路);
+     **混合执行** (2026-07-27 用户改进: 整股即时限价 + 余量分数市价排开盘, 解决整股欠配)。
+     背景: Robinhood 限价单拒绝分数股 (2026-07-20 实测 API 400), 故整股走即时限价、零头走市价排开盘。
+     每个买单 (dollar_amount=D, est_price=E) 拆两腿, 合计 **恰好 ≤ D、绝不放大**:
+     - **① 整股即时限价腿**: limit_price = round(E×1.010, 2) (信号价 +1.0% 容差), time_in_force=gfd;
+       whole = floor(D ÷ limit_price)。whole ≥ 1 → place **limit** (whole 股, all_day_hours, ref_id①) 盘后即时成交;
+       标的不支持 24h 或被拒 → 降级 extended_hours → regular_hours 排开盘 (降级记 journal)。取实际成交额
+       cost₁ = filled_qty × avg_price; 该腿未成/部分成交 → **撤掉未成交量** (防其后续成交与②腿重复), cost₁ 只计已成交。
+     - **② 余量分数市价腿**: remaining = D − cost₁。remaining ≥ `min_order_usd` → place
+       **market + regular_hours + dollar_amount=remaining** (ref_id②), 分数股排**次一开盘**按开盘价成交,
+       补足整股腿吃不下的零头; remaining < `min_order_usd` → 跳过零头记 journal。
+       whole == 0 (买不起 1 整股) → 无①腿, 整单 D 直接走②腿 (全额分数市价排开盘)。
+     - 两腿 cost₁ + remaining = D (①按实成、②补差), 合计不超过 D; 为凑整向上加钱属放大 **绝不允许**; ref_id 每腿一个、重试复用。
+     - **①腿今夜成交、②腿次一开盘成交**: 今夜写回只记①腿实成交; ②腿开盘成交由报告窗口 10:45 ET 晨检回写 (或次日主跑 §1 按券商持仓自愈)。
      - funding_rotation / accelerated_liquidation 换仓与加速清理卖单夜间一律跳过
        (存量多为分数股无法限价卖出, 且其卖款 T+1 结算无法支持本批买单), 留待次日主流程重算;
      - 资金约束: 买单按 seq 累计金额不得超过 `get_portfolio` 实时 buying_power, 超出部分跳过记 journal;
