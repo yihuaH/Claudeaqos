@@ -2,23 +2,17 @@
   "high_water_mark": 2078.69,
   "halted": false,
   "strategy_positions": {
-    "TGT": {
-      "qty": 2.0,
-      "entry_price": 135.335,
-      "entry_date": "2026-07-24",
-      "cost": 270.67
-    },
     "NVDA": {
-      "qty": 1.0,
-      "entry_price": 196.24,
+      "qty": 1.593787,
+      "entry_price": 195.635,
       "entry_date": "2026-07-27",
-      "cost": 196.24
+      "cost": 311.80
     },
     "NTRA": {
-      "qty": 1.0,
-      "entry_price": 260.0,
+      "qty": 1.201980,
+      "entry_price": 259.406,
       "entry_date": "2026-07-27",
-      "cost": 260.0
+      "cost": 311.80
     }
   },
   "legacy_positions": {},
@@ -218,6 +212,33 @@
       "side": "buy",
       "qty": 1.0,
       "price": 260.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "TGT",
+      "side": "sell",
+      "qty": 2.0,
+      "price": 141.91,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 0.593787,
+      "price": 194.615,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "NTRA",
+      "side": "buy",
+      "qty": 0.20198,
+      "price": 256.46,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

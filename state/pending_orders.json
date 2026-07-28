@@ -6,8 +6,8 @@
   "executed_at": "2026-07-28T00:44:32Z",
   "executed_mode": "盘外混合 (①整股即时限价 20:43 ET 已成; ②余量分数市价 21:50 ET 排 07-28 开盘, 用户两次「执行」)",
   "remainder_legs": [
-    {"symbol": "NVDA", "order_id": "6a680ae3-37fc-4503-9044-6bcabe8a98ad", "dollar_amount": 115.56, "qty": 0.591730, "type": "market", "market_hours": "regular_hours", "state": "queued", "fills_at": "2026-07-28 开盘", "note": "补足 ①腿$196.24 至授权 $311.80"},
-    {"symbol": "NTRA", "order_id": "6a680ae9-3531-4a41-a15f-b1304bfc34f1", "dollar_amount": 51.80, "qty": 0.200770, "type": "market", "market_hours": "regular_hours", "state": "queued", "fills_at": "2026-07-28 开盘", "note": "补足 ①腿$260.00 至授权 $311.80"}
+    {"symbol": "NVDA", "order_id": "6a680ae3-37fc-4503-9044-6bcabe8a98ad", "dollar_amount": 115.56, "qty": 0.591730, "type": "market", "market_hours": "regular_hours", "state": "filled", "fill_qty": 0.593787, "fill_price": 194.615, "note": "补足 ①腿$196.24 至授权 $311.80; 07-28 开盘成交, NVDA 合计 1.593787 股"},
+    {"symbol": "NTRA", "order_id": "6a680ae9-3531-4a41-a15f-b1304bfc34f1", "dollar_amount": 51.80, "qty": 0.200770, "type": "market", "market_hours": "regular_hours", "state": "filled", "fill_qty": 0.201980, "fill_price": 256.46, "note": "补足 ①腿$260.00 至授权 $311.80; 07-28 开盘成交, NTRA 合计 1.201980 股"}
   ],
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
   "valid_until": "2026-07-28 09:25 ET (次一交易日)",
