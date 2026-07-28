@@ -55,7 +55,7 @@
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
 - `scripts/learn_overnight.py` — 隔夜策略学习器 (双纸面账本 A/B; **暂停中** 2026-07-21, 随隔夜实盘暂停冻结); `strategy/learning_overnight.json` 边界; `state/learning_overnight.json` + 两本 paper_overnight_* 账本
-- `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境)
+- `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
 - `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)

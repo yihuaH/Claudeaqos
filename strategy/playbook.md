@@ -222,6 +222,15 @@ python3 scripts/signals.py signal \
    a. `paper.py run --orders <opt_closes> --date <今天> --fills-out <scratchpad>/opt_close_fills.json` (期权平仓单被拒 = 可能已被指派 → 记异常、通知用户)
    b. `paper.py run --orders <paper_orders> --date <今天> --fills-out <scratchpad>/paper_fills.json`
    c. `paper.py run --orders <opt_opens> --date <今天> --fills-out <scratchpad>/opt_open_fills.json`
+   d. **收盘后运行 (market closed, 收盘后主跑常态)**: 上述每个 `paper.py run` 追加
+      `--allow-queue --queued-out state/paper_queued_challenger.json` — Alpaca-paper 收盘后拒 market 单,
+      故改用 limit/day (限价 est×(1±3%)) 挂至**次一开盘**, 不等成交 (今日 fills 空), 排队清单入库并提交。
+      **回收放在次一交易日主跑 §6 开头** (下方步骤 0, 主跑上下文写账本不受分类器限制; 报告窗口晨检为只读不做 paper 写回)。
+      开盘时段运行则无需 --allow-queue (照旧即时成交)。
+0. **回收昨日排队单 (§6 最先做)**: 若 `state/paper_queued_challenger.json` 存在, 先
+   `paper.py sync --queued state/paper_queued_challenger.json --fills-out <scratchpad>/ch_sync_fills.json --prune`
+   → `signals.py apply --state state/paper_positions.json --fills <同> --date <今天>` 把昨日排队单的开盘成交回写账本
+   (sync 只读订单状态+写本地账本, 无需开盘), 再往下算当日挑战者信号。momentum/期权轨道同理各自 sync 其 queued 文件。
 6. 回写账本:
    a. 正股: `python3 scripts/signals.py apply --state state/paper_positions.json --fills <paper_fills> --date <今天> --portfolio-value <paper equity>`
    b. 期权: 对 opt_close_fills 和 opt_open_fills 分别 `python3 scripts/options_overlay.py apply --ledger state/paper_positions.json --fills <文件> --date <今天>`
@@ -257,6 +266,10 @@ python3 scripts/signals.py signal \
 3. 信号: `python3 scripts/momentum.py signal --config strategy/momentum.json --state state/momentum_positions.json --bars <mom_bars> --quotes <mom_quotes> --date <今天> --portfolio-value <equity> --buying-power <cash> --out <scratchpad>/mom_orders.json`
 4. 执行与回写: `paper.py run --orders <mom_orders> --date <今天> --coid-prefix cqm --fills-out <mom_fills>` → `signals.py apply --state state/momentum_positions.json --fills <mom_fills> --date <今天> --portfolio-value <equity>`。
    (`--coid-prefix cqm` 隔离幂等ID, 防止与其他 paper 轨道同日同标的订单冲突。)
+   **收盘后运行**: `run` 追加 `--allow-queue --queued-out state/paper_queued_momentum.json` 挂至次开;
+   **次一交易日主跑 §7B 开头**先 `paper.py sync --queued state/paper_queued_momentum.json --fills-out <f> --prune`
+   回收 → `signals.py apply --state state/momentum_positions.json ...` 回写, 再算当日动量信号。
+   (无调仓交易时 run 无单、不生成排队文件, 照旧只更新 last_rebalance。)
 5. journal 记录: 是否调仓日、动量分数榜前5、目标持仓 vs 实际、净值。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
 6. 评估: 实验累计 ≥60 交易日 (约12次周度调仓) 后与用户复盘决定去留; 期间不并入任何实盘决策。
 
