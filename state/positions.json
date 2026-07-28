@@ -7,6 +7,18 @@
       "entry_price": 135.335,
       "entry_date": "2026-07-24",
       "cost": 270.67
+    },
+    "NVDA": {
+      "qty": 1.0,
+      "entry_price": 196.24,
+      "entry_date": "2026-07-27",
+      "cost": 196.24
+    },
+    "NTRA": {
+      "qty": 1.0,
+      "entry_price": 260.0,
+      "entry_date": "2026-07-27",
+      "cost": 260.0
     }
   },
   "legacy_positions": {},
@@ -190,6 +202,24 @@
       "price": 86.72,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-27",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 196.24,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-27",
+      "symbol": "NTRA",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 260.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

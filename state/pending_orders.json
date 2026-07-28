@@ -2,7 +2,9 @@
   "trade_date": "2026-07-27",
   "generated_at": "2026-07-27T21:54:00Z",
   "generated_by": "收盘后主跑 (post-close primary, ~17:45 ET)",
-  "status": "awaiting_execution",
+  "status": "executed",
+  "executed_at": "2026-07-28T00:44:32Z",
+  "executed_mode": "盘外限价 (all_day_hours, 用户 20:43 ET 回复「执行」)",
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
   "valid_until": "2026-07-28 09:25 ET (次一交易日)",
   "buying_power_at_generation": 1538.26,
@@ -21,7 +23,8 @@
       "rsi2": 6.73,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "exec_note": "夜间整股限价: floor(311.80 / (196.555*1.01)) = 1 股; 当日市价窗口则按 $311.80 市价"
+      "exec_note": "夜间整股限价: floor(311.80 / (196.555*1.01)) = 1 股; 当日市价窗口则按 $311.80 市价",
+      "executed_fill": {"order_id": "6a67fb67-5eac-4319-bf22-23a2fbef6857", "qty": 1, "limit_price": 198.52, "fill_price": 196.24, "state": "filled"}
     },
     {
       "seq": 2,
@@ -35,7 +38,8 @@
       "rsi2": 6.94,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "exec_note": "夜间整股限价: 1 股; 盘后价差较宽 (bid 255.50 / ask 272.42), 开盘市价更稳"
+      "exec_note": "夜间整股限价: 1 股; 盘后价差较宽 (bid 255.50 / ask 272.42), 开盘市价更稳",
+      "executed_fill": {"order_id": "6a67fb6f-94a0-4edb-b013-02dcf8ec47d5", "qty": 1, "limit_price": 260.79, "fill_price": 260.00, "state": "filled"}
     }
   ]
 }
