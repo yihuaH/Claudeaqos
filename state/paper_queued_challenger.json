@@ -1,0 +1,42 @@
+{
+  "queued_when": "market_closed",
+  "date": "2026-07-27",
+  "coid_prefix": "chl",
+  "next_open": "2026-07-28T09:30:00-04:00",
+  "skipped": [],
+  "orders": [
+    {
+      "coid": "chl-2026-07-27-DIA-sell",
+      "order_id": "4fba5957-65f7-411f-a640-62a8dae47b33",
+      "symbol": "DIA",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "505.61",
+      "qty": "29",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "chl-2026-07-27-NVDA-buy",
+      "order_id": "130278d6-dc7e-43fb-8ec4-253f8da02f34",
+      "symbol": "NVDA",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "202.45",
+      "qty": "75",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "chl-2026-07-27-NTRA-buy",
+      "order_id": "45f20d9e-d201-4e28-bb14-a406546fa511",
+      "symbol": "NTRA",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "265.96",
+      "qty": "57",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
+}

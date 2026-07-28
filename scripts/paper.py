@@ -3,7 +3,9 @@
 Alpaca 纸面账户执行器 — 只用于挑战者参数的影子验证。
 
   run     执行 signals.py 产出的订单 (先卖后买, 市价, 幂等 client_order_id);
-          整仓出场自动改走 close-position 接口全量平掉, 不留小数残渣
+          整仓出场自动改走 close-position 接口全量平掉, 不留小数残渣;
+          --allow-queue: 收盘后不拒单, 改用 limit/day 挂至次一开盘 (配合 --queued-out)
+  sync    次日回收排队单成交 → fills (供 signals.py apply 回写账本), 幂等
   equity  按本地账本 + 实时报价计算挑战者净值/现金 (不受 paper 账户里其他持仓干扰)
   account 打印 paper 账户基本状态
 
@@ -51,10 +53,10 @@ def _get_by_coid(coid):
 
 
 def _submit(order, coid):
+    # 默认 market/day; order 可覆盖 type/time_in_force (排队模式用 limit/day)
+    body = {"type": "market", "time_in_force": "day", **order, "client_order_id": coid}
     try:
-        return _req("POST", "/v2/orders", {**order, "type": "market",
-                                           "time_in_force": "day",
-                                           "client_order_id": coid})
+        return _req("POST", "/v2/orders", body)
     except urllib.error.HTTPError as e:
         detail = e.read().decode()[:200]
         if e.code == 422 and "client_order_id" in detail:
@@ -63,6 +65,7 @@ def _submit(order, coid):
 
 
 OCC_RE = re.compile(r"^[A-Z.]{1,6}\d{6}[CP]\d{8}$")  # 期权 OCC 符号, 整张合约交易
+QUEUE_BUF = 0.03  # 收盘后排队限价缓冲: 买 est×1.03 / 卖 est×0.97, 保证次开成交、兼作极端跳空保护
 
 
 def _wait_fill(coid, timeout_s):
@@ -142,8 +145,12 @@ def cmd_run(a):
         print(json.dumps({"dry_run": True, "plan": plan}, indent=2, ensure_ascii=False))
         return
 
-    if not _req("GET", "/v2/clock")["is_open"]:
-        raise SystemExit("Alpaca 时钟显示市场未开盘, 拒绝提交 paper 订单 (顺延下一交易日)")
+    clk = _req("GET", "/v2/clock")
+    if not clk["is_open"]:
+        if not getattr(a, "allow_queue", False):
+            raise SystemExit("Alpaca 时钟显示市场未开盘, 拒绝提交 paper 订单 "
+                             "(顺延下一交易日; 加 --allow-queue 可排队至次开)")
+        return _run_queued(a, plan, clk)
 
     fills, warnings = [], []
     for side, o in plan:
@@ -179,6 +186,102 @@ def cmd_run(a):
             json.dump(out, f, indent=2, ensure_ascii=False)
             f.write("\n")
     print(json.dumps(out, indent=2, ensure_ascii=False))
+
+
+def _queue_limit_body(side, o):
+    """收盘后排队用 limit/day 单 (盘后任意时段都能挂至次一开盘; market 单 16:00-20:00 ET 会被拒)。
+    限价 = est_price × (1 ± QUEUE_BUF): 买 +3% / 卖 -3%, 次开成交概率高且封顶极端跳空。
+    买单转整股 (limit 不支持 notional/分数); 买不起 1 整股 → 返回 None 跳过。"""
+    sym = o["symbol"]
+    est = float(o.get("est_price") or 0)
+    if est <= 0:
+        raise SystemExit(f"{sym}: 排队模式需 est_price 定限价, 缺失")
+    body = {"symbol": sym, "side": side, "type": "limit", "time_in_force": "day"}
+    if o.get("position_intent"):
+        body["position_intent"] = o["position_intent"]
+    if OCC_RE.match(sym):
+        lp = round(est * (1.0 + (QUEUE_BUF if side == "buy" else -QUEUE_BUF)), 2)
+        body["limit_price"] = str(lp)
+        body["qty"] = str(int(o["qty"]))  # 期权整张
+    elif side == "sell":
+        wq = int(float(o["qty"]))  # limit 不支持分数, 向下取整; 残渣 (<1股) 留待次日市价扫
+        if wq < 1:
+            return None
+        body["limit_price"] = str(round(est * (1.0 - QUEUE_BUF), 2))
+        body["qty"] = str(wq)
+    else:  # 买 → 整股
+        lp = round(est * (1.0 + QUEUE_BUF), 2)
+        qty = int(float(o["dollar_amount"]) // lp)
+        if qty < 1:
+            return None
+        body["limit_price"] = str(lp)
+        body["qty"] = str(qty)
+    return body
+
+
+def _run_queued(a, plan, clk):
+    """市场未开盘且 --allow-queue: 逐单提交 limit/day 挂至次开, 不等成交。
+    幂等 (同 coid 重跑复用已挂单); 排队清单写 --queued-out 供次日 sync 回收。"""
+    queued, skipped = [], []
+    for side, o in plan:
+        sym = o["symbol"]
+        coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
+        body = _queue_limit_body(side, o)
+        if body is None:
+            skipped.append(f"{sym} {side}: 排队限价下买不起 1 整股, 跳过")
+            continue
+        sub_o = _submit(body, coid)
+        queued.append({"coid": coid, "order_id": sub_o.get("id"), "symbol": sym,
+                       "side": side, "status": sub_o.get("status"),
+                       "limit_price": body.get("limit_price"), "qty": body.get("qty"),
+                       "bucket": o.get("bucket", "strategy"), "reason": o.get("reason", "")})
+    qstate = {"queued_when": "market_closed", "date": a.date, "coid_prefix": a.coid_prefix,
+              "next_open": clk.get("next_open"), "skipped": skipped, "orders": queued}
+    if a.queued_out:
+        with open(a.queued_out, "w") as f:
+            json.dump(qstate, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    if a.fills_out:  # 今日无成交, 写空 fills 让 signals.py apply 干净空跑
+        with open(a.fills_out, "w") as f:
+            json.dump({"fills": []}, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    print(json.dumps({"market": "closed", "mode": "queued_for_next_open",
+                      "queued": len(queued), "skipped": skipped,
+                      "next_open": clk.get("next_open"),
+                      "queued_out": a.queued_out, "fills": []},
+                     indent=2, ensure_ascii=False))
+
+
+def cmd_sync(a):
+    """次日回收排队单: 按 coid 查各单当前状态; 已成交 → 汇成 fills (供 signals.py apply
+    回写账本); 终态未成交 (canceled/rejected/expired) → 记 terminal_no_fill; 仍挂 → 保留。
+    幂等可反复跑; --prune 会把已终态单从排队清单剔除, 只留仍挂的。"""
+    q = load_json(a.queued)
+    fills, still, dead = [], [], []
+    for rec in q.get("orders", []):
+        o = _get_by_coid(rec["coid"])
+        st = o.get("status")
+        fq = float(o.get("filled_qty") or 0)
+        if fq > 0 and st == "filled":
+            fills.append({"symbol": rec["symbol"], "side": rec["side"], "qty": fq,
+                          "price": float(o["filled_avg_price"]),
+                          "bucket": rec.get("bucket", "strategy"),
+                          "reason": rec.get("reason", "")})
+        elif st in ("canceled", "rejected", "expired"):
+            dead.append({"coid": rec["coid"], "symbol": rec["symbol"], "status": st})
+        else:
+            still.append(rec)
+    if a.fills_out:
+        with open(a.fills_out, "w") as f:
+            json.dump({"fills": fills}, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    if a.prune:
+        q["orders"] = still
+        with open(a.queued, "w") as f:
+            json.dump(q, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    print(json.dumps({"filled": fills, "still_pending": len(still),
+                      "terminal_no_fill": dead}, indent=2, ensure_ascii=False))
 
 
 def cmd_equity(a):
@@ -274,7 +377,17 @@ def main():
     r.add_argument("--coid-prefix", default="cq",
                    help="幂等ID前缀; 不同 paper 轨道用不同前缀, 避免同日同标的订单冲突")
     r.add_argument("--dry-run", action="store_true")
+    r.add_argument("--allow-queue", action="store_true",
+                   help="收盘后不拒单, 改用 limit/day 挂至次一开盘 (需订单带 est_price)")
+    r.add_argument("--queued-out", help="排队清单输出 (供次日 sync 回收成交)")
     r.set_defaults(func=cmd_run)
+
+    sy = sub.add_parser("sync", help="次日回收排队单成交 → fills (供 signals.py apply)")
+    sy.add_argument("--queued", required=True, help="run --allow-queue 产出的排队清单")
+    sy.add_argument("--fills-out", help="已成交汇总输出 (供 signals.py apply 回写账本)")
+    sy.add_argument("--prune", action="store_true",
+                    help="从排队清单剔除已终态 (成交/取消/拒绝/过期) 单, 只留仍挂的")
+    sy.set_defaults(func=cmd_sync)
 
     e = sub.add_parser("equity")
     e.add_argument("--ledger", required=True, help="state/paper_positions.json")
