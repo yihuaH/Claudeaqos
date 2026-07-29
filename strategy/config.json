@@ -22,7 +22,7 @@
   "stock_universe_file": "strategy/universe.json",
   "defense": {
     "allow_unknown_earnings": true,
-    "earnings_blackout_days": 10,
+    "earnings_blackout_days": 7,
     "earnings_exit_days": 1,
     "max_daily_move_pct": 8.0,
     "move_lookback_days": 20,
