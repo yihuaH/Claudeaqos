@@ -21,6 +21,24 @@
       "entry_price": 257.475789,
       "entry_date": "2026-07-28",
       "cost": 14676.12
+    },
+    "SOXQ": {
+      "qty": 228.0,
+      "entry_price": 86.345,
+      "entry_date": "2026-07-29",
+      "cost": 19686.66
+    },
+    "XLK": {
+      "qty": 116.0,
+      "entry_price": 171.329051,
+      "entry_date": "2026-07-29",
+      "cost": 19874.17
+    },
+    "QQQM": {
+      "qty": 71.0,
+      "entry_price": 277.90014,
+      "entry_date": "2026-07-29",
+      "cost": 19730.91
     }
   },
   "legacy_positions": {},
@@ -112,6 +130,33 @@
       "side": "buy",
       "qty": 57.0,
       "price": 257.475789,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-29",
+      "symbol": "SOXQ",
+      "side": "buy",
+      "qty": 228.0,
+      "price": 86.345,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-29",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 116.0,
+      "price": 171.329051,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-29",
+      "symbol": "QQQM",
+      "side": "buy",
+      "qty": 71.0,
+      "price": 277.90014,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

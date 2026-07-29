@@ -1,44 +1,20 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-07-28",
+  "date": "2026-07-29",
   "coid_prefix": "chl",
-  "next_open": "2026-07-29T09:30:00-04:00",
-  "skipped": [
-    "DIA sell: 排队限价下买不起 1 整股, 跳过"
-  ],
+  "next_open": "2026-07-30T09:30:00-04:00",
+  "skipped": [],
   "orders": [
     {
-      "coid": "chl-2026-07-28-SOXQ-buy",
-      "order_id": "982a9aa5-56f2-4d2c-82a8-80af3b131ade",
+      "coid": "chl-2026-07-29-SOXQ-sell",
+      "order_id": "ce25e7ee-afa3-4bcf-8c7b-68126959fe22",
       "symbol": "SOXQ",
-      "side": "buy",
+      "side": "sell",
       "status": "accepted",
-      "limit_price": "89.47",
+      "limit_price": "79.78",
       "qty": "228",
       "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "chl-2026-07-28-XLK-buy",
-      "order_id": "3acbc248-c460-44f9-a3e6-fbd38e25251f",
-      "symbol": "XLK",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "176.16",
-      "qty": "116",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "chl-2026-07-28-QQQM-buy",
-      "order_id": "83d77c1f-9337-4dd7-aa17-4b96cd251cbd",
-      "symbol": "QQQM",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "286.44",
-      "qty": "71",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
+      "reason": "stop_loss"
     }
   ]
 }
