@@ -1,20 +1,77 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-07-29",
+  "date": "2026-07-30",
   "coid_prefix": "chl",
-  "next_open": "2026-07-30T09:30:00-04:00",
-  "skipped": [],
+  "next_open": "2026-07-31T09:30:00-04:00",
+  "skipped": [
+    "DIA sell: 排队限价下买不起 1 整股, 跳过"
+  ],
   "orders": [
     {
-      "coid": "chl-2026-07-29-SOXQ-sell",
-      "order_id": "ce25e7ee-afa3-4bcf-8c7b-68126959fe22",
-      "symbol": "SOXQ",
+      "coid": "chl-2026-07-30-NTRA-sell",
+      "order_id": "a22c9db8-0b9b-4bd7-8ef7-dadaff59aa2d",
+      "symbol": "NTRA",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "79.78",
-      "qty": "228",
+      "limit_price": "261.57",
+      "qty": "57",
       "bucket": "strategy",
-      "reason": "stop_loss"
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "chl-2026-07-30-XLK-sell",
+      "order_id": "2948b2bd-c1d0-4dd7-9868-425a32f518d1",
+      "symbol": "XLK",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "170.46",
+      "qty": "116",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "chl-2026-07-30-QQQM-sell",
+      "order_id": "33ce8a5d-302c-42ac-9fe9-466f19ac60e1",
+      "symbol": "QQQM",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "272.95",
+      "qty": "71",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "chl-2026-07-30-ODFL-buy",
+      "order_id": "13c12a47-9641-46d0-bd47-135eaafc6fc0",
+      "symbol": "ODFL",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "218.97",
+      "qty": "94",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "chl-2026-07-30-CRS-buy",
+      "order_id": "99b70fb3-0e14-4240-822e-1b6ad8056bb5",
+      "symbol": "CRS",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "518.91",
+      "qty": "40",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "chl-2026-07-30-FTI-buy",
+      "order_id": "76eff424-ced0-4d9f-bde8-2a35e6da0761",
+      "symbol": "FTI",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "70.98",
+      "qty": "292",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

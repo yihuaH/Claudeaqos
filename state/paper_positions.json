@@ -22,12 +22,6 @@
       "entry_date": "2026-07-28",
       "cost": 14676.12
     },
-    "SOXQ": {
-      "qty": 228.0,
-      "entry_price": 86.345,
-      "entry_date": "2026-07-29",
-      "cost": 19686.66
-    },
     "XLK": {
       "qty": 116.0,
       "entry_price": 171.329051,
@@ -159,6 +153,15 @@
       "price": 277.90014,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-30",
+      "symbol": "SOXQ",
+      "side": "sell",
+      "qty": 228.0,
+      "price": 86.765175,
+      "bucket": "strategy",
+      "reason": "stop_loss"
     }
   ]
 }
