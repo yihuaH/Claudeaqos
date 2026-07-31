@@ -2,12 +2,13 @@
   "trade_date": "2026-07-30",
   "generated_at": "2026-07-30T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, ~17:45 ET)",
-  "status": "partially_executed",
+  "status": "partially_executed_final",
   "partial_executed_at": "2026-07-31T02:06:00Z",
-  "partial_note": "用户 07-30 ~22:0x ET 回复「执行」+「执行能负担的部分」: 今夜 BP 仅 $288.82 (供血卖单未成交), 按 4C 盘外混合缩量执行 ODFL 至 ~$288 (①1股即时限价@$213成交 + ②$75市价排07-31开盘); CRS/FTI 今夜 BP 不足**跳过, 仍 awaiting**, 留 07-31 开盘卖单供血后由用户回复「执行」补做 (valid 至 07-31 15:55 ET)。注: ODFL 因缩量仅 ~$288 (目标$426), 欠配 ~$138, 是否明日补足由用户定。",
+  "partial_note": "ODFL 已全部成交 (①1股@$213 今夜 + ②0.349878股@$214.36 07-31开盘, 合计1.349878股/$288, 欠配~$138 vs $426目标)。CRS/FTI **未能执行**并作废 — 见 settlement_finding。",
+  "settlement_finding": "**结算修正 (2026-07-31 晨检)**: 账户为**现金账户 (type=cash)**, 07-31 开盘 4 笔出场卖出款 ~$1555 为**未结算 (unsettled)**, 现金账户下**不即时计入买入力**。晨检查 get_portfolio: cash=$1555.37 但 **buying_power=$0.82**。故 CRS/FTI 今日无法供血执行, valid_until 15:55 到期作废。资金 T+1 结算 (07-31 周五 → **08-03 周一**可用)。届时 07-30 信号已 2 个交易日过期, 不强制执行陈旧信号; 由 08-03 主跑重新评估 CRS/FTI。**修正**: 此前告知用户'现金账户卖出款可即时当买入力'有误 — 现金账户需等 T+1 结算。",
   "executed_legs_odfl": [
-    {"symbol": "ODFL", "leg": 1, "type": "limit", "qty": 1, "limit": 214.72, "fill": 213.00, "order_id": "6a6c02c3-32bf-411c-9285-55525e9a69df", "state": "filled", "when": "今夜24h盘"},
-    {"symbol": "ODFL", "leg": 2, "type": "market", "dollar_amount": 75.00, "order_id": "6a6c02f8-9752-4a97-bb06-bb91c242dc5e", "state": "queued", "fills_at": "2026-07-31 开盘"}
+    {"symbol": "ODFL", "leg": 1, "type": "limit", "qty": 1, "limit": 214.72, "fill": 213.00, "order_id": "6a6c02c3-32bf-411c-9285-55525e9a69df", "state": "filled", "when": "07-30 24h盘"},
+    {"symbol": "ODFL", "leg": 2, "type": "market", "dollar_amount": 75.00, "fill_qty": 0.349878, "fill_price": 214.36, "order_id": "6a6c02f8-9752-4a97-bb06-bb91c242dc5e", "state": "filled", "filled_at": "2026-07-31 开盘"}
   ],
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
   "valid_until": "2026-07-31 15:55 ET (次一交易日收盘; 本批延至次日盘中因买入资金依赖今日出场卖单于 07-31 开盘成交)",
@@ -16,10 +17,10 @@
   "sizing_note": "sizing 20%/仓 = 组合 $2132.07 × 20% = $426.41; 今日出场 4 只 (NTRA/SOXQ/XLK/QQQM 止盈), 保留 NVDA; 新入 3 只满 max_new_entries_per_day=3, 终态持仓 NVDA+ODFL+CRS+FTI (4/5 槽)。",
   "earnings_defense": "blackout_days=7: 12 个 RSI2<10 候选逐个查财报, ODFL(下次10-28)/CRS(10-22)/FTI(10-22) 均刚报完财报、下次 80+ 天外, 未被拦; O(下次08-05 dte6) 被拦但本就未入选; MO/WWD 因单日异动≥8% 防御跳过。",
   "exit_sells_placed": [
-    {"symbol": "NTRA", "qty": 1.20198, "reason": "exit_strength", "est_price": 269.66, "order_id": "6a6bc748-0862-4770-b6b5-cd481400126b", "state": "queued", "fills_at": "2026-07-31 开盘"},
-    {"symbol": "SOXQ", "qty": 4.808963, "reason": "exit_strength", "est_price": 88.94, "order_id": "6a6bc74a-c331-4f25-8dac-d456479cfdf1", "state": "queued", "fills_at": "2026-07-31 开盘"},
-    {"symbol": "XLK", "qty": 2.433801, "reason": "exit_strength", "est_price": 175.73, "order_id": "6a6bc74c-2e05-4729-a418-bdf0db5fea5f", "state": "queued", "fills_at": "2026-07-31 开盘"},
-    {"symbol": "QQQM", "qty": 1.224607, "reason": "exit_strength", "est_price": 281.39, "order_id": "6a6bc74d-294f-42d8-a4f4-3a47f0def01d", "state": "queued", "fills_at": "2026-07-31 开盘"}
+    {"symbol": "NTRA", "qty": 1.20198, "reason": "exit_strength", "est_price": 269.66, "fill": 273.25, "order_id": "6a6bc748-0862-4770-b6b5-cd481400126b", "state": "filled", "filled_at": "2026-07-31 开盘"},
+    {"symbol": "SOXQ", "qty": 4.808963, "reason": "exit_strength", "est_price": 88.94, "fill": 92.58, "order_id": "6a6bc74a-c331-4f25-8dac-d456479cfdf1", "state": "filled", "filled_at": "2026-07-31 开盘"},
+    {"symbol": "XLK", "qty": 2.433801, "reason": "exit_strength", "est_price": 175.73, "fill": 177.46, "order_id": "6a6bc74c-2e05-4729-a418-bdf0db5fea5f", "state": "filled", "filled_at": "2026-07-31 开盘"},
+    {"symbol": "QQQM", "qty": 1.224607, "reason": "exit_strength", "est_price": 281.39, "fill": 284.99, "order_id": "6a6bc74d-294f-42d8-a4f4-3a47f0def01d", "state": "filled", "filled_at": "2026-07-31 开盘"}
   ],
   "note_4A": "4 笔出场止盈卖单已按 4A 自动 place (queued, 排 07-31 开盘); 出场为减风险动作, 无需用户确认。成交回写由 07-31 晨检处理。",
   "exec_protocol": "用户回复「执行」后按 playbook 4C: 若 07-31 盘中 (09:30-15:55 ET) → 当日市价模式 (market/regular_hours); 若盘外 → 盘外混合 (①整股即时限价 all_day_hours + ②余量分数市价排开盘)。买单按 seq 累计不超实时 BP, 超出跳过。逐字段照抄, 绝不放大/加单/改标的。",
@@ -37,7 +38,7 @@
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
       "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "executed_partial (~$288/$426, BP缩量; ①1股@$213成交 + ②$75排开盘; 欠配~$138待用户定是否补)"
+      "exec_status": "EXECUTED (1.349878股/$288; ①1@$213 + ②0.349878@$214.36; 欠配~$138 vs $426目标)"
     },
     {
       "seq": 2,
@@ -52,7 +53,7 @@
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
       "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "awaiting — 今夜BP不足跳过, 07-31开盘卖单供血后由用户回复「执行」"
+      "exec_status": "EXPIRED_UNSETTLED — 07-31出场卖出款未结算(现金账户,BP$0.82), 无法供血; 15:55作废; 由08-03主跑重评"
     },
     {
       "seq": 3,
@@ -67,7 +68,7 @@
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
       "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "awaiting — 今夜BP不足跳过, 07-31开盘卖单供血后由用户回复「执行」"
+      "exec_status": "EXPIRED_UNSETTLED — 07-31出场卖出款未结算(现金账户,BP$0.82), 无法供血; 15:55作废; 由08-03主跑重评"
     }
   ]
 }

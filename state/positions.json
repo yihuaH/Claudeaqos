@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 2144.34,
+  "high_water_mark": 2157.73,
   "halted": false,
   "strategy_positions": {
     "NVDA": {
@@ -8,35 +8,11 @@
       "entry_date": "2026-07-27",
       "cost": 311.8
     },
-    "NTRA": {
-      "qty": 1.20198,
-      "entry_price": 259.406,
-      "entry_date": "2026-07-27",
-      "cost": 311.8
-    },
-    "SOXQ": {
-      "qty": 4.808963,
-      "entry_price": 86.3304,
-      "entry_date": "2026-07-28",
-      "cost": 415.16
-    },
-    "XLK": {
-      "qty": 2.433801,
-      "entry_price": 170.5809,
-      "entry_date": "2026-07-28",
-      "cost": 415.16
-    },
-    "QQQM": {
-      "qty": 1.224607,
-      "entry_price": 277.2316,
-      "entry_date": "2026-07-28",
-      "cost": 339.5
-    },
     "ODFL": {
-      "qty": 1.0,
-      "entry_price": 213.0,
+      "qty": 1.349878,
+      "entry_price": 213.3526,
       "entry_date": "2026-07-30",
-      "cost": 213.0
+      "cost": 288.0
     }
   },
   "legacy_positions": {},
@@ -328,6 +304,51 @@
       "price": 213.0,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "NTRA",
+      "side": "sell",
+      "qty": 1.20198,
+      "price": 273.25,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "SOXQ",
+      "side": "sell",
+      "qty": 4.808963,
+      "price": 92.58,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "XLK",
+      "side": "sell",
+      "qty": 2.433801,
+      "price": 177.46,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "QQQM",
+      "side": "sell",
+      "qty": 1.224607,
+      "price": 284.99,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "ODFL",
+      "side": "buy",
+      "qty": 0.349878,
+      "price": 214.36,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ]
 }
