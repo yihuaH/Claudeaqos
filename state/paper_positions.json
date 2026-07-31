@@ -16,23 +16,23 @@
       "entry_date": "2026-07-28",
       "cost": 14557.5
     },
-    "NTRA": {
-      "qty": 57.0,
-      "entry_price": 257.475789,
-      "entry_date": "2026-07-28",
-      "cost": 14676.12
+    "ODFL": {
+      "qty": 94.0,
+      "entry_price": 214.37,
+      "entry_date": "2026-07-31",
+      "cost": 20150.78
     },
-    "XLK": {
-      "qty": 116.0,
-      "entry_price": 171.329051,
-      "entry_date": "2026-07-29",
-      "cost": 19874.17
+    "CRS": {
+      "qty": 40.0,
+      "entry_price": 516.629999,
+      "entry_date": "2026-07-31",
+      "cost": 20665.2
     },
-    "QQQM": {
-      "qty": 71.0,
-      "entry_price": 277.90014,
-      "entry_date": "2026-07-29",
-      "cost": 19730.91
+    "FTI": {
+      "qty": 292.0,
+      "entry_price": 70.401233,
+      "entry_date": "2026-07-31",
+      "cost": 20557.16
     }
   },
   "legacy_positions": {},
@@ -162,6 +162,60 @@
       "price": 86.765175,
       "bucket": "strategy",
       "reason": "stop_loss"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "NTRA",
+      "side": "sell",
+      "qty": 57.0,
+      "price": 271.23,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "XLK",
+      "side": "sell",
+      "qty": 116.0,
+      "price": 177.71,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "QQQM",
+      "side": "sell",
+      "qty": 71.0,
+      "price": 285.317746,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "ODFL",
+      "side": "buy",
+      "qty": 94.0,
+      "price": 214.37,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "CRS",
+      "side": "buy",
+      "qty": 40.0,
+      "price": 516.629999,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-07-31",
+      "symbol": "FTI",
+      "side": "buy",
+      "qty": 292.0,
+      "price": 70.401233,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

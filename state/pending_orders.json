@@ -1,75 +1,39 @@
 {
-  "trade_date": "2026-07-30",
-  "generated_at": "2026-07-30T21:52:00Z",
+  "trade_date": "2026-07-31",
+  "generated_at": "2026-07-31T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, ~17:45 ET)",
-  "status": "partially_executed_final",
-  "partial_executed_at": "2026-07-31T02:06:00Z",
-  "partial_note": "ODFL 已全部成交 (①1股@$213 今夜 + ②0.349878股@$214.36 07-31开盘, 合计1.349878股/$288, 欠配~$138 vs $426目标)。CRS/FTI **未能执行**并作废 — 见 settlement_finding。",
-  "settlement_finding": "**结算修正 (2026-07-31 晨检)**: 账户为**现金账户 (type=cash)**, 07-31 开盘 4 笔出场卖出款 ~$1555 为**未结算 (unsettled)**, 现金账户下**不即时计入买入力**。晨检查 get_portfolio: cash=$1555.37 但 **buying_power=$0.82**。故 CRS/FTI 今日无法供血执行, valid_until 15:55 到期作废。资金 T+1 结算 (07-31 周五 → **08-03 周一**可用)。届时 07-30 信号已 2 个交易日过期, 不强制执行陈旧信号; 由 08-03 主跑重新评估 CRS/FTI。**修正**: 此前告知用户'现金账户卖出款可即时当买入力'有误 — 现金账户需等 T+1 结算。",
-  "user_decision": "2026-07-31 用户明确「当天重新决定」: CRS/FTI 作废、**不结转**; 08-03 周一主跑用当天数据重新算信号 (CRS/FTI 仅当日仍 RSI2<10 且过财报/新闻/异动过滤才会重新入选)。届时 $1555 已结算, BP 可用于引擎当日所选标的。本 pending (trade_date 07-30) 终态归档, 不再消费。",
-  "executed_legs_odfl": [
-    {"symbol": "ODFL", "leg": 1, "type": "limit", "qty": 1, "limit": 214.72, "fill": 213.00, "order_id": "6a6c02c3-32bf-411c-9285-55525e9a69df", "state": "filled", "when": "07-30 24h盘"},
-    {"symbol": "ODFL", "leg": 2, "type": "market", "dollar_amount": 75.00, "fill_qty": 0.349878, "fill_price": 214.36, "order_id": "6a6c02f8-9752-4a97-bb06-bb91c242dc5e", "state": "filled", "filled_at": "2026-07-31 开盘"}
-  ],
+  "status": "awaiting_execution",
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
-  "valid_until": "2026-07-31 15:55 ET (次一交易日收盘; 本批延至次日盘中因买入资金依赖今日出场卖单于 07-31 开盘成交)",
-  "buying_power_at_generation": 288.82,
-  "funding_note": "今日 4A 出场止盈卖单 (NTRA/SOXQ/XLK/QQQM, market/regular_hours) 已 place, state=queued 排 07-31 开盘成交, 预计回笼 ~$1524.12。3 笔买单合计 $1279.23 由此供血 + 现有现金 $288.82。**注意**: 今夜/盘前购买力仅 $288.82 (卖单未成交), 不足以全额执行; 应在 07-31 开盘 (卖单成交供血) 后于盘中回复「执行」, 届时 BP ~$1813 可全额买入。若今夜执行则 4C 按实时 BP 缩量, 只能吃下约 1 笔。",
-  "sizing_note": "sizing 20%/仓 = 组合 $2132.07 × 20% = $426.41; 今日出场 4 只 (NTRA/SOXQ/XLK/QQQM 止盈), 保留 NVDA; 新入 3 只满 max_new_entries_per_day=3, 终态持仓 NVDA+ODFL+CRS+FTI (4/5 槽)。",
-  "earnings_defense": "blackout_days=7: 12 个 RSI2<10 候选逐个查财报, ODFL(下次10-28)/CRS(10-22)/FTI(10-22) 均刚报完财报、下次 80+ 天外, 未被拦; O(下次08-05 dte6) 被拦但本就未入选; MO/WWD 因单日异动≥8% 防御跳过。",
+  "valid_until": "2026-08-03 15:55 ET (周一; 因结算: 买入资金依赖 07-31 卖出款 T+1 于 08-03 周一到位, 现金账户不即时可用)",
+  "buying_power_at_generation": 0.82,
+  "settlement_note": "**现金账户结算 (红线9)**: 当前 cash $1555.37 (07-31 出场款) 为**未结算**, buying_power 仅 **$0.82**; T+1 结算 = **08-03 周一**可用。故 AAPL 今日/周末无法执行, 须待周一资金结算后。4C 执行时以实时 buying_power (非 cash) 为上限; 不得用未结算款买入后结算前卖出 (GFV)。今日另有 NVDA 出场卖单排周一开盘 (其款 T+1=周二结算, 不供本单)。",
+  "sizing_note": "engine sizing: AAPL $315.87 (20%上限 $431.88, 但引擎按本轮 NVDA 卖出可用资金封顶 ~$321); 逐字段照抄引擎, 不放大。终态 (若执行): ODFL + AAPL (NVDA 出场后)。",
+  "earnings_defense": "blackout=7: 8 个 RSI2<10 候选查财报, AAPL(下次10-29, 昨07-30刚报)未拦; O(下次08-05 dte5) 被拦; 引擎选 AAPL (ODFL 已持跳过)。",
+  "news_flag_summary": "AAPL red_flag=TRUE 但**疑似误报**: 命中关键词 'trading halt' 来自标题「SK Hynix Soars 22%, Samsung Jumps 19% as Kospi Hits Trading Halt」— 指韩国 KOSPI 指数涨停熔断 (利好芯片), **非 Apple 停牌**; 文章因涉内存/芯片被打 AAPL 标签。另注: AAPL 今日 -7.3%, 或与内存成本新闻 (Apple Warns of '100-Year' Memory Flood) 相关, 属可否决的基本面判断 — 由用户 4C 定夺。引擎照常确定性选股。",
+  "macro_context": {
+    "vix": 17.09, "yield_curve_10y2y": 0.47, "hy_credit_spread": 2.84, "ig_credit_spread": 0.8,
+    "note": "宏观温和 risk-on (曲线正、利差紧), 仅展示不门控"
+  },
   "exit_sells_placed": [
-    {"symbol": "NTRA", "qty": 1.20198, "reason": "exit_strength", "est_price": 269.66, "fill": 273.25, "order_id": "6a6bc748-0862-4770-b6b5-cd481400126b", "state": "filled", "filled_at": "2026-07-31 开盘"},
-    {"symbol": "SOXQ", "qty": 4.808963, "reason": "exit_strength", "est_price": 88.94, "fill": 92.58, "order_id": "6a6bc74a-c331-4f25-8dac-d456479cfdf1", "state": "filled", "filled_at": "2026-07-31 开盘"},
-    {"symbol": "XLK", "qty": 2.433801, "reason": "exit_strength", "est_price": 175.73, "fill": 177.46, "order_id": "6a6bc74c-2e05-4729-a418-bdf0db5fea5f", "state": "filled", "filled_at": "2026-07-31 开盘"},
-    {"symbol": "QQQM", "qty": 1.224607, "reason": "exit_strength", "est_price": 281.39, "fill": 284.99, "order_id": "6a6bc74d-294f-42d8-a4f4-3a47f0def01d", "state": "filled", "filled_at": "2026-07-31 开盘"}
+    {"symbol": "NVDA", "qty": 1.593787, "reason": "exit_strength", "est_price": 200.81, "order_id": "6a6d18fc-69c9-4901-86e2-0921b629e679", "state": "queued", "fills_at": "2026-08-03 开盘"}
   ],
-  "note_4A": "4 笔出场止盈卖单已按 4A 自动 place (queued, 排 07-31 开盘); 出场为减风险动作, 无需用户确认。成交回写由 07-31 晨检处理。",
-  "exec_protocol": "用户回复「执行」后按 playbook 4C: 若 07-31 盘中 (09:30-15:55 ET) → 当日市价模式 (market/regular_hours); 若盘外 → 盘外混合 (①整股即时限价 all_day_hours + ②余量分数市价排开盘)。买单按 seq 累计不超实时 BP, 超出跳过。逐字段照抄, 绝不放大/加单/改标的。",
+  "note_4A": "NVDA 出场止盈 (RSI2≥65 反弹) 已按 4A 自动 place, queued 排周一开盘; 成交回写由周一晨检处理。",
+  "exec_protocol": "用户周一回复「执行」后按 4C: 先查实时 buying_power (确认 $1555 已结算), 以其为上限执行 AAPL; 盘中市价 / 盘外混合。逐字段照抄, 绝不放大/加单/改标的。若周一主跑前未执行, 由周一主跑用当天数据重评 (用户「当天重新决定」原则)。",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ODFL",
-      "dollar_amount": 426.41,
+      "symbol": "AAPL",
+      "dollar_amount": 315.87,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 212.595,
-      "review_est_price": 212.51,
-      "rsi2": 1.3,
+      "est_price": 308.52,
+      "review_est_price": 309.03,
+      "rsi2": 3.47,
       "state_file": "state/positions.json",
-      "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "EXECUTED (1.349878股/$288; ①1@$213 + ②0.349878@$214.36; 欠配~$138 vs $426目标)"
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "CRS",
-      "dollar_amount": 426.41,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 503.795,
-      "review_est_price": 502.59,
-      "rsi2": 1.64,
-      "state_file": "state/positions.json",
-      "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "EXPIRED_UNSETTLED — 07-31出场卖出款未结算(现金账户,BP$0.82), 无法供血; 15:55作废; 由08-03主跑重评"
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "FTI",
-      "dollar_amount": 426.41,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 68.915,
-      "review_est_price": 68.92,
-      "rsi2": 2.44,
-      "state_file": "state/positions.json",
-      "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
-      "exec_status": "EXPIRED_UNSETTLED — 07-31出场卖出款未结算(现金账户,BP$0.82), 无法供血; 15:55作废; 由08-03主跑重评"
+      "valid_until": "2026-08-03 15:55 ET",
+      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$315.05, 预期内 — 靠07-31出场款T+1周一结算供血)",
+      "news_flag": "trading halt (疑似误报: 韩国KOSPI熔断非AAPL停牌); AAPL今日-7.3%或涉内存成本新闻 — 用户4C判断"
     }
   ]
 }
