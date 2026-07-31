@@ -6,6 +6,7 @@
   "partial_executed_at": "2026-07-31T02:06:00Z",
   "partial_note": "ODFL 已全部成交 (①1股@$213 今夜 + ②0.349878股@$214.36 07-31开盘, 合计1.349878股/$288, 欠配~$138 vs $426目标)。CRS/FTI **未能执行**并作废 — 见 settlement_finding。",
   "settlement_finding": "**结算修正 (2026-07-31 晨检)**: 账户为**现金账户 (type=cash)**, 07-31 开盘 4 笔出场卖出款 ~$1555 为**未结算 (unsettled)**, 现金账户下**不即时计入买入力**。晨检查 get_portfolio: cash=$1555.37 但 **buying_power=$0.82**。故 CRS/FTI 今日无法供血执行, valid_until 15:55 到期作废。资金 T+1 结算 (07-31 周五 → **08-03 周一**可用)。届时 07-30 信号已 2 个交易日过期, 不强制执行陈旧信号; 由 08-03 主跑重新评估 CRS/FTI。**修正**: 此前告知用户'现金账户卖出款可即时当买入力'有误 — 现金账户需等 T+1 结算。",
+  "user_decision": "2026-07-31 用户明确「当天重新决定」: CRS/FTI 作废、**不结转**; 08-03 周一主跑用当天数据重新算信号 (CRS/FTI 仅当日仍 RSI2<10 且过财报/新闻/异动过滤才会重新入选)。届时 $1555 已结算, BP 可用于引擎当日所选标的。本 pending (trade_date 07-30) 终态归档, 不再消费。",
   "executed_legs_odfl": [
     {"symbol": "ODFL", "leg": 1, "type": "limit", "qty": 1, "limit": 214.72, "fill": 213.00, "order_id": "6a6c02c3-32bf-411c-9285-55525e9a69df", "state": "filled", "when": "07-30 24h盘"},
     {"symbol": "ODFL", "leg": 2, "type": "market", "dollar_amount": 75.00, "fill_qty": 0.349878, "fill_price": 214.36, "order_id": "6a6c02f8-9752-4a97-bb06-bb91c242dc5e", "state": "filled", "filled_at": "2026-07-31 开盘"}
