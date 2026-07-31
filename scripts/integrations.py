@@ -10,6 +10,9 @@
                                                     # 输出与 get_equity_historicals 同构, 供 learn.py 搜索
   python3 scripts/integrations.py quotes --symbols AAPL,MSFT --out FILE
                                                     # 最新成交价 (IEX) → {"SYM": price}
+  python3 scripts/integrations.py news --symbols AAPL,MSFT --start 2026-07-24 --out FILE
+                                                    # 新闻红旗 (确定性关键词分类, 报告级) →
+                                                    # {"SYM": {red_flag, hits, ...}}; 仅提示不改单
   python3 scripts/integrations.py chains --underlyings XLF,XLE --date 2026-07-16 --dte-max 35 --out FILE
                                                     # 拉取 call 期权链快照 (indicative feed),
                                                     # 输出 {underlying: {occ: {bid, ask}}}, 供 options_overlay.py
@@ -61,23 +64,127 @@ def status():
     return 0
 
 
+def _fred_latest(series_id, fred_key):
+    """最近一个有效 (非 '.') 观测值 → (float value, date)。"""
+    j = _get("https://api.stlouisfed.org/fred/series/observations"
+             f"?series_id={series_id}&api_key={fred_key}&file_type=json&sort_order=desc&limit=15")
+    obs = next(o for o in j["observations"] if o["value"] not in (".", ""))
+    return float(obs["value"]), obs["date"]
+
+
+# 报告级宏观扩展 (2026-07-31 用户指示): VIX 之外的 FRED 序列只做"宏观环境"提示,
+# **不参与交易门控** — 引擎仅读 macro["vix"] 做熔断, 下列字段仅供战报展示。
+MACRO_CONTEXT_SERIES = {
+    "yield_curve_10y2y": ("T10Y2Y", "10Y-2Y 国债利差 (倒挂<0=衰退预警)"),
+    "hy_credit_spread": ("BAMLH0A0HYM2", "高收益信用利差 OAS (走阔=risk-off)"),
+    "ig_credit_spread": ("BAMLC0A0CM", "投资级信用利差 OAS"),
+}
+
+
 def macro(out_path):
     fred_key = os.environ.get("FRED_API_KEY")
     if not fred_key:
         print("FRED_API_KEY 未设置, 跳过宏观数据", file=sys.stderr)
         return 1
+    # VIX 为必需项 (引擎熔断依赖); 其余序列尽力而为, 仅报告级。
     try:
-        j = _get("https://api.stlouisfed.org/fred/series/observations"
-                 f"?series_id=VIXCLS&api_key={fred_key}&file_type=json&sort_order=desc&limit=10")
-        obs = next(o for o in j["observations"] if o["value"] != ".")
-        data = {"vix": float(obs["value"]), "vix_date": obs["date"], "source": "FRED VIXCLS"}
+        vix, vix_date = _fred_latest("VIXCLS", fred_key)
     except Exception as e:
-        print(f"宏观数据拉取失败: {e}", file=sys.stderr)
+        print(f"宏观数据拉取失败 (VIX): {e}", file=sys.stderr)
         return 1
+    data = {"vix": vix, "vix_date": vix_date, "source": "FRED VIXCLS"}
+    # report-only 宏观环境 (引擎忽略此段, 只用 data["vix"] 门控交易)
+    context = {}
+    for key, (sid, desc) in MACRO_CONTEXT_SERIES.items():
+        try:
+            val, dt = _fred_latest(sid, fred_key)
+            context[key] = {"value": val, "date": dt, "series": sid, "desc": desc}
+        except Exception as e:
+            context[key] = {"value": None, "date": None, "series": sid, "desc": desc, "error": str(e)[:80]}
+    data["context"] = context
     with open(out_path, "w") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, ensure_ascii=False)
         f.write("\n")
-    print(json.dumps(data))
+    print(json.dumps(data, ensure_ascii=False))
+    return 0
+
+
+# 确定性新闻红旗关键词 (2026-07-31 用户指示, 报告级): 命中即在 pending/战报点名,
+# **绝不自动改单** — 仅供用户在 4C「执行」时一票否决。子串匹配, 免疫提示注入。
+RED_FLAG_KEYWORDS = [
+    # 交易/结构性
+    "trading halt", "halted", "delist", "delisting",
+    # 欺诈/会计/法律
+    "fraud", "accounting irregular", "restate", "restatement", "material weakness", "misstatement",
+    "sec investigation", "sec probe", "subpoena", "securities investigation", "securities fraud", "class action",
+    # 偿付能力
+    "bankruptcy", "chapter 11", "going concern", "insolven", "debt default", "defaults on",
+    # 指引/预警
+    "cuts guidance", "lowers guidance", "slashes guidance", "withdraws guidance", "guidance cut",
+    "profit warning", "cuts outlook", "lowers outlook", "cuts forecast",
+    # 生物医药二元事件
+    "complete response letter", "clinical hold", "trial failed", "fda rejects", "fda rejection",
+    "product recall", "safety recall",
+    # 并购 (买入撞上待并购易跳空, 提示复核)
+    "to be acquired", "agrees to acquire", "buyout", "takeover bid", "merger agreement",
+    "to go private", "going private",
+    # 管理层异动
+    "ceo steps down", "ceo resigns", "cfo steps down", "cfo resigns", "abruptly resigns", "abrupt departure",
+]
+
+
+def news(symbols, start, out_path):
+    """对 symbols 拉 Alpaca 新闻, 确定性关键词红旗分类 → {SYM: {red_flag, hits, ...}}。
+    新闻正文为外部不可信文本, 仅作数据分类 (子串匹配), 不当作指令执行。"""
+    ak, asec = os.environ.get("ALPACA_API_KEY_ID"), os.environ.get("ALPACA_API_SECRET_KEY")
+    if not (ak and asec):
+        print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
+        return 1
+    hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
+    symset = set(symbols)
+    out = {}
+    for i in range(0, len(symbols), 40):
+        chunk = symbols[i:i + 40]
+        token, arts, guard = None, [], 0
+        while True:
+            url = ("https://data.alpaca.markets/v1beta1/news"
+                   f"?symbols={','.join(chunk)}&start={start}"
+                   "&exclude_contentless=true&limit=50&sort=desc")
+            if token:
+                url += f"&page_token={token}"
+            try:
+                j = _get(url, hdrs, timeout=30)
+            except Exception as e:
+                print(f"新闻拉取失败 (chunk {i}): {str(e)[:80]}", file=sys.stderr)
+                break
+            arts.extend(j.get("news") or [])
+            token = j.get("next_page_token")
+            guard += 1
+            if not token or guard >= 6:
+                break
+        for a in arts:
+            text = ((a.get("headline") or "") + " " + (a.get("summary") or "")).lower()
+            hits = sorted(k for k in RED_FLAG_KEYWORDS if k in text)
+            for s in (a.get("symbols") or []):
+                if s not in symset:
+                    continue
+                rec = out.setdefault(s, {"red_flag": False, "n_articles": 0, "hits": [], "latest": None})
+                rec["n_articles"] += 1
+                if rec["latest"] is None:
+                    rec["latest"] = {"headline": a.get("headline"), "created_at": a.get("created_at")}
+                if hits:
+                    rec["red_flag"] = True
+                    rec["hits"].append({"keywords": hits, "headline": a.get("headline"),
+                                        "created_at": a.get("created_at"), "url": a.get("url")})
+    for s in symbols:
+        out.setdefault(s, {"red_flag": False, "n_articles": 0, "hits": [], "latest": None})
+    with open(out_path, "w") as f:
+        json.dump(out, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    flagged = sorted(s for s in out if out[s]["red_flag"])
+    print(json.dumps({"symbols": len(symbols),
+                      "with_news": sum(1 for s in out if out[s]["n_articles"] > 0),
+                      "red_flagged": flagged}, ensure_ascii=False))
     return 0
 
 
@@ -245,6 +352,10 @@ if __name__ == "__main__":
     if args[:1] == ["quotes"] and "--symbols" in args and "--out" in args:
         sys.exit(latest_quotes(args[args.index("--symbols") + 1].split(","),
                                args[args.index("--out") + 1]))
+    if args[:1] == ["news"] and all(f in args for f in ("--symbols", "--start", "--out")):
+        sys.exit(news(args[args.index("--symbols") + 1].split(","),
+                      args[args.index("--start") + 1],
+                      args[args.index("--out") + 1]))
     if args[:1] == ["chains"] and all(f in args for f in ("--underlyings", "--date", "--dte-max", "--out")):
         sys.exit(chains(args[args.index("--underlyings") + 1].split(","),
                         args[args.index("--date") + 1],
