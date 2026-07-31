@@ -2,7 +2,13 @@
   "trade_date": "2026-07-30",
   "generated_at": "2026-07-30T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, ~17:45 ET)",
-  "status": "awaiting_execution",
+  "status": "partially_executed",
+  "partial_executed_at": "2026-07-31T02:06:00Z",
+  "partial_note": "用户 07-30 ~22:0x ET 回复「执行」+「执行能负担的部分」: 今夜 BP 仅 $288.82 (供血卖单未成交), 按 4C 盘外混合缩量执行 ODFL 至 ~$288 (①1股即时限价@$213成交 + ②$75市价排07-31开盘); CRS/FTI 今夜 BP 不足**跳过, 仍 awaiting**, 留 07-31 开盘卖单供血后由用户回复「执行」补做 (valid 至 07-31 15:55 ET)。注: ODFL 因缩量仅 ~$288 (目标$426), 欠配 ~$138, 是否明日补足由用户定。",
+  "executed_legs_odfl": [
+    {"symbol": "ODFL", "leg": 1, "type": "limit", "qty": 1, "limit": 214.72, "fill": 213.00, "order_id": "6a6c02c3-32bf-411c-9285-55525e9a69df", "state": "filled", "when": "今夜24h盘"},
+    {"symbol": "ODFL", "leg": 2, "type": "market", "dollar_amount": 75.00, "order_id": "6a6c02f8-9752-4a97-bb06-bb91c242dc5e", "state": "queued", "fills_at": "2026-07-31 开盘"}
+  ],
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
   "valid_until": "2026-07-31 15:55 ET (次一交易日收盘; 本批延至次日盘中因买入资金依赖今日出场卖单于 07-31 开盘成交)",
   "buying_power_at_generation": 288.82,
@@ -30,7 +36,8 @@
       "rsi2": 1.3,
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)"
+      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
+      "exec_status": "executed_partial (~$288/$426, BP缩量; ①1股@$213成交 + ②$75排开盘; 欠配~$138待用户定是否补)"
     },
     {
       "seq": 2,
@@ -44,7 +51,8 @@
       "rsi2": 1.64,
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)"
+      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
+      "exec_status": "awaiting — 今夜BP不足跳过, 07-31开盘卖单供血后由用户回复「执行」"
     },
     {
       "seq": 3,
@@ -58,7 +66,8 @@
       "rsi2": 2.44,
       "state_file": "state/positions.json",
       "valid_until": "2026-07-31 15:55 ET",
-      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)"
+      "review_flag": "EQUITY_NOT_ENOUGH_BP (缺$137.59, 预期内 — 靠出场卖单07-31开盘供血)",
+      "exec_status": "awaiting — 今夜BP不足跳过, 07-31开盘卖单供血后由用户回复「执行」"
     }
   ]
 }
