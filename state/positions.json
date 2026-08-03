@@ -2,12 +2,6 @@
   "high_water_mark": 2159.42,
   "halted": false,
   "strategy_positions": {
-    "NVDA": {
-      "qty": 1.593787,
-      "entry_price": 195.635,
-      "entry_date": "2026-07-27",
-      "cost": 311.8
-    },
     "ODFL": {
       "qty": 1.349878,
       "entry_price": 213.3526,
@@ -349,6 +343,15 @@
       "price": 214.36,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "NVDA",
+      "side": "sell",
+      "qty": 1.593787,
+      "price": 197.51,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }
