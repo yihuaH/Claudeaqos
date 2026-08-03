@@ -10,12 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "NVDA": {
-      "qty": 75.0,
-      "entry_price": 194.1,
-      "entry_date": "2026-07-28",
-      "cost": 14557.5
-    },
     "ODFL": {
       "qty": 94.0,
       "entry_price": 214.37,
@@ -33,6 +27,18 @@
       "entry_price": 70.401233,
       "entry_date": "2026-07-31",
       "cost": 20557.16
+    },
+    "AAPL": {
+      "qty": 66.0,
+      "entry_price": 309.029091,
+      "entry_date": "2026-08-03",
+      "cost": 20395.92
+    },
+    "WELL": {
+      "qty": 87.0,
+      "entry_price": 235.108735,
+      "entry_date": "2026-08-03",
+      "cost": 20454.46
     }
   },
   "legacy_positions": {},
@@ -214,6 +220,33 @@
       "side": "buy",
       "qty": 292.0,
       "price": 70.401233,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "NVDA",
+      "side": "sell",
+      "qty": 75.0,
+      "price": 198.912934,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 66.0,
+      "price": 309.029091,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 87.0,
+      "price": 235.108735,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

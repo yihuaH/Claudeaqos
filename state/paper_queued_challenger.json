@@ -1,42 +1,31 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-07-31",
+  "date": "2026-08-03",
   "coid_prefix": "chl",
-  "next_open": "2026-08-03T09:30:00-04:00",
+  "next_open": "2026-08-04T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "orders": [
     {
-      "coid": "chl-2026-07-31-NVDA-sell",
-      "order_id": "71dff3ea-934e-47ef-813c-21322e05000f",
-      "symbol": "NVDA",
+      "coid": "chl-2026-08-03-CRS-sell",
+      "order_id": "fed5a6e6-2ae2-4839-94e6-3e20a4f25dc9",
+      "symbol": "CRS",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "194.79",
-      "qty": "75",
+      "limit_price": "527.28",
+      "qty": "40",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "chl-2026-07-31-AAPL-buy",
-      "order_id": "e7b5043f-3820-42dc-98b8-1f3dd3b36611",
-      "symbol": "AAPL",
+      "coid": "chl-2026-08-03-D-buy",
+      "order_id": "d7d5c67f-9775-4d54-a2a6-a4c4276c1d6d",
+      "symbol": "D",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "317.78",
-      "qty": "66",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "chl-2026-07-31-WELL-buy",
-      "order_id": "454dca4d-a62d-4e1d-9ead-e521aa98844a",
-      "symbol": "WELL",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "241.65",
-      "qty": "87",
+      "limit_price": "70.82",
+      "qty": "296",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
