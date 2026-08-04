@@ -5,5 +5,13 @@
   "positions": {},
   "trades": [],
   "round_trips": [],
-  "skip_log": []
+  "skip_log": [
+    {
+      "date": "2026-08-04",
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=5.84%)",
+      "rsi2": 3.83,
+      "spot": 303.54
+    }
+  ]
 }

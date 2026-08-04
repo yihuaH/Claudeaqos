@@ -1,0 +1,15 @@
+{
+  "date": "2026-08-04",
+  "halted": false,
+  "sells": [],
+  "buys": [],
+  "skips": [
+    {
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=5.84%)",
+      "rsi2": 3.83,
+      "spot": 303.54
+    }
+  ],
+  "warnings": []
+}
