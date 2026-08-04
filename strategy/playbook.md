@@ -196,7 +196,9 @@ python3 scripts/signals.py signal \
 - **买单 (buy_to_open, 绝不无人值守 place)**: 写入 `state/pending_option_orders.json`
   (格式同 pending_orders.json, 每单含 occ/underlying/strike/expiry/contracts/est_price(mid)/
   entry_quote/model_price, 逐字段照抄引擎), commit + PushNotification。
-  **时效: 次一交易日 09:25 ET** (同 RSI-2 买单)。当日无买单则不生成。
+  **时效: 次一交易日 10:30 ET** (2026-08-04 用户批准, 期权专属, 比股票买单的 09:25 宽 —
+  期权只能开市成交, 且开盘头 15 分钟点差最宽; **推荐执行窗 09:45–10:30 ET** = 北京 21:45–22:30,
+  等点差收窄后执行, 限价保护照旧封顶)。当日无买单则不生成。
 - **用户「执行」后 (有人值守)**: 校验 status/valid_until → **逐笔明细确认** (同 4C 1B) →
   每单 `review_option_order` → `place_option_order` (**limit**, 限价 = min(引擎 est_price×1.03,
   执行时点 ask), time_in_force=gfd, ref_id 每单一个重试复用; 盘中即时、盘后排次开)。
