@@ -4,28 +4,5 @@
   "coid_prefix": "cqm",
   "next_open": "2026-08-04T09:30:00-04:00",
   "skipped": [],
-  "orders": [
-    {
-      "coid": "cqm-2026-08-03-QQQ-sell",
-      "order_id": "fe33f217-e4f2-45f9-bb01-ac8673eeb6a0",
-      "symbol": "QQQ",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "679.47",
-      "qty": "10",
-      "bucket": "strategy",
-      "reason": "momentum_rotation"
-    },
-    {
-      "coid": "cqm-2026-08-03-XLE-buy",
-      "order_id": "7bd9c1d6-dfee-4049-a991-ff065d4063fc",
-      "symbol": "XLE",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "60.54",
-      "qty": "120",
-      "bucket": "strategy",
-      "reason": "momentum_entry"
-    }
-  ]
+  "orders": []
 }

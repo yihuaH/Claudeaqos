@@ -1,128 +1,48 @@
 {
-  "trade_date": "2026-08-03",
-  "generated_at": "2026-08-03T22:55:00Z",
-  "generated_by": "收盘后主跑 (post-close primary, 补跑 ~18:5x ET; 17:45 ET 主跑未触发)",
-  "status": "executed",
-  "executed_at": "2026-08-04T00:44:00Z",
-  "executed_mode": "盘外混合 (用户 08-03 ~19:4x ET 回复「执行」): ①整股即时限价 + ②余量分数市价排 08-04 开盘",
-  "executed_legs": [
-    {
-      "symbol": "AAPL",
-      "leg1": {
-        "order_id": "6a71357e-c1fa-4705-a8df-9070513e8f1e",
-        "qty": 1,
-        "limit": 306.58,
-        "fill": 304.75,
-        "state": "filled",
-        "when": "今夜24h盘"
-      },
-      "leg2": {
-        "order_id": "6a7135c5-03b3-47f2-9f7f-bafe7ef0392c",
-        "dollar_amount": 126.39,
-        "state": "filled",
-        "fill": 302.79,
-        "qty": 0.417418,
-        "when": "2026-08-04 开盘"
-      }
-    },
-    {
-      "symbol": "WELL",
-      "leg1": {
-        "order_id": "6a713581-a868-4064-b03f-799676cc8b1d",
-        "qty": 1,
-        "limit": 235.42,
-        "fill": 234.0,
-        "state": "filled",
-        "when": "今夜24h盘"
-      },
-      "leg2": {
-        "order_id": "6a7135c7-7db5-4fd9-a577-ac15c344558c",
-        "dollar_amount": 197.14,
-        "state": "filled",
-        "fill": 230.31,
-        "qty": 0.855976,
-        "when": "2026-08-04 开盘"
-      }
-    },
-    {
-      "symbol": "D",
-      "leg1": {
-        "order_id": "6a713582-b21b-49f0-8ce5-0b52761d95fc",
-        "qty": 6,
-        "limit": 69.45,
-        "state": "filled",
-        "fill": 69.45,
-        "when": "今夜24h盘分两笔 (05:54/07:31 UTC, 4+2股)"
-      },
-      "leg2": {
-        "order_id": "6a7135c9-9d6b-46b1-b8b3-6f1cb556029f",
-        "dollar_amount": 14.44,
-        "state": "filled",
-        "fill": 68.46,
-        "qty": 0.210926,
-        "when": "2026-08-04 开盘"
-      }
-    }
-  ],
-  "writeback_note": "今夜成交回写 state: AAPL 1@304.75, WELL 1@234.00 (新建仓)。D①(6股)+全部②腿排 08-04 开盘, 由晨检 average-in/新建回写。各标的 ①+② 合计 ≤ $431.14 未放大。BP 结算款支付, 无 GFV。",
-  "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
-  "valid_until": "2026-08-04 09:25 ET (次一交易日)",
-  "buying_power_at_generation": 1555.37,
-  "funding_note": "BP $1555.37 已结算 (周五出场款周一结算到位), 3 笔买单合计 $1293.42 < BP, **资金充足、无供血时序问题**。今日 NVDA 卖出款 $314.79 为新未结算 (T+1 周二), 不影响本批。可今夜盘外混合执行或次日盘中/开盘执行。",
-  "sizing_note": "sizing 20%/仓 = 组合 $2155.69 × 20% = $431.14; 3 新入 (满 max_new_entries_per_day=3), 终态持仓 ODFL+AAPL+WELL+D (4/5 槽)。逐字段照抄引擎, 不放大。",
-  "earnings_defense": "blackout=7: 7 个 RSI2<10 候选查财报, AAPL(下次10-29)/WELL(10-26)/D(10-30) 均 80+ 天外未拦; LLY(下次08-05 dte2) 被拦但 rank4 未入选。",
-  "news_flag_summary": "AAPL red_flag=TRUE 但**同前, 疑似误报**: 命中 'trading halt' 来自韩国 KOSPI 涨停熔断新闻 (非 Apple 停牌), 文章因涉芯片被打 AAPL 标签。WELL/D 无红旗。仅提示, 引擎照常确定性选股, 由用户 4C 一票否决。",
+  "trade_date": "2026-08-04",
+  "generated_at": "2026-08-04T21:52:00Z",
+  "generated_by": "收盘后主跑 (post-close primary, 准时)",
+  "status": "awaiting_execution",
+  "market_window_until_et": "已过 (盘后主跑)",
+  "valid_until": "2026-08-05 09:25 ET (次一交易日)",
+  "buying_power_at_generation": 4576.74,
+  "funding_note": "BP $4,576.74 全部为已结算入金 (今晨 $3,000+$1,000 到账), 2 笔买单合计 $2,468.94 < BP, 资金充足无供血时序问题。今日 ODFL 卖单排明晨开盘, 其卖款 (~$296) T+1 结算, 不计入本批。",
+  "sizing_note": "sizing 20%/仓 = 组合 $6,172.37 × 20% = $1,234.47 (入金后单仓自动放大); 2 新入, 终态 AAPL+WELL+D+ABBV+PM (5/5 满槽)。逐字段照抄引擎, 不放大。",
+  "earnings_defense": "blackout=7: 8 候选查财报; LLY(08-05 dte1) 拦截 — 原 rank2 被移除; ABBV(10-30)/PM(10-21) 87+ 天外未拦; TMO 被异动过滤拦 (非财报)。",
+  "news_flag_summary": "🚩 ABBV red_flag=TRUE (guidance cut, 2026-07-31 Q2 财报下调指引致股价下跌 — **真实红旗非误报**, 这正是其超卖的原因之一; 均值回归策略本吃这类恐慌, 但指引下调属基本面变化, 由用户 4C 一票否决)。PM 无红旗。仅提示, 引擎确定性选股不变 (红线2)。",
   "macro_context": {
-    "vix": 15.99,
-    "yield_curve_10y2y": 0.45,
-    "hy_credit_spread": 2.84,
-    "ig_credit_spread": 0.8,
+    "vix": 15.86, "yield_curve_10y2y": 0.43, "hy_credit_spread": 2.78, "ig_credit_spread": 0.78,
     "note": "宏观温和 risk-on (VIX 低、曲线正、利差紧), 仅展示不门控"
   },
-  "note_4A": "今日无 4A 出场/止损卖单 (ODFL 持有未触发, -0.86%)。",
-  "note_main_run": "17:45 ET 主跑 Routine 未触发 (worker 重启类, 当日 journal 缺失); 18:5x ET 主跑 Routine 再触发, §0 时段有效 (盘后) + 幂等未完成 → 补跑。功能等同于按时跑 (同为当日收盘数据)。本批同时兑现用户「当天重新决定」: 07-31 的 AAPL pending 已 15:55 过期作废, 今日引擎用当天数据重算 → AAPL 仍超卖入选 + WELL/D。",
-  "exec_protocol": "用户回复「执行」后按 4C: 盘中 (09:30-15:55 ET) 市价; 盘外混合 (①整股即时限价 all_day_hours + ②余量分数市价排开盘)。BP 充足, 3 笔全额执行。逐字段照抄, 绝不放大/加单/改标的。若次日主跑前未执行, 由次日主跑重评。",
+  "note_4A": "ODFL 1.349878股 exit_strength 卖单已自动下单 (order 6a725e47, market/regular_hours 排 08-05 开盘, est $219.31, 入场 $213.35 → 预计 +2.8%)。",
+  "exec_protocol": "用户回复「执行」后按 4C: 盘中市价; 盘外混合 (①整股即时限价 est×1.010 all_day_hours + ②余量分数市价排开盘)。买单按 seq 累计不超实时 BP。逐字段照抄, 绝不放大/加单/改标的。",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "AAPL",
-      "dollar_amount": 431.14,
+      "symbol": "ABBV",
+      "dollar_amount": 1234.47,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 303.54,
-      "review_est_price": 303.27,
-      "rsi2": 2.57,
+      "est_price": 243.7,
+      "review_est_price": 243.71,
+      "rsi2": 3.74,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "news_flag": "trading halt (疑似误报: 韩国KOSPI熔断非AAPL停牌) — 用户4C判断"
+      "news_flag": "guidance cut (2026-07-31 Q2财报下调指引, 真实红旗) — 用户4C判断"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "WELL",
-      "dollar_amount": 431.14,
+      "symbol": "PM",
+      "dollar_amount": 1234.47,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 233.085,
-      "review_est_price": 233.04,
-      "rsi2": 2.6,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "D",
-      "dollar_amount": 431.14,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 68.76,
-      "review_est_price": 68.765,
-      "rsi2": 3.07,
+      "est_price": 186.92,
+      "review_est_price": 186.87,
+      "rsi2": 5.84,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
-  ],
-  "reconciled_at": "2026-08-04T14:50:00Z (晨检: 全部腿成交, state 已回写)"
+  ]
 }
