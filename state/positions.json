@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 2159.42,
+  "high_water_mark": 6155.46,
   "halted": false,
   "strategy_positions": {
     "ODFL": {
@@ -9,16 +9,22 @@
       "cost": 288.0
     },
     "AAPL": {
-      "qty": 1.0,
-      "entry_price": 304.75,
+      "qty": 1.417418,
+      "entry_price": 304.1728,
       "entry_date": "2026-08-03",
-      "cost": 304.75
+      "cost": 431.14
     },
     "WELL": {
-      "qty": 1.0,
-      "entry_price": 234.0,
+      "qty": 1.855976,
+      "entry_price": 232.2983,
       "entry_date": "2026-08-03",
-      "cost": 234.0
+      "cost": 431.14
+    },
+    "D": {
+      "qty": 6.210926,
+      "entry_price": 69.4164,
+      "entry_date": "2026-08-04",
+      "cost": 431.14
     }
   },
   "legacy_positions": {},
@@ -382,6 +388,42 @@
       "price": 234.0,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "D",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 69.45,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "D",
+      "side": "buy",
+      "qty": 0.210926,
+      "price": 68.46,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 0.855976,
+      "price": 230.31,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 0.417418,
+      "price": 302.79,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ]
 }
