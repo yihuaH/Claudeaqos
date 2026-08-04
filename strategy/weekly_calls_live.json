@@ -1,8 +1,29 @@
 {
   "_purpose": "周call 实盘实验仓 (账户 802095265, 用户 2026-08-04 授权链: 「我可以接受全赔」→「你先搞出引擎, 多少钱不要管, 我后续会追加投资的」)。形态 = 回测最优 (RSI-2 × 深ITM 0.90 × 无期权止损 × 跟正股出场 × spread gate ≤2%)。买入 semi_auto (红线9): 引擎出单→pending_option_orders.json→用户「执行」; 出场卖单全自动。budget 为硬顶 (红线3), 用户追加投资后需同步上调 max_open_premium_usd。",
   "enabled": true,
-  "universe": ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "META", "GOOGL", "AMZN", "AVGO", "TSM", "AMD", "TSLA", "XLF", "XLE"],
-  "_universe_note": "14 只超流动大盘 + XLF/XLE (回测流动名单内、当前账户规模下深ITM权利金 $600-1000/张唯一可负担档; 2026-08-04 盘前实测 XLF 有 3 档过双关)。指数类 (IWM/SPY) 点差最优但 $3k+/张待追加投资; 个股深ITM点差 3-13% 会被 gate 自然拦下记 skip_log。",
+  "universe": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "META",
+    "GOOGL",
+    "AMZN",
+    "AVGO",
+    "TSM",
+    "AMD",
+    "TSLA",
+    "XLF",
+    "XLE",
+    "TLT",
+    "GLD",
+    "SMH",
+    "BAC"
+  ],
+  "_universe_note": "20 只 (2026-08-04 用户「不是全部扫描吗」后实测扩编): 14 超流动大盘 + XLF/XLE + TLT/GLD/SMH/BAC (逐一盘前实测深ITM点差合格才收: TLT 0.35%最优/$922可负担、BAC 1.51%/$663可负担、GLD 0.64%/$4.3k、SMH 1.19%/$6k; XLK/JPM/XOM/COST/NFLX/MU 实测 0 档过关被淘汰)。全部在回测家族内 (股池 914 笔或实盘 ETF 池)。不扫全部 100 股池: 多数无周度期权/深ITM无报价/点差 5-29%, 扫了必被 gate 全拦。",
   "entry": {
     "rsi2_max": 10.0,
     "sma200_filter": true
@@ -14,7 +35,7 @@
     "force_exit_dte_lte": 1
   },
   "contract": {
-    "moneyness": 0.90,
+    "moneyness": 0.9,
     "floor_moneyness": 0.85,
     "min_dte_calendar": 8,
     "max_dte_calendar": 17,

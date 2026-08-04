@@ -334,9 +334,9 @@ python3 scripts/signals.py signal \
    → `python3 scripts/weekly_calls.py apply --ledger state/weekly_call_positions.json --fills <同> --context state/weekly_call_last_orders.json --date <今天>`
    (context = 昨日 signal 输出的入库副本, 提供入场/出场报价快照; skip 记录按日期去重, 重复 apply 无害。)
 1. 数据 (Alpaca):
-   - bars: `integrations.py bars --symbols <weekly_calls.json 与 weekly_calls_live.json universe 并集, 16只逗号分隔> --start <今天-450天> --out <scratchpad>/wc_bars.json` (SMA200 需 ≥200 交易日);
-   - quotes: `integrations.py quotes --symbols <同 16 只> --out <scratchpad>/wc_quotes.json`;
-   - chains: `integrations.py chains --underlyings <universe 16只 + 两账本持仓底层> --date <今天> --dte-max 17 --out <scratchpad>/wc_chains.json`;
+   - bars: `integrations.py bars --symbols <weekly_calls.json 与 weekly_calls_live.json universe 并集 (当前20只) 逗号分隔> --start <今天-450天> --out <scratchpad>/wc_bars.json` (SMA200 需 ≥200 交易日);
+   - quotes: `integrations.py quotes --symbols <同一并集> --out <scratchpad>/wc_quotes.json`;
+   - chains: `integrations.py chains --underlyings <同一并集 + 两账本持仓底层> --date <今天> --dte-max 17 --out <scratchpad>/wc_chains.json`;
    - earnings: 复用第 1 节 4B 的 earnings.json (缺则不传, allow_unknown_earnings=true 照常)。
 2. 信号: `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls.json --ledger state/weekly_call_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --date <今天> --out state/weekly_call_last_orders.json`
    (输出**入库** — 次日跨会话回收排队单时需要它做 --context; 本步 commit 时一并提交。)
