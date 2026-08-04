@@ -1,0 +1,9 @@
+{
+  "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
+  "halted": false,
+  "started": "2026-08-04",
+  "positions": {},
+  "trades": [],
+  "round_trips": [],
+  "skip_log": []
+}

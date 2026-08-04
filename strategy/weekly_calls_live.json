@@ -1,0 +1,57 @@
+{
+  "_purpose": "周call 实盘实验仓 (账户 802095265, 用户 2026-08-04 授权链: 「我可以接受全赔」→「你先搞出引擎, 多少钱不要管, 我后续会追加投资的」)。形态 = 回测最优 (RSI-2 × 深ITM 0.90 × 无期权止损 × 跟正股出场 × spread gate ≤2%)。买入 semi_auto (红线9): 引擎出单→pending_option_orders.json→用户「执行」; 出场卖单全自动。budget 为硬顶 (红线3), 用户追加投资后需同步上调 max_open_premium_usd。",
+  "enabled": true,
+  "universe": ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "META", "GOOGL", "AMZN", "AVGO", "TSM", "AMD", "TSLA", "XLF", "XLE"],
+  "_universe_note": "14 只超流动大盘 + XLF/XLE (回测流动名单内、当前账户规模下深ITM权利金 $600-1000/张唯一可负担档; 2026-08-04 盘前实测 XLF 有 3 档过双关)。指数类 (IWM/SPY) 点差最优但 $3k+/张待追加投资; 个股深ITM点差 3-13% 会被 gate 自然拦下记 skip_log。",
+  "entry": {
+    "rsi2_max": 10.0,
+    "sma200_filter": true
+  },
+  "exit": {
+    "rsi2_min": 65.0,
+    "underlying_stop_loss_pct": 5.0,
+    "max_holding_days": 10,
+    "force_exit_dte_lte": 1
+  },
+  "contract": {
+    "moneyness": 0.90,
+    "floor_moneyness": 0.85,
+    "min_dte_calendar": 8,
+    "max_dte_calendar": 17,
+    "max_spread_pct": 2.0,
+    "min_bid": 0.05,
+    "max_premium_per_contract_usd": 5000
+  },
+  "sizing": {
+    "contracts_per_position": 1,
+    "max_open_positions": 2,
+    "max_new_entries_per_day": 1
+  },
+  "budget": {
+    "max_open_premium_usd": 1000
+  },
+  "_budget_note": "未平仓权利金总额硬顶, 按用户账户机会主义运行 (2026-08-04 用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(budget余额,实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。初始 $1000 = 用户实验预算 (当前可负担档 XLF/XLE 深ITM $600-1000/张); **追加投资后由用户上调此值或明示让会话改** (红线3: 上限只能用户定)。",
+  "circuit_breaker": {
+    "max_cumulative_realized_loss_usd": 1000
+  },
+  "_circuit_breaker_note": "累计已实现亏损达此值 → 引擎只出不进并通知用户; 与 budget 同步调整。",
+  "defense": {
+    "earnings_blackout_days": 7,
+    "allow_unknown_earnings": true
+  },
+  "validation": {
+    "start_date": "2026-08-04",
+    "min_round_trips": 15,
+    "min_trading_days": 30,
+    "go_bar": {
+      "max_median_leg_spread_pct": 2.25,
+      "min_median_trade_pnl_pct": 0.0
+    },
+    "_note": "实盘自评报告 (report 命令) 沿用同一 go_bar 口径: 若实测中位点差/盈亏跌破, 主动向用户建议关停。"
+  },
+  "model": {
+    "iv_rv_mult": 1.25,
+    "rv_window_days": 20,
+    "risk_free": 0.04
+  }
+}

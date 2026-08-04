@@ -6,7 +6,7 @@
 ## 硬性红线 (任何情况下不得违反)
 
 1. 只允许操作账户 **802095265** (nickname "Agentic", agentic_allowed=true)。绝不触碰其他账户。
-2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 期权来自 `scripts/options_overlay.py` (备兑) 与 `scripts/weekly_calls.py` (周call摩擦实测), paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
+2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 备兑来自 `scripts/options_overlay.py`, 周call 双轨 (paper 摩擦实测 `weekly_calls.json` + 实盘实验仓 `weekly_calls_live.json`, 后者用户 2026-08-04 授权「接受全赔、后续追加投资」) 均来自 `scripts/weekly_calls.py`, paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
 3. `strategy/config.json` 的风控限制 (仓位上限、单量上限、熔断) 是上限, 不是建议。
 4. `enabled=false` 或 `halted=true` 时只允许读数据和写日志。
 5. API 密钥、secret 一律不得写入本仓库 (用户提供的 Alpaca/FRED 密钥只存在会话环境中)。
@@ -16,6 +16,7 @@
 9. 半自动买入 (execution.mode=semi_auto, 用户 2026-07-20 设立, 取代原 confirm 闸门): 实盘新买入与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation) 在无人值守会话**可 review、不得 place** (平台分类器只拦截无人值守 place, review 不受限; 不要反复尝试下单) — 只能由主流程写入 `state/pending_orders.json` (逐字段来自引擎输出), 待用户在有人值守会话明确说"执行"后按 playbook 4C 原样执行 (当日窗口市价; 盘外买单混合执行=整股即时限价①腿 + 余量分数市价排次开②腿, 2026-07-27 用户改进; 有效至次一交易日 09:25 ET; 隔夜轨道买单仅当日)。出场/止损/兜底卖出与纸面轨道不受限, 照常全自动 (可直接 place)。
    - **结算铁律 (2026-07-31 实测)**: 账户 802095265 为**现金账户 (cash)**, **卖出款未结算 (unsettled) 不即时计入 buying_power, 需 T+1 结算才可买入** (`cash` 会涨但 `buying_power` 不涨; 周五卖→下周一到)。4C 执行买单**一律以实时 `buying_power` (非 cash) 为上限**, 超出跳过; 不得假设"当日卖出款即时可用"。不得用未结算款买入后于结算前卖出该新仓 (good-faith violation)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
+   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) 同受 semi_auto 约束 — 无人值守只写 `state/pending_option_orders.json`, 用户「执行」后按 playbook 4D 下限价单 (有效至次一交易日 09:25 ET); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。预算 `weekly_calls_live.json budget` 与实时 buying_power 双硬顶 (红线3), **追加投资后 budget 只能由用户上调**。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
 
@@ -41,7 +42,8 @@
 | 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
-| 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期; 达 go_bar 前绝不实盘) | `weekly_calls.json enabled` |
+| 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
+| 周call 实盘实验仓 (同形态, semi_auto 买入) | 实盘 | ✅ active·机会主义 (2026-08-04 用户定调「有合适就买, 没有就不买」; budget $1000 内可负担档=XLF/XLE 深ITM, 大盘/指数档待追加投资后上调 budget) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 
@@ -61,7 +63,9 @@
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
-- `scripts/weekly_calls.py` — 周call 摩擦实测确定性引擎 (signal / apply / report, 仅 paper; 2026-08-04 用户授权): RSI-2 同形信号 × 深ITM(0.90) 买call × 无期权止损 × 跟正股出场; 唯一目的实测真实点差 vs 回测模型, 达 `strategy/weekly_calls.json` validation.go_bar 才谈实盘; `state/weekly_call_positions.json` 账本 (含 round_trips/skip_log 摩擦数据), `state/weekly_call_last_orders.json` 当日订单入库副本 (次日跨会话回收 context)
+- `scripts/weekly_calls.py` — 周call 确定性引擎 (signal / apply / report; 2026-08-04 用户授权), RSI-2 同形信号 × 深ITM(0.90) 买call × 无期权止损 × 跟正股出场, 双轨共用:
+  - paper 摩擦实测: `strategy/weekly_calls.json` + `state/weekly_call_positions.json` 账本 (round_trips/skip_log 摩擦数据) + `state/weekly_call_last_orders.json` (次日跨会话回收 context); 实测真实点差 vs 回测模型
+  - 实盘实验仓: `strategy/weekly_calls_live.json` (budget+实时BP 双硬顶) + `state/weekly_call_live_positions.json` 账本 + `state/weekly_call_live_last_orders.json`; 买入 semi_auto 走 `state/pending_option_orders.json` (playbook 4D), 出场卖单全自动
 - `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)
 - `state/positions.json` — 实盘持仓与净值状态 (引擎回写)
 - `state/learning.json` — 学习状态 (冠军/挑战者、净值曲线、晋级历史)

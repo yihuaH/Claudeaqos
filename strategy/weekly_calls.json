@@ -1,8 +1,8 @@
 {
   "_purpose": "周call 摩擦实测轨道 (仅 Alpaca paper, 2026-08-04 用户「b→建」授权)。回测结论: RSI-2 信号 × 深ITM(0.90) 短周期 call、无期权止损、跟正股出场, 在模型摩擦 ±2% 下均值 +1.6~2.6%/笔、±3% 下 ≈0。本轨道唯一目的 = 实测真实点差/成交价 vs 模型, 达 go_bar 才谈实盘, 不达自动否决。绝不驱动实盘订单。",
   "enabled": true,
-  "universe": ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "META", "GOOGL", "AMZN", "AVGO", "TSM", "AMD", "TSLA"],
-  "_universe_note": "静态超流动周期权白名单 (与实盘 universe.json 无关, 不随周筛轮换); 只有这类名单深ITM周call点差才可能 ≤2%。",
+  "universe": ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "META", "GOOGL", "AMZN", "AVGO", "TSM", "AMD", "TSLA", "XLF", "XLE"],
+  "_universe_note": "静态超流动周期权白名单 (与实盘 universe.json 无关, 不随周筛轮换); 只有这类名单深ITM周call点差才可能 ≤2%。XLF/XLE 与实盘实验仓对齐 (2026-08-04): 当前账户规模下唯一可负担档, 摩擦数据要对称积累。",
   "entry": {
     "rsi2_max": 10.0,
     "sma200_filter": true

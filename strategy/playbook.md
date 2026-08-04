@@ -182,6 +182,32 @@ python3 scripts/signals.py signal \
 - 引擎没输出的单**绝不下**; 引擎输出的金额/数量**绝不放大**。
 - 收盘前 5 分钟(15:55 ET)后不再提交新单, 未执行的记入日志顺延。
 
+**4D. 实盘周call实验仓 (semi_auto 买入; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
+
+订单**只**来自 `weekly_calls.py signal --config strategy/weekly_calls_live.json` (§7C 步骤 7 生成,
+红线 2); 预算硬顶 `budget.max_open_premium_usd` (现 $1000, **用户追加投资后由用户上调**) +
+实时 buying_power 双重封顶, 引擎内置。期权只有整张, 无分数腿, 不适用 4C 混合执行。
+
+- **出场卖单 (sell_to_close, 无人值守全自动, 同 4A)**: 逐单按 OCC 解析标的/到期/行权价 →
+  `get_option_instruments` 定位合约 → `review_option_order` → 无预期外告警 →
+  `place_option_order` (**limit**, 限价 = 引擎 est_price×0.97 向下保护, time_in_force=gfd;
+  盘中即时成交, 盘后自动排次开 — 期权无盘后交易)。被拒/预期外告警 → 跳过记 journal
+  (次日引擎会重新出场判定; DTE≤1 强平是兜底)。
+- **买单 (buy_to_open, 绝不无人值守 place)**: 写入 `state/pending_option_orders.json`
+  (格式同 pending_orders.json, 每单含 occ/underlying/strike/expiry/contracts/est_price(mid)/
+  entry_quote/model_price, 逐字段照抄引擎), commit + PushNotification。
+  **时效: 次一交易日 09:25 ET** (同 RSI-2 买单)。当日无买单则不生成。
+- **用户「执行」后 (有人值守)**: 校验 status/valid_until → **逐笔明细确认** (同 4C 1B) →
+  每单 `review_option_order` → `place_option_order` (**limit**, 限价 = min(引擎 est_price×1.03,
+  执行时点 ask), time_in_force=gfd, ref_id 每单一个重试复用; 盘中即时、盘后排次开)。
+  执行前 `get_portfolio` 实时 buying_power 为上限, 超出跳过记 journal。
+- **回写**: fills → `weekly_calls.py apply --ledger state/weekly_call_live_positions.json
+  --context state/weekly_call_live_last_orders.json`; 排队单成交由次日晨检 `get_option_orders`
+  回收补写。pending 文件 status=executed; journal 加"实盘周call"小节; commit+push。
+- **纪律**: 轨道熔断 (累计已实现亏 ≥$1000, 与 budget 同步调) 触发 → 引擎自动只出不进, 通知用户;
+  合约过期未平/疑似被行权 → 红线 6 停该仓、人工对账; report 自评跌破 go_bar 口径 →
+  主动建议用户关停。**引擎没出的单绝不下, 出了的绝不放大** (4A/4C 通用规则同样适用)。
+
 ## 5. 回写与日志
 
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
@@ -289,7 +315,7 @@ python3 scripts/signals.py signal \
 5. journal 记录: 是否调仓日、动量分数榜前5、目标持仓 vs 实际、净值。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
 6. 评估: 实验累计 ≥60 交易日 (约12次周度调仓) 后与用户复盘决定去留; 期间不并入任何实盘决策。
 
-## 7C. 周 call 摩擦实测 (仅 paper, strategy/weekly_calls.json enabled=true 时)
+## 7C. 周 call 轨道 (步骤 1-6 = paper 摩擦实测 `weekly_calls.json`; 步骤 7 = 实盘实验仓 `weekly_calls_live.json`)
 
 第 7B 节完成后执行, 独立账本 `state/weekly_call_positions.json`, 任何失败只记日志, 不影响其他轨道。
 **目的 (2026-08-04 用户授权设立)**: 实测深ITM周call的真实点差/成交价 vs 回测模型 — 回测结论: RSI-2 × 深ITM(0.90)
@@ -302,9 +328,9 @@ python3 scripts/signals.py signal \
    → `python3 scripts/weekly_calls.py apply --ledger state/weekly_call_positions.json --fills <同> --context state/weekly_call_last_orders.json --date <今天>`
    (context = 昨日 signal 输出的入库副本, 提供入场/出场报价快照; skip 记录按日期去重, 重复 apply 无害。)
 1. 数据 (Alpaca):
-   - bars: `integrations.py bars --symbols <weekly_calls.json universe 14只逗号分隔> --start <今天-450天> --out <scratchpad>/wc_bars.json` (SMA200 需 ≥200 交易日);
-   - quotes: `integrations.py quotes --symbols <同 14 只> --out <scratchpad>/wc_quotes.json`;
-   - chains: `integrations.py chains --underlyings <universe 14只 + 持仓底层> --date <今天> --dte-max 17 --out <scratchpad>/wc_chains.json`;
+   - bars: `integrations.py bars --symbols <weekly_calls.json 与 weekly_calls_live.json universe 并集, 16只逗号分隔> --start <今天-450天> --out <scratchpad>/wc_bars.json` (SMA200 需 ≥200 交易日);
+   - quotes: `integrations.py quotes --symbols <同 16 只> --out <scratchpad>/wc_quotes.json`;
+   - chains: `integrations.py chains --underlyings <universe 16只 + 两账本持仓底层> --date <今天> --dte-max 17 --out <scratchpad>/wc_chains.json`;
    - earnings: 复用第 1 节 4B 的 earnings.json (缺则不传, allow_unknown_earnings=true 照常)。
 2. 信号: `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls.json --ledger state/weekly_call_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --date <今天> --out state/weekly_call_last_orders.json`
    (输出**入库** — 次日跨会话回收排队单时需要它做 --context; 本步 commit 时一并提交。)
@@ -319,6 +345,13 @@ python3 scripts/signals.py signal \
 6. 判定纪律: report 的 verdict 变为 `GO_candidate` 或 `NO_GO` 时**通知用户**并写显著标注;
    `NO_GO` → 建议用户关停 (enabled=false), 绝不擅自转实盘。合约已过期未平 (被自动行权) 的告警
    → 按红线 6 停该仓、通知用户人工对账。轨道熔断 (累计已实现亏损 ≥$2000) → 引擎自动只出不进, 通知用户。
+7. **实盘子轨道 (weekly_calls_live.json enabled=true 时, 2026-08-04 用户授权)**: 同一批数据再跑
+   `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --date <今天> --out state/weekly_call_live_last_orders.json`
+   (输出入库供次日 context) → **sells 按 §4D 自动执行并 apply 回写; buys 写
+   `state/pending_option_orders.json` 待用户「执行」(§4D)**; `report --config strategy/weekly_calls_live.json
+   --ledger state/weekly_call_live_positions.json` 一并跑, journal 记"实盘周call"小节 (含 skip 原因 —
+   budget_exceeded 属预期, 表示待用户追加投资/上调 budget)。回收昨日排队/成交: 晨检或本步开头
+   `get_option_orders` 核对后 `apply --context state/weekly_call_live_last_orders.json`。
 
 ## 8. 参数搜索 (无活跃挑战者时执行)
 

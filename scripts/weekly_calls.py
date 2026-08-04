@@ -204,6 +204,14 @@ def cmd_signal(a):
         except ValueError:
             return None
 
+    # 实盘硬顶 (红线3, 上限不是建议): budget.max_open_premium_usd = 未平仓权利金总额封顶
+    # (用户追加投资后自行上调); --buying-power = 实时购买力封顶。paper 配置无 budget 段则不启用。
+    bud_cap = (cfg.get("budget") or {}).get("max_open_premium_usd")
+    open_prem = sum(float(p["entry_premium"]) * 100 * int(p["contracts"])
+                    for p in positions.values())
+    bp_left = float(a.buying_power) if getattr(a, "buying_power", None) is not None else None
+    spent = 0.0
+
     held_und = {p["underlying"] for p in positions.values()} - exiting_und
     cands = []
     for sym in cfg["universe"]:
@@ -231,12 +239,25 @@ def cmd_signal(a):
             skips.append({"symbol": sym, "reason": skip or "no_chain",
                           "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
             continue
+        qty = int(cfg["sizing"]["contracts_per_position"])
+        cost = pick["mid"] * 100.0 * qty
+        if bud_cap is not None and open_prem + spent + cost > float(bud_cap):
+            skips.append({"symbol": sym, "reason": f"budget_exceeded(cost={cost:.0f},"
+                          f"cap={float(bud_cap):.0f},open={open_prem + spent:.0f})",
+                          "rsi2": round(rsi2v, 2)})
+            continue
+        if bp_left is not None and spent + cost > bp_left:
+            skips.append({"symbol": sym, "reason": f"insufficient_buying_power"
+                          f"(cost={cost:.0f},bp_left={bp_left - spent:.0f})",
+                          "rsi2": round(rsi2v, 2)})
+            continue
+        spent += cost
         rv = ind[sym]["rv"]
         iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
         model = bs_call(spot, pick["meta"]["strike"], pick["dte"] / 365.0, iv,
                         float(cfg["model"]["risk_free"]))
         out["buys"].append({
-            "symbol": pick["occ"], "qty": int(cfg["sizing"]["contracts_per_position"]),
+            "symbol": pick["occ"], "qty": qty,
             "position_intent": "buy_to_open", "bucket": BUCKET,
             "reason": "rsi2_entry_call", "est_price": round(pick["mid"], 2),
             "underlying": sym, "strike": pick["meta"]["strike"],
@@ -403,6 +424,8 @@ def main():
     s.add_argument("--quotes", required=True, help='{"SYM": price} 或 get_equity_quotes 原始输出')
     s.add_argument("--chains", help="integrations.py chains 输出 (universe + 持仓底层, dte-max 17)")
     s.add_argument("--earnings", help='{"SYM": "YYYY-MM-DD"|null} (复用主跑 earnings.json)')
+    s.add_argument("--buying-power", type=float,
+                   help="实盘配置用: 实时购买力, 新买入权利金合计不得超过 (paper 可省略)")
     s.add_argument("--date", required=True)
     s.add_argument("--out", help="订单输出 (paper.py run --orders 输入)")
     s.set_defaults(func=cmd_signal)
