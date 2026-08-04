@@ -203,6 +203,10 @@ python3 scripts/signals.py signal \
   每单 `review_option_order` → `place_option_order` (**limit**, 限价 = min(引擎 est_price×1.03,
   执行时点 ask), time_in_force=gfd, ref_id 每单一个重试复用; 盘中即时、盘后排次开)。
   执行前 `get_portfolio` 实时 buying_power 为上限, 超出跳过记 journal。
+  **提前执行语义 (2026-08-04 用户确认)**: 用户可在有效期内**任意时刻** (含盘前) 说「执行」—
+  当场立即挂限价单, 由限价单自身在开盘后等待合意价格 (点差宽/要价超限 → 不成交挂着;
+  进入限价内 → 自动成交; 当日未成 → gfd 收盘作废, 次日引擎重评)。**绝不允许**把「执行」
+  记下来延迟到无人值守会话再 place (分类器拦截 + 红线9); 等待合意价的机制只能是限价单本身。
 - **回写**: fills → `weekly_calls.py apply --ledger state/weekly_call_live_positions.json
   --context state/weekly_call_live_last_orders.json`; 排队单成交由次日晨检 `get_option_orders`
   回收补写。pending 文件 status=executed; journal 加"实盘周call"小节; commit+push。
