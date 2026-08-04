@@ -188,8 +188,16 @@ def cmd_signal(a):
         })
 
     # --- 轨道级熔断: 累计已实现亏损超限 → 只出不进 ---
+    # 阈值支持绝对额 (usd) 或账户百分比 (pct_of_portfolio, 需 --portfolio-value)
+    pv = float(a.portfolio_value) if getattr(a, "portfolio_value", None) is not None else None
     cum_real = sum(rt.get("pnl_usd", 0.0) for rt in ledger.get("round_trips", []))
-    cb = float(cfg["circuit_breaker"]["max_cumulative_realized_loss_usd"])
+    cbc = cfg["circuit_breaker"]
+    cb = cbc.get("max_cumulative_realized_loss_usd")
+    if cb is None and cbc.get("max_cumulative_realized_loss_pct_of_portfolio") is not None:
+        if pv is None:
+            raise SystemExit("熔断配置为百分比但未传 --portfolio-value")
+        cb = pv * float(cbc["max_cumulative_realized_loss_pct_of_portfolio"]) / 100.0
+    cb = float(cb)
     if cum_real <= -cb:
         out["note"] = (f"轨道熔断: 累计已实现 {cum_real:.0f} ≤ -{cb:.0f}, "
                        "停止新入场 (出场照常), 等用户决定")
@@ -204,9 +212,15 @@ def cmd_signal(a):
         except ValueError:
             return None
 
-    # 实盘硬顶 (红线3, 上限不是建议): budget.max_open_premium_usd = 未平仓权利金总额封顶
-    # (用户追加投资后自行上调); --buying-power = 实时购买力封顶。paper 配置无 budget 段则不启用。
-    bud_cap = (cfg.get("budget") or {}).get("max_open_premium_usd")
+    # 实盘硬顶 (红线3, 上限不是建议): budget = 未平仓权利金总额封顶, 支持绝对额 (usd) 或
+    # 账户百分比 (pct_of_portfolio × --portfolio-value, 2026-08-04 用户定 40%, 随净值自动伸缩);
+    # --buying-power = 实时购买力封顶。paper 配置无 budget 段则不启用。
+    bud = cfg.get("budget") or {}
+    bud_cap = bud.get("max_open_premium_usd")
+    if bud_cap is None and bud.get("max_open_premium_pct_of_portfolio") is not None:
+        if pv is None:
+            raise SystemExit("budget 配置为百分比但未传 --portfolio-value")
+        bud_cap = pv * float(bud["max_open_premium_pct_of_portfolio"]) / 100.0
     open_prem = sum(float(p["entry_premium"]) * 100 * int(p["contracts"])
                     for p in positions.values())
     bp_left = float(a.buying_power) if getattr(a, "buying_power", None) is not None else None
@@ -426,6 +440,8 @@ def main():
     s.add_argument("--earnings", help='{"SYM": "YYYY-MM-DD"|null} (复用主跑 earnings.json)')
     s.add_argument("--buying-power", type=float,
                    help="实盘配置用: 实时购买力, 新买入权利金合计不得超过 (paper 可省略)")
+    s.add_argument("--portfolio-value", type=float,
+                   help="账户净值 (get_portfolio total_value); budget/熔断配置为百分比时必传")
     s.add_argument("--date", required=True)
     s.add_argument("--out", help="订单输出 (paper.py run --orders 输入)")
     s.set_defaults(func=cmd_signal)

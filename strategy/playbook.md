@@ -185,8 +185,8 @@ python3 scripts/signals.py signal \
 **4D. 实盘周call实验仓 (semi_auto 买入; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
 
 订单**只**来自 `weekly_calls.py signal --config strategy/weekly_calls_live.json` (§7C 步骤 7 生成,
-红线 2); 预算硬顶 `budget.max_open_premium_usd` (现 $1000, **用户追加投资后由用户上调**) +
-实时 buying_power 双重封顶, 引擎内置。期权只有整张, 无分数腿, 不适用 4C 混合执行。
+红线 2); 预算硬顶 = **账户净值 × budget.max_open_premium_pct_of_portfolio (40%, 2026-08-04 用户定,
+追加投资后自动伸缩)** + 实时 buying_power 双重封顶, 引擎内置。期权只有整张, 无分数腿, 不适用 4C 混合执行。
 
 - **出场卖单 (sell_to_close, 无人值守全自动, 同 4A)**: 逐单按 OCC 解析标的/到期/行权价 →
   `get_option_instruments` 定位合约 → `review_option_order` → 无预期外告警 →
@@ -346,7 +346,7 @@ python3 scripts/signals.py signal \
    `NO_GO` → 建议用户关停 (enabled=false), 绝不擅自转实盘。合约已过期未平 (被自动行权) 的告警
    → 按红线 6 停该仓、通知用户人工对账。轨道熔断 (累计已实现亏损 ≥$2000) → 引擎自动只出不进, 通知用户。
 7. **实盘子轨道 (weekly_calls_live.json enabled=true 时, 2026-08-04 用户授权)**: 同一批数据再跑
-   `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --date <今天> --out state/weekly_call_live_last_orders.json`
+   `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --portfolio-value <get_portfolio total_value> --date <今天> --out state/weekly_call_live_last_orders.json`
    (输出入库供次日 context) → **sells 按 §4D 自动执行并 apply 回写; buys 写
    `state/pending_option_orders.json` 待用户「执行」(§4D)**; `report --config strategy/weekly_calls_live.json
    --ledger state/weekly_call_live_positions.json` 一并跑, journal 记"实盘周call"小节 (含 skip 原因 —
