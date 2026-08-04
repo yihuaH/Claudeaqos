@@ -289,6 +289,37 @@ python3 scripts/signals.py signal \
 5. journal 记录: 是否调仓日、动量分数榜前5、目标持仓 vs 实际、净值。熔断触发则该账本自行 halted, 通知用户, 不影响其他轨道。
 6. 评估: 实验累计 ≥60 交易日 (约12次周度调仓) 后与用户复盘决定去留; 期间不并入任何实盘决策。
 
+## 7C. 周 call 摩擦实测 (仅 paper, strategy/weekly_calls.json enabled=true 时)
+
+第 7B 节完成后执行, 独立账本 `state/weekly_call_positions.json`, 任何失败只记日志, 不影响其他轨道。
+**目的 (2026-08-04 用户授权设立)**: 实测深ITM周call的真实点差/成交价 vs 回测模型 — 回测结论: RSI-2 × 深ITM(0.90)
+× 无期权止损 × 跟正股出场, 模型摩擦 ±2% 时 +1.6~2.6%/笔、±3% 时 ≈0, 唯一悬而未决就是真实摩擦
+(全部回测记录见 `journal/2026-08-04-weekly-calls.md`)。**纸面盈亏绝不驱动实盘 (红线7);
+达 validation.go_bar 才与用户讨论实盘, 不达自动否决关停。**
+
+0. **回收昨日排队单 (最先做, 在覆盖 last_orders 之前)**: 若 `state/paper_queued_weekly_calls.json` 存在:
+   `paper.py sync --queued state/paper_queued_weekly_calls.json --fills-out <scratchpad>/wc_sync_fills.json --prune`
+   → `python3 scripts/weekly_calls.py apply --ledger state/weekly_call_positions.json --fills <同> --context state/weekly_call_last_orders.json --date <今天>`
+   (context = 昨日 signal 输出的入库副本, 提供入场/出场报价快照; skip 记录按日期去重, 重复 apply 无害。)
+1. 数据 (Alpaca):
+   - bars: `integrations.py bars --symbols <weekly_calls.json universe 14只逗号分隔> --start <今天-450天> --out <scratchpad>/wc_bars.json` (SMA200 需 ≥200 交易日);
+   - quotes: `integrations.py quotes --symbols <同 14 只> --out <scratchpad>/wc_quotes.json`;
+   - chains: `integrations.py chains --underlyings <universe 14只 + 持仓底层> --date <今天> --dte-max 17 --out <scratchpad>/wc_chains.json`;
+   - earnings: 复用第 1 节 4B 的 earnings.json (缺则不传, allow_unknown_earnings=true 照常)。
+2. 信号: `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls.json --ledger state/weekly_call_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --date <今天> --out state/weekly_call_last_orders.json`
+   (输出**入库** — 次日跨会话回收排队单时需要它做 --context; 本步 commit 时一并提交。)
+3. 执行: `paper.py run --orders state/weekly_call_last_orders.json --date <今天> --coid-prefix cqw --fills-out <scratchpad>/wc_fills.json`;
+   **收盘后运行 (主跑常态)** 追加 `--allow-queue --queued-out state/paper_queued_weekly_calls.json`
+   (limit/day 挂次开: 买 mid×1.03 / 卖 mid×0.97; OCC 单整张)。无单则不生成排队文件。
+4. 回写: `weekly_calls.py apply --ledger state/weekly_call_positions.json --fills <wc_fills> --context state/weekly_call_last_orders.json --date <今天>`
+   (排队日 fills 为空, apply 仍要跑 — 它负责把当日 skip 记录进 skip_log; 成交在次日步骤 0 回收)。
+5. 摩擦报告: `weekly_calls.py report --config strategy/weekly_calls.json --ledger state/weekly_call_positions.json --chains <wc_chains> --date <今天>`
+   → journal 加"周call摩擦实测"小节: 当日进出/skip 及原因、round_trips 数、中位单边点差、
+   中位每笔盈亏、成交vs前收mid、mid vs 模型价偏差、validation verdict。
+6. 判定纪律: report 的 verdict 变为 `GO_candidate` 或 `NO_GO` 时**通知用户**并写显著标注;
+   `NO_GO` → 建议用户关停 (enabled=false), 绝不擅自转实盘。合约已过期未平 (被自动行权) 的告警
+   → 按红线 6 停该仓、通知用户人工对账。轨道熔断 (累计已实现亏损 ≥$2000) → 引擎自动只出不进, 通知用户。
+
 ## 8. 参数搜索 (无活跃挑战者时执行)
 
 1. 拉长历史 (约 5 年): `python3 scripts/integrations.py bars --symbols <ETF池逗号分隔> --start <今天减5年> --out <scratchpad>/bars_5y.json`

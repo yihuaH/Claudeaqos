@@ -6,7 +6,7 @@
 ## 硬性红线 (任何情况下不得违反)
 
 1. 只允许操作账户 **802095265** (nickname "Agentic", agentic_allowed=true)。绝不触碰其他账户。
-2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 期权来自 `scripts/options_overlay.py`, paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
+2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 期权来自 `scripts/options_overlay.py` (备兑) 与 `scripts/weekly_calls.py` (周call摩擦实测), paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
 3. `strategy/config.json` 的风控限制 (仓位上限、单量上限、熔断) 是上限, 不是建议。
 4. `enabled=false` 或 `halted=true` 时只允许读数据和写日志。
 5. API 密钥、secret 一律不得写入本仓库 (用户提供的 Alpaca/FRED 密钥只存在会话环境中)。
@@ -41,6 +41,7 @@
 | 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
+| 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期; 达 go_bar 前绝不实盘) | `weekly_calls.json enabled` |
 
 ## 结构
 
@@ -60,6 +61,7 @@
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
+- `scripts/weekly_calls.py` — 周call 摩擦实测确定性引擎 (signal / apply / report, 仅 paper; 2026-08-04 用户授权): RSI-2 同形信号 × 深ITM(0.90) 买call × 无期权止损 × 跟正股出场; 唯一目的实测真实点差 vs 回测模型, 达 `strategy/weekly_calls.json` validation.go_bar 才谈实盘; `state/weekly_call_positions.json` 账本 (含 round_trips/skip_log 摩擦数据), `state/weekly_call_last_orders.json` 当日订单入库副本 (次日跨会话回收 context)
 - `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)
 - `state/positions.json` — 实盘持仓与净值状态 (引擎回写)
 - `state/learning.json` — 学习状态 (冠军/挑战者、净值曲线、晋级历史)

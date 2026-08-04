@@ -1,0 +1,9 @@
+{
+  "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
+  "halted": false,
+  "started": "2026-08-04",
+  "positions": {},
+  "trades": [],
+  "round_trips": [],
+  "skip_log": []
+}

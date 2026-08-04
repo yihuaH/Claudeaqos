@@ -1,0 +1,55 @@
+{
+  "_purpose": "周call 摩擦实测轨道 (仅 Alpaca paper, 2026-08-04 用户「b→建」授权)。回测结论: RSI-2 信号 × 深ITM(0.90) 短周期 call、无期权止损、跟正股出场, 在模型摩擦 ±2% 下均值 +1.6~2.6%/笔、±3% 下 ≈0。本轨道唯一目的 = 实测真实点差/成交价 vs 模型, 达 go_bar 才谈实盘, 不达自动否决。绝不驱动实盘订单。",
+  "enabled": true,
+  "universe": ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "META", "GOOGL", "AMZN", "AVGO", "TSM", "AMD", "TSLA"],
+  "_universe_note": "静态超流动周期权白名单 (与实盘 universe.json 无关, 不随周筛轮换); 只有这类名单深ITM周call点差才可能 ≤2%。",
+  "entry": {
+    "rsi2_max": 10.0,
+    "sma200_filter": true
+  },
+  "exit": {
+    "rsi2_min": 65.0,
+    "underlying_stop_loss_pct": 5.0,
+    "max_holding_days": 10,
+    "force_exit_dte_lte": 1
+  },
+  "_exit_note": "与实盘 RSI-2 出场同形: 反弹强势(close>SMA5 或 RSI2≥65)/正股止损5%/时间止损10天。无期权级止损 (回测证明其在均值回归上是毒药: 被它截住的交易均值 -54%、胜率 0%); force_exit_dte_lte=1 防到期行权。",
+  "contract": {
+    "moneyness": 0.90,
+    "floor_moneyness": 0.85,
+    "min_dte_calendar": 8,
+    "max_dte_calendar": 17,
+    "max_spread_pct": 2.0,
+    "min_bid": 0.05,
+    "max_premium_per_contract_usd": 5000
+  },
+  "_contract_note": "深ITM: 行权价 = ≤0.90×现价 的最高档 (delta≈0.8, 近乎免疫IV/crush); 到期 8-17 日历日内最近周五。spread gate ≤2% 既是入场闸也是实测数据: 被 gate 跳过的机会全部记 skip_log, 跳过率本身是 go/no-go 输入。",
+  "sizing": {
+    "contracts_per_position": 1,
+    "max_open_positions": 4,
+    "max_new_entries_per_day": 2
+  },
+  "circuit_breaker": {
+    "max_cumulative_realized_loss_usd": 2000
+  },
+  "defense": {
+    "earnings_blackout_days": 7,
+    "allow_unknown_earnings": true
+  },
+  "validation": {
+    "start_date": "2026-08-04",
+    "min_round_trips": 15,
+    "min_trading_days": 30,
+    "go_bar": {
+      "max_median_leg_spread_pct": 2.25,
+      "min_median_trade_pnl_pct": 0.0
+    },
+    "_note": "≥15 笔完整往返或 ≥30 交易日后评估: 中位单边点差 ≤2.25% 且 中位每笔盈亏 >0 → 才与用户讨论实盘; 否则自动否决、轨道关停。期间纸面盈亏绝不驱动实盘 (红线7)。"
+  },
+  "model": {
+    "iv_rv_mult": 1.25,
+    "rv_window_days": 20,
+    "risk_free": 0.04
+  },
+  "_model_note": "model_price 仅用于记录『模型价 vs 真实 mid』偏差 (检验回测 IV 假设), 不参与任何下单决策。"
+}
