@@ -7,6 +7,18 @@
       "entry_price": 213.3526,
       "entry_date": "2026-07-30",
       "cost": 288.0
+    },
+    "AAPL": {
+      "qty": 1.0,
+      "entry_price": 304.75,
+      "entry_date": "2026-08-03",
+      "cost": 304.75
+    },
+    "WELL": {
+      "qty": 1.0,
+      "entry_price": 234.0,
+      "entry_date": "2026-08-03",
+      "cost": 234.0
     }
   },
   "legacy_positions": {},
@@ -352,6 +364,24 @@
       "price": 197.51,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 304.75,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-03",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 234.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

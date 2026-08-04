@@ -2,7 +2,15 @@
   "trade_date": "2026-08-03",
   "generated_at": "2026-08-03T22:55:00Z",
   "generated_by": "收盘后主跑 (post-close primary, 补跑 ~18:5x ET; 17:45 ET 主跑未触发)",
-  "status": "awaiting_execution",
+  "status": "executed",
+  "executed_at": "2026-08-04T00:44:00Z",
+  "executed_mode": "盘外混合 (用户 08-03 ~19:4x ET 回复「执行」): ①整股即时限价 + ②余量分数市价排 08-04 开盘",
+  "executed_legs": [
+    {"symbol": "AAPL", "leg1": {"order_id": "6a71357e-c1fa-4705-a8df-9070513e8f1e", "qty": 1, "limit": 306.58, "fill": 304.75, "state": "filled", "when": "今夜24h盘"}, "leg2": {"order_id": "6a7135c5-03b3-47f2-9f7f-bafe7ef0392c", "dollar_amount": 126.39, "state": "queued", "fills_at": "2026-08-04 开盘"}},
+    {"symbol": "WELL", "leg1": {"order_id": "6a713581-a868-4064-b03f-799676cc8b1d", "qty": 1, "limit": 235.42, "fill": 234.00, "state": "filled", "when": "今夜24h盘"}, "leg2": {"order_id": "6a7135c7-7db5-4fd9-a577-ac15c344558c", "dollar_amount": 197.14, "state": "queued", "fills_at": "2026-08-04 开盘"}},
+    {"symbol": "D", "leg1": {"order_id": "6a713582-b21b-49f0-8ce5-0b52761d95fc", "qty": 6, "limit": 69.45, "state": "confirmed", "fills_at": "2026-08-04 开盘 (D 非24h标的, 限价挂开盘)"}, "leg2": {"order_id": "6a7135c9-9d6b-46b1-b8b3-6f1cb556029f", "dollar_amount": 14.44, "state": "queued", "fills_at": "2026-08-04 开盘"}}
+  ],
+  "writeback_note": "今夜成交回写 state: AAPL 1@304.75, WELL 1@234.00 (新建仓)。D①(6股)+全部②腿排 08-04 开盘, 由晨检 average-in/新建回写。各标的 ①+② 合计 ≤ $431.14 未放大。BP 结算款支付, 无 GFV。",
   "market_window_until_et": "已过 (盘后主跑, 当日市价窗口已收盘)",
   "valid_until": "2026-08-04 09:25 ET (次一交易日)",
   "buying_power_at_generation": 1555.37,
