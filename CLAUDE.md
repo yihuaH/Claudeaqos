@@ -43,7 +43,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周call 实盘实验仓 (同形态, semi_auto 买入) | 实盘 | ✅ active·机会主义 (2026-08-04 用户定调「有合适就买, 没有就不买」; budget=净值×40% 自动伸缩; 白名单20只, 当前可负担档=XLF/XLE/TLT/BAC 深ITM) | `weekly_calls_live.json enabled` + `budget` |
+| 周call 实盘实验仓 (同形态, semi_auto 买入) | 实盘 | ✅ active·机会主义 (2026-08-04 用户定调「有合适就买, 没有就不买」; budget=净值×40% 自动伸缩, 注码=净值×20%/信号; 白名单18只·股票类专属 (2026-08-05 剔 GLD/TLT), 可负担档=XLF/XLE/BAC) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 
