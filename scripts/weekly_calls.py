@@ -282,6 +282,40 @@ def cmd_signal(a):
                             "mid": round(pick["mid"], 4),
                             "spread_pct": pick["spread_pct"]},
         })
+
+    # --- 期权预警 near_signals (报告级, 2026-08-05 用户批准「条件性弹药预留」) ---
+    # 情景规则 (确定性): 明日收跌 1% (或连续两日各跌 ~1%) 将使 RSI2 < rsi2_max 且价格仍在
+    # SMA200 上方 → 未来 1-2 天可能出现期权买入信号。仅提示: 4B 据此在股票 pending 写
+    # option_alert 建议保留弹药, 4C 执行时按其保留 BP; 绝不改引擎选股/金额 (红线2)。
+    held_all = {p["underlying"] for p in positions.values()}
+    buy_und = {b["underlying"] for b in out["buys"]}
+    near = []
+    for sym in cfg["universe"]:
+        if sym in held_all or sym in buy_und:
+            continue
+        i = ind.get(sym)
+        if not i or i["rsi2"] is None or i["sma200"] is None or i["close"] is None:
+            continue
+        if i["rsi2"] < cfg["entry"]["rsi2_max"]:
+            continue  # 已是当日信号 (未成单原因见 skips)
+        ed = days_to_earnings(sym)
+        if ed is not None and 0 <= ed <= int(cfg["defense"]["earnings_blackout_days"]):
+            continue
+        px = i["close"]
+        closes_now = series[sym][1]
+        scenario = None
+        r1 = rsi(closes_now + [px * 0.99], 2)
+        if r1 is not None and r1 < cfg["entry"]["rsi2_max"] and px * 0.99 > i["sma200"]:
+            scenario = "1d_-1%"
+        else:
+            r2d = rsi(closes_now + [px * 0.99, px * 0.9801], 2)
+            if r2d is not None and r2d < cfg["entry"]["rsi2_max"] and px * 0.9801 > i["sma200"]:
+                scenario = "2d_-1%x2"
+        if scenario:
+            near.append({"symbol": sym, "rsi2_now": round(i["rsi2"], 2),
+                         "scenario": scenario, "spot": round(px, 2),
+                         "est_premium_usd": round(px * 10.5)})  # 深ITM权利金 ≈ 10.5%×现价×100股
+    out["near_signals"] = near
     _emit(out, a.out)
 
 
