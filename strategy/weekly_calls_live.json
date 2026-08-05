@@ -44,9 +44,8 @@
     "max_premium_per_contract_usd": 5000
   },
   "sizing": {
-    "contracts_per_position": 1,
-    "max_open_positions": 2,
-    "max_new_entries_per_day": 1
+    "position_pct_of_portfolio": 20,
+    "_note": "每信号 ≈ 净值×20% (全凯利档, 2026-08-05 用户「中间档试一下」→ D20 回测采纳: 中位+47%/最差+31%, 优于1张制与40-50%重注制)。便宜档自动折多张 (XLE≈2张); 单张 >20% 但 ≤40% 净值的贵档 (如 IWM) 允许 1 张; 更贵跳过记 premium_exceeds_position_cap。**并持数与每日新仓数不限** (用户 2026-08-05 指示) — 总敞口由 budget=净值×40% 与实时 BP 双硬顶封锁 (「接受全赔」边界=40%桶不变)。"
   },
   "budget": {
     "max_open_premium_pct_of_portfolio": 40

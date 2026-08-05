@@ -242,8 +242,10 @@ def cmd_signal(a):
         cands.append((i["rsi2"], sym))
     cands.sort()
 
-    slots = max(0, min(int(cfg["sizing"]["max_open_positions"]) - len(held_und) - len(out["buys"]),
-                       int(cfg["sizing"]["max_new_entries_per_day"])))
+    # 仓数限制可选 (缺省=不限, 2026-08-05 用户指示; 总敞口由 budget+BP 双硬顶管)
+    mop = int(cfg["sizing"].get("max_open_positions", 10**6))
+    mne = int(cfg["sizing"].get("max_new_entries_per_day", 10**6))
+    slots = max(0, min(mop - len(held_und), mne))
     for rsi2v, sym in cands:
         if len(out["buys"]) >= slots:
             break
@@ -253,8 +255,26 @@ def cmd_signal(a):
             skips.append({"symbol": sym, "reason": skip or "no_chain",
                           "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
             continue
-        qty = int(cfg["sizing"]["contracts_per_position"])
-        cost = pick["mid"] * 100.0 * qty
+        # 张数: position_pct_of_portfolio (每信号≈净值×N%, 2026-08-05 D20 回测采纳全凯利档)
+        # 优先; 缺省回落到固定 contracts_per_position (paper 摩擦实测用)。
+        per_cost = pick["mid"] * 100.0
+        pos_pct = (cfg.get("sizing") or {}).get("position_pct_of_portfolio")
+        if pos_pct is not None:
+            if pv is None:
+                raise SystemExit("sizing 配置为百分比但未传 --portfolio-value")
+            target = pv * float(pos_pct) / 100.0
+            qty = int(target // per_cost)
+            if qty < 1:
+                if per_cost <= 2 * target:  # 贵档例外: 单张 ≤ 2×目标仓 (如 IWM) 允许 1 张
+                    qty = 1
+                else:
+                    skips.append({"symbol": sym, "reason": f"premium_exceeds_position_cap"
+                                  f"(per={per_cost:.0f},target={target:.0f})",
+                                  "rsi2": round(rsi2v, 2)})
+                    continue
+        else:
+            qty = int(cfg["sizing"]["contracts_per_position"])
+        cost = per_cost * qty
         if bud_cap is not None and open_prem + spent + cost > float(bud_cap):
             skips.append({"symbol": sym, "reason": f"budget_exceeded(cost={cost:.0f},"
                           f"cap={float(bud_cap):.0f},open={open_prem + spent:.0f})",
