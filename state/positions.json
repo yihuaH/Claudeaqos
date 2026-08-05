@@ -25,6 +25,12 @@
       "entry_price": 69.4164,
       "entry_date": "2026-08-04",
       "cost": 431.14
+    },
+    "ABBV": {
+      "qty": 5.0,
+      "entry_price": 245.36,
+      "entry_date": "2026-08-04",
+      "cost": 1226.8
     }
   },
   "legacy_positions": {},
@@ -424,6 +430,15 @@
       "price": 302.79,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "ABBV",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 245.36,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

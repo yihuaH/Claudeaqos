@@ -49,7 +49,7 @@
     }
   ],
   "executed_at": "2026-08-05T02:01:30Z",
-  "executed_mode": "盘外混合 (用户 ~22:00 ET 回复「执行pm」— 仅 PM, ABBV 用户依新闻红旗一票否决)",
+  "executed_mode": "盘外混合 (用户 ~22:00 ET「执行pm」→ ~22:10 ET「ABBV也执行吧」撤销否决, 全部执行)",
   "executed_legs": [
     {
       "symbol": "PM",
@@ -69,9 +69,20 @@
     },
     {
       "symbol": "ABBV",
-      "vetoed_by_user": true,
-      "reason": "news_flag guidance cut (07-31 财报下调指引) — 用户 4C 一票否决, 不执行"
+      "veto_history": "先遭用户依新闻红旗否决, ~10分钟后用户复议撤销 (「ABBV也执行吧」)",
+      "leg1": {
+        "order_id": "6a729b8b-a4e5-404b-a24c-401346a94497",
+        "qty": 5,
+        "limit": 246.14,
+        "fill": 245.36,
+        "state": "filled",
+        "when": "今夜24h盘即时"
+      },
+      "leg2": {
+        "skipped": true,
+        "reason": "零头 $3.77 < min_order_usd $5, 按规则跳过"
+      }
     }
   ],
-  "writeback_note": "PM ①+② 合计 ≤ $1,234.47 未放大; 成交由 08-05 晨检回写。ABBV 否决后今日不再入场 (引擎明日重算)。"
+  "writeback_note": "PM ①+② ≤ $1,234.47; ABBV ①腿 5股@245.36=$1,226.80 已今夜成交并回写 state (零头$3.77跳过), 未放大。PM 两腿成交由 08-05 晨检回写。"
 }
