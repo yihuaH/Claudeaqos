@@ -351,7 +351,16 @@ python3 scripts/signals.py signal \
 6. 判定纪律: report 的 verdict 变为 `GO_candidate` 或 `NO_GO` 时**通知用户**并写显著标注;
    `NO_GO` → 建议用户关停 (enabled=false), 绝不擅自转实盘。合约已过期未平 (被自动行权) 的告警
    → 按红线 6 停该仓、通知用户人工对账。轨道熔断 (累计已实现亏损 ≥$2000) → 引擎自动只出不进, 通知用户。
-7. **实盘子轨道 (weekly_calls_live.json enabled=true 时, 2026-08-04 用户授权)**: 同一批数据再跑
+6B. **期权池月度复核 (每月首个交易周一执行, 周一休市顺延至该周首个交易日; 2026-08-05 用户批准「加进去吧」; 首跑 2026-08-10)**:
+   白名单是静态的, 本步是它唯一的更新通道。两部分, 全确定性:
+   - **① 在册通过率盘点**: 统计两账本 skip_log 近 30 天各标的 spread gate 拦截/通过次数;
+     30 天内被拦 ≥3 次且 0 通过 → journal 标注「休眠」(不移除名单, 仅供用户参考)。
+   - **② 候选实测收编**: 候选 = strategy/universe.json 内 [现价 ≤ 当前期权预算÷0.105 (深ITM权利金≈10.5%现价)
+     且不在白名单] 的个股 + 主流行业/资产 ETF 板凳 (XLI/XLV/XLU/SLV/GDX 等, 限回测家族同类);
+     逐个 `integrations.py chains --dte-max 17` 实测深ITM (0.85-0.92×spot) 点差 →
+     **收编标准 (与 2026-08-04 TLT/BAC 同口径): ≥1 档同时满足 spread ≤2% 且权利金 ≤ 当前预算** →
+     达标者加入双配置 universe (paper+live 对齐), 未达标记录淘汰原因进 journal; commit。
+   - 红线合规: 只改"能买什么"不改"何时买/买多少" (同 screen.py 定位, 红线2); 收编标准确定性, 不得凭观点加减名单。
    `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --portfolio-value <get_portfolio total_value> --date <今天> --out state/weekly_call_live_last_orders.json`
    (输出入库供次日 context) → **sells 按 §4D 自动执行并 apply 回写; buys 写
    `state/pending_option_orders.json` 待用户「执行」(§4D)**; `report --config strategy/weekly_calls_live.json

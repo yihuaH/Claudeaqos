@@ -23,7 +23,7 @@
     "SMH",
     "BAC"
   ],
-  "_universe_note": "静态超流动周期权白名单 (与实盘 universe.json 无关, 不随周筛轮换); 只有这类名单深ITM周call点差才可能 ≤2%。与实盘实验仓 20 只对齐 (2026-08-04 扩编 TLT/GLD/SMH/BAC, 实测点差合格; XLK/JPM/XOM/COST/NFLX/MU 淘汰), 摩擦数据对称积累。",
+  "_universe_note": "静态超流动周期权白名单 (与实盘 universe.json 无关, 不随周筛轮换); 只有这类名单深ITM周call点差才可能 ≤2%。与实盘实验仓 20 只对齐 (2026-08-04 扩编 TLT/GLD/SMH/BAC, 实测点差合格; XLK/JPM/XOM/COST/NFLX/MU 淘汰), 摩擦数据对称积累。 更新通道: 每月首个交易周一按 playbook §7C.6B 月度复核 (skip_log 通过率盘点 + 候选实测收编, 2026-08-05 用户批准)。",
   "entry": {
     "rsi2_max": 10.0,
     "sma200_filter": true
