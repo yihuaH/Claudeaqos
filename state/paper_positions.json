@@ -10,12 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "ODFL": {
-      "qty": 94.0,
-      "entry_price": 214.37,
-      "entry_date": "2026-07-31",
-      "cost": 20150.78
-    },
     "FTI": {
       "qty": 292.0,
       "entry_price": 70.401233,
@@ -39,6 +33,12 @@
       "entry_price": 68.37,
       "entry_date": "2026-08-04",
       "cost": 20237.52
+    },
+    "ABBV": {
+      "qty": 85.0,
+      "entry_price": 247.884824,
+      "entry_date": "2026-08-05",
+      "cost": 21070.21
     }
   },
   "legacy_positions": {},
@@ -265,6 +265,24 @@
       "side": "buy",
       "qty": 296.0,
       "price": 68.37,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-05",
+      "symbol": "ODFL",
+      "side": "sell",
+      "qty": 94.0,
+      "price": 216.67,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-05",
+      "symbol": "ABBV",
+      "side": "buy",
+      "qty": 85.0,
+      "price": 247.884824,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

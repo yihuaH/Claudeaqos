@@ -1,92 +1,31 @@
 {
-  "trade_date": "2026-08-04",
-  "generated_at": "2026-08-04T21:52:00Z",
+  "trade_date": "2026-08-05",
+  "generated_at": "2026-08-05T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, 准时)",
-  "status": "executed",
-  "market_window_until_et": "已过 (盘后主跑)",
-  "valid_until": "2026-08-05 09:25 ET (次一交易日)",
-  "buying_power_at_generation": 4576.74,
-  "funding_note": "BP $4,576.74 全部为已结算入金 (今晨 $3,000+$1,000 到账), 2 笔买单合计 $2,468.94 < BP, 资金充足无供血时序问题。今日 ODFL 卖单排明晨开盘, 其卖款 (~$296) T+1 结算, 不计入本批。",
-  "sizing_note": "sizing 20%/仓 = 组合 $6,172.37 × 20% = $1,234.47 (入金后单仓自动放大); 2 新入, 终态 AAPL+WELL+D+ABBV+PM (5/5 满槽)。逐字段照抄引擎, 不放大。",
-  "earnings_defense": "blackout=7: 8 候选查财报; LLY(08-05 dte1) 拦截 — 原 rank2 被移除; ABBV(10-30)/PM(10-21) 87+ 天外未拦; TMO 被异动过滤拦 (非财报)。",
-  "news_flag_summary": "🚩 ABBV red_flag=TRUE (guidance cut, 2026-07-31 Q2 财报下调指引致股价下跌 — **真实红旗非误报**, 这正是其超卖的原因之一; 均值回归策略本吃这类恐慌, 但指引下调属基本面变化, 由用户 4C 一票否决)。PM 无红旗。仅提示, 引擎确定性选股不变 (红线2)。",
-  "macro_context": {
-    "vix": 15.86,
-    "yield_curve_10y2y": 0.43,
-    "hy_credit_spread": 2.78,
-    "ig_credit_spread": 0.78,
-    "note": "宏观温和 risk-on (VIX 低、曲线正、利差紧), 仅展示不门控"
-  },
-  "note_4A": "ODFL 1.349878股 exit_strength 卖单已自动下单 (order 6a725e47, market/regular_hours 排 08-05 开盘, est $219.31, 入场 $213.35 → 预计 +2.8%)。",
-  "exec_protocol": "用户回复「执行」后按 4C: 盘中市价; 盘外混合 (①整股即时限价 est×1.010 all_day_hours + ②余量分数市价排开盘)。买单按 seq 累计不超实时 BP。逐字段照抄, 绝不放大/加单/改标的。",
+  "status": "awaiting_execution",
+  "valid_until": "2026-08-06 09:25 ET",
+  "buying_power_at_generation": 2123.81,
+  "funding_note": "BP $2,123.81 + ODFL 卖款 $295.16 明日结算 ≈ $2,419 可用。⚠️ 与今日期权 pending (XLE 2张 ~$1,186) 合计 ~$2,424 几乎恰好用满 — 建议先执行期权 (整张不可调) 再执行本单 (市价单遇 BP 告警按 4C 自动下调金额)。",
+  "sizing_note": "sizing 20%/仓 = $6,192.68 × 20% = $1,238.54; 1 新入 (WELL 出场腾槽), 终态满 5 槽: AAPL/D/ABBV/PM/XOM。逐字段照抄引擎。",
+  "earnings_defense": "blackout=7: XOM 财报 07-31 已过 (下次 10-30, 86天外) 未拦; 能源板块候选 SU/PSX/COP/CNQ/BP/TRGP 财报未知但 allow_unknown=true, 均未入选 (行业上限与槽位)。",
+  "news_flag_summary": "XOM 无红旗 (13 篇文章, 能源下跌为宏观油价事件 — 霍尔木兹和谈预期, 属典型恐慌盘非公司基本面恶化)。",
+  "macro_context": {"vix": 16.5, "note": "VIX 温和; 仅展示不门控"},
+  "note_4A": "WELL 1.855976 股 exit_strength 卖单已自动下单 (order 6a73af89, market/regular_hours 排 08-06 开盘, est $237.16, 均入 $232.30 → 预计 +2.1%)。",
+  "option_alert": null,
+  "exec_protocol": "用户回复「执行」后按 4C。盘中市价 / 盘外混合 (①整股限价 est×1.010 + ②零头市价排开盘)。",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ABBV",
-      "dollar_amount": 1234.47,
+      "symbol": "XOM",
+      "dollar_amount": 1238.54,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 243.7,
-      "review_est_price": 243.71,
-      "rsi2": 3.74,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "news_flag": "guidance cut (2026-07-31 Q2财报下调指引, 真实红旗) — 用户4C判断"
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "PM",
-      "dollar_amount": 1234.47,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 186.92,
-      "review_est_price": 186.87,
-      "rsi2": 5.84,
+      "est_price": 151.595,
+      "review_est_price": 151.6,
+      "rsi2": 4.07,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
-  ],
-  "executed_at": "2026-08-05T02:01:30Z",
-  "executed_mode": "盘外混合 (用户 ~22:00 ET「执行pm」→ ~22:10 ET「ABBV也执行吧」撤销否决, 全部执行)",
-  "executed_legs": [
-    {
-      "symbol": "PM",
-      "leg1": {
-        "order_id": "6a72995d-b84a-430b-932f-c47cfe01bd50",
-        "qty": 6,
-        "limit": 188.79,
-        "state": "filled",
-        "fill": 187.4,
-        "when": "今夜24h盘即时 (02:01 UTC, 优于限价$1.39/股)"
-      },
-      "leg2": {
-        "order_id": "6a729979-fa77-4013-9df1-e20e2e5548eb",
-        "dollar_amount": 101.73,
-        "state": "filled",
-        "fill": 188.42,
-        "qty": 0.53991,
-        "when": "2026-08-05 开盘"
-      }
-    },
-    {
-      "symbol": "ABBV",
-      "veto_history": "先遭用户依新闻红旗否决, ~10分钟后用户复议撤销 (「ABBV也执行吧」)",
-      "leg1": {
-        "order_id": "6a729b8b-a4e5-404b-a24c-401346a94497",
-        "qty": 5,
-        "limit": 246.14,
-        "fill": 245.36,
-        "state": "filled",
-        "when": "今夜24h盘即时"
-      },
-      "leg2": {
-        "skipped": true,
-        "reason": "零头 $3.77 < min_order_usd $5, 按规则跳过"
-      }
-    }
-  ],
-  "writeback_note": "PM ①+② ≤ $1,234.47; ABBV ①腿 5股@245.36=$1,226.80 已今夜成交并回写 state (零头$3.77跳过), 未放大。PM 两腿成交由 08-05 晨检回写。",
-  "reconciled_at": "2026-08-05T14:46:00Z (晨检: PM两腿+ABBV+ODFL卖 全部成交并回写)"
+  ]
 }

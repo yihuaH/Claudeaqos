@@ -1,31 +1,31 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-04",
+  "date": "2026-08-05",
   "coid_prefix": "cq",
-  "next_open": "2026-08-05T09:30:00-04:00",
+  "next_open": "2026-08-06T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "orders": [
     {
-      "coid": "cq-2026-08-04-ODFL-sell",
-      "order_id": "9a4ac7e2-3a85-434e-bf13-63c62f5eafe9",
-      "symbol": "ODFL",
+      "coid": "cq-2026-08-05-WELL-sell",
+      "order_id": "67474a45-26e1-4aae-bf8c-a2becb92198b",
+      "symbol": "WELL",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "212.73",
-      "qty": "94",
+      "limit_price": "230.05",
+      "qty": "87",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-08-04-ABBV-buy",
-      "order_id": "6aaa2fb6-a01a-4fba-906d-002b961683a3",
-      "symbol": "ABBV",
+      "coid": "cq-2026-08-05-XOM-buy",
+      "order_id": "f07c5e5c-78d2-4bb0-9526-d4be187fd019",
+      "symbol": "XOM",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "251.01",
-      "qty": "85",
+      "limit_price": "156.14",
+      "qty": "136",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
