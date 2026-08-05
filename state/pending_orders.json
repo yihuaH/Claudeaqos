@@ -2,7 +2,7 @@
   "trade_date": "2026-08-04",
   "generated_at": "2026-08-04T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, 准时)",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "已过 (盘后主跑)",
   "valid_until": "2026-08-05 09:25 ET (次一交易日)",
   "buying_power_at_generation": 4576.74,
@@ -11,7 +11,10 @@
   "earnings_defense": "blackout=7: 8 候选查财报; LLY(08-05 dte1) 拦截 — 原 rank2 被移除; ABBV(10-30)/PM(10-21) 87+ 天外未拦; TMO 被异动过滤拦 (非财报)。",
   "news_flag_summary": "🚩 ABBV red_flag=TRUE (guidance cut, 2026-07-31 Q2 财报下调指引致股价下跌 — **真实红旗非误报**, 这正是其超卖的原因之一; 均值回归策略本吃这类恐慌, 但指引下调属基本面变化, 由用户 4C 一票否决)。PM 无红旗。仅提示, 引擎确定性选股不变 (红线2)。",
   "macro_context": {
-    "vix": 15.86, "yield_curve_10y2y": 0.43, "hy_credit_spread": 2.78, "ig_credit_spread": 0.78,
+    "vix": 15.86,
+    "yield_curve_10y2y": 0.43,
+    "hy_credit_spread": 2.78,
+    "ig_credit_spread": 0.78,
     "note": "宏观温和 risk-on (VIX 低、曲线正、利差紧), 仅展示不门控"
   },
   "note_4A": "ODFL 1.349878股 exit_strength 卖单已自动下单 (order 6a725e47, market/regular_hours 排 08-05 开盘, est $219.31, 入场 $213.35 → 预计 +2.8%)。",
@@ -44,5 +47,31 @@
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
-  ]
+  ],
+  "executed_at": "2026-08-05T02:01:30Z",
+  "executed_mode": "盘外混合 (用户 ~22:00 ET 回复「执行pm」— 仅 PM, ABBV 用户依新闻红旗一票否决)",
+  "executed_legs": [
+    {
+      "symbol": "PM",
+      "leg1": {
+        "order_id": "6a72995d-b84a-430b-932f-c47cfe01bd50",
+        "qty": 6,
+        "limit": 188.79,
+        "state": "placed_unconfirmed",
+        "note": "夜盘 ask $190 > 限价, 挂单等回落或明晨开盘"
+      },
+      "leg2": {
+        "order_id": "6a729979-fa77-4013-9df1-e20e2e5548eb",
+        "dollar_amount": 101.73,
+        "state": "queued",
+        "fills_at": "2026-08-05 开盘"
+      }
+    },
+    {
+      "symbol": "ABBV",
+      "vetoed_by_user": true,
+      "reason": "news_flag guidance cut (07-31 财报下调指引) — 用户 4C 一票否决, 不执行"
+    }
+  ],
+  "writeback_note": "PM ①+② 合计 ≤ $1,234.47 未放大; 成交由 08-05 晨检回写。ABBV 否决后今日不再入场 (引擎明日重算)。"
 }
