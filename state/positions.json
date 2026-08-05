@@ -2,12 +2,6 @@
   "high_water_mark": 6155.46,
   "halted": false,
   "strategy_positions": {
-    "ODFL": {
-      "qty": 1.349878,
-      "entry_price": 213.3526,
-      "entry_date": "2026-07-30",
-      "cost": 288.0
-    },
     "AAPL": {
       "qty": 1.417418,
       "entry_price": 304.1728,
@@ -31,6 +25,12 @@
       "entry_price": 245.36,
       "entry_date": "2026-08-04",
       "cost": 1226.8
+    },
+    "PM": {
+      "qty": 6.53991,
+      "entry_price": 187.4842,
+      "entry_date": "2026-08-04",
+      "cost": 1226.13
     }
   },
   "legacy_positions": {},
@@ -439,6 +439,33 @@
       "price": 245.36,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "PM",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 187.4,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-05",
+      "symbol": "PM",
+      "side": "buy",
+      "qty": 0.53991,
+      "price": 188.42,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-05",
+      "symbol": "ODFL",
+      "side": "sell",
+      "qty": 1.349878,
+      "price": 218.66,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }

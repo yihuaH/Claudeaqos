@@ -57,14 +57,17 @@
         "order_id": "6a72995d-b84a-430b-932f-c47cfe01bd50",
         "qty": 6,
         "limit": 188.79,
-        "state": "placed_unconfirmed",
-        "note": "夜盘 ask $190 > 限价, 挂单等回落或明晨开盘"
+        "state": "filled",
+        "fill": 187.4,
+        "when": "今夜24h盘即时 (02:01 UTC, 优于限价$1.39/股)"
       },
       "leg2": {
         "order_id": "6a729979-fa77-4013-9df1-e20e2e5548eb",
         "dollar_amount": 101.73,
-        "state": "queued",
-        "fills_at": "2026-08-05 开盘"
+        "state": "filled",
+        "fill": 188.42,
+        "qty": 0.53991,
+        "when": "2026-08-05 开盘"
       }
     },
     {
@@ -84,5 +87,6 @@
       }
     }
   ],
-  "writeback_note": "PM ①+② ≤ $1,234.47; ABBV ①腿 5股@245.36=$1,226.80 已今夜成交并回写 state (零头$3.77跳过), 未放大。PM 两腿成交由 08-05 晨检回写。"
+  "writeback_note": "PM ①+② ≤ $1,234.47; ABBV ①腿 5股@245.36=$1,226.80 已今夜成交并回写 state (零头$3.77跳过), 未放大。PM 两腿成交由 08-05 晨检回写。",
+  "reconciled_at": "2026-08-05T14:46:00Z (晨检: PM两腿+ABBV+ODFL卖 全部成交并回写)"
 }
