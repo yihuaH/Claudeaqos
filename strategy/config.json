@@ -50,11 +50,12 @@
     "max_holding_days": 10
   },
   "sizing": {
-    "position_pct_of_portfolio": 20.0,
-    "max_strategy_positions": 5,
-    "max_new_entries_per_day": 3,
+    "position_pct_of_portfolio": 10,
+    "max_strategy_positions": 99,
+    "max_new_entries_per_day": 99,
     "min_cash_reserve_usd": 5.0,
-    "min_order_usd": 5.0
+    "min_order_usd": 5.0,
+    "_note": "2026-08-06 用户「按D来,不设新仓上限」: 5槽×20%×3/日 → 不限槽×10%/仓×不限/日 (现金即节流阀)。回测对比 (14月): 现行+36%/回撤10%/最差月-$482 → 新配置+39%/8%/-$208, 峰值并持13仓。行业上限 (defense.max_per_sector=3) 不变, 恐慌日板块齐跌时仍限每行业3只。99=事实不限 (红线3: 仍是用户定的上限)。"
   },
   "legacy": {
     "protective_stop_pct": 7.0,
