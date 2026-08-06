@@ -2,14 +2,17 @@
   "trade_date": "2026-08-05",
   "generated_at": "2026-08-05T21:52:00Z",
   "generated_by": "收盘后主跑 (post-close primary, 准时)",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "2026-08-06 09:25 ET",
   "buying_power_at_generation": 2123.81,
   "funding_note": "BP $2,123.81 + ODFL 卖款 $295.16 明日结算 ≈ $2,419 可用。⚠️ 与今日期权 pending (XLE 2张 ~$1,186) 合计 ~$2,424 几乎恰好用满 — 建议先执行期权 (整张不可调) 再执行本单 (市价单遇 BP 告警按 4C 自动下调金额)。",
   "sizing_note": "sizing 20%/仓 = $6,192.68 × 20% = $1,238.54; 1 新入 (WELL 出场腾槽), 终态满 5 槽: AAPL/D/ABBV/PM/XOM。逐字段照抄引擎。",
   "earnings_defense": "blackout=7: XOM 财报 07-31 已过 (下次 10-30, 86天外) 未拦; 能源板块候选 SU/PSX/COP/CNQ/BP/TRGP 财报未知但 allow_unknown=true, 均未入选 (行业上限与槽位)。",
   "news_flag_summary": "XOM 无红旗 (13 篇文章, 能源下跌为宏观油价事件 — 霍尔木兹和谈预期, 属典型恐慌盘非公司基本面恶化)。",
-  "macro_context": {"vix": 16.5, "note": "VIX 温和; 仅展示不门控"},
+  "macro_context": {
+    "vix": 16.5,
+    "note": "VIX 温和; 仅展示不门控"
+  },
   "note_4A": "WELL 1.855976 股 exit_strength 卖单已自动下单 (order 6a73af89, market/regular_hours 排 08-06 开盘, est $237.16, 均入 $232.30 → 预计 +2.1%)。",
   "option_alert": null,
   "exec_protocol": "用户回复「执行」后按 4C。盘中市价 / 盘外混合 (①整股限价 est×1.010 + ②零头市价排开盘)。",
@@ -26,6 +29,30 @@
       "rsi2": 4.07,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
+    }
+  ],
+  "executed_at": "2026-08-06T01:44:00Z",
+  "executed_mode": "盘外混合 (用户 ~21:45 ET「执行」, 先期权后股票)",
+  "executed_legs": [
+    {
+      "symbol": "XOM",
+      "leg1": {
+        "order_id": "6a73e6c2-1748-4d86-b1b6-0e18d253b72a",
+        "qty": 6,
+        "limit": 153.11,
+        "state": "queued",
+        "note": "XOM 非24h标的 (EQUITY_ALL_DAY_TRADING_ERROR), 按4C降级 regular_hours 限价排开盘"
+      },
+      "leg2": {
+        "order_id": "6a73e6e8-3d6b-4d01-b1df-b06b6e6a8e50",
+        "dollar_amount": 15.0,
+        "state": "queued",
+        "fills_at": "2026-08-06 开盘"
+      },
+      "bp_shortfall": {
+        "amount": 304.88,
+        "reason": "②腿原拟 $319.88 按今晚实时BP被拒 (ODFL卖款$295.16明晨才结算, 券商按当前BP校验; 期权2张保留$1,190 + ①腿$918.66 后仅余$15.15) → ②缩至$15.00, 缺口$304.88 记录, 未放大总额 (部署合计 $933.66+15=948.66... 修正: ①+② = $933.66 ≤ 引擎 $1,238.54)"
+      }
     }
   ]
 }

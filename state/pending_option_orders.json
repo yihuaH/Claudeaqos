@@ -2,7 +2,7 @@
   "trade_date": "2026-08-05",
   "generated_at": "2026-08-05T21:52:00Z",
   "generated_by": "收盘后主跑 §7C 步骤7 (实盘周call实验仓首单)",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "2026-08-06 10:30 ET (推荐执行窗 09:45-10:30 ET = 北京 21:45-22:30; 提前执行=当场挂限价单)",
   "buying_power_at_generation": 2123.81,
   "funding_note": "⚠️ 本单 (~$1,186 含缓冲) 与股票 pending XOM ($1,238.54) 合计 ~$2,424, 明晨 BP ≈ $2,419 (今日 BP $2,123.81 + ODFL 卖款 $295.16 周四结算) — 两者几乎恰好用满, 若都执行, 后执行者按实时 BP 微量下调/跳过 (4C/4D 规则)。建议执行顺序: 先期权 (整张不可调) 后股票 (金额可缩)。",
@@ -23,10 +23,27 @@
       "spot": 57.29,
       "rsi2": 7.62,
       "model_price": 5.8437,
-      "entry_quote": {"bid": 5.86, "ask": 5.93, "mid": 5.895, "spread_pct": 1.187},
+      "entry_quote": {
+        "bid": 5.86,
+        "ask": 5.93,
+        "mid": 5.895,
+        "spread_pct": 1.187
+      },
       "reason": "rsi2_entry_call",
       "state_file": "state/weekly_call_live_positions.json",
       "note": "昨日 near_signals 预警 (XLE 再跌1%触发) 今日兑现: 收跌1.33%, RSI2 7.62。深ITM 0.899, 点差 1.19% 过关, 模型价偏差 +0.9%。"
+    }
+  ],
+  "executed_at": "2026-08-06T01:43:00Z",
+  "executed_legs": [
+    {
+      "occ": "XLE260814C00051500",
+      "order_id": "6a73e6a0-44be-4c1b-b557-f2fefbbc519f",
+      "contracts": 2,
+      "limit": 5.95,
+      "state": "queued",
+      "fills_at": "2026-08-06 开盘 (期权无盘后交易)",
+      "note": "limit=min(est5.89×1.03=6.07, 收盘ask5.93)→tick取5.95; 盘后报价5.75/6.25为宽价, 开盘按实价成交≤5.95"
     }
   ]
 }
