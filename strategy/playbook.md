@@ -234,6 +234,12 @@ python3 scripts/signals.py signal \
 - **回写**: fills → `weekly_calls.py apply --ledger state/weekly_call_live_positions.json
   --context state/weekly_call_live_last_orders.json`; 排队单成交由次日晨检 `get_option_orders`
   回收补写。pending 文件 status=executed; journal 加"实盘周call"小节; commit+push。
+- **已下单但未成交的处置 (2026-08-06 实况补入)**: 期权限价单挂到次日 10:30 ET 执行窗结束仍
+  `queued/confirmed` → 晨检 `cancel_option_order` 撤销, pending 记 `status="cancelled_unfilled"`
+  + outcome (当时 bid/ask、未成原因、撤单时间), commit。**绝不改限价追单** — 引擎价是当日信号价,
+  上调限价即放大 (红线2)。正股反弹使合约涨过限价属**限价保护正常工作**, 不是故障: 当晚主跑会用
+  新数据重新判断 (仍超卖则以新价重出信号, 已脱离则机会自然作废)。此类未成交**不记 skip_log**
+  (skip_log 只记引擎层被 gate 拦掉的机会, 挂单未成属执行层结果)。
 - **纪律**: 轨道熔断 (累计已实现亏 ≥$1000, 与 budget 同步调) 触发 → 引擎自动只出不进, 通知用户;
   合约过期未平/疑似被行权 → 红线 6 停该仓、人工对账; report 自评跌破 go_bar 口径 →
   主动建议用户关停。**引擎没出的单绝不下, 出了的绝不放大** (4A/4C 通用规则同样适用)。
