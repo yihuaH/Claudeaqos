@@ -32,7 +32,7 @@
     "rsi2_min": 65.0,
     "underlying_stop_loss_pct": 5.0,
     "max_holding_days": 10,
-    "force_exit_dte_lte": 1
+    "force_exit_dte_lte": 2
   },
   "_exit_note": "与实盘 RSI-2 出场同形: 反弹强势(close>SMA5 或 RSI2≥65)/正股止损5%/时间止损10天。无期权级止损 (回测证明其在均值回归上是毒药: 被它截住的交易均值 -54%、胜率 0%); force_exit_dte_lte=1 防到期行权。",
   "contract": {

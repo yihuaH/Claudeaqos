@@ -30,7 +30,7 @@
     "rsi2_min": 65.0,
     "underlying_stop_loss_pct": 5.0,
     "max_holding_days": 10,
-    "force_exit_dte_lte": 1
+    "force_exit_dte_lte": 2
   },
   "contract": {
     "moneyness": 0.9,
@@ -71,5 +71,6 @@
     "iv_rv_mult": 1.25,
     "rv_window_days": 20,
     "risk_free": 0.04
-  }
+  },
+  "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。"
 }
