@@ -40,19 +40,25 @@
         "order_id": "6a73e6c2-1748-4d86-b1b6-0e18d253b72a",
         "qty": 6,
         "limit": 153.11,
-        "state": "queued",
-        "note": "XOM 非24h标的 (EQUITY_ALL_DAY_TRADING_ERROR), 按4C降级 regular_hours 限价排开盘"
+        "state": "filled",
+        "note": "XOM 非24h标的 (EQUITY_ALL_DAY_TRADING_ERROR), 按4C降级 regular_hours 限价排开盘",
+        "fill": 153.11,
+        "when": "2026-08-06 开盘 09:36"
       },
       "leg2": {
         "order_id": "6a73e6e8-3d6b-4d01-b1df-b06b6e6a8e50",
         "dollar_amount": 15.0,
-        "state": "queued",
-        "fills_at": "2026-08-06 开盘"
+        "state": "filled",
+        "fills_at": "2026-08-06 开盘",
+        "fill": 153.6,
+        "qty": 0.097656,
+        "when": "2026-08-06 开盘"
       },
       "bp_shortfall": {
         "amount": 304.88,
         "reason": "②腿原拟 $319.88 按今晚实时BP被拒 (ODFL卖款$295.16明晨才结算, 券商按当前BP校验; 期权2张保留$1,190 + ①腿$918.66 后仅余$15.15) → ②缩至$15.00, 缺口$304.88 记录, 未放大总额 (部署合计 $933.66+15=948.66... 修正: ①+② = $933.66 ≤ 引擎 $1,238.54)"
       }
     }
-  ]
+  ],
+  "reconciled_at": "2026-08-06T15:12:00Z (晨检: XOM两腿+WELL卖 全部成交回写; 期权单未成交已撤)"
 }

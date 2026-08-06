@@ -8,12 +8,6 @@
       "entry_date": "2026-08-03",
       "cost": 431.14
     },
-    "WELL": {
-      "qty": 1.855976,
-      "entry_price": 232.2983,
-      "entry_date": "2026-08-03",
-      "cost": 431.14
-    },
     "D": {
       "qty": 6.210926,
       "entry_price": 69.4164,
@@ -31,6 +25,12 @@
       "entry_price": 187.4842,
       "entry_date": "2026-08-04",
       "cost": 1226.13
+    },
+    "XOM": {
+      "qty": 6.097656,
+      "entry_price": 153.1179,
+      "entry_date": "2026-08-06",
+      "cost": 933.66
     }
   },
   "legacy_positions": {},
@@ -466,6 +466,33 @@
       "price": 218.66,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-06",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 1.855976,
+      "price": 238.91,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-06",
+      "symbol": "XOM",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 153.11,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-06",
+      "symbol": "XOM",
+      "side": "buy",
+      "qty": 0.097656,
+      "price": 153.6,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ]
 }
