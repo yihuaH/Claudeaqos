@@ -1,64 +1,33 @@
 {
-  "trade_date": "2026-08-05",
-  "generated_at": "2026-08-05T21:52:00Z",
-  "generated_by": "收盘后主跑 (post-close primary, 准时)",
-  "status": "executed",
-  "valid_until": "2026-08-06 09:25 ET",
-  "buying_power_at_generation": 2123.81,
-  "funding_note": "BP $2,123.81 + ODFL 卖款 $295.16 明日结算 ≈ $2,419 可用。⚠️ 与今日期权 pending (XLE 2张 ~$1,186) 合计 ~$2,424 几乎恰好用满 — 建议先执行期权 (整张不可调) 再执行本单 (市价单遇 BP 告警按 4C 自动下调金额)。",
-  "sizing_note": "sizing 20%/仓 = $6,192.68 × 20% = $1,238.54; 1 新入 (WELL 出场腾槽), 终态满 5 槽: AAPL/D/ABBV/PM/XOM。逐字段照抄引擎。",
-  "earnings_defense": "blackout=7: XOM 财报 07-31 已过 (下次 10-30, 86天外) 未拦; 能源板块候选 SU/PSX/COP/CNQ/BP/TRGP 财报未知但 allow_unknown=true, 均未入选 (行业上限与槽位)。",
-  "news_flag_summary": "XOM 无红旗 (13 篇文章, 能源下跌为宏观油价事件 — 霍尔木兹和谈预期, 属典型恐慌盘非公司基本面恶化)。",
-  "macro_context": {
-    "vix": 16.5,
-    "note": "VIX 温和; 仅展示不门控"
-  },
-  "note_4A": "WELL 1.855976 股 exit_strength 卖单已自动下单 (order 6a73af89, market/regular_hours 排 08-06 开盘, est $237.16, 均入 $232.30 → 预计 +2.1%)。",
+  "trade_date": "2026-08-06",
+  "generated_at": "2026-08-06T21:52:00Z",
+  "generated_by": "收盘后主跑 (scripts/daily.py 驱动器首次实战, 20秒/23条命令零异常)",
+  "status": "awaiting_execution",
+  "valid_until": "2026-08-07 09:25 ET (次一交易日)",
+  "buying_power_at_generation": 1485.31,
+  "funding_note": "⚠️ **资金紧**: BP $1,485.31; 5 笔买单合计 $2,867.43 远超 BP。今晚 AAPL+XOM 出场款 (~$1,387) T+1 周一才结算 (周五卖→周一到)。4C 执行时按 seq 顺序累计到 BP 用完为止, 装不下的跳过记 journal — 预计可执行前 2 笔 (F+CVS≈$1,235), 余下 SU/HST/GWW 跳过, 由次日主跑重评。",
+  "sizing_note": "新结构首次生效 (2026-08-06 用户「按D来」): 单仓 = 净值 $6,175.11 × 10% = $617.51 (原 20%); 不限槽位、不限每日新仓数; 行业上限 3 仍在。GWW 因单价 $1,282 > 单仓额, 引擎按可用资金给 $397.39 (不足 1 股, 分数股买入)。",
+  "earnings_defense": "blackout=7: 6 候选全查财报 — F(10-22)/CVS(10-28)/SU(11-03)/HST(11-04)/GWW(11-04) 均 77+ 天外未拦; 最近的 SU/GWW 08-04、HST 08-05 财报**已过**, 属财报后回调非财报前风险。",
+  "news_flag_summary": "5 只买单标的全部无红旗 (F 6篇/CVS 3篇/GWW 1篇/SU/HST 无新闻, 关键词零命中)。",
+  "macro_context": {"vix": 15.81, "note": "VIX 温和; 仅展示不门控"},
+  "note_4A": "AAPL 1.417418股 (order 6a7500f6) + XOM 6.097656股 (order 6a750100) 均 exit_strength, market/regular_hours 排 08-07 开盘。AAPL 均入 304.17→est 312.45 (+2.7%); XOM 今早刚入 153.12→est 154.86 (+1.1%, 隔夜单)。",
   "option_alert": null,
-  "exec_protocol": "用户回复「执行」后按 4C。盘中市价 / 盘外混合 (①整股限价 est×1.010 + ②零头市价排开盘)。",
+  "exec_protocol": "用户回复「执行」后按 4C: 盘中市价 / 盘外混合 (①整股限价 est×1.010 all_day_hours + ②零头市价排开盘)。**买单按 seq 累计不得超过执行时实时 BP**, 超出跳过记 journal (不缩量至低于 min_order_usd)。",
   "orders": [
-    {
-      "seq": 1,
-      "action": "buy",
-      "symbol": "XOM",
-      "dollar_amount": 1238.54,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 151.595,
-      "review_est_price": 151.6,
-      "rsi2": 4.07,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    }
-  ],
-  "executed_at": "2026-08-06T01:44:00Z",
-  "executed_mode": "盘外混合 (用户 ~21:45 ET「执行」, 先期权后股票)",
-  "executed_legs": [
-    {
-      "symbol": "XOM",
-      "leg1": {
-        "order_id": "6a73e6c2-1748-4d86-b1b6-0e18d253b72a",
-        "qty": 6,
-        "limit": 153.11,
-        "state": "filled",
-        "note": "XOM 非24h标的 (EQUITY_ALL_DAY_TRADING_ERROR), 按4C降级 regular_hours 限价排开盘",
-        "fill": 153.11,
-        "when": "2026-08-06 开盘 09:36"
-      },
-      "leg2": {
-        "order_id": "6a73e6e8-3d6b-4d01-b1df-b06b6e6a8e50",
-        "dollar_amount": 15.0,
-        "state": "filled",
-        "fills_at": "2026-08-06 开盘",
-        "fill": 153.6,
-        "qty": 0.097656,
-        "when": "2026-08-06 开盘"
-      },
-      "bp_shortfall": {
-        "amount": 304.88,
-        "reason": "②腿原拟 $319.88 按今晚实时BP被拒 (ODFL卖款$295.16明晨才结算, 券商按当前BP校验; 期权2张保留$1,190 + ①腿$918.66 后仅余$15.15) → ②缩至$15.00, 缺口$304.88 记录, 未放大总额 (部署合计 $933.66+15=948.66... 修正: ①+② = $933.66 ≤ 引擎 $1,238.54)"
-      }
-    }
-  ],
-  "reconciled_at": "2026-08-06T15:12:00Z (晨检: XOM两腿+WELL卖 全部成交回写; 期权单未成交已撤)"
+    {"seq": 1, "action": "buy", "symbol": "F", "dollar_amount": 617.51, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 13.79, "rsi2": 1.77,
+     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 2, "action": "buy", "symbol": "CVS", "dollar_amount": 617.51, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 96.15, "rsi2": 2.22,
+     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 3, "action": "buy", "symbol": "SU", "dollar_amount": 617.51, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 61.33, "rsi2": 3.19,
+     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 4, "action": "buy", "symbol": "HST", "dollar_amount": 617.51, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 23.37, "rsi2": 5.1,
+     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 5, "action": "buy", "symbol": "GWW", "dollar_amount": 397.39, "bucket": "strategy",
+     "reason": "rsi2_entry", "est_price": 1282.44, "rsi2": 5.75,
+     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"}
+  ]
 }

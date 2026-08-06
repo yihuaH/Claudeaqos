@@ -1,31 +1,86 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-05",
+  "date": "2026-08-06",
   "coid_prefix": "cq",
-  "next_open": "2026-08-06T09:30:00-04:00",
+  "next_open": "2026-08-07T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "orders": [
     {
-      "coid": "cq-2026-08-05-WELL-sell",
-      "order_id": "67474a45-26e1-4aae-bf8c-a2becb92198b",
-      "symbol": "WELL",
+      "coid": "cq-2026-08-06-AAPL-sell",
+      "order_id": "1fba85f2-19e5-4d41-ae66-a09a5b82c6db",
+      "symbol": "AAPL",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "230.05",
-      "qty": "87",
+      "limit_price": "303.08",
+      "qty": "66",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-08-05-XOM-buy",
-      "order_id": "f07c5e5c-78d2-4bb0-9526-d4be187fd019",
+      "coid": "cq-2026-08-06-XOM-sell",
+      "order_id": "85b10f9c-d437-467b-90c5-b204c3d9ac9c",
       "symbol": "XOM",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "150.21",
+      "qty": "136",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-08-06-F-buy",
+      "order_id": "e438940f-9cf4-40ea-a15a-413aa838136a",
+      "symbol": "F",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "156.14",
-      "qty": "136",
+      "limit_price": "14.2",
+      "qty": "746",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-06-CVS-buy",
+      "order_id": "372cc9b6-d911-4d94-a874-8ffe564911b0",
+      "symbol": "CVS",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "99.03",
+      "qty": "107",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-06-SU-buy",
+      "order_id": "9fe704b9-e332-4ffd-aa24-42ead5694e5d",
+      "symbol": "SU",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "63.17",
+      "qty": "167",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-06-HST-buy",
+      "order_id": "3c25b6fb-aa27-4e78-9c37-90e13b020c57",
+      "symbol": "HST",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "24.07",
+      "qty": "440",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-06-GWW-buy",
+      "order_id": "c073e0ee-4ee4-4069-ac22-df0401924a17",
+      "symbol": "GWW",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "1320.91",
+      "qty": "2",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

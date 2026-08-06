@@ -1,31 +1,10 @@
 {
-  "date": "2026-08-05",
+  "date": "2026-08-06",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "symbol": "XLE260814C00051500",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 5.89,
-      "underlying": "XLE",
-      "strike": 51.5,
-      "expiry": "2026-08-14",
-      "dte": 9,
-      "spot": 57.29,
-      "rsi2": 7.62,
-      "model_price": 5.8437,
-      "entry_quote": {
-        "bid": 5.86,
-        "ask": 5.93,
-        "mid": 5.895,
-        "spread_pct": 1.187
-      }
-    }
-  ],
+  "buys": [],
   "skips": [],
   "warnings": [],
-  "near_signals": []
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }

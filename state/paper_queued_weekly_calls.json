@@ -4,17 +4,5 @@
   "coid_prefix": "cqw",
   "next_open": "2026-08-06T09:30:00-04:00",
   "skipped": [],
-  "orders": [
-    {
-      "coid": "cqw-2026-08-05-XLE260814C00051500-buy",
-      "order_id": "3bd805bc-26cb-4dbe-87f3-ca74a447b3be",
-      "symbol": "XLE260814C00051500",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "6.07",
-      "qty": "1",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call"
-    }
-  ]
+  "orders": []
 }
