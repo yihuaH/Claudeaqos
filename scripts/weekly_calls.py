@@ -30,6 +30,13 @@ from options_overlay import parse_occ, dte  # noqa: E402
 
 BUCKET = "weekly_calls"
 
+# near_signals 预警门槛 (2026-08-06 用 7 只 × ~242 天实测转化率校准):
+# 1 日档 (再跌1%即触发) 转化率 44% — 全收; 2 日档随当前 RSI2 衰减 (<25:28% / 25-40:22% / ≥40:17%),
+# 故 2 日档只在 RSI2 < 25 时预警。避免中性标的 (RSI2≈50) 白扣买入力。
+NEAR_2D_RSI2_MAX = 25.0
+# 预警保留额上限 = 实时 BP 的此比例 (保住立足点, 不让不确定的机会饿死股票策略)
+NEAR_RESERVE_BP_CAP = 0.35
+
 
 # ---------- pricing helpers (仅用于记录模型偏差, 不参与下单决策) ----------
 
@@ -327,7 +334,9 @@ def cmd_signal(a):
         r1 = rsi(closes_now + [px * 0.99], 2)
         if r1 is not None and r1 < cfg["entry"]["rsi2_max"] and px * 0.99 > i["sma200"]:
             scenario = "1d_-1%"
-        else:
+        elif i["rsi2"] < NEAR_2D_RSI2_MAX:
+            # 2 日档转化率随当前 RSI2 急剧衰减 (2026-08-06 实测: <25 → 28%; 25-40 → 22%;
+            # ≥40 → 17% 近噪音)。只在已明显偏弱时才预警, 避免中性标的白扣弹药。
             r2d = rsi(closes_now + [px * 0.99, px * 0.9801], 2)
             if r2d is not None and r2d < cfg["entry"]["rsi2_max"] and px * 0.9801 > i["sma200"]:
                 scenario = "2d_-1%x2"
@@ -335,7 +344,17 @@ def cmd_signal(a):
             near.append({"symbol": sym, "rsi2_now": round(i["rsi2"], 2),
                          "scenario": scenario, "spot": round(px, 2),
                          "est_premium_usd": round(px * 10.5)})  # 深ITM权利金 ≈ 10.5%×现价×100股
+    # 建议保留额 (确定性): 最便宜预警标的的**单张**权利金, 且不超过实时 BP 的 NEAR_RESERVE_BP_CAP。
+    # 只保 1 张而非整个 D20 仓位 — 预警转化率 28-44%, 为不确定的机会扣住整仓会饿死股票策略;
+    # 留住"至少买得起 1 张"的立足点, 信号真来时引擎按实时 BP 自然决定张数。
+    near.sort(key=lambda x: x["est_premium_usd"])
+    reserve = 0.0
+    if near:
+        cheapest = float(near[0]["est_premium_usd"])
+        cap = float(bp_left) * NEAR_RESERVE_BP_CAP if bp_left else cheapest
+        reserve = round(min(cheapest, cap), 2)
     out["near_signals"] = near
+    out["suggested_reserve_usd"] = reserve
     _emit(out, a.out)
 
 

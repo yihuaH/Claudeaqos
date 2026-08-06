@@ -54,6 +54,7 @@
 - `strategy/momentum.json` — 周度动量轮动实验参数: universe、混合动量回看期、调仓节奏 (仅 paper, 用户可改)
 - `strategy/stocks.json` — 个股防御实验参数 (仅 paper; **实验暂停中** 2026-07-21, 个股已并入实盘主策略, 防御层参数由 config.json defense 段沿用)
 - `strategy/screen.json` — 个股池周度筛选标准 (用户可改); `strategy/universe.json` — 筛选产出的当前 100 股池 (screen.py 回写)
+- `scripts/daily.py` — **每日主跑驱动器** (2026-08-06 用户「建」): 一条命令跑完 playbook 中所有可脚本化步骤 (取数→RSI-2信号→期权双轨→纸面轨道), 产出 `plan.json` (place_now 待会话下单 / to_pending 待用户执行 / journal_facts / command_log 审计); **只调用各引擎绝不含决策逻辑** (红线2); `--plan-only` 干预览不写账本。会话仍负责 MCP 取数、下单、写 journal
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply)
 - `scripts/overnight.py` — 隔夜均值回归引擎 (IBS 收盘买/次日收盘卖); **实盘入场暂停中** (live_entries_paused, 2026-07-21 用户指示, 出场/兜底与纸面学习照常); `strategy/overnight.json` 参数; `state/overnight_positions.json` 账本

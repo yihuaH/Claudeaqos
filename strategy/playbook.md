@@ -29,6 +29,17 @@
 
 ## 1. 取数
 
+> **⚡ 快捷路径 (2026-08-06 起, 推荐)**: 第 1-3 节 + 6/7/7C 节中所有**可脚本化**的步骤已合并进
+> `scripts/daily.py` 驱动器。会话只需三步:
+> 1. MCP 取数 → 存 `positions.json` (第2步的映射) 与 `earnings.json` (第2节财报);
+> 2. `python3 scripts/daily.py --date <今天> --portfolio-value <total_value> --buying-power <BP>
+>    --positions <映射> --earnings <财报> --workdir <scratchpad>` (加 `--plan-only` 可干预览不写账本);
+> 3. 按产出的 `plan.json` 执行: `place_now` 逐单 review→place (4A 卖单 / 4D 期权出场),
+>    `to_pending` 写 pending 文件 (4B/4D 买单), `journal_facts` 写 journal。
+>
+> 驱动器内部逐条调用本文档所述的同一批引擎命令 (全程记 `command_log` 可审计), **不含任何决策逻辑**;
+> 下方各节仍是权威规范与手工回退路径 — 驱动器失败或行为可疑时, 按下方逐步手工执行并记 journal。
+
 1. `get_portfolio(802095265)` → 记下 `total_value` 和 `buying_power`。
 2. `get_equity_positions(802095265)` → 与 `state/positions.json` 核对; 数量不一致以券商为准, 先修正 state。把结果整理成简单映射存到 scratchpad: `{"SYM": {"qty": x, "available": y, "intraday": z}}`。
 3. 报价 (候选池 = ETF池9只 + universe.json 100只, 2026-07-21 起):
@@ -135,9 +146,13 @@ python3 scripts/signals.py signal \
   隔夜轨道 (5B 主窗口) 的入场买单同样并入此文件 (state_file 指向对应账本)。
 - **期权预警字段 option_alert (2026-08-05 用户批准「条件性弹药预留」, 回测 C 政策胜出)**: 当日
   §7C 步骤 7 实盘周call扫描的 `near_signals` 非空时, 本文件加顶层字段
-  `"option_alert": {"names": [...], "scenarios": {...}, "reserve_usd": <最便宜≤2个预警权利金之和,
-  不超过期权预算余额>}`, PushNotification 一并提及 (如「⚡XLE 或 2 天内触发期权信号, 建议保留 ~$610」)。
-  仅提示 + 4C 执行层保留, 绝不改股票引擎选股/金额 (红线2)。
+  `"option_alert": {"names": [...], "scenarios": {...}, "reserve_usd": <直接照抄引擎输出的
+  suggested_reserve_usd, 不得自行计算>}`, PushNotification 一并提及 (如「⚡XLE 或 2 天内触发期权信号,
+  建议保留 ~$610」)。仅提示 + 4C 执行层保留, 绝不改股票引擎选股/金额 (红线2)。
+  - 保留额口径 (引擎内 `suggested_reserve_usd`, 2026-08-06 实测校准): **最便宜预警标的的单张权利金**,
+    且 ≤ 实时 BP×35%。只保 1 张不保整仓 — 预警转化率仅 28-44%, 扣整仓会饿死股票策略。
+  - 预警门槛同日校准: 1 日档 (再跌1%即触发) 全收 (转化率 44%); 2 日档只在当前 RSI2<25 时发
+    (<25 转化 28%, ≥40 仅 17% 近噪音)。避免中性标的白扣弹药。
 - 写完 commit+push, 并用 PushNotification 通知用户:
   "今日待执行订单 N 笔已就绪 (总额 $X), 15:55 ET 前到报告窗口回复「执行」即可; 不执行则今日只出不进"。
 - 当日无买单信号 → 不生成文件, 不打扰用户。
