@@ -450,9 +450,20 @@ def cmd_signal(a):
             if r2d is not None and r2d < cfg["entry"]["rsi2_max"] and px * 0.9801 > i["sma200"]:
                 scenario = "2d_-1%x2"
         if scenario:
+            # 预估单张成本: 用 Black-Scholes + 该标的实测波动率, **按当前配置的形态算**
+            # (2026-08-07 修正: 原为固定 10.5%×现价的单腿口径, 切价差后会超额扣弹药 —
+            #  价差净借记约为深ITM单腿的一半)。仅用于建议保留额, 不参与下单。
+            rvn = i.get("rv")
+            ivn = max(0.15, min(1.5, (rvn or 0.30) * float(cfg["model"]["iv_rv_mult"])))
+            tn = (int(cc["min_dte_calendar"]) + int(cc["max_dte_calendar"])) / 2.0 / 365.0
+            est = bs_call(px, cc["moneyness"] * px, tn, ivn, float(cfg["model"]["risk_free"]))
+            if cc.get("structure") == "vertical_spread":
+                est -= bs_call(px, cc["short_moneyness"] * px, tn, ivn,
+                               float(cfg["model"]["risk_free"]))
             near.append({"symbol": sym, "rsi2_now": round(i["rsi2"], 2),
                          "scenario": scenario, "spot": round(px, 2),
-                         "est_premium_usd": round(px * 10.5)})  # 深ITM权利金 ≈ 10.5%×现价×100股
+                         "structure": cc.get("structure", "single"),
+                         "est_premium_usd": max(round(est * 100.0), 1)})
     # 建议保留额 (确定性): 最便宜预警标的的**单张**权利金, 且不超过实时 BP 的 NEAR_RESERVE_BP_CAP。
     # 只保 1 张而非整个 D20 仓位 — 预警转化率 28-44%, 为不确定的机会扣住整仓会饿死股票策略;
     # 留住"至少买得起 1 张"的立足点, 信号真来时引擎按实时 BP 自然决定张数。
