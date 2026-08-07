@@ -91,6 +91,10 @@ python3 scripts/signals.py signal \
    b. 期权: 对 opt_close_fills 和 opt_open_fills 分别 `python3 scripts/options_overlay.py apply --ledger state/paper_positions.json --fills <文件> --date <今天>`
 7. 记录净值 (成交后重算: `paper.py equity --ledger ... --quotes ... --chains <chains>`):
    `python3 scripts/learn.py record --state-learn state/learning.json --date <今天> --live-equity <实盘 total_value> --paper-equity <equity_ex_options>`
+   ⚠️ **当日若有入金/出金必须加 `--live-deposit <净流入, 出金为负>`** (2026-08-07 修正): 净值曲线改用
+   时间加权收益 (TWR), 逐段剔除外部现金流。漏填会把入金当成策略收益, 令 edge 指标失效 —
+   08-04 的 $4,000 入金曾让 live_return 虚高到 +218% (真实 +12.2%), 挑战者 A/B 空转两天。
+   判定方法: `get_portfolio` 的 total_value 日间跳变远大于持仓涨跌, 或用户明确说过充值。
    **注意: record 必须用 `equity_ex_options`** (剔除期权轨道, 保持参数 A/B 对比干净); `overlay_pnl` 单独记入 journal 的备兑一栏。
 8. 评估: `python3 scripts/learn.py evaluate --learning strategy/learning.json --state-learn state/learning.json --paper-ledger state/paper_positions.json --date <今天>`, 结果记入 journal。
    - `pass` 且 `auto_promote=true` → `learn.py promote ...`, 在 journal 显著标注**参数晋级**并**通知用户** (新旧参数、验证期表现)。

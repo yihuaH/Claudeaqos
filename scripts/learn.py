@@ -270,6 +270,11 @@ def cmd_record(a):
     sl = load_json(a.state_learn)
     entry = {"date": a.date, "live": round(float(a.live_equity), 2),
              "paper": round(float(a.paper_equity), 2)}
+    # 外部现金流 (入金为正/出金为负) — 必须记录, 否则净值曲线把入金当成策略收益
+    # (2026-08-07 修正: 08-04 入金 $4,000 曾被算成一日 +186%, 令 edge 指标失效)
+    flow = float(getattr(a, "live_deposit", 0) or 0)
+    if flow:
+        entry["live_flow"] = round(flow, 2)
     hist = [e for e in sl.get("equity_history", []) if e["date"] != a.date]
     hist.append(entry)
     sl["equity_history"] = sorted(hist, key=lambda e: e["date"])
@@ -292,12 +297,26 @@ def _evaluate(learning, sl, ledger, today):
         res["verdict"] = "insufficient_data"
         return res
 
-    live_ret = (pts[-1]["live"] / pts[0]["live"] - 1.0) * 100.0
-    paper_ret = (pts[-1]["paper"] / pts[0]["paper"] - 1.0) * 100.0
+    # 时间加权收益 (TWR): 逐段链接, 每段剔除当日外部现金流 — 入金/出金不再冒充策略收益
+    def twr(key, flow_key=None):
+        r = 1.0
+        for prev, cur in zip(pts, pts[1:]):
+            flow = float(cur.get(flow_key, 0) or 0) if flow_key else 0.0
+            base = float(prev[key])
+            if base <= 0:
+                continue
+            r *= (float(cur[key]) - flow) / base
+        return (r - 1.0) * 100.0
+    live_ret = twr("live", "live_flow")
+    paper_ret = twr("paper")
+    # 回撤同样按剔除现金流后的净值曲线算 (paper 无现金流, 保持原口径)
     peak, maxdd = pts[0]["paper"], 0.0
     for e in pts:
         peak = max(peak, e["paper"])
         maxdd = max(maxdd, (peak - e["paper"]) / peak * 100.0)
+    flows = sum(float(e.get("live_flow", 0) or 0) for e in pts)
+    if flows:
+        res["live_external_flow_usd"] = round(flows, 2)
     edge = paper_ret - live_ret
     res.update({"live_return_pct": round(live_ret, 3), "paper_return_pct": round(paper_ret, 3),
                 "edge_pct": round(edge, 3), "paper_maxdd_pct": round(maxdd, 3)})
@@ -410,6 +429,9 @@ def main():
     r.add_argument("--date", required=True)
     r.add_argument("--live-equity", required=True)
     r.add_argument("--paper-equity", required=True)
+    r.add_argument("--live-deposit", type=float, default=0.0,
+                   help="当日外部现金流 (入金为正/出金为负); 不填=0。"
+                        "必填场景: 用户当日充值或提现 — 否则 TWR 会把它当成策略收益")
     r.set_defaults(func=cmd_record)
 
     e = sub.add_parser("evaluate")
