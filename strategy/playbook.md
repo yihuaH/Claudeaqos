@@ -192,6 +192,23 @@
 红线 2); 预算硬顶 = **账户净值 × budget.max_open_premium_pct_of_portfolio (40%, 2026-08-04 用户定,
 追加投资后自动伸缩)** + 实时 buying_power 双重封顶, 引擎内置。期权只有整张, 无分数腿, 不适用 4C 混合执行。
 
+**形态: 牛市价差 (vertical_spread, 2026-08-07 用户「直接部署到实盘」授权, 跳过 paper 验证期)** —
+引擎输出带 `structure: "vertical_spread"` 与 `legs[2]` 时按**多腿组合单**下, 关键规则:
+- **一笔组合单, 不是两笔**: `place_option_order(legs=[买腿, 卖腿], quantity, type="limit", price=<净价>,
+  direction="debit"(开)/"credit"(平"))` — 两腿同生共死, 不存在单腿裸露。
+- **多腿只能 limit** (券商不支持 market), 且**要求 margin 账户** (802095265 已于 2026-08-07 满足)。
+- **价格 = 净价** (每张组合的净借记/净贷记), 不是单腿价; 买入 `price = 引擎 est_price × 1.03` 封顶,
+  平仓 `price = 引擎 est_price × 0.97` 保底。逐字段照抄引擎输出的 legs 顺序与 position_effect。
+- **成交回写**: fills 用 `{"symbol": <买腿OCC>, "side": "buy"/"sell", "qty": 张数, "price": <净价>,
+  "structure": "vertical_spread", "short_symbol": <卖腿OCC>}` — 账本以**买腿 OCC 为仓位主键**。
+- ⚠️ **pin risk (行权价夹心) — 价差比单腿多出来的风险**: 到期时股价落在两腿行权价之间 →
+  买腿被自动行权 (须接 100 股/张), 卖腿作废 → 一个 ~$1.2k 的仓位可能变成数千美元股票债务。
+  **`force_exit_dte_lte=2` 必须严格执行, 绝不留到到期日**; 该护栏优先于任何其他考量。
+  (缓解: 正股 -5% 止损先于最大亏损触发 — 买腿行权价在 -6% 处, 故止损通常在最大亏损前出场。)
+- **未经 paper 验证的三件事** (用户知情选择, 首批实盘单要重点观察并记 journal):
+  ① 组合单真实成交净价 vs 引擎估算 (引擎用最保守的"买腿ask − 卖腿bid", 实盘组合报价通常更好);
+  ② 临到期/波动时平仓难度; ③ 多腿被拒或部分成交的实际表现。任一出现异常 → 红线 6 停轨道、通知用户。
+
 - **出场卖单 (sell_to_close, 无人值守全自动, 同 4A)**: 逐单按 OCC 解析标的/到期/行权价 →
   `get_option_instruments` 定位合约 → `review_option_order` → 无预期外告警 →
   `place_option_order` (**limit**, 限价 = 引擎 est_price×0.97 向下保护, time_in_force=gfd;

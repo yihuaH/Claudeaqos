@@ -33,13 +33,16 @@
     "force_exit_dte_lte": 2
   },
   "contract": {
-    "moneyness": 0.9,
+    "moneyness": 0.94,
     "floor_moneyness": 0.85,
     "min_dte_calendar": 8,
     "max_dte_calendar": 17,
     "max_spread_pct": 2.0,
     "min_bid": 0.05,
-    "max_premium_per_contract_usd": 5000
+    "max_premium_per_contract_usd": 3000,
+    "structure": "vertical_spread",
+    "short_moneyness": 1.03,
+    "max_short_leg_spread_pct": 8.0
   },
   "sizing": {
     "position_pct_of_portfolio": 20,
@@ -72,5 +75,6 @@
     "rv_window_days": 20,
     "risk_free": 0.04
   },
-  "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。"
+  "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。",
+  "_contract_note": "牛市价差 (2026-08-07 用户「直接部署到实盘」, 跳过 paper 验证期; 回测 72 笔: 价差 0.94→1.03 均值 +16.0%/中位 +20.3%/胜率 86%, 优于深ITM单腿 +9.8%/+11.3%/75%, 且单张成本 $1,204 vs $2,361 — 卖掉 +3% 以上涨幅换掉时间价值成本, 与 RSI-2「3天涨1-3%」形态天然匹配; 虚值腿点差假设从×1压到×4仍胜出, 不脆弱)。买腿 = 深ITM ≤0.94×spot 最高档, 过 max_spread_pct 2%; 卖腿 = 同到期 ≥1.03×spot 最低档, 过 max_short_leg_spread_pct 8% (虚值腿百分比点差天然更宽)。净借记 = 买腿ask − 卖腿bid (最保守口径)。⚠️ **未经 paper 验证**: 组合单真实成交价、临到期平仓难度均为实盘首测; **pin risk (行权价夹心)**: 到期时股价落在两腿之间 → 买腿被行权需接 100 股、卖腿作废, 故 force_exit_dte_lte=2 必须严格执行, 绝不留到到期日。"
 }

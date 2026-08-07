@@ -113,6 +113,64 @@ def _pick_contract(sym, spot, chain, cc, today):
     return None, "no_valid_quote"
 
 
+def _pick_vertical(sym, spot, chain, cc, today):
+    """牛市价差 (bull call spread, 2026-08-07 用户「直接部署到实盘」授权):
+    买腿 = 与单腿同一选法 (深ITM, 过 max_spread_pct gate);
+    卖腿 = 同到期、行权价 ≥ short_moneyness×spot 的**最低**档 (最贴近目标), 过 max_short_leg_spread_pct gate
+    (虚值腿百分比点差天然更宽, 故单设更松的闸; 回测显示卖腿点差×4 仍优于单腿)。
+    净价 = 买腿ask − 卖腿bid (保守: 按最差可成交价估, 实盘组合单通常更好)。
+    返回 (order_dict, skip_reason)。"""
+    long_pick, skip = _pick_contract(sym, spot, chain, cc, today)
+    if long_pick is None:
+        return None, skip
+    expiry = long_pick["meta"]["expiry"]
+    min_short_k = cc["short_moneyness"] * spot
+    cands = []
+    for occ, q in chain.items():
+        meta = parse_occ(occ)
+        if not meta or meta["type"] != "C" or meta["expiry"] != expiry:
+            continue
+        if meta["strike"] < min_short_k or meta["strike"] <= long_pick["meta"]["strike"]:
+            continue
+        cands.append((meta["strike"], occ, meta, q))
+    if not cands:
+        return None, f"no_short_leg(需 ≥{min_short_k:.2f} 同到期 {expiry})"
+    cands.sort()
+    max_sp = float(cc.get("max_short_leg_spread_pct", cc["max_spread_pct"] * 4))
+    best_sp = None
+    for strike, occ, meta, q in cands:
+        m = _mid(q)
+        if m is None or q["bid"] < cc["min_bid"]:
+            continue
+        sp = _spread_pct(q)
+        best_sp = sp if best_sp is None else min(best_sp, sp)
+        if sp > max_sp:
+            continue
+        # 净借记: 买腿吃 ask, 卖腿收 bid (最保守口径)
+        net = long_pick["quote"]["ask"] - q["bid"]
+        if net <= 0:
+            continue
+        if net * 100.0 > cc["max_premium_per_contract_usd"]:
+            return None, f"net_debit_too_large({net * 100:.0f})"
+        width = strike - long_pick["meta"]["strike"]
+        return {"structure": "vertical_spread", "dte": long_pick["dte"], "expiry": expiry,
+                "long": long_pick, "short": {"occ": occ, "meta": meta, "quote": q, "mid": m,
+                                             "spread_pct": round(sp, 3)},
+                "net_debit": round(net, 2), "mid": round(net, 2),
+                "max_value": round(width, 2),  # 到期最大值 = 两腿行权价之差
+                "spread_pct": long_pick["spread_pct"]}, None
+    if best_sp is not None:
+        return None, f"short_leg_spread_too_wide(best={best_sp:.2f}%)"
+    return None, "no_valid_short_quote"
+
+
+def _pick_structure(sym, spot, chain, cc, today):
+    """按配置 contract.structure 分派: 'single' (默认) 或 'vertical_spread'。"""
+    if cc.get("structure") == "vertical_spread":
+        return _pick_vertical(sym, spot, chain, cc, today)
+    return _pick_contract(sym, spot, chain, cc, today)
+
+
 def cmd_signal(a):
     cfg = load_json(a.config)
     ledger = load_json(a.ledger)
@@ -185,6 +243,33 @@ def cmd_signal(a):
             m = max((spot or pos["strike"]) - pos["strike"], 0.01)
             warnings.append(f"{occ}: 无链报价, est_price 按内在价值 {m:.2f} 兜底")
         exiting_und.add(u)
+        if pos.get("structure") == "vertical_spread":
+            # 价差平仓: 卖出买腿 + 买回卖腿, 一笔组合单 (net credit)
+            sq = (chains.get(u) or {}).get(pos["short_occ"]) or {}
+            lq = q
+            lbid = lq.get("bid")
+            sask = sq.get("ask")
+            if lbid is None or sask is None:
+                spot = (ind.get(u) or {}).get("close") or pos["strike"]
+                lbid = max(spot - pos["strike"], 0.01) if lbid is None else lbid
+                sask = max(spot - pos["short_strike"], 0.01) if sask is None else sask
+                warnings.append(f"{occ}: 价差平仓缺腿报价, est 按内在价值兜底")
+            net = round(max(float(lbid) - float(sask), 0.01), 2)
+            out["sells"].append({
+                "structure": "vertical_spread", "qty": int(pos["contracts"]),
+                "bucket": BUCKET, "reason": reason, "direction": "credit",
+                "est_price": net, "underlying": u, "expiry": pos["expiry"],
+                "legs": [
+                    {"symbol": occ, "side": "sell", "position_effect": "close",
+                     "strike": pos["strike"], "quote": lq},
+                    {"symbol": pos["short_occ"], "side": "buy", "position_effect": "close",
+                     "strike": pos["short_strike"], "quote": sq},
+                ],
+                "exit_quote": {"long_bid": lbid, "short_ask": sask, "net_credit": net,
+                               "long_spread_pct": round(_spread_pct(lq), 3) if _spread_pct(lq) else None,
+                               "short_spread_pct": round(_spread_pct(sq), 3) if _spread_pct(sq) else None},
+            })
+            continue
         out["sells"].append({
             "symbol": occ, "qty": int(pos["contracts"]),
             "position_intent": "sell_to_close", "bucket": BUCKET,
@@ -257,7 +342,7 @@ def cmd_signal(a):
         if len(out["buys"]) >= slots:
             break
         spot = ind[sym]["close"]
-        pick, skip = _pick_contract(sym, spot, chains.get(sym) or {}, cc, today)
+        pick, skip = _pick_structure(sym, spot, chains.get(sym) or {}, cc, today)
         if pick is None:
             skips.append({"symbol": sym, "reason": skip or "no_chain",
                           "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
@@ -295,6 +380,30 @@ def cmd_signal(a):
         spent += cost
         rv = ind[sym]["rv"]
         iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
+        if pick.get("structure") == "vertical_spread":
+            lm, sm = pick["long"]["meta"], pick["short"]["meta"]
+            model = (bs_call(spot, lm["strike"], pick["dte"] / 365.0, iv, float(cfg["model"]["risk_free"]))
+                     - bs_call(spot, sm["strike"], pick["dte"] / 365.0, iv, float(cfg["model"]["risk_free"])))
+            out["buys"].append({
+                "structure": "vertical_spread", "qty": qty, "bucket": BUCKET,
+                "reason": "rsi2_entry_spread",
+                "legs": [
+                    {"symbol": pick["long"]["occ"], "side": "buy", "position_effect": "open",
+                     "strike": lm["strike"], "quote": pick["long"]["quote"],
+                     "spread_pct": pick["long"]["spread_pct"]},
+                    {"symbol": pick["short"]["occ"], "side": "sell", "position_effect": "open",
+                     "strike": sm["strike"], "quote": pick["short"]["quote"],
+                     "spread_pct": pick["short"]["spread_pct"]},
+                ],
+                "est_price": pick["net_debit"], "direction": "debit",
+                "underlying": sym, "expiry": pick["expiry"], "dte": pick["dte"],
+                "spot": round(spot, 4), "rsi2": round(rsi2v, 2),
+                "model_price": round(model, 4),
+                "max_value_per_contract": pick["max_value"],
+                "max_loss_usd": round(pick["net_debit"] * 100 * qty, 2),
+                "max_gain_usd": round((pick["max_value"] - pick["net_debit"]) * 100 * qty, 2),
+            })
+            continue
         model = bs_call(spot, pick["meta"]["strike"], pick["dte"] / 365.0, iv,
                         float(cfg["model"]["risk_free"]))
         out["buys"].append({
@@ -372,8 +481,13 @@ def cmd_apply(a):
     ledger = load_json(a.ledger)
     fills = load_json(a.fills)
     ctx = load_json(a.context) if a.context else {}
-    ctx_buys = {o["symbol"]: o for o in ctx.get("buys", [])}
-    ctx_sells = {o["symbol"]: o for o in ctx.get("sells", [])}
+    def _key(o):
+        """价差单以**买腿 OCC** 为仓位主键 (与 fills 约定一致)。"""
+        if o.get("structure") == "vertical_spread":
+            return o["legs"][0]["symbol"]
+        return o["symbol"]
+    ctx_buys = {_key(o): o for o in ctx.get("buys", [])}
+    ctx_sells = {_key(o): o for o in ctx.get("sells", [])}
     positions = ledger.setdefault("positions", {})
     today = a.date
 
@@ -385,13 +499,24 @@ def cmd_apply(a):
             raise SystemExit(f"非期权成交混入 weekly_calls apply: {occ}")
         if side == "buy":
             c = ctx_buys.get(occ, {})
-            positions[occ] = {
+            rec = {
                 "underlying": meta["underlying"], "strike": meta["strike"],
                 "expiry": meta["expiry"], "contracts": qty,
                 "entry_premium": price, "entry_date": today,
                 "entry_underlying": c.get("spot"), "entry_rsi2": c.get("rsi2"),
                 "entry_quote": c.get("entry_quote"), "model_price": c.get("model_price"),
             }
+            # 价差: price = 净借记; 额外存卖腿, 供出场时组同一笔组合单
+            if f.get("structure") == "vertical_spread" or c.get("structure") == "vertical_spread":
+                short_occ = f.get("short_symbol") or (c.get("legs") or [{}, {}])[1].get("symbol")
+                smeta = parse_occ(short_occ) if short_occ else None
+                if not smeta:
+                    raise SystemExit(f"价差成交缺卖腿 OCC: {occ} (人工对账)")
+                rec.update({"structure": "vertical_spread", "short_occ": short_occ,
+                            "short_strike": smeta["strike"],
+                            "max_value_per_contract": c.get("max_value_per_contract"),
+                            "entry_legs": c.get("legs")})
+            positions[occ] = rec
         else:
             pos = positions.pop(occ, None)
             if pos is None:
@@ -401,7 +526,9 @@ def cmd_apply(a):
             eq = pos.get("entry_quote") or {}
             xq = c.get("exit_quote") or {}
             ledger.setdefault("round_trips", []).append({
-                "occ": occ, "underlying": meta["underlying"],
+                "occ": occ, "structure": pos.get("structure", "single"),
+                "short_occ": pos.get("short_occ"),
+                "underlying": meta["underlying"],
                 "entry_date": pos["entry_date"], "exit_date": today,
                 "entry_premium": ep, "exit_premium": price,
                 "pnl_pct": round((price / ep - 1) * 100.0, 2) if ep else None,
