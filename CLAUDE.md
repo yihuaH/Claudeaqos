@@ -33,7 +33,7 @@
 
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
-| RSI-2 均值回归 (主策略, ETF+个股) — **每日收盘后单跑** (~17:45 ET, 全异步) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项经扫描确认已在最优位) | `config.json enabled` |
+| RSI-2 均值回归 (主策略, ETF+个股) — **每日收盘后单跑** (~17:45 ET, 全异步) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项已在最优位; 同日启用**加仓机制** 再跌3%补一档·每票≤2档) | `config.json enabled` + `config.json scale_in.enabled` |
 | └ (已退役) 15:30 盘前主跑 | 实盘 | ⛔ 停用 (2026-07-24, 平台窗口内频繁挂起, 改收盘后单跑) | Routine disabled |
 | 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |
@@ -58,7 +58,7 @@
 - `strategy/screen.json` — 个股池周度筛选标准 (用户可改); `strategy/universe.json` — 筛选产出的当前 100 股池 (screen.py 回写)
 - `scripts/daily.py` — **每日主跑驱动器** (2026-08-06 用户「建」): 一条命令跑完 playbook 中所有可脚本化步骤 (取数→RSI-2信号→期权双轨→纸面轨道), 产出 `plan.json` (place_now 待会话下单 / to_pending 待用户执行 / journal_facts / command_log 审计); **只调用各引擎绝不含决策逻辑** (红线2); `--plan-only` 干预览不写账本。会话仍负责 MCP 取数、下单、写 journal
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
-- `scripts/signals.py` — 确定性信号引擎 (signal / apply)
+- `scripts/signals.py` — 确定性信号引擎 (signal / apply); 含**加仓机制** (`config.json scale_in`, 2026-08-07 用户「做加仓」启用): 已持策略仓收盘 ≤ 加权均价×(1−3%) 且未触发出场 → 补一档 (净值×10%), 每票最多 2 档 = 单票敞口上限 20%; 加仓单 `reason=rsi2_scale_in`, 同受 semi_auto (红线9)/VIX/财报黑窗约束, 排在新开仓单前吃现金 (回测口径, 执行时不得重排)
 - `scripts/overnight.py` — 隔夜均值回归引擎 (IBS 收盘买/次日收盘卖); **实盘入场暂停中** (live_entries_paused, 2026-07-21 用户指示, 出场/兜底与纸面学习照常); `strategy/overnight.json` 参数; `state/overnight_positions.json` 账本
 - `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线; `macro` 含 FRED 报告级 `context` (收益率曲线/信用利差, 仅展示不门控); `news` 确定性新闻红旗分类 (报告级, 仅提示不改单, 2026-07-31 用户加)
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)

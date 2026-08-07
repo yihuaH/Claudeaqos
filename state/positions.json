@@ -6,37 +6,43 @@
       "qty": 6.210926,
       "entry_price": 69.4164,
       "entry_date": "2026-08-04",
-      "cost": 431.14
+      "cost": 431.14,
+      "tranches": 1
     },
     "ABBV": {
       "qty": 5.0,
       "entry_price": 245.36,
       "entry_date": "2026-08-04",
-      "cost": 1226.8
+      "cost": 1226.8,
+      "tranches": 1
     },
     "PM": {
       "qty": 6.53991,
       "entry_price": 187.4842,
       "entry_date": "2026-08-04",
-      "cost": 1226.13
+      "cost": 1226.13,
+      "tranches": 1
     },
     "F": {
       "qty": 44.682843,
       "entry_price": 13.8198,
       "entry_date": "2026-08-06",
-      "cost": 617.51
+      "cost": 617.51,
+      "tranches": 1
     },
     "CVS": {
       "qty": 6.406526,
       "entry_price": 96.3877,
       "entry_date": "2026-08-06",
-      "cost": 617.51
+      "cost": 617.51,
+      "tranches": 1
     },
     "SU": {
       "qty": 9.98669,
       "entry_price": 60.869,
       "entry_date": "2026-08-07",
-      "cost": 607.88
+      "cost": 607.88,
+      "tranches": 1
     }
   },
   "legacy_positions": {},

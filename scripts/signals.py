@@ -336,6 +336,37 @@ def cmd_signal(a):
         accelerated_liquidation()
         _emit(out, a.out)
         return
+
+    # --- 加仓: 已持策略仓再跌 N% 补一档 (2026-08-07 用户「做加仓」批准) ---
+    # 依据: 4352 信号无约束样本 + 217 对配对检验 (同票同入场日, 加仓版 vs 不加仓版):
+    #   每笔改善 +2.13pp (bootstrap 95% 区间 +1.91~+2.37, t=18.2), 71% 的情况美元盈亏更好,
+    #   2022-2026 分年胜率 63.6~77.8% 全为正。机制 = 反弹时多赚 177 笔小钱, 止损时多赔 21 笔大钱, 净正。
+    # 口径 (与回测一致, 改动即失效): 触发价比**加权均价**; 止损同样比加权均价 (等效把首档止损
+    #   外移到 ≈-8.4%, 这是加仓收益的一部分); 时间止损时钟**不因加仓重置**, 仍从首次入场起算。
+    # 敞口: 单票上限 = position_pct × max_tranches (红线3 的上限, 只能由用户改)。
+    # 加仓单同属买入, 受 semi_auto (红线9) 与 VIX 风控约束 —— risk_off 时上面已 return, 不会加仓。
+    si = cfg.get("scale_in") or {}
+    adds = []
+    if si.get("enabled"):
+        drop = float(si["trigger_drop_pct"]) / 100.0
+        max_tr = int(si["max_tranches"])
+        for sym in sorted(held):
+            pos = strat[sym]
+            i = ind.get(sym)
+            if not i or i["close"] is None or i["rsi2"] is None:
+                warnings.append(f"{sym}: 指标数据不足, 跳过加仓检查")
+                continue
+            if int(pos.get("tranches", 1)) >= max_tr:
+                continue
+            if i["close"] > float(pos["entry_price"]) * (1 - drop):
+                continue
+            if defense is not None and sym not in exempt_syms:
+                ed = days_to_earnings(sym)
+                if ed is not None and 0 <= ed <= int(defense.get("earnings_blackout_days", 10)):
+                    warnings.append(f"{sym}: 触发加仓但 {ed} 天后财报, 防御性跳过")
+                    continue
+            adds.append(sym)
+
     cands = []
     for sym in universe:
         i = ind.get(sym)
@@ -388,10 +419,13 @@ def cmd_signal(a):
     cash = bp - cfg["sizing"]["min_cash_reserve_usd"]
     cash += sum(s["qty"] * s["est_price"] for s in out["sells"])
 
+    # 加仓单排在新开仓单前面吃现金 (回测: 加仓优先 +141.0% vs 新仓优先 +134.7% vs 不加仓 +123.2%;
+    # 两种优先级都胜出, 取更优的一档)。加仓不触发存量换仓卖出 —— 只花手头现金, 不为补仓去砍存量。
     funding_sales = 0
-    for sym in picked:
+    queue = [(s, "rsi2_scale_in") for s in adds] + [(s, "rsi2_entry") for s in picked]
+    for sym, why in queue:
         need = pos_usd
-        while (cash < need and cfg["legacy"]["funding_sales_allowed"]
+        while (why == "rsi2_entry" and cash < need and cfg["legacy"]["funding_sales_allowed"]
                and funding_sales < cfg["legacy"]["max_funding_sales_per_day"] and fundable):
             lsym = fundable.pop(0)
             lqty = broker_qty(lsym, float(legacy[lsym]["qty"]))
@@ -405,12 +439,20 @@ def cmd_signal(a):
             funding_sales += 1
         amt = round(min(need, cash), 2)
         if amt >= cfg["sizing"]["min_order_usd"]:
-            out["buys"].append({"symbol": sym, "dollar_amount": amt,
-                                "reason": "rsi2_entry", "est_price": ind[sym]["close"],
-                                "rsi2": round(ind[sym]["rsi2"], 2)})
+            order = {"symbol": sym, "dollar_amount": amt,
+                     "reason": why, "est_price": ind[sym]["close"],
+                     "rsi2": round(ind[sym]["rsi2"], 2)}
+            if why == "rsi2_scale_in":
+                held_pos = strat[sym]
+                avg = float(held_pos["entry_price"])
+                order["tranche"] = int(held_pos.get("tranches", 1)) + 1
+                order["avg_entry_price"] = avg
+                order["drawdown_pct"] = round((ind[sym]["close"] / avg - 1) * 100, 2)
+            out["buys"].append(order)
             cash -= amt
         else:
-            warnings.append(f"{sym}: 有入场信号但可用资金不足 (${cash:.2f}), 跳过")
+            kind = "加仓" if why == "rsi2_scale_in" else "入场"
+            warnings.append(f"{sym}: 有{kind}信号但可用资金不足 (${cash:.2f}), 跳过")
 
     accelerated_liquidation()
     _emit(out, a.out)
@@ -437,22 +479,25 @@ def cmd_apply(a):
         if side == "buy":
             book = state.setdefault("strategy_positions", {})
             if sym in book:
-                # 同标的加仓 (如 4C ②腿补零头): 加权入仓 — 量相加、成本相加、
+                # 同标的追加买入 (4C ②腿补零头, 或 scale_in 加仓档): 加权入仓 — 量相加、成本相加、
                 # entry_price = 总成本/总量、entry_date 保留原始 (holding-days/time-stop 以首次入场起算)
                 old = book[sym]
                 old_cost = float(old.get("cost", float(old["qty"]) * float(old["entry_price"])))
                 new_qty = round(float(old["qty"]) + qty, 6)
                 new_cost = round(old_cost + qty * price, 2)
+                # tranches 只在真正的加仓档上 +1; ②腿 (rsi2_*_leg2) 属同一档的余量, 不计数
                 book[sym] = {
                     "qty": new_qty,
                     "entry_price": round(new_cost / new_qty, 4) if new_qty else price,
                     "entry_date": old.get("entry_date", today),
                     "cost": new_cost,
+                    "tranches": int(old.get("tranches", 1))
+                                + (1 if f.get("reason") == "rsi2_scale_in" else 0),
                 }
             else:
                 book[sym] = {
                     "qty": qty, "entry_price": price, "entry_date": today,
-                    "cost": round(qty * price, 2),
+                    "cost": round(qty * price, 2), "tranches": 1,
                 }
         else:
             book = state.get("strategy_positions" if bucket == "strategy" else "legacy_positions", {})
