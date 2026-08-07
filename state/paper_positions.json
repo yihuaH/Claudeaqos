@@ -16,12 +16,6 @@
       "entry_date": "2026-07-31",
       "cost": 20557.16
     },
-    "AAPL": {
-      "qty": 66.0,
-      "entry_price": 309.029091,
-      "entry_date": "2026-08-03",
-      "cost": 20395.92
-    },
     "D": {
       "qty": 296.0,
       "entry_price": 68.37,
@@ -34,11 +28,40 @@
       "entry_date": "2026-08-05",
       "cost": 21070.21
     },
-    "XOM": {
-      "qty": 136.0,
-      "entry_price": 154.27,
-      "entry_date": "2026-08-06",
-      "cost": 20980.72
+    "F": {
+      "qty": 746.0,
+      "entry_price": 13.860992,
+      "entry_date": "2026-08-07",
+      "cost": 10340.3,
+      "tranches": 1
+    },
+    "CVS": {
+      "qty": 107.0,
+      "entry_price": 95.209439,
+      "entry_date": "2026-08-07",
+      "cost": 10187.41,
+      "tranches": 1
+    },
+    "SU": {
+      "qty": 167.0,
+      "entry_price": 61.102215,
+      "entry_date": "2026-08-07",
+      "cost": 10204.07,
+      "tranches": 1
+    },
+    "HST": {
+      "qty": 440.0,
+      "entry_price": 23.263682,
+      "entry_date": "2026-08-07",
+      "cost": 10236.02,
+      "tranches": 1
+    },
+    "GWW": {
+      "qty": 2.0,
+      "entry_price": 1280.7,
+      "entry_date": "2026-08-07",
+      "cost": 2561.4,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -301,6 +324,69 @@
       "side": "buy",
       "qty": 136.0,
       "price": 154.27,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "AAPL",
+      "side": "sell",
+      "qty": 66.0,
+      "price": 312.588486,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "XOM",
+      "side": "sell",
+      "qty": 136.0,
+      "price": 152.25,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "F",
+      "side": "buy",
+      "qty": 746.0,
+      "price": 13.860992,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "CVS",
+      "side": "buy",
+      "qty": 107.0,
+      "price": 95.209439,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "SU",
+      "side": "buy",
+      "qty": 167.0,
+      "price": 61.102215,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "HST",
+      "side": "buy",
+      "qty": 440.0,
+      "price": 23.263682,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-07",
+      "symbol": "GWW",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 1280.7,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

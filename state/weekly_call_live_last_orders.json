@@ -1,10 +1,27 @@
 {
-  "date": "2026-08-06",
+  "date": "2026-08-07",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [],
   "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "near_signals": [
+    {
+      "symbol": "XLF",
+      "rsi2_now": 30.51,
+      "scenario": "1d_-1%",
+      "spot": 57.61,
+      "structure": "vertical_spread",
+      "est_premium_usd": 341
+    },
+    {
+      "symbol": "GOOGL",
+      "rsi2_now": 19.74,
+      "scenario": "2d_-1%x2",
+      "spot": 354.35,
+      "structure": "vertical_spread",
+      "est_premium_usd": 1700
+    }
+  ],
+  "suggested_reserve_usd": 341.0
 }
