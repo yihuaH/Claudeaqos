@@ -78,7 +78,7 @@
       "valid_until": "next_open_0925_et"
     }
   ],
-  "executed_at": "2026-08-07T01:16:00Z",
+  "executed_at": "2026-08-07T01:48:20Z (SU 补执行)",
   "executed_mode": "盘外混合 (用户 ~21:15 ET「执行」): ①整股即时限价 all_day_hours + ②零头分数市价排 08-07 开盘",
   "executed_legs": [
     {
@@ -122,8 +122,23 @@
     {
       "symbol": "SU",
       "seq": 3,
-      "skipped": true,
-      "reason": "BP 上限: 累计 $1,852.53 > 实时 BP $1,485.31 (4C 规则跳过不缩量); 次日主跑重评"
+      "skip_history": "21:15 ET 首次执行时因 cash 账户 BP 上限跳过 (累计 $1,852.53 > BP $1,485.31); 21:47 ET 用户获知账户已升级 limited margin 后回「买吧」→ 按原引擎单补执行",
+      "leg1": {
+        "order_id": "6a75395c-41b9-4df8-9db6-f6f8d050179f",
+        "qty": 9,
+        "limit": 61.94,
+        "state": "queued",
+        "fills_at": "2026-08-07 开盘",
+        "note": "SU 非24h标的 (EQUITY_ALL_DAY_TRADING_ERROR), 按 4C 降级 regular_hours 排开盘"
+      },
+      "leg2": {
+        "order_id": "6a753963-2118-4619-b233-4c3540200122",
+        "dollar_amount": 60.05,
+        "state": "queued",
+        "fills_at": "2026-08-07 开盘"
+      },
+      "total": 617.51,
+      "guard_check": "min(BP $693.70, cash $741.75) = $693.70 ≥ $617.51 ✓ (防杠杆闸首次生效, 无借贷)"
     },
     {
       "symbol": "HST",
@@ -138,5 +153,5 @@
       "reason": "同上 (BP 已用尽)"
     }
   ],
-  "writeback_note": "F+CVS 各 $617.51 全额部署 (①+②=D, 未放大); ①腿今夜成交已回写 state (F 44@13.82 / CVS 6@96.4817), ②腿开盘成交由 08-07 晨检回写。SU/HST/GWW 因 BP 不足跳过 — 出场款周一结算, 次日引擎按当日数据重算。"
+  "writeback_note": "F+CVS 各 $617.51 全额部署 (①+②=D, 未放大); ①腿今夜成交已回写 state (F 44@13.82 / CVS 6@96.4817), ②腿开盘成交由 08-07 晨检回写。SU/HST/GWW 因 BP 不足跳过 — 出场款周一结算, 次日引擎按当日数据重算。 | 2026-08-07 01:48 UTC 补执行 SU $617.51 (①9股limit61.94 + ②$60.05, 均排开盘): 账户升级 limited margin 后 BP 口径变化, 用户确认后按原引擎金额补单, 未放大。HST/GWW 仍因资金不足未执行, 由次日主跑重评。"
 }
