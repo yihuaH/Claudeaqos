@@ -31,6 +31,18 @@
       "entry_price": 153.1179,
       "entry_date": "2026-08-06",
       "cost": 933.66
+    },
+    "F": {
+      "qty": 44.0,
+      "entry_price": 13.82,
+      "entry_date": "2026-08-06",
+      "cost": 608.08
+    },
+    "CVS": {
+      "qty": 6.0,
+      "entry_price": 96.4817,
+      "entry_date": "2026-08-06",
+      "cost": 578.89
     }
   },
   "legacy_positions": {},
@@ -493,6 +505,24 @@
       "price": 153.6,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-06",
+      "symbol": "F",
+      "side": "buy",
+      "qty": 44.0,
+      "price": 13.82,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-06",
+      "symbol": "CVS",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 96.4817,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

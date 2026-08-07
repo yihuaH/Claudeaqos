@@ -2,32 +2,141 @@
   "trade_date": "2026-08-06",
   "generated_at": "2026-08-06T21:52:00Z",
   "generated_by": "收盘后主跑 (scripts/daily.py 驱动器首次实战, 20秒/23条命令零异常)",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "2026-08-07 09:25 ET (次一交易日)",
   "buying_power_at_generation": 1485.31,
   "funding_note": "⚠️ **资金紧**: BP $1,485.31; 5 笔买单合计 $2,867.43 远超 BP。今晚 AAPL+XOM 出场款 (~$1,387) T+1 周一才结算 (周五卖→周一到)。4C 执行时按 seq 顺序累计到 BP 用完为止, 装不下的跳过记 journal — 预计可执行前 2 笔 (F+CVS≈$1,235), 余下 SU/HST/GWW 跳过, 由次日主跑重评。",
   "sizing_note": "新结构首次生效 (2026-08-06 用户「按D来」): 单仓 = 净值 $6,175.11 × 10% = $617.51 (原 20%); 不限槽位、不限每日新仓数; 行业上限 3 仍在。GWW 因单价 $1,282 > 单仓额, 引擎按可用资金给 $397.39 (不足 1 股, 分数股买入)。",
   "earnings_defense": "blackout=7: 6 候选全查财报 — F(10-22)/CVS(10-28)/SU(11-03)/HST(11-04)/GWW(11-04) 均 77+ 天外未拦; 最近的 SU/GWW 08-04、HST 08-05 财报**已过**, 属财报后回调非财报前风险。",
   "news_flag_summary": "5 只买单标的全部无红旗 (F 6篇/CVS 3篇/GWW 1篇/SU/HST 无新闻, 关键词零命中)。",
-  "macro_context": {"vix": 15.81, "note": "VIX 温和; 仅展示不门控"},
+  "macro_context": {
+    "vix": 15.81,
+    "note": "VIX 温和; 仅展示不门控"
+  },
   "note_4A": "AAPL 1.417418股 (order 6a7500f6) + XOM 6.097656股 (order 6a750100) 均 exit_strength, market/regular_hours 排 08-07 开盘。AAPL 均入 304.17→est 312.45 (+2.7%); XOM 今早刚入 153.12→est 154.86 (+1.1%, 隔夜单)。",
   "option_alert": null,
   "exec_protocol": "用户回复「执行」后按 4C: 盘中市价 / 盘外混合 (①整股限价 est×1.010 all_day_hours + ②零头市价排开盘)。**买单按 seq 累计不得超过执行时实时 BP**, 超出跳过记 journal (不缩量至低于 min_order_usd)。",
   "orders": [
-    {"seq": 1, "action": "buy", "symbol": "F", "dollar_amount": 617.51, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 13.79, "rsi2": 1.77,
-     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 2, "action": "buy", "symbol": "CVS", "dollar_amount": 617.51, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 96.15, "rsi2": 2.22,
-     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 3, "action": "buy", "symbol": "SU", "dollar_amount": 617.51, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 61.33, "rsi2": 3.19,
-     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 4, "action": "buy", "symbol": "HST", "dollar_amount": 617.51, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 23.37, "rsi2": 5.1,
-     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 5, "action": "buy", "symbol": "GWW", "dollar_amount": 397.39, "bucket": "strategy",
-     "reason": "rsi2_entry", "est_price": 1282.44, "rsi2": 5.75,
-     "state_file": "state/positions.json", "valid_until": "next_open_0925_et"}
-  ]
+    {
+      "seq": 1,
+      "action": "buy",
+      "symbol": "F",
+      "dollar_amount": 617.51,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 13.79,
+      "rsi2": 1.77,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 2,
+      "action": "buy",
+      "symbol": "CVS",
+      "dollar_amount": 617.51,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 96.15,
+      "rsi2": 2.22,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "SU",
+      "dollar_amount": 617.51,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 61.33,
+      "rsi2": 3.19,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "HST",
+      "dollar_amount": 617.51,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 23.37,
+      "rsi2": 5.1,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "GWW",
+      "dollar_amount": 397.39,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 1282.44,
+      "rsi2": 5.75,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    }
+  ],
+  "executed_at": "2026-08-07T01:16:00Z",
+  "executed_mode": "盘外混合 (用户 ~21:15 ET「执行」): ①整股即时限价 all_day_hours + ②零头分数市价排 08-07 开盘",
+  "executed_legs": [
+    {
+      "symbol": "F",
+      "seq": 1,
+      "leg1": {
+        "order_id": "6a75318d-92db-43c0-923f-743d13f868e2",
+        "qty": 44,
+        "limit": 13.93,
+        "fill": 13.82,
+        "state": "filled",
+        "when": "今夜24h盘即时 (优于限价 $0.11/股)"
+      },
+      "leg2": {
+        "order_id": "6a7531c8-b5ed-4aed-8564-9f5d213ce16f",
+        "dollar_amount": 9.43,
+        "state": "queued",
+        "fills_at": "2026-08-07 开盘"
+      },
+      "total": 617.51
+    },
+    {
+      "symbol": "CVS",
+      "seq": 2,
+      "leg1": {
+        "order_id": "6a75319a-5fae-4738-8559-d38fe8e14f28",
+        "qty": 6,
+        "limit": 97.11,
+        "fill": 96.4817,
+        "state": "filled",
+        "when": "今夜24h盘即时 (优于限价 $0.63/股)"
+      },
+      "leg2": {
+        "order_id": "6a7531ce-a1b4-4e2e-bcf8-c4dd610210c6",
+        "dollar_amount": 38.62,
+        "state": "queued",
+        "fills_at": "2026-08-07 开盘"
+      },
+      "total": 617.51
+    },
+    {
+      "symbol": "SU",
+      "seq": 3,
+      "skipped": true,
+      "reason": "BP 上限: 累计 $1,852.53 > 实时 BP $1,485.31 (4C 规则跳过不缩量); 次日主跑重评"
+    },
+    {
+      "symbol": "HST",
+      "seq": 4,
+      "skipped": true,
+      "reason": "同上 (BP 已用尽)"
+    },
+    {
+      "symbol": "GWW",
+      "seq": 5,
+      "skipped": true,
+      "reason": "同上 (BP 已用尽)"
+    }
+  ],
+  "writeback_note": "F+CVS 各 $617.51 全额部署 (①+②=D, 未放大); ①腿今夜成交已回写 state (F 44@13.82 / CVS 6@96.4817), ②腿开盘成交由 08-07 晨检回写。SU/HST/GWW 因 BP 不足跳过 — 出场款周一结算, 次日引擎按当日数据重算。"
 }
