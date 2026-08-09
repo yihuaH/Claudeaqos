@@ -40,11 +40,16 @@
    - **财报日**: `get_earnings_calendar` 或对 RSI2<10 候选逐个 `get_earnings_results` →
      `{"SYM":"YYYY-MM-DD"|null}` 存 scratchpad (**不得跳过**, 财报回避每日必须生效;
      不知当日候选时先跑一次 `--plan-only` 看 `plan.json` 的 `stock.candidates`)。
+   - **券商官方收盘 (行情管道交叉核对, 2026-08-08 用户批准, 每日必做)**: 对**持仓 + 当日买单候选**
+     (≤20 只, 超过 20 只时 `get_equity_quotes` 不返回官方 close) 调 `get_equity_quotes`, 取其
+     **`close` 字段** (`source=sip-list-exchange-close`) 逐字段整理成
+     `{"SYM":{"date":...,"price":...,"source":...}}` 存 scratchpad, 下一步用 `--broker-closes` 传入。
 2. **跑驱动器**:
    ```bash
    python3 scripts/daily.py --date <今天> \
      --portfolio-value <total_value> --buying-power <BP> \
      --positions <scratchpad>/positions.json --earnings <scratchpad>/earnings.json \
+     --broker-closes <scratchpad>/broker_closes.json \
      --workdir <scratchpad>            # 加 --plan-only 可干预览, 不写账本不排纸面单
    ```
    驱动器内部逐条调用各确定性引擎 (signals/weekly_calls/momentum/learn/paper/integrations),
@@ -52,6 +57,10 @@
 3. **检查 plan.json 再执行**: `fatal` 或 `anomalies` 非空 → 按红线6 停止交易、写日志、通知用户
    (paper 轨道异常不影响实盘, 照常继续但记录); `stopped` 非空 (halted/熔断) → 只读结束并通知用户。
    然后按 `place_now` / `to_pending` 执行第 4 节。
+   - **`price_check` 段**: 引擎用的 Alpaca SIP 与券商官方收盘同源, **应 100% 一致**。双闸:
+     单只偏差 >25bp → 已并入 `anomalies` (红线6 停止交易); 完全一致率 <80% → `soft_warnings`
+     (口径可能退回 iex / 数据源故障 — 核查 `integrations.py` 的 `EQUITY_FEED` / `EQUITY_RT_FEED`),
+     不阻断交易但必须写 journal 并通知用户。核对结果每日写进战报。
 
 > 驱动器失败或输出可疑 → 按 `strategy/tracks.md` 手工逐步执行, 并在 journal 注明"驱动器回退"。
 

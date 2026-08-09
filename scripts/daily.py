@@ -171,6 +171,29 @@ def phase_data(a, R, plan, allsyms):
     if missing:
         R.anomalies.append(f"无报价标的 {len(missing)}: {missing[:10]}")
 
+    # 行情管道交叉核对 (2026-08-08 用户批准): 引擎用的 Alpaca SIP 收盘 vs 券商官方收盘。
+    # 两者同源 (Robinhood close.source = sip-list-exchange-close), 应完全一致;
+    # 持续偏差 = 管道异常 (口径被改回 iex / 数据源故障 / 分割调整不一致), 必须在下单前发现。
+    # --broker-closes 由会话经 MCP 取回后落盘; 未提供则跳过 (不阻断主跑)。
+    if a.broker_closes:
+        out = R.run(["scripts/price_check.py", "--bars", f"{W}/bars.json",
+                     "--quotes", f"{W}/quotes.json", "--broker", a.broker_closes,
+                     "--date", a.date, "--out", f"{W}/price_check.json"],
+                    "price_check", critical=False)
+        pc = parse_json_out(out) or {}
+        plan["price_check"] = {k: pc.get(k) for k in
+                               ("verdict", "compared", "exact_match", "exact_pct",
+                                "mean_abs_dev_bp", "max_abs_dev_bp", "note")}
+        plan["price_check"]["warnings"] = pc.get("warnings", [])
+        if pc.get("verdict") == "fail":
+            R.anomalies.append(f"行情管道交叉核对失败: {pc.get('note')} "
+                               f"明细 {json.dumps(pc.get('anomalies'), ensure_ascii=False)}")
+        elif pc.get("verdict") == "warn":
+            plan.setdefault("soft_warnings", []).append(f"行情核对: {pc.get('note')}")
+    else:
+        plan["price_check"] = {"verdict": "skipped",
+                               "note": "未提供 --broker-closes, 本次未做券商侧交叉核对"}
+
 
 def phase_stock_signal(a, R, plan):
     W = a.workdir
@@ -412,6 +435,10 @@ def main():
     p.add_argument("--buying-power", required=True, type=float, help="实时 buying_power (非 cash)")
     p.add_argument("--positions", help="券商持仓映射 JSON (get_equity_positions 整理)")
     p.add_argument("--earnings", help="财报日映射 JSON")
+    p.add_argument("--broker-closes",
+                   help='券商官方收盘价 JSON (会话从 get_equity_quotes 的 close 字段整理): '
+                        '{"SYM": {"date": "YYYY-MM-DD", "price": 0.0, "source": "..."}}; '
+                        '提供则做行情管道交叉核对, 偏差超阈值记 anomaly')
     p.add_argument("--workdir", required=True, help="临时数据目录 (scratchpad)")
     p.add_argument("--out", help="计划输出路径 (缺省 <workdir>/plan.json)")
     p.add_argument("--bars-days", type=int, default=450, help="历史K线回溯天数 (SMA200 需 ≥300)")
