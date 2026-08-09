@@ -6,10 +6,10 @@
   python3 scripts/integrations.py status            # 连通性自诊断 (记入 journal)
   python3 scripts/integrations.py macro --out FILE  # 拉取宏观数据 (VIX) 供引擎 --macro 使用
   python3 scripts/integrations.py bars --symbols SPY,QQQ --start 2021-01-01 --out FILE
-                                                    # 拉取 Alpaca 日线 (split 调整, IEX),
+                                                    # 拉取 Alpaca 日线 (split 调整, SIP 合并行情),
                                                     # 输出与 get_equity_historicals 同构, 供 learn.py 搜索
   python3 scripts/integrations.py quotes --symbols AAPL,MSFT --out FILE
-                                                    # 最新成交价 (IEX) → {"SYM": price}
+                                                    # 最新成交价 (SIP) → {"SYM": price}
   python3 scripts/integrations.py news --symbols AAPL,MSFT --start 2026-07-24 --out FILE
                                                     # 新闻红旗 (确定性关键词分类, 报告级) →
                                                     # {"SYM": {red_flag, hits, ...}}; 仅提示不改单
@@ -24,6 +24,23 @@ import json
 import os
 import sys
 import urllib.request
+
+# 股票行情口径 (2026-08-08 用户「采用 robinhood 的 sip」批准, iex → sip)。
+# SIP = Securities Information Processor = 法定合并行情, 覆盖全美所有交易所 + TRF (100% 成交量);
+# IEX = 单一交易所, 约 2-3% 成交量。实测 2026-08-06 官方收盘 12 只标的:
+#   Alpaca SIP vs Robinhood 官方收盘 = 12/12 完全一致 (0.00 bp);
+#   Alpaca IEX vs Robinhood 官方收盘 = 2/12 一致, 平均偏差 3.23 bp (最大 ILMN 13.9 bp)。
+# Robinhood 自身的 close.source 字段即 "sip-list-exchange-close" —— 换 SIP 后引擎算信号用的价格
+# 与券商成交/结算的价格完全同源, 消除"用 A 的价格决策、在 B 的市场成交"的口径错配。
+# ⚠️ 期权链仍用 feed=indicative: OPRA 实时期权行情需签署协议 (实测 403 "OPRA agreement is not
+#    signed"), 故 weekly_calls 的 spread gate 读到的仍是 indicative 报价, 非交易所真实 NBBO。
+EQUITY_FEED = "sip"
+
+# 实时端点 (trades/latest, snapshots) 的 SIP 需另行订阅 —— 实测 feed=sip 返回
+# 403 "subscription does not permit querying recent SIP data"。delayed_sip = 延迟 15 分钟的
+# SIP 合并行情, 本订阅可用, 数据与 sip 完全同源。主跑在 17:45 ET (收盘后 1h45m) 运行,
+# 15 分钟延迟对当日收盘价无任何影响; 若将来引入盘中决策, 此处需重新评估。
+EQUITY_RT_FEED = "delayed_sip"
 
 
 def _get(url, headers=None, timeout=15):
@@ -198,7 +215,7 @@ def bars(symbols, start, out_path, quiet=False):
     for i in range(0, len(symbols), 200):  # 分批, 避免 URL 超长
         chunk = symbols[i:i + 200]
         base = ("https://data.alpaca.markets/v2/stocks/bars"
-                f"?symbols={','.join(chunk)}&timeframe=1Day&adjustment=split&feed=iex"
+                f"?symbols={','.join(chunk)}&timeframe=1Day&adjustment=split&feed={EQUITY_FEED}"
                 f"&limit=10000&start={start}T00:00:00Z")
         token = None
         while True:
@@ -262,10 +279,20 @@ def latest_quotes(symbols, out_path):
     if not (ak and asec):
         print("ALPACA_API_KEY_ID/SECRET 未设置", file=sys.stderr)
         return 1
+    # 取 snapshot 的 dailyBar.close 而非 trades/latest (2026-08-08 修正):
+    # trades/latest 在收盘后返回的是**盘后成交价** (实测 QQQ 723.23), 不是官方收盘 (723.03);
+    # 引擎把该值当作"今日收盘"喂给 RSI2/SMA, 用盘后稀薄成交定信号是错的口径。
+    # dailyBar.close 盘中是当前最新价、收盘后即官方收盘价, 正是引擎需要的语义。
     hdrs = {"APCA-API-KEY-ID": ak, "APCA-API-SECRET-KEY": asec}
-    j = _get("https://data.alpaca.markets/v2/stocks/trades/latest"
-             f"?symbols={','.join(symbols)}&feed=iex", hdrs, timeout=30)
-    out = {sym: t["p"] for sym, t in (j.get("trades") or {}).items()}
+    out = {}
+    for i in range(0, len(symbols), 200):
+        j = _get("https://data.alpaca.markets/v2/stocks/snapshots"
+                 f"?symbols={','.join(symbols[i:i + 200])}&feed={EQUITY_RT_FEED}",
+                 hdrs, timeout=60)
+        for sym, v in (j or {}).items():
+            db = (v or {}).get("dailyBar") or {}
+            if db.get("c"):
+                out[sym] = db["c"]
     with open(out_path, "w") as f:
         json.dump(out, f, indent=2)
         f.write("\n")
@@ -284,7 +311,8 @@ def snapshots(symbols, out_path):
     out = {}
     for i in range(0, len(symbols), 200):
         j = _get("https://data.alpaca.markets/v2/stocks/snapshots"
-                 f"?symbols={','.join(symbols[i:i + 200])}&feed=iex", hdrs, timeout=60)
+                 f"?symbols={','.join(symbols[i:i + 200])}&feed={EQUITY_RT_FEED}",
+                 hdrs, timeout=60)
         for sym, v in j.items():
             db = v.get("dailyBar") or {}
             if db:

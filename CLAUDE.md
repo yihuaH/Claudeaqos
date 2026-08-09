@@ -60,7 +60,7 @@
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply); 含**加仓机制** (`config.json scale_in`, 2026-08-07 用户「做加仓」启用): 已持策略仓收盘 ≤ 加权均价×(1−3%) 且未触发出场 → 补一档 (净值×10%), 每票最多 2 档 = 单票敞口上限 20%; 加仓单 `reason=rsi2_scale_in`, 同受 semi_auto (红线9)/VIX/财报黑窗约束, 排在新开仓单前吃现金 (回测口径, 执行时不得重排)
 - `scripts/overnight.py` — 隔夜均值回归引擎 (IBS 收盘买/次日收盘卖); **实盘入场暂停中** (live_entries_paused, 2026-07-21 用户指示, 出场/兜底与纸面学习照常); `strategy/overnight.json` 参数; `state/overnight_positions.json` 账本
-- `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线; `macro` 含 FRED 报告级 `context` (收益率曲线/信用利差, 仅展示不门控); `news` 确定性新闻红旗分类 (报告级, 仅提示不改单, 2026-07-31 用户加)
+- `scripts/integrations.py` — 外部数据源 (Alpaca paper / FRED) 自诊断、宏观数据、历史日线; `macro` 含 FRED 报告级 `context` (收益率曲线/信用利差, 仅展示不门控); `news` 确定性新闻红旗分类 (报告级, 仅提示不改单, 2026-07-31 用户加)。**股票行情口径 = SIP 合并行情** (2026-08-08 用户「采用 robinhood 的 sip」, 由 iex 改; 实测 Robinhood 官方收盘 `source=sip-list-exchange-close`, SIP 12/12 完全一致 vs IEX 2/12): 历史日线用 `EQUITY_FEED=sip`, 实时端点用 `EQUITY_RT_FEED=delayed_sip` (实时 SIP 未订阅, 延迟 15 分钟对收盘后主跑无影响; **引入盘中决策须重评**); `quotes` 取 snapshot `dailyBar.close` 而非 trades/latest (后者收盘后返回盘后成交价, 属既有 bug)。⚠️ **期权链仍是 `feed=indicative`** (OPRA 需签协议, 实测 403) — `weekly_calls` 点差闸读的不是交易所真实 NBBO, 首笔实盘成交后需回校
 - `scripts/learn.py` — 参数学习器 (walk-forward 搜索 / 验证评估 / 晋级)
 - `scripts/learn_overnight.py` — 隔夜策略学习器 (双纸面账本 A/B; **暂停中** 2026-07-21, 随隔夜实盘暂停冻结); `strategy/learning_overnight.json` 边界; `state/learning_overnight.json` + 两本 paper_overnight_* 账本
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`
