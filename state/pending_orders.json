@@ -1,180 +1,83 @@
 {
-  "trade_date": "2026-08-07",
-  "generated_at": "2026-08-07T21:52:04Z",
-  "status": "closed",
+  "trade_date": "2026-08-10",
+  "generated_at": "2026-08-10T21:50:27Z",
+  "status": "awaiting_execution",
   "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 (2026-08-10 周一) 09:25 ET",
-  "buying_power_at_generation": 1460.64,
+  "valid_until": "次一交易日 (2026-08-11 周二) 09:25 ET",
+  "buying_power_at_generation": 3370.84,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "MNST",
-      "dollar_amount": 618.58,
+      "symbol": "D",
+      "dollar_amount": 620.16,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 90.36,
-      "review_est_price": 90.32,
-      "rsi2": 4.04,
+      "reason": "rsi2_scale_in",
+      "est_price": 67.15,
+      "review_est_price": 67.136,
+      "rsi2": 30.09,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "tranche": 2,
+      "avg_entry_price": 69.4164,
+      "drawdown_pct": -3.26
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "GWW",
-      "dollar_amount": 618.58,
+      "symbol": "VIK",
+      "dollar_amount": 620.16,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1277.25,
-      "review_est_price": 1277.12,
-      "rsi2": 4.33,
+      "est_price": 103.8,
+      "review_est_price": 103.76,
+      "rsi2": 8.25,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "HST",
-      "dollar_amount": 618.58,
+      "symbol": "DAL",
+      "dollar_amount": 620.16,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 23.275,
-      "review_est_price": 23.275,
-      "rsi2": 4.65,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "ILMN",
-      "dollar_amount": 618.58,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 188.04,
-      "review_est_price": 187.96,
-      "rsi2": 7.28,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "VLO",
-      "dollar_amount": 618.58,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 298.3,
-      "review_est_price": 298.32,
-      "rsi2": 8.76,
+      "est_price": 89.21,
+      "review_est_price": 89.19,
+      "rsi2": 9.07,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "option_alert": {
     "names": [
-      "XLF",
-      "GOOGL"
+      "AAPL",
+      "AMD"
     ],
     "scenarios": {
-      "XLF": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 30.51,
-        "spot": 57.61,
-        "est_premium_usd": 341
-      },
-      "GOOGL": {
+      "AAPL": {
         "scenario": "2d_-1%x2",
-        "rsi2_now": 19.74,
-        "spot": 354.35,
-        "est_premium_usd": 1700
+        "rsi2_now": 19.84,
+        "spot": 308.26,
+        "est_premium_usd": 1545
+      },
+      "AMD": {
+        "scenario": "2d_-1%x2",
+        "rsi2_now": 17.61,
+        "spot": 469.56,
+        "est_premium_usd": 2103
       }
     },
-    "reserve_usd": 341.0
+    "reserve_usd": 1179.79
   },
   "news_precheck": {
     "symbols": [
-      "MNST",
-      "GWW",
-      "HST",
-      "ILMN",
-      "VLO"
+      "D",
+      "VIK",
+      "DAL"
     ],
     "red_flagged": [],
-    "source": "integrations.py news 2026-07-31→2026-08-07"
+    "source": "integrations.py news 2026-08-03→2026-08-10"
   },
-  "note": "5 单合计 $3,092.90; 生成时 BP $1,460.64。ABBV/PM 出场卖单已 queued, 周一开盘成交后预计再入账约 $2,469 (ABBV 5×245.89 + PM 6.53991×189.50, 按 08-07 收盘估)。4C 执行时仍按实时 min(buying_power, cash) 逐单封顶, 超出的整单跳过不缩量 (红线9 防杠杆闸)。本日无加仓单: D 收 67.38 vs 加仓线 67.33, 差 $0.05 未触发。",
-  "executed_at": "2026-08-08T05:04:57Z",
-  "execution": {
-    "trigger": "用户 2026-08-08 05:03 UTC 在报告窗口回复「执行」(已基于 18:46 ET 战报逐笔明细, 4C-1B 确认成立)",
-    "mode": "盘外限价模式 (15:55 ET 后至次一交易日 09:25 ET)",
-    "buying_power_at_execution": 1460.64,
-    "cash_at_execution": 1460.64,
-    "option_alert_reserve_usd": 341.0,
-    "cumulative_cap_usd": 1119.64,
-    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = min(1460.64, 1460.64) − 341.00 = 1119.64",
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "MNST",
-        "dollar_amount": 618.58,
-        "outcome": "leg1_filled",
-        "leg1": {
-          "type": "limit",
-          "qty": 6,
-          "limit_price": 91.26,
-          "limit_basis": "引擎 est_price 90.36 × 1.010 = 91.2636 → round 91.26 (4C ①腿口径)",
-          "whole_calc": "floor(618.58 / 91.26) = 6",
-          "notional": 547.56,
-          "market_hours": "all_day_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a76b8d4-95af-4754-8fa8-5128f6bc5d15",
-          "ref_id": "3f1c8a54-6d02-4b7e-9c31-8ae5b0d47f29",
-          "state": "filled",
-          "cumulative_quantity": 6.0,
-          "note": "券商接受 all_day_hours 无降级 (review order_checks 空); 但下单时点为周六 01:04 ET, 24h 时段休市至周日 20:00 ET, 故未即时成交",
-          "avg_fill_price": 91.26,
-          "filled_at_et": "2026-08-09 20:00:00 (周日 24h 时段开盘即成)",
-          "actual_cost_usd": 547.56
-        },
-        "leg2": {
-          "placed": false,
-          "reason": "①腿未成交 (cost₁=0), 若按 remaining = D − cost₁ = 618.58 下②腿, 与①腿 547.56 名义合计 1166.14 > D 618.58 = 放大, 4C 明令禁止。protocol_gap: 4C 混合执行假设①腿当夜 24h 时段成交; 本次因周六休市不成立。②腿约 $71 余量留待用户决定, 未自行处置。",
-          "final": "cost₁ 已知 = $547.56 → remaining = $71.02, 但 2026-08-10 晨检时 (10:46 ET) 本文件 valid_until (周一 09:25 ET) **已过期**, 且晨检为无人值守会话 —— 红线9 禁止无人值守 place 买单。故②腿终局不下单。MNST 实际建仓 $547.56 (目标 $618.58, 欠配 $71.02 = 11.5%), 不做补买: 引擎已视 MNST 为持仓, 后续由出场/加仓逻辑接管。"
-        }
-      },
-      {
-        "seq": 2,
-        "symbol": "GWW",
-        "dollar_amount": 618.58,
-        "outcome": "expired_unfunded",
-        "detail": "累计 1237.16 > cap 1119.64 → 整单跳过不缩量 (4C 资金约束 + 2C) | 终局: 2026-08-10 09:25 ET 有效期届满, 卖款 09:30 才到账, 本单未获资金即过期。周一主跑用新数据重新决策。"
-      },
-      {
-        "seq": 3,
-        "symbol": "HST",
-        "dollar_amount": 618.58,
-        "outcome": "expired_unfunded",
-        "detail": "累计 1237.16 > cap 1119.64 → 整单跳过不缩量 | 终局: 2026-08-10 09:25 ET 有效期届满, 卖款 09:30 才到账, 本单未获资金即过期。周一主跑用新数据重新决策。"
-      },
-      {
-        "seq": 4,
-        "symbol": "ILMN",
-        "dollar_amount": 618.58,
-        "outcome": "expired_unfunded",
-        "detail": "累计 1237.16 > cap 1119.64 → 整单跳过不缩量 | 终局: 2026-08-10 09:25 ET 有效期届满, 卖款 09:30 才到账, 本单未获资金即过期。周一主跑用新数据重新决策。"
-      },
-      {
-        "seq": 5,
-        "symbol": "VLO",
-        "dollar_amount": 618.58,
-        "outcome": "expired_unfunded",
-        "detail": "累计 1237.16 > cap 1119.64 → 整单跳过不缩量 | 终局: 2026-08-10 09:25 ET 有效期届满, 卖款 09:30 才到账, 本单未获资金即过期。周一主跑用新数据重新决策。"
-      }
-    ],
-    "note": "ABBV/PM 卖款 (~$2,469) 要周一 09:30 开盘成交才到账, 晚于本文件 09:25 ET 有效期, 故被跳过的 4 单在本有效期内无法再获资金; 周一 17:45 主跑会用新数据重新出信号。",
-    "final_note": "三单成交回收 (2026-08-10 晨检): MNST 买入 6@$91.26 = $547.56 (周日 20:00 ET 成交); PM 卖出 6.53991@$188.01、ABBV 卖出 5@$245.65 (周一 09:30 开盘成交)。已 signals.py apply 回写 state, 券商 5 只持仓与账本完全一致。"
-  },
-  "closed_at": "2026-08-10T14:48:32Z"
+  "note": "3 单合计 $1,860.48; 生成时 BP $3,370.84。option_alert 保留 $1,179.79 (=BP×35% 封顶, 两个预警标的最便宜的 AAPL 单组 $1,545 已超 BP×35%) → 4C 可用 $2,191.05, **三单全部装得下**。SU 卖单 (~$626) 明日开盘成交后 BP 还会增加。4C 执行时仍按实时 min(buying_power, cash) 逐单封顶。⚠️ VIK 财报 2026-08-19 (9 天后), 在 7 日黑窗之外故未拦截, 但已接近 —— 若持有超过 2 日需留意。"
 }

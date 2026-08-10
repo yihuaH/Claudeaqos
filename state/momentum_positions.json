@@ -4,7 +4,7 @@
   "started": "2026-07-21",
   "high_water_mark": 25000.0,
   "halted": false,
-  "last_rebalance": "2026-08-03",
+  "last_rebalance": "2026-08-10",
   "strategy_positions": {
     "SMH": {
       "qty": 12.832560526,

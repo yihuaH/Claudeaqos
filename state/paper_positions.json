@@ -10,23 +10,11 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "FTI": {
-      "qty": 292.0,
-      "entry_price": 70.401233,
-      "entry_date": "2026-07-31",
-      "cost": 20557.16
-    },
     "D": {
       "qty": 296.0,
       "entry_price": 68.37,
       "entry_date": "2026-08-04",
       "cost": 20237.52
-    },
-    "ABBV": {
-      "qty": 85.0,
-      "entry_price": 247.884824,
-      "entry_date": "2026-08-05",
-      "cost": 21070.21
     },
     "F": {
       "qty": 746.0,
@@ -61,6 +49,20 @@
       "entry_price": 1280.7,
       "entry_date": "2026-08-07",
       "cost": 2561.4,
+      "tranches": 1
+    },
+    "MNST": {
+      "qty": 113.0,
+      "entry_price": 91.14,
+      "entry_date": "2026-08-10",
+      "cost": 10298.82,
+      "tranches": 1
+    },
+    "ILMN": {
+      "qty": 54.0,
+      "entry_price": 190.421667,
+      "entry_date": "2026-08-10",
+      "cost": 10282.77,
       "tranches": 1
     }
   },
@@ -387,6 +389,42 @@
       "side": "buy",
       "qty": 2.0,
       "price": 1280.7,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "FTI",
+      "side": "sell",
+      "qty": 292.0,
+      "price": 69.99,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "ABBV",
+      "side": "sell",
+      "qty": 85.0,
+      "price": 245.370235,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "MNST",
+      "side": "buy",
+      "qty": 113.0,
+      "price": 91.14,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "ILMN",
+      "side": "buy",
+      "qty": 54.0,
+      "price": 190.421667,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
