@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 6155.46,
+  "high_water_mark": 6195.73,
   "halted": false,
   "strategy_positions": {
     "D": {
@@ -7,20 +7,6 @@
       "entry_price": 69.4164,
       "entry_date": "2026-08-04",
       "cost": 431.14,
-      "tranches": 1
-    },
-    "ABBV": {
-      "qty": 5.0,
-      "entry_price": 245.36,
-      "entry_date": "2026-08-04",
-      "cost": 1226.8,
-      "tranches": 1
-    },
-    "PM": {
-      "qty": 6.53991,
-      "entry_price": 187.4842,
-      "entry_date": "2026-08-04",
-      "cost": 1226.13,
       "tranches": 1
     },
     "F": {
@@ -42,6 +28,13 @@
       "entry_price": 60.869,
       "entry_date": "2026-08-07",
       "cost": 607.88,
+      "tranches": 1
+    },
+    "MNST": {
+      "qty": 6.0,
+      "entry_price": 91.26,
+      "entry_date": "2026-08-10",
+      "cost": 547.56,
       "tranches": 1
     }
   },
@@ -577,6 +570,33 @@
       "price": 60.86,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "MNST",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 91.26,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "PM",
+      "side": "sell",
+      "qty": 6.53991,
+      "price": 188.01,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-10",
+      "symbol": "ABBV",
+      "side": "sell",
+      "qty": 5.0,
+      "price": 245.65,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }
