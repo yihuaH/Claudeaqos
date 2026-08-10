@@ -29,6 +29,9 @@
 5. 开市检查:
    - 首选: 上一步 status 里 alpaca `ok=true` 时, 以 Alpaca 时钟为准 — `market_is_open=false` 视为休市 → 写日志"休市"并结束。
    - 回退 (alpaca 不可用): `get_equity_quotes(["SPY"])`, 若 `venue_last_trade_time` 的日期不是今天(UTC), 视为休市日 → 写日志"休市"并结束。
+
+> **每次会话先跑 `python3 scripts/session.py brief --window <main_run|morning|report>`** —— 它会打印本窗口的精确清单 (含 MCP 调用与 daily.py 命令行)、幂等与市场状态、待执行文件状态、加仓线监控。Routine 唤醒词已精简为两行, 见 `strategy/routines.md`。本节及以下是细则, 与调度器输出冲突时**以本文件为准**。
+
 ## 1. 取数与算信号 (走驱动器)
 
 **标准路径 (2026-08-06 起)** — 三步:
