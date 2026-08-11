@@ -3,10 +3,10 @@
   "halted": false,
   "strategy_positions": {
     "D": {
-      "qty": 15.210926,
-      "entry_price": 68.1339,
+      "qty": 15.433479,
+      "entry_price": 68.1181,
       "entry_date": "2026-08-04",
-      "cost": 1036.38,
+      "cost": 1051.3,
       "tranches": 2
     },
     "F": {
@@ -23,25 +23,25 @@
       "cost": 617.51,
       "tranches": 1
     },
-    "SU": {
-      "qty": 9.98669,
-      "entry_price": 60.869,
-      "entry_date": "2026-08-07",
-      "cost": 607.88,
-      "tranches": 1
-    },
     "MNST": {
-      "qty": 6.0,
-      "entry_price": 91.26,
+      "qty": 12.0,
+      "entry_price": 45.63,
       "entry_date": "2026-08-10",
       "cost": 547.56,
       "tranches": 1
     },
     "DAL": {
-      "qty": 6.0,
-      "entry_price": 89.4233,
+      "qty": 6.937443,
+      "entry_price": 89.3932,
       "entry_date": "2026-08-11",
-      "cost": 536.54,
+      "cost": 620.16,
+      "tranches": 1
+    },
+    "VIK": {
+      "qty": 5.0,
+      "entry_price": 104.728,
+      "entry_date": "2026-08-11",
+      "cost": 523.64,
       "tranches": 1
     }
   },
@@ -622,6 +622,65 @@
       "price": 89.4233,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "SU",
+      "side": "sell",
+      "qty": 9.98669,
+      "price": 62.74,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "VIK",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 104.728,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "D",
+      "side": "buy",
+      "qty": 0.222553,
+      "price": 67.04,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 0.937443,
+      "price": 89.2,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    }
+  ],
+  "corporate_actions": [
+    {
+      "date": "2026-08-11",
+      "symbol": "MNST",
+      "type": "forward_split",
+      "old_rate": 1,
+      "new_rate": 2,
+      "ex_date": "2026-08-11",
+      "payable_date": "2026-08-11",
+      "source": "Alpaca corporate_actions id 8f2e37fc-e035-482d-adbf-a45e4440f0ac; 券商持仓交叉验证 12 股 @ 45.63",
+      "before": {
+        "qty": 6.0,
+        "entry_price": 91.26,
+        "cost": 547.56
+      },
+      "after": {
+        "qty": 12.0,
+        "entry_price": 45.63,
+        "cost": 547.56
+      },
+      "note": "仅按拆股比例调整份额与均价, 成本基与美元敞口不变; trades[] 历史记录保持原样 (如实反映当时成交价)。未产生任何订单 (红线2)。"
     }
   ]
 }
