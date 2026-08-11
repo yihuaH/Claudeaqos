@@ -1,13 +1,13 @@
 {
-  "high_water_mark": 6195.73,
+  "high_water_mark": 6197.1,
   "halted": false,
   "strategy_positions": {
     "D": {
-      "qty": 6.210926,
-      "entry_price": 69.4164,
+      "qty": 15.210926,
+      "entry_price": 68.1339,
       "entry_date": "2026-08-04",
-      "cost": 431.14,
-      "tranches": 1
+      "cost": 1036.38,
+      "tranches": 2
     },
     "F": {
       "qty": 44.682843,
@@ -35,6 +35,13 @@
       "entry_price": 91.26,
       "entry_date": "2026-08-10",
       "cost": 547.56,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 6.0,
+      "entry_price": 89.4233,
+      "entry_date": "2026-08-11",
+      "cost": 536.54,
       "tranches": 1
     }
   },
@@ -597,6 +604,24 @@
       "price": 245.65,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "D",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 67.2488,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 89.4233,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }
