@@ -144,6 +144,30 @@ def phase_preflight(a, R, plan):
                                      "note": f"journal/{a.date}.md 已 completed, 幂等结束"},
                                     ensure_ascii=False))
 
+    # 持仓一致性闸 (2026-08-11 用户「做」批准, 起因 MNST 2:1 拆股):
+    # 引擎日线是拆股调整后的 (integrations.py adjustment=split), 账本 entry_price 不是 —
+    # 两者不同步时引擎会算出巨额假回撤并触发止损, 而出场卖单是全自动的 (不受 semi_auto 约束),
+    # 会在无人干预下卖掉实际没亏的仓位。故放在 preflight 末尾: 早于昂贵的 bars 阶段就停住。
+    # 复用主跑已有的 --positions 输入, 不额外调 MCP。
+    if a.positions:
+        out = R.run(["scripts/position_check.py", "--broker", a.positions,
+                     "--state", f"{REPO}/state/positions.json",
+                     "--out", f"{a.workdir}/position_check.json"],
+                    "position_check", critical=False)
+        pk = parse_json_out(out) or {}
+        plan["position_check"] = {k: pk.get(k) for k in
+                                  ("verdict", "compared", "matched", "mismatched",
+                                   "kinds", "note")}
+        plan["position_check"]["anomalies"] = pk.get("anomalies", [])
+        if pk.get("verdict") == "fail":
+            R.anomalies.append(f"券商持仓与账本不一致: {pk.get('note')} "
+                               f"明细 {json.dumps(pk.get('anomalies'), ensure_ascii=False)}")
+            if not a.force:
+                raise RuntimeError("券商持仓与账本不一致, 按红线6 停止 (--force 可强制继续)")
+    else:
+        plan["position_check"] = {"verdict": "skipped",
+                                  "note": "未提供 --positions, 本次未做持仓一致性核对"}
+
 
 def phase_data(a, R, plan, allsyms):
     W = a.workdir

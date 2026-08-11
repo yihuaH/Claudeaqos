@@ -57,6 +57,7 @@
 - `strategy/stocks.json` — 个股防御实验参数 (仅 paper; **实验暂停中** 2026-07-21, 个股已并入实盘主策略, 防御层参数由 config.json defense 段沿用)
 - `strategy/screen.json` — 个股池周度筛选标准 (用户可改); `strategy/universe.json` — 筛选产出的当前 100 股池 (screen.py 回写)
 - `scripts/session.py` — **会话调度器** (2026-08-08 用户「不用每天一大段 prompt 吧」): `brief` 自动判断时间窗口 (主跑/晨检/战报)、检查幂等与市场状态、读所有账本与待执行文件, 打印本次的精确清单 (含要调的 MCP 与可直接复制的 daily.py 命令行) 与加仓线监控; **只调度不做交易决策** (红线2)。Routine 唤醒词因此缩到两行, 见 `strategy/routines.md`
+- `scripts/position_check.py` — **持仓一致性闸** (2026-08-11 用户「做」批准, 起因 MNST 2:1 拆股): 券商持仓份额 vs `state/positions.json` 逐只比对, 不一致即 anomaly 并在 preflight **停跑** (早于取 bars)。分类 `split_suspected` (简单整数比 + 成本基守恒, 附 `suggested_fix`) / `unapplied_fill` (差额=券商 intraday_quantity) / `qty_mismatch` / `broker_only` / `ledger_only`。**只报告绝不改账本**; 由 `daily.py --positions` 调用 (复用主跑既有输入, 不额外调 MCP)。存在意义: 引擎日线是拆股调整后的而账本 `entry_price` 不是, 两者脱钩会算出假回撤触发止损, 而**出场卖单全自动**会无人干预成交
 - `scripts/price_check.py` — 行情管道每日交叉核对: 引擎用的 Alpaca SIP 收盘 vs 券商官方收盘 (应 100% 一致); 双闸 — 单只偏差 >25bp 记 anomaly (红线6), 完全一致率 <80% 记 warn (口径可能退回 iex); 由 `daily.py --broker-closes` 调用
 - `scripts/daily.py` — **每日主跑驱动器** (2026-08-06 用户「建」): 一条命令跑完 playbook 中所有可脚本化步骤 (取数→RSI-2信号→期权双轨→纸面轨道), 产出 `plan.json` (place_now 待会话下单 / to_pending 待用户执行 / journal_facts / command_log 审计); **只调用各引擎绝不含决策逻辑** (红线2); `--plan-only` 干预览不写账本。会话仍负责 MCP 取数、下单、写 journal
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定

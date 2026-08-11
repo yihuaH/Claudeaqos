@@ -110,8 +110,8 @@ CHECKLIST = {
     "main_run": [
         ("MCP 取数", [
             "get_portfolio(802095265) → total_value, buying_power (用 BP 不用 cash)",
-            "get_equity_positions(802095265) → 与 state/positions.json 核对 (不一致以券商为准, 先修 state); "
-            "整理 {\"SYM\":{qty,available,intraday}} 存 <wd>/positions.json",
+            "get_equity_positions(802095265) → 存 <wd>/positions.json (**建议直接存原始输出**, 带 "
+            "average_buy_price 才能验成本基); 与 state/positions.json 的一致性由驱动器 position_check 闸自动核对",
             "财报: 对持仓+RSI2<10 候选逐个 get_earnings_results → {\"SYM\":\"YYYY-MM-DD\"|null} 存 <wd>/earnings.json "
             "(不知候选时先跑一次 --plan-only 看 plan.json 的 stock.candidates)",
             "券商官方收盘 (≤20 只: 持仓+买单候选): get_equity_quotes → 取 close 字段 → "
@@ -122,6 +122,9 @@ CHECKLIST = {
             "fatal / anomalies 非空 → 红线6: 停止交易, 写日志, 通知用户",
             "stopped 非空 (halted/熔断) → 只读结束并通知用户",
             "price_check.verdict: fail→已并入 anomalies; warn→写 journal 并通知 (核查 EQUITY_FEED)",
+            "position_check.verdict=fail → preflight 已停跑。split_suspected: 按 suggested_fix 手工改账本 "
+            "(份额取券商值、均价=原cost÷新份额、cost 不变, trades[] 不动, 写 corporate_actions 留痕) 后重跑; "
+            "unapplied_fill: 先 signals.py apply 补回写; 其余分类查明原因前不交易 (playbook §1 步骤3)",
         ]),
         ("执行 (playbook §4)", [
             "place_now.equity_sells → 4A: review_equity_order → place (market+regular_hours), 无需用户确认",

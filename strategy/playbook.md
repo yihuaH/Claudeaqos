@@ -38,8 +38,9 @@
 
 1. **MCP 取数** (驱动器碰不到, 必须会话做):
    - `get_portfolio(802095265)` → `total_value` 与 **`buying_power`**;
-   - `get_equity_positions(802095265)` → 与 `state/positions.json` 核对 (不一致**以券商为准, 先修 state**),
-     整理成 `{"SYM":{"qty":x,"available":y,"intraday":z}}` 存 scratchpad;
+   - `get_equity_positions(802095265)` → 整理成 `{"SYM":{"qty":x,"available":y,"intraday":z}}` 存 scratchpad
+     (**推荐直接存原始输出**: 带 `average_buy_price`, 下一步的持仓一致性闸才能交叉验证成本基是否守恒)。
+     与 `state/positions.json` 的一致性由驱动器的 `position_check` 闸自动核对, 见步骤 3;
    - **财报日**: `get_earnings_calendar` 或对 RSI2<10 候选逐个 `get_earnings_results` →
      `{"SYM":"YYYY-MM-DD"|null}` 存 scratchpad (**不得跳过**, 财报回避每日必须生效;
      不知当日候选时先跑一次 `--plan-only` 看 `plan.json` 的 `stock.candidates`)。
@@ -60,6 +61,22 @@
 3. **检查 plan.json 再执行**: `fatal` 或 `anomalies` 非空 → 按红线6 停止交易、写日志、通知用户
    (paper 轨道异常不影响实盘, 照常继续但记录); `stopped` 非空 (halted/熔断) → 只读结束并通知用户。
    然后按 `place_now` / `to_pending` 执行第 4 节。
+   - **`position_check` 段 (持仓一致性闸, 2026-08-11 用户批准)**: 券商持仓份额与 `state/positions.json`
+     **必须逐只完全一致**; 不一致即 `anomalies` + **在 preflight 阶段直接停跑** (早于取 bars)。
+     起因是 2026-08-11 MNST 2:1 拆股 —— 引擎日线是拆股调整后的 (`adjustment=split`), 账本
+     `entry_price` 不是, 差一步就会算出 −50% 假回撤触发止损, 而**出场卖单是全自动的**
+     (不受 semi_auto 约束) 会无人干预地卖掉没亏的仓位。分类与处置:
+     - `split_suspected` (份额比为简单整数比 + 成本基守恒) → **拆股**。按 `suggested_fix` 手工改
+       `state/positions.json`: **份额改成券商的、均价 = 原 cost ÷ 新份额、`cost` 不变**
+       (美元敞口与 TWR 口径不变); `trades[]` 历史**不动** (如实反映当时成交价); 在账本
+       `corporate_actions` 段留痕; 通知用户后重跑主跑。**脚本绝不自动改账本。**
+     - `unapplied_fill` (差额恰等于券商 `intraday_quantity`) → 当日成交漏回写, 先跑
+       `signals.py apply` 补上再重跑。
+     - `qty_mismatch` / `broker_only` / `ledger_only` → 原因不明, **停止交易**、写日志、通知用户,
+       查明后再交易。切勿只把份额改成券商的了事 —— 均价不改等于埋下同一个假回撤地雷。
+     - 同时别忘同步**挑战者纸面账本** (`state/paper_positions.json`): 该轨道的 broker of record 是
+       Alpaca, 须以 Alpaca 持仓为准; Alpaca 处理公司行动常有延迟 (2026-08-11 实测滞后于券商),
+       未收敛前**不要单方面改**, 否则下单份额会对不上。
    - **`price_check` 段**: 引擎用的 Alpaca SIP 与券商官方收盘同源, **应 100% 一致**。双闸:
      单只偏差 >25bp → 已并入 `anomalies` (红线6 停止交易); 完全一致率 <80% → `soft_warnings`
      (口径可能退回 iex / 数据源故障 — 核查 `integrations.py` 的 `EQUITY_FEED` / `EQUITY_RT_FEED`),
