@@ -1,171 +1,106 @@
 {
-  "trade_date": "2026-08-10",
-  "generated_at": "2026-08-10T21:50:27Z",
-  "status": "executed",
+  "trade_date": "2026-08-11",
+  "generated_at": "2026-08-11T21:49:00Z",
+  "status": "awaiting_execution",
   "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 (2026-08-11 周二) 09:25 ET",
-  "buying_power_at_generation": 3370.84,
+  "valid_until": "次一交易日 (2026-08-12 周三) 09:25 ET",
+  "buying_power_at_generation": 2233.42,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "D",
-      "dollar_amount": 620.16,
+      "symbol": "VIK",
+      "dollar_amount": 619.67,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 67.15,
-      "review_est_price": 67.136,
-      "rsi2": 30.09,
+      "est_price": 101.55,
+      "rsi2": 3.27,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
       "tranche": 2,
-      "avg_entry_price": 69.4164,
-      "drawdown_pct": -3.26,
-      "execution": {
-        "outcome": "filled_leg1_leg2_queued",
-        "leg1": {
-          "type": "limit",
-          "qty": 9,
-          "limit_price": 67.82,
-          "market_hours": "all_day_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7a85ae-6d43-44de-81c5-ba763f9a0942",
-          "ref_id": "d3b3a6e5-3ed7-4204-96b4-3999c8cf974d",
-          "state": "filled",
-          "avg_price": 67.2488,
-          "cost": 605.24,
-          "degraded": false
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 14.92,
-          "market_hours": "regular_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7a863b-23ba-4dbb-a5e0-8655eee22162",
-          "ref_id": "c4d58e6c-c877-416b-b424-25b849322441",
-          "state": "queued",
-          "note": "remaining = 620.16 − 605.24; 周二 09:30 开盘成交"
-        },
-        "total_committed": 620.16
-      }
+      "avg_entry_price": 104.728,
+      "drawdown_pct": -3.03
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "VIK",
-      "dollar_amount": 620.16,
+      "symbol": "WELL",
+      "dollar_amount": 619.67,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 103.8,
-      "review_est_price": 103.76,
-      "rsi2": 8.25,
+      "est_price": 226.01,
+      "rsi2": 5.42,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "execution": {
-        "outcome": "leg1_queued_extended_hours_no_leg2",
-        "leg1": {
-          "type": "limit",
-          "qty": 5,
-          "limit_price": 104.84,
-          "market_hours": "extended_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7a85c7-b0ff-48f3-8f41-eec2193bb934",
-          "ref_id": "63c7a2ea-8ebf-4cd6-95ad-5e0ab7ce1b0f",
-          "state": "queued",
-          "degraded": true,
-          "degrade_reason": "all_day_hours 被拒: order_checks.alertType=EQUITY_ALL_DAY_TRADING_ERROR, reason='instrument is untradable for 24 hour trading'; 按 playbook 4C 降级链 all_day_hours → extended_hours (order_checks 转为空)"
-        },
-        "leg2": null,
-        "leg2_decision": "用户 2026-08-10 22:2x ET 明确选择「不下②腿, 接受欠配」(4C 协议缺口: ①腿今夜不成交 → cost₁ 未知 → remaining 无法按公式计算)",
-        "total_committed_if_leg1_fills": 524.2,
-        "under_allocation_if_leg1_fills": 95.96
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "DAL",
-      "dollar_amount": 620.16,
+      "symbol": "CSX",
+      "dollar_amount": 619.67,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 89.21,
-      "review_est_price": 89.19,
-      "rsi2": 9.07,
+      "est_price": 49.94,
+      "rsi2": 9.56,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "execution": {
-        "outcome": "filled_leg1_leg2_queued",
-        "leg1": {
-          "type": "limit",
-          "qty": 6,
-          "limit_price": 90.1,
-          "market_hours": "all_day_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7a85d0-62b4-40f1-9fe8-d1db81a333f3",
-          "ref_id": "21c9db4b-5f5f-415b-9564-4afc06f0ebeb",
-          "state": "filled",
-          "avg_price": 89.4233,
-          "cost": 536.54,
-          "degraded": false
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 83.62,
-          "market_hours": "regular_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7a863c-ac96-476c-993f-927ae20d1e08",
-          "ref_id": "27facf98-ad04-414d-8aa6-a31366e0081c",
-          "state": "queued",
-          "note": "remaining = 620.16 − 536.54; 周二 09:30 开盘成交"
-        },
-        "total_committed": 620.16
-      }
+      "valid_until": "next_open_0925_et"
     }
   ],
   "option_alert": {
     "names": [
+      "XLF",
       "AAPL",
-      "AMD"
+      "GOOGL",
+      "DIA",
+      "SPY"
     ],
     "scenarios": {
-      "AAPL": {
-        "scenario": "2d_-1%x2",
-        "rsi2_now": 19.84,
-        "spot": 308.26,
-        "est_premium_usd": 1545
+      "XLF": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 60.8,
+        "spot": 57.8,
+        "structure": "vertical_spread",
+        "est_premium_usd": 342
       },
-      "AMD": {
-        "scenario": "2d_-1%x2",
-        "rsi2_now": 17.61,
-        "spot": 469.56,
-        "est_premium_usd": 2103
+      "AAPL": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 10.19,
+        "spot": 304.91,
+        "structure": "vertical_spread",
+        "est_premium_usd": 1527
+      },
+      "GOOGL": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 12.02,
+        "spot": 343.8,
+        "structure": "vertical_spread",
+        "est_premium_usd": 1644
+      },
+      "DIA": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 26.67,
+        "spot": 537.28,
+        "structure": "vertical_spread",
+        "est_premium_usd": 3115
+      },
+      "SPY": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 39.42,
+        "spot": 770.56,
+        "structure": "vertical_spread",
+        "est_premium_usd": 4489
       }
     },
-    "reserve_usd": 1179.79
+    "reserve_usd": 342.0
   },
   "news_precheck": {
     "symbols": [
-      "D",
       "VIK",
-      "DAL"
+      "WELL",
+      "CSX"
     ],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-03→2026-08-10"
+    "source": "integrations.py news 2026-08-04→2026-08-11"
   },
-  "note": "3 单合计 $1,860.48; 生成时 BP $3,370.84。option_alert 保留 $1,179.79 (=BP×35% 封顶, 两个预警标的最便宜的 AAPL 单组 $1,545 已超 BP×35%) → 4C 可用 $2,191.05, **三单全部装得下**。SU 卖单 (~$626) 明日开盘成交后 BP 还会增加。4C 执行时仍按实时 min(buying_power, cash) 逐单封顶。⚠️ VIK 财报 2026-08-19 (9 天后), 在 7 日黑窗之外故未拦截, 但已接近 —— 若持有超过 2 日需留意。",
-  "executed_at": "2026-08-11T02:17:32Z",
-  "execution_context": {
-    "mode": "盘外限价模式 (混合执行)",
-    "executed_at_et": "2026-08-10 22:15–22:17 ET (周一夜, 24h/盘前时段)",
-    "attended": true,
-    "trigger": "用户回复「执行」(报告窗口逐笔明细已展示, 4C-1B 成立)",
-    "buying_power_at_execution": 3370.84,
-    "cash_at_execution": 3370.84,
-    "unleveraged_buying_power": 3370.84,
-    "option_alert_reserve_usd": 1179.79,
-    "cap_usd": 2191.05,
-    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd",
-    "cumulative_dollar_amount": 1860.48,
-    "cap_binding": false
-  }
+  "note": "3 单合计 $1859.01; 生成时 BP $2233.42。option_alert 保留 $342.0 (引擎 suggested_reserve_usd = 最便宜预警标的 XLF 单组价差成本, 且 ≤ BP×35%=$781.7) → 4C 可用 $1891.42, **三单全部装得下** (余 $32.41)。D/F 卖款 (~$1,676 按收盘估) 周三 09:30 开盘成交后到账, 晚于本文件 09:25 有效期。4C 执行时仍按实时 min(buying_power, cash) 逐单封顶, 超出整单跳过不缩量 (红线9 防杠杆闸)。⚠️ VIK 财报 2026-08-19: 引擎今日判定为 8 天 (7 日黑窗之外) 故未拦截, 但**明日 08-12 即落入 7 日黑窗**; seq1 是 VIK 加仓单, 若用户不愿在财报前加仓可在 4C 一票否决该单 (红线2: 引擎不因此自动改单)。"
 }

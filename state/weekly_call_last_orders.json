@@ -1,27 +1,58 @@
 {
-  "date": "2026-08-10",
+  "date": "2026-08-11",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [],
+  "skips": [
+    {
+      "symbol": "XLP",
+      "reason": "spread_too_wide(best=2.45%)",
+      "rsi2": 5.25,
+      "spot": 84.69
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "AAPL",
-      "rsi2_now": 19.84,
-      "scenario": "2d_-1%x2",
-      "spot": 308.26,
+      "symbol": "XLF",
+      "rsi2_now": 60.8,
+      "scenario": "1d_-1%",
+      "spot": 57.8,
       "structure": "single",
-      "est_premium_usd": 3252
+      "est_premium_usd": 585
     },
     {
-      "symbol": "AMD",
-      "rsi2_now": 17.61,
-      "scenario": "2d_-1%x2",
-      "spot": 469.56,
+      "symbol": "AAPL",
+      "rsi2_now": 10.19,
+      "scenario": "1d_-1%",
+      "spot": 304.91,
       "structure": "single",
-      "est_premium_usd": 6235
+      "est_premium_usd": 3218
+    },
+    {
+      "symbol": "GOOGL",
+      "rsi2_now": 12.02,
+      "scenario": "1d_-1%",
+      "spot": 343.8,
+      "structure": "single",
+      "est_premium_usd": 3868
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 26.67,
+      "scenario": "1d_-1%",
+      "spot": 537.28,
+      "structure": "single",
+      "est_premium_usd": 5439
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 39.42,
+      "scenario": "1d_-1%",
+      "spot": 770.56,
+      "structure": "single",
+      "est_premium_usd": 7801
     }
   ],
-  "suggested_reserve_usd": 3252.0
+  "suggested_reserve_usd": 585.0
 }

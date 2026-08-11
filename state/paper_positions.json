@@ -30,25 +30,11 @@
       "cost": 10187.41,
       "tranches": 1
     },
-    "SU": {
-      "qty": 167.0,
-      "entry_price": 61.102215,
-      "entry_date": "2026-08-07",
-      "cost": 10204.07,
-      "tranches": 1
-    },
     "HST": {
       "qty": 440.0,
       "entry_price": 23.263682,
       "entry_date": "2026-08-07",
       "cost": 10236.02,
-      "tranches": 1
-    },
-    "GWW": {
-      "qty": 2.0,
-      "entry_price": 1280.7,
-      "entry_date": "2026-08-07",
-      "cost": 2561.4,
       "tranches": 1
     },
     "MNST": {
@@ -63,6 +49,20 @@
       "entry_price": 190.421667,
       "entry_date": "2026-08-10",
       "cost": 10282.77,
+      "tranches": 1
+    },
+    "VIK": {
+      "qty": 99.0,
+      "entry_price": 104.647778,
+      "entry_date": "2026-08-11",
+      "cost": 10360.13,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 115.0,
+      "entry_price": 89.182783,
+      "entry_date": "2026-08-11",
+      "cost": 10256.02,
       "tranches": 1
     }
   },
@@ -425,6 +425,42 @@
       "side": "buy",
       "qty": 54.0,
       "price": 190.421667,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "SU",
+      "side": "sell",
+      "qty": 167.0,
+      "price": 62.770778,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "GWW",
+      "side": "sell",
+      "qty": 2.0,
+      "price": 1298.7,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "VIK",
+      "side": "buy",
+      "qty": 99.0,
+      "price": 104.647778,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-11",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 115.0,
+      "price": 89.182783,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
