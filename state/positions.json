@@ -43,6 +43,13 @@
       "entry_date": "2026-08-11",
       "cost": 523.64,
       "tranches": 1
+    },
+    "CSX": {
+      "qty": 12.0,
+      "entry_price": 50.14,
+      "entry_date": "2026-08-12",
+      "cost": 601.68,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -658,6 +665,15 @@
       "price": 89.2,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 12.0,
+      "price": 50.14,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
