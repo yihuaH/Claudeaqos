@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-11",
   "generated_at": "2026-08-11T21:49:00Z",
-  "status": "executed",
+  "status": "closed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-12 周三) 09:25 ET",
   "buying_power_at_generation": 2233.42,
@@ -37,7 +37,16 @@
         "leg2": null,
         "leg2_decision": "沿用用户 08-10 对同一标的同一情形的决定「不下②腿, 接受欠配」; 本次缺口极小 ($4.25 若按限价成交, 低于 min_order_usd $5)",
         "total_committed_if_leg1_fills": 615.42,
-        "under_allocation_if_leg1_fills": 4.25
+        "under_allocation_if_leg1_fills": 4.25,
+        "final_outcome": {
+          "final": "leg1_filled_no_leg2",
+          "filled_qty": 6.0,
+          "avg_price": 102.57,
+          "cost": 615.42,
+          "filled_at_et": "2026-08-12 07:00:00 (盘前)",
+          "under_allocation": 4.25,
+          "note": "降级 extended_hours 后盘前全额成交, 成交价=限价 102.57。无②腿 (用户决定 + 缺口 $4.25 < min_order_usd $5)"
+        }
       }
     },
     {
@@ -75,7 +84,26 @@
           "state": "queued",
           "sizing": "上界公式 (用户 2026-08-11 明确批准): remaining = D − ①腿**限价名义** = 619.67 − 2×228.27 = 163.13; ①腿实际成交价 ≤ 限价, 故两腿合计恒 ≤ D, 绝不放大"
         },
-        "total_committed_max": 619.67
+        "total_committed_max": 619.67,
+        "final_outcome": {
+          "final": "both_legs_filled",
+          "filled_qty": 2.723446,
+          "cost": 619.67,
+          "leg1": {
+            "qty": 2.0,
+            "avg_price": 228.27,
+            "cost": 456.54,
+            "filled_at_et": "2026-08-12 00:09:46 (24h 时段)"
+          },
+          "leg2": {
+            "qty": 0.723446,
+            "avg_price": 225.49,
+            "cost": 163.13,
+            "filled_at_et": "2026-08-12 09:30:01"
+          },
+          "under_allocation": 0.0,
+          "note": "上界公式精确命中: ①腿恰以限价 228.27 成交 → cost₁=456.54 = 上界, 两腿合计 619.67 = D 分毫不差"
+        }
       }
     },
     {
@@ -114,7 +142,25 @@
           "state": "queued",
           "note": "remaining = 619.67 − 601.68"
         },
-        "total_committed": 619.67
+        "total_committed": 619.67,
+        "final_outcome": {
+          "final": "both_legs_filled",
+          "filled_qty": 12.358723,
+          "cost": 619.67,
+          "leg1": {
+            "qty": 12.0,
+            "avg_price": 50.14,
+            "cost": 601.68,
+            "filled_at_et": "2026-08-11 21:27:32"
+          },
+          "leg2": {
+            "qty": 0.358723,
+            "avg_price": 50.15,
+            "cost": 17.99,
+            "filled_at_et": "2026-08-12 09:30:04"
+          },
+          "under_allocation": 0.0
+        }
       }
     }
   ],
@@ -191,5 +237,12 @@
     "cap_binding": false,
     "vik_earnings_veto_used": false,
     "note": "用户未说「不留了」→ 保留 $342; 未否决 seq1 VIK 加仓单 → 三单全执行, 无跳过无缩量。"
+  },
+  "closed_at": "2026-08-12T14:47:00Z",
+  "final_summary": {
+    "target_usd": 1859.01,
+    "deployed_usd": 1854.76,
+    "fill_rate_pct": 99.77,
+    "note": "3 单全部成交。总欠配 $4.25 (0.23%), 全部来自 VIK 整股腿零头 —— 为历次 4C 最佳 (对比 08-08 MNST 88.5%、08-10 VIK 84.5%)。"
   }
 }

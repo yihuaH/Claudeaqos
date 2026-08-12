@@ -2,20 +2,6 @@
   "high_water_mark": 6197.1,
   "halted": false,
   "strategy_positions": {
-    "D": {
-      "qty": 15.433479,
-      "entry_price": 68.1181,
-      "entry_date": "2026-08-04",
-      "cost": 1051.3,
-      "tranches": 2
-    },
-    "F": {
-      "qty": 44.682843,
-      "entry_price": 13.8198,
-      "entry_date": "2026-08-06",
-      "cost": 617.51,
-      "tranches": 1
-    },
     "CVS": {
       "qty": 6.406526,
       "entry_price": 96.3877,
@@ -38,17 +24,24 @@
       "tranches": 1
     },
     "VIK": {
-      "qty": 5.0,
-      "entry_price": 104.728,
+      "qty": 11.0,
+      "entry_price": 103.5509,
       "entry_date": "2026-08-11",
-      "cost": 523.64,
-      "tranches": 1
+      "cost": 1139.06,
+      "tranches": 2
     },
     "CSX": {
-      "qty": 12.0,
-      "entry_price": 50.14,
+      "qty": 12.358723,
+      "entry_price": 50.1403,
       "entry_date": "2026-08-12",
-      "cost": 601.68,
+      "cost": 619.67,
+      "tranches": 1
+    },
+    "WELL": {
+      "qty": 2.723446,
+      "entry_price": 227.5316,
+      "entry_date": "2026-08-12",
+      "cost": 619.67,
       "tranches": 1
     }
   },
@@ -674,6 +667,60 @@
       "price": 50.14,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "D",
+      "side": "sell",
+      "qty": 15.433479,
+      "price": 68.04,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "F",
+      "side": "sell",
+      "qty": 44.682843,
+      "price": 13.97,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "VIK",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 102.57,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 228.27,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 0.723446,
+      "price": 225.49,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 0.358723,
+      "price": 50.15,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [
