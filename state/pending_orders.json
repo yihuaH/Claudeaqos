@@ -1,248 +1,144 @@
 {
-  "trade_date": "2026-08-11",
-  "generated_at": "2026-08-11T21:49:00Z",
-  "status": "closed",
+  "trade_date": "2026-08-12",
+  "generated_at": "2026-08-12T21:49:00Z",
+  "status": "awaiting_execution",
   "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 (2026-08-12 周三) 09:25 ET",
-  "buying_power_at_generation": 2233.42,
+  "valid_until": "次一交易日 (2026-08-13 周四) 09:25 ET",
+  "buying_power_at_generation": 2052.92,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "VIK",
-      "dollar_amount": 619.67,
+      "symbol": "ROST",
+      "dollar_amount": 622.9,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 101.55,
-      "rsi2": 3.27,
+      "reason": "rsi2_entry",
+      "est_price": 248.25,
+      "review_est_price": 248.25,
+      "rsi2": 4.98,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "tranche": 2,
-      "avg_entry_price": 104.728,
-      "drawdown_pct": -3.03,
-      "execution": {
-        "outcome": "leg1_queued_extended_hours_no_leg2",
-        "leg1": {
-          "type": "limit",
-          "qty": 6,
-          "limit_price": 102.57,
-          "market_hours": "extended_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7bcbec-8e94-4d9a-9ef9-b1f3d8c5fece",
-          "ref_id": "69827e9c-b5b0-4e54-af48-61e4a6a565ee",
-          "state": "queued",
-          "degraded": true,
-          "degrade_reason": "all_day_hours 被拒: EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (与 08-10 同因) → 按 4C 降级链改 extended_hours, order_checks 转空"
-        },
-        "leg2": null,
-        "leg2_decision": "沿用用户 08-10 对同一标的同一情形的决定「不下②腿, 接受欠配」; 本次缺口极小 ($4.25 若按限价成交, 低于 min_order_usd $5)",
-        "total_committed_if_leg1_fills": 615.42,
-        "under_allocation_if_leg1_fills": 4.25,
-        "final_outcome": {
-          "final": "leg1_filled_no_leg2",
-          "filled_qty": 6.0,
-          "avg_price": 102.57,
-          "cost": 615.42,
-          "filled_at_et": "2026-08-12 07:00:00 (盘前)",
-          "under_allocation": 4.25,
-          "note": "降级 extended_hours 后盘前全额成交, 成交价=限价 102.57。无②腿 (用户决定 + 缺口 $4.25 < min_order_usd $5)"
-        }
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "WELL",
-      "dollar_amount": 619.67,
+      "symbol": "AAPL",
+      "dollar_amount": 622.9,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 226.01,
-      "rsi2": 5.42,
+      "est_price": 302.25,
+      "review_est_price": 302.02,
+      "rsi2": 5.75,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "execution": {
-        "outcome": "leg1_working_leg2_queued",
-        "leg1": {
-          "type": "limit",
-          "qty": 2,
-          "limit_price": 228.27,
-          "market_hours": "all_day_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7bcbf7-a0b3-4dba-9cef-72d650c91332",
-          "ref_id": "778a44d6-6a76-4501-9ccb-b8c3f4c0cc86",
-          "state": "confirmed",
-          "degraded": false,
-          "note": "24h 时段盘口过薄, 挂 2 分钟 0 成交; 继续挂单等成交"
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 163.13,
-          "market_hours": "regular_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7bcc7d-029f-43cd-9d0d-dbb7ca71fb7f",
-          "ref_id": "5d097fc4-56f7-4ebc-9a87-3427cb9f97f3",
-          "state": "queued",
-          "sizing": "上界公式 (用户 2026-08-11 明确批准): remaining = D − ①腿**限价名义** = 619.67 − 2×228.27 = 163.13; ①腿实际成交价 ≤ 限价, 故两腿合计恒 ≤ D, 绝不放大"
-        },
-        "total_committed_max": 619.67,
-        "final_outcome": {
-          "final": "both_legs_filled",
-          "filled_qty": 2.723446,
-          "cost": 619.67,
-          "leg1": {
-            "qty": 2.0,
-            "avg_price": 228.27,
-            "cost": 456.54,
-            "filled_at_et": "2026-08-12 00:09:46 (24h 时段)"
-          },
-          "leg2": {
-            "qty": 0.723446,
-            "avg_price": 225.49,
-            "cost": 163.13,
-            "filled_at_et": "2026-08-12 09:30:01"
-          },
-          "under_allocation": 0.0,
-          "note": "上界公式精确命中: ①腿恰以限价 228.27 成交 → cost₁=456.54 = 上界, 两腿合计 619.67 = D 分毫不差"
-        }
-      }
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "CSX",
-      "dollar_amount": 619.67,
+      "symbol": "CRS",
+      "dollar_amount": 622.9,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 49.94,
-      "rsi2": 9.56,
+      "est_price": 528.64,
+      "review_est_price": 528.77,
+      "rsi2": 9.02,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "execution": {
-        "outcome": "filled_leg1_leg2_queued",
-        "leg1": {
-          "type": "limit",
-          "qty": 12,
-          "limit_price": 50.44,
-          "market_hours": "all_day_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7bcc03-1f9e-4417-b73b-91f2d796960e",
-          "ref_id": "9d86fb9e-8a98-4468-a97a-cc489bd4dd71",
-          "state": "filled",
-          "avg_price": 50.14,
-          "cost": 601.68,
-          "degraded": false
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 17.99,
-          "market_hours": "regular_hours",
-          "time_in_force": "gfd",
-          "order_id": "6a7bcc15-a3c4-4112-8d7e-bc01e32f9ca0",
-          "ref_id": "49caca6c-48aa-4f91-a662-49ed379c35e0",
-          "state": "queued",
-          "note": "remaining = 619.67 − 601.68"
-        },
-        "total_committed": 619.67,
-        "final_outcome": {
-          "final": "both_legs_filled",
-          "filled_qty": 12.358723,
-          "cost": 619.67,
-          "leg1": {
-            "qty": 12.0,
-            "avg_price": 50.14,
-            "cost": 601.68,
-            "filled_at_et": "2026-08-11 21:27:32"
-          },
-          "leg2": {
-            "qty": 0.358723,
-            "avg_price": 50.15,
-            "cost": 17.99,
-            "filled_at_et": "2026-08-12 09:30:04"
-          },
-          "under_allocation": 0.0
-        }
-      }
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "MA",
+      "dollar_amount": 622.9,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 559.73,
+      "review_est_price": 559.82,
+      "rsi2": 9.31,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
     }
   ],
   "option_alert": {
     "names": [
-      "XLF",
-      "AAPL",
+      "AMZN",
       "GOOGL",
-      "DIA",
-      "SPY"
+      "MSFT",
+      "DIA"
     ],
     "scenarios": {
-      "XLF": {
+      "AMZN": {
         "scenario": "1d_-1%",
-        "rsi2_now": 60.8,
-        "spot": 57.8,
+        "rsi2_now": 14.93,
+        "spot": 267.28,
         "structure": "vertical_spread",
-        "est_premium_usd": 342
-      },
-      "AAPL": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 10.19,
-        "spot": 304.91,
-        "structure": "vertical_spread",
-        "est_premium_usd": 1527
+        "est_premium_usd": 1249
       },
       "GOOGL": {
         "scenario": "1d_-1%",
-        "rsi2_now": 12.02,
-        "spot": 343.8,
+        "rsi2_now": 11.68,
+        "spot": 343.54,
         "structure": "vertical_spread",
-        "est_premium_usd": 1644
+        "est_premium_usd": 1650
+      },
+      "MSFT": {
+        "scenario": "2d_-1%x2",
+        "rsi2_now": 17.8,
+        "spot": 492.43,
+        "structure": "vertical_spread",
+        "est_premium_usd": 2320
       },
       "DIA": {
         "scenario": "1d_-1%",
-        "rsi2_now": 26.67,
-        "spot": 537.28,
+        "rsi2_now": 24.87,
+        "spot": 537.15,
         "structure": "vertical_spread",
-        "est_premium_usd": 3115
-      },
-      "SPY": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 39.42,
-        "spot": 770.56,
-        "structure": "vertical_spread",
-        "est_premium_usd": 4489
+        "est_premium_usd": 3114
       }
     },
-    "reserve_usd": 342.0
+    "reserve_usd": 718.52
   },
   "news_precheck": {
     "symbols": [
-      "VIK",
-      "WELL",
-      "CSX"
+      "ROST",
+      "AAPL",
+      "CRS",
+      "MA"
     ],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-04→2026-08-11"
+    "source": "integrations.py news 2026-08-05→2026-08-12"
   },
-  "note": "3 单合计 $1859.01; 生成时 BP $2233.42。option_alert 保留 $342.0 (引擎 suggested_reserve_usd = 最便宜预警标的 XLF 单组价差成本, 且 ≤ BP×35%=$781.7) → 4C 可用 $1891.42, **三单全部装得下** (余 $32.41)。D/F 卖款 (~$1,676 按收盘估) 周三 09:30 开盘成交后到账, 晚于本文件 09:25 有效期。4C 执行时仍按实时 min(buying_power, cash) 逐单封顶, 超出整单跳过不缩量 (红线9 防杠杆闸)。⚠️ VIK 财报 2026-08-19: 引擎今日判定为 8 天 (7 日黑窗之外) 故未拦截, 但**明日 08-12 即落入 7 日黑窗**; seq1 是 VIK 加仓单, 若用户不愿在财报前加仓可在 4C 一票否决该单 (红线2: 引擎不因此自动改单)。",
-  "executed_at": "2026-08-12T01:29:33Z",
-  "execution_context": {
-    "mode": "盘外限价模式 (混合执行)",
-    "executed_at_et": "2026-08-11 21:26–21:29 ET (周二夜)",
-    "attended": true,
-    "trigger": "用户在 18:46 ET 战报 (含逐笔明细) 后回复「执行」, 4C-1B 成立",
-    "buying_power_at_execution": 2233.42,
-    "cash_at_execution": 2233.42,
-    "unleveraged_buying_power": 2233.42,
-    "option_alert_reserve_usd": 342.0,
-    "cap_usd": 1891.42,
+  "funding_projection": {
+    "cap_usd": 1334.4,
     "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd",
-    "cumulative_dollar_amount": 1859.01,
-    "cap_binding": false,
-    "vik_earnings_veto_used": false,
-    "note": "用户未说「不留了」→ 保留 $342; 未否决 seq1 VIK 加仓单 → 三单全执行, 无跳过无缩量。"
+    "total_usd": 2491.6,
+    "per_seq": [
+      {
+        "seq": 1,
+        "symbol": "ROST",
+        "cumulative": 622.9,
+        "projection": "装得下"
+      },
+      {
+        "seq": 2,
+        "symbol": "AAPL",
+        "cumulative": 1245.8,
+        "projection": "装得下"
+      },
+      {
+        "seq": 3,
+        "symbol": "CRS",
+        "cumulative": 1868.7,
+        "projection": "超 cap → 整单跳过"
+      },
+      {
+        "seq": 4,
+        "symbol": "MA",
+        "cumulative": 2491.6,
+        "projection": "超 cap → 整单跳过"
+      }
+    ],
+    "note": "按生成时 BP 的投影, 仅供参考; 4C 执行时一律以**实时** min(buying_power, cash) 重算, 超出的整单跳过不缩量 (红线9)。"
   },
-  "closed_at": "2026-08-12T14:47:00Z",
-  "final_summary": {
-    "target_usd": 1859.01,
-    "deployed_usd": 1854.76,
-    "fill_rate_pct": 99.77,
-    "note": "3 单全部成交。总欠配 $4.25 (0.23%), 全部来自 VIK 整股腿零头 —— 为历次 4C 最佳 (对比 08-08 MNST 88.5%、08-10 VIK 84.5%)。"
-  }
+  "note": "4 单合计 $2491.6; 生成时 BP $2052.92。option_alert 保留 $718.52 (引擎 suggested_reserve_usd; 本次由 **BP×35%** 封顶触发 —— 最便宜的 AMZN 单组 $1,249 已超 BP×35%) → 4C 可用 $1334.4。**装不下全部 4 单**: 按 seq 累计, seq1 ROST + seq2 AAPL 共 $1245.8 可执行, seq3 CRS / seq4 MA 超 cap **整单跳过不缩量**。MNST 卖款 (~$552) 周四 09:30 开盘成交后才到账, 晚于本文件 09:25 有效期。若用户说「不留了」撤销弹药保留, cap 升至 $2,052.92, 可多装第 3 单 (seq3 CRS), seq4 MA 仍超。⚠️ 引擎已按确定性规则拦掉两只候选: TPR (财报 08-13 距今 1 天, 在 7 日黑窗内) 与 TRV (近 20 日单日异动 ≥8%), 二者不在清单内。"
 }

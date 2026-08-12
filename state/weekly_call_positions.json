@@ -12,6 +12,13 @@
       "reason": "spread_too_wide(best=2.45%)",
       "rsi2": 5.25,
       "spot": 84.69
+    },
+    {
+      "date": "2026-08-12",
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=3.50%)",
+      "rsi2": 5.75,
+      "spot": 302.25
     }
   ]
 }
