@@ -11,24 +11,26 @@
 
 ## 会话模式: 每次开新窗口 (2026-08-13 用户「每日的主跑, 战报, 收盘等还是开新窗口吧」)
 
-三个每日 Routine 已重建为 **create_new_session_on_fire** —— 每次触发开一个全新会话,
-不再唤回长久会话 (原 session_017Jqv…「Daily report sending window」, 该会话保留,
-仅不再被每日 Routine 唤醒)。当前触发器清单:
+三个每日 Routine 与周度股票池刷新已重建为 **create_new_session_on_fire** —— 每次触发开一个
+全新会话, 不再唤回长久会话 (原 session_017Jqv…「Daily report sending window」, 该会话保留,
+仅不再被任何 Routine 唤醒)。当前触发器清单:
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
 | 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01Y566pgrN57xjs2RXZN3Mad` | ✅ 新窗口 |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_019cdJ9TLSZfZhQDN77bEGrX` | ✅ 新窗口 |
 | 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01LSG22K25Jgqc9SR19YNVef` | ✅ 新窗口 |
+| 周度股票池刷新 (周一 15:00 ET) | `0 19 * * 1` | `trig_01W7opsqjExxvDSHGsxUeKYq` | ✅ 新窗口 |
 | (旧) 主跑 → 长久会话 | `45 21 * * 1-5` | `trig_01JjYFiFewuCPxSEDauXmafN` | ⏸ 2026-08-13 停用 (保留可回退) |
 | (旧) 晨检+战报 → 长久会话 | `45 14,22 * * 1-5` | `trig_01MieoRch6D7Um9fY65yBGCW` | ⏸ 2026-08-13 停用 (保留可回退) |
-| 周度股票池刷新 (周一 15:00 ET) | `0 19 * * 1` | `trig_01Mum8dwjyp3khnYeFYtipbw` | 未动, 仍指长久会话 |
+| (旧) 周度股票池刷新 → 长久会话 | `0 19 * * 1` | `trig_01Mum8dwjyp3khnYeFYtipbw` | ⏸ 2026-08-13 停用 (保留可回退) |
 
 ⚠️ **连接器注意** (2026-08-13 实测): 经 API 从任务会话重建的触发器**带不上 Robinhood
 (cash-printer) 连接器** (平台限制: 连接器只能从持有可传递授权的会话或 Routines 界面带入)。
-用户需在 claude.ai Routines 界面为三条新 Routine 手工添加 Robinhood 工具
-(用户 2026-08-13「我可以自己加 robinhood 工具」)。三条唤醒词已内置缺连接器时的安全行为:
-主跑不交易只通知 / 晨检不动单只通知 / 战报照发但注明「券商侧未核对」。
+用户需在 claude.ai Routines 界面为新建 Routine 手工添加 Robinhood 工具
+(用户 2026-08-13「我可以自己加 robinhood 工具」; 三条每日已添加并验证带 cash-printer,
+周度刷新新触发器待添加)。唤醒词均已内置缺连接器时的安全行为: 主跑不交易只通知 /
+晨检不动单只通知 / 战报照发但注明「券商侧未核对」/ 周度刷新不刷新只通知。
 
 注: cron 为 UTC, 按夏令时 (ET=UTC−4) 换算; 冬令时 (ET=UTC−5) 需整体 +1 小时重调。
 
@@ -96,7 +98,7 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
   (当天的战报/晨检新窗口、或任意手开会话) 说「执行」, 按 playbook 4C/4D 消费。
 - **跨会话 context**: 新窗口没有前一天的对话记忆, 一切以 Main 上的账本/journal/pending 文件为准
   (本来就是既定原则, `state/weekly_call_*_last_orders.json` 等回收 context 文件因此存在)。
-- **旧长久会话**: 仍可手动使用 (用户在里面说「执行」依然有效), 只是不再被每日 Routine 唤醒。
+- **旧长久会话**: 仍可手动使用 (用户在里面说「执行」依然有效), 只是不再被任何 Routine 唤醒。
 
 ## 维护约定
 
