@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-12",
   "generated_at": "2026-08-12T21:49:00Z",
-  "status": "executed",
+  "status": "closed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-13 周四) 09:25 ET",
   "buying_power_at_generation": 2052.92,
@@ -180,8 +180,11 @@
       "type": "market $121.44 regular_hours",
       "order_id": "6a7d5e41-6347-4fb4-92d3-ea892c7f2453",
       "ref_id": "92d895e3-dcd1-4658-9257-141546558bf6",
-      "state": "queued",
-      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+      "state": "filled",
+      "filled_qty": 0.487378,
+      "avg_price": 249.17,
+      "cost": 121.44,
+      "filled_at": "2026-08-13T13:30:00Z"
     },
     {
       "seq": 2,
@@ -204,8 +207,11 @@
       "type": "market $17.58 regular_hours",
       "order_id": "6a7d5e46-0384-4720-884e-71075486d0a0",
       "ref_id": "e29f3716-211d-4aa1-acc3-61428acdb17e",
-      "state": "queued",
-      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+      "state": "filled",
+      "filled_qty": 0.057828,
+      "avg_price": 304.0,
+      "cost": 17.58,
+      "filled_at": "2026-08-13T13:30:01Z"
     },
     {
       "seq": 3,
@@ -227,8 +233,49 @@
       "type": "market $88.97 regular_hours",
       "order_id": "6a7d5e4a-0d62-4b64-b3cf-9cc0371fb096",
       "ref_id": "69b41475-7eb2-493d-814d-0accf0407e21",
-      "state": "queued",
-      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+      "state": "filled",
+      "filled_qty": 0.167309,
+      "avg_price": 531.77,
+      "cost": 88.97,
+      "filled_at": "2026-08-13T13:30:02Z"
     }
-  ]
+  ],
+  "closed_at": "2026-08-13T15:59:00Z",
+  "final_outcome": {
+    "fill_rate": "100.0% — 三单实际建仓 $622.90/$622.90 各分毫不差 (①+②腿合计恰等于引擎目标额), 历次最佳 (08-12 为 99.77%)",
+    "per_order": [
+      {
+        "seq": 1,
+        "symbol": "ROST",
+        "target_usd": 622.9,
+        "built_usd": 622.9,
+        "qty": 2.487378,
+        "avg": 250.4243
+      },
+      {
+        "seq": 2,
+        "symbol": "AAPL",
+        "target_usd": 622.9,
+        "built_usd": 622.9,
+        "qty": 2.057828,
+        "avg": 302.6978
+      },
+      {
+        "seq": 3,
+        "symbol": "CRS",
+        "target_usd": 622.9,
+        "built_usd": 622.9,
+        "qty": 1.167309,
+        "avg": 533.6205
+      },
+      {
+        "seq": 4,
+        "symbol": "MA",
+        "target_usd": 622.9,
+        "built_usd": 0,
+        "note": "超实时资金上限, 整单跳过不缩量 (红线9)"
+      }
+    ],
+    "reconciled_by": "2026-08-13 晨检 (人工代跑, Routine 新窗口首跑失败见 journal/2026-08-13-morning.md)"
+  }
 }

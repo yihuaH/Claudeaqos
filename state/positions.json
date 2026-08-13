@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 6234.76,
+  "high_water_mark": 6253.66,
   "halted": false,
   "strategy_positions": {
     "CVS": {
@@ -7,13 +7,6 @@
       "entry_price": 96.3877,
       "entry_date": "2026-08-06",
       "cost": 617.51,
-      "tranches": 1
-    },
-    "MNST": {
-      "qty": 12.0,
-      "entry_price": 45.63,
-      "entry_date": "2026-08-10",
-      "cost": 547.56,
       "tranches": 1
     },
     "DAL": {
@@ -45,24 +38,24 @@
       "tranches": 1
     },
     "ROST": {
-      "qty": 2.0,
-      "entry_price": 250.73,
+      "qty": 2.487378,
+      "entry_price": 250.4243,
       "entry_date": "2026-08-13",
-      "cost": 501.46,
+      "cost": 622.9,
       "tranches": 1
     },
     "AAPL": {
-      "qty": 2.0,
-      "entry_price": 302.66,
+      "qty": 2.057828,
+      "entry_price": 302.6978,
       "entry_date": "2026-08-13",
-      "cost": 605.32,
+      "cost": 622.9,
       "tranches": 1
     },
     "CRS": {
-      "qty": 1.0,
-      "entry_price": 533.93,
+      "qty": 1.167309,
+      "entry_price": 533.6205,
       "entry_date": "2026-08-13",
-      "cost": 533.93,
+      "cost": 622.9,
       "tranches": 1
     }
   },
@@ -769,6 +762,42 @@
       "price": 533.93,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "MNST",
+      "side": "sell",
+      "qty": 12.0,
+      "price": 46.44,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "ROST",
+      "side": "buy",
+      "qty": 0.487378,
+      "price": 249.17,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 0.057828,
+      "price": 304.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "CRS",
+      "side": "buy",
+      "qty": 0.167309,
+      "price": 531.77,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [
