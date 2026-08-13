@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 6197.1,
+  "high_water_mark": 6234.76,
   "halted": false,
   "strategy_positions": {
     "CVS": {
@@ -42,6 +42,27 @@
       "entry_price": 227.5316,
       "entry_date": "2026-08-12",
       "cost": 619.67,
+      "tranches": 1
+    },
+    "ROST": {
+      "qty": 2.0,
+      "entry_price": 250.73,
+      "entry_date": "2026-08-13",
+      "cost": 501.46,
+      "tranches": 1
+    },
+    "AAPL": {
+      "qty": 2.0,
+      "entry_price": 302.66,
+      "entry_date": "2026-08-13",
+      "cost": 605.32,
+      "tranches": 1
+    },
+    "CRS": {
+      "qty": 1.0,
+      "entry_price": 533.93,
+      "entry_date": "2026-08-13",
+      "cost": 533.93,
       "tranches": 1
     }
   },
@@ -721,6 +742,33 @@
       "price": 50.15,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "ROST",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 250.73,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 302.66,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "CRS",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 533.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-12",
   "generated_at": "2026-08-12T21:49:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-13 周四) 09:25 ET",
   "buying_power_at_generation": 2052.92,
@@ -140,5 +140,95 @@
     ],
     "note": "按生成时 BP 的投影, 仅供参考; 4C 执行时一律以**实时** min(buying_power, cash) 重算, 超出的整单跳过不缩量 (红线9)。"
   },
-  "note": "4 单合计 $2491.6; 生成时 BP $2052.92。option_alert 保留 $718.52 (引擎 suggested_reserve_usd; 本次由 **BP×35%** 封顶触发 —— 最便宜的 AMZN 单组 $1,249 已超 BP×35%) → 4C 可用 $1334.4。**装不下全部 4 单**: 按 seq 累计, seq1 ROST + seq2 AAPL 共 $1245.8 可执行, seq3 CRS / seq4 MA 超 cap **整单跳过不缩量**。MNST 卖款 (~$552) 周四 09:30 开盘成交后才到账, 晚于本文件 09:25 有效期。若用户说「不留了」撤销弹药保留, cap 升至 $2,052.92, 可多装第 3 单 (seq3 CRS), seq4 MA 仍超。⚠️ 引擎已按确定性规则拦掉两只候选: TPR (财报 08-13 距今 1 天, 在 7 日黑窗内) 与 TRV (近 20 日单日异动 ≥8%), 二者不在清单内。"
+  "note": "4 单合计 $2491.6; 生成时 BP $2052.92。option_alert 保留 $718.52 (引擎 suggested_reserve_usd; 本次由 **BP×35%** 封顶触发 —— 最便宜的 AMZN 单组 $1,249 已超 BP×35%) → 4C 可用 $1334.4。**装不下全部 4 单**: 按 seq 累计, seq1 ROST + seq2 AAPL 共 $1245.8 可执行, seq3 CRS / seq4 MA 超 cap **整单跳过不缩量**。MNST 卖款 (~$552) 周四 09:30 开盘成交后才到账, 晚于本文件 09:25 有效期。若用户说「不留了」撤销弹药保留, cap 升至 $2,052.92, 可多装第 3 单 (seq3 CRS), seq4 MA 仍超。⚠️ 引擎已按确定性规则拦掉两只候选: TPR (财报 08-13 距今 1 天, 在 7 日黑窗内) 与 TRV (近 20 日单日异动 ≥8%), 二者不在清单内。",
+  "executed_at": "2026-08-13T06:04:00Z",
+  "execution_summary": {
+    "mode": "盘外限价模式 (4C 混合执行), 2026-08-13 01:56-02:04 ET 用户「执行」",
+    "reserve_revoked": "用户明确选择「不留了, 全买股票」→ option_alert 保留 $718.52 一票撤销 (4C-2C), cap 升至 min(BP,cash)=$2,052.92",
+    "funding_check": "实时 BP $2,052.92 = cash = unleveraged_BP (防杠杆闸 ✓); seq1-3 累计 $1,868.70 ≤ cap; seq4 MA 累计 $2,491.60 超 cap 整单跳过不缩量 (红线9)",
+    "executed_seqs": [
+      1,
+      2,
+      3
+    ],
+    "skipped_seqs": [
+      {
+        "seq": 4,
+        "symbol": "MA",
+        "reason": "超实时资金上限, 整单跳过"
+      }
+    ]
+  },
+  "executed_legs": [
+    {
+      "seq": 1,
+      "symbol": "ROST",
+      "leg": 1,
+      "type": "limit 2股 @250.73 all_day gfd",
+      "order_id": "6a7d5d5d-d266-41a7-b3e4-c9b32c5fbd1d",
+      "ref_id": "7ac3b4c1-76e7-40fd-b59a-581e254c19c7",
+      "state": "filled",
+      "filled_qty": 2.0,
+      "avg_price": 250.73,
+      "cost": 501.46,
+      "filled_at": "2026-08-13T05:59:58Z"
+    },
+    {
+      "seq": 1,
+      "symbol": "ROST",
+      "leg": 2,
+      "type": "market $121.44 regular_hours",
+      "order_id": "6a7d5e41-6347-4fb4-92d3-ea892c7f2453",
+      "ref_id": "92d895e3-dcd1-4658-9257-141546558bf6",
+      "state": "queued",
+      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+    },
+    {
+      "seq": 2,
+      "symbol": "AAPL",
+      "leg": 1,
+      "type": "limit 2股 @305.27 all_day gfd",
+      "order_id": "6a7d5d63-f365-460c-97ad-d66f1a796f82",
+      "ref_id": "c04f4ae5-f423-4f12-9bba-63c079d29ba1",
+      "state": "filled",
+      "filled_qty": 2.0,
+      "avg_price": 302.66,
+      "cost": 605.32,
+      "filled_at": "2026-08-13T06:00:03Z",
+      "note": "成交价优于限价 (省 0.85%)"
+    },
+    {
+      "seq": 2,
+      "symbol": "AAPL",
+      "leg": 2,
+      "type": "market $17.58 regular_hours",
+      "order_id": "6a7d5e46-0384-4720-884e-71075486d0a0",
+      "ref_id": "e29f3716-211d-4aa1-acc3-61428acdb17e",
+      "state": "queued",
+      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+    },
+    {
+      "seq": 3,
+      "symbol": "CRS",
+      "leg": 1,
+      "type": "limit 1股 @533.93 all_day gfd",
+      "order_id": "6a7d5d73-f1e4-4ee1-9597-aee5b7be1fdc",
+      "ref_id": "d35193b2-65de-4c5f-a42e-1cd0db9571be",
+      "state": "filled",
+      "filled_qty": 1.0,
+      "avg_price": 533.93,
+      "cost": 533.93,
+      "filled_at": "2026-08-13T06:00:20Z"
+    },
+    {
+      "seq": 3,
+      "symbol": "CRS",
+      "leg": 2,
+      "type": "market $88.97 regular_hours",
+      "order_id": "6a7d5e4a-0d62-4b64-b3cf-9cc0371fb096",
+      "ref_id": "69b41475-7eb2-493d-814d-0accf0407e21",
+      "state": "queued",
+      "fills_at": "2026-08-13 09:30 开盘, 晨检回写"
+    }
+  ]
 }
