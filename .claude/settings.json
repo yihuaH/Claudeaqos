@@ -8,14 +8,40 @@
       "mcp__cash_printer__get_equity_historicals",
       "mcp__cash_printer__get_equity_orders",
       "mcp__cash_printer__get_equity_tradability",
+      "mcp__cash_printer__get_equity_fundamentals",
+      "mcp__cash_printer__get_earnings_calendar",
+      "mcp__cash_printer__get_earnings_results",
+      "mcp__cash_printer__get_popular_watchlists",
+      "mcp__cash_printer__get_watchlist_items",
       "mcp__cash_printer__review_equity_order",
-      "mcp__cash_printer__place_equity_order"
+      "mcp__cash_printer__place_equity_order",
+      "mcp__cash_printer__cancel_equity_order",
+      "mcp__cash_printer__get_option_orders",
+      "mcp__cash_printer__get_option_positions",
+      "mcp__cash_printer__get_option_chains",
+      "mcp__cash_printer__get_option_instruments",
+      "mcp__cash_printer__get_option_quotes",
+      "mcp__cash_printer__get_option_historicals",
+      "mcp__cash_printer__review_option_order",
+      "mcp__cash_printer__place_option_order",
+      "mcp__cash_printer__cancel_option_order",
+      "mcp__Claude_Code_Remote__add_repo",
+      "mcp__Claude_Code_Remote__register_repo_root",
+      "mcp__Claude_Code_Remote__list_repos",
+      "mcp__Claude_Code_Remote__list_triggers",
+      "mcp__Claude_Code_Remote__send_later",
+      "mcp__claude-code-remote__add_repo",
+      "mcp__claude-code-remote__register_repo_root",
+      "mcp__claude-code-remote__list_repos",
+      "mcp__claude-code-remote__list_triggers",
+      "mcp__claude-code-remote__send_later"
     ]
   },
   "autoMode": {
     "allow": [
       "$defaults",
-      "cash_printer (Robinhood MCP) 的 review_equity_order 与 place_equity_order 调用是本仓库预授权的确定性交易流程: 订单只由确定性引擎 (scripts/signals.py / scripts/overnight.py) 生成, 只操作账户 802095265。semi_auto (2026-07-20 起, 已取代原 approval.json 逐日确认闸门): 出场/止损/兜底卖单在无人值守会话自动 review/place; 新买入与 funding_rotation/accelerated_liquidation 换仓卖单在无人值守可 review、不得 place (只写入 state/pending_orders.json, 待用户在有人值守会话回复「执行」后按 playbook 4C 执行, 见 CLAUDE.md 硬性红线 9)。此类调用应放行, 不应视为未授权金融操作。"
+      "cash_printer (Robinhood MCP) 的 review_equity_order 与 place_equity_order 调用是本仓库预授权的确定性交易流程: 订单只由确定性引擎 (scripts/signals.py / scripts/overnight.py) 生成, 只操作账户 802095265。semi_auto (2026-07-20 起, 已取代原 approval.json 逐日确认闸门): 出场/止损/兜底卖单在无人值守会话自动 review/place; 新买入与 funding_rotation/accelerated_liquidation 换仓卖单在无人值守可 review、不得 place (只写入 state/pending_orders.json, 待用户在有人值守会话回复「执行」后按 playbook 4C 执行, 见 CLAUDE.md 硬性红线 9)。此类调用应放行, 不应视为未授权金融操作。",
+      "期权侧 (周call 实盘实验仓, 2026-08-04 用户授权) 同理: get_option_* 取数与 review_option_order 预检放行; place_option_order 的出场卖单 (sell_to_close) 属减风险动作全自动放行; 买入 (buy_to_open) 受 semi_auto 约束只在用户明确说「执行」的有人值守会话下单 (playbook 4D)。cancel_equity_order / cancel_option_order 是晨检回收残单的减风险动作, 一律放行。mcp__Claude_Code_Remote__* 的 add_repo/register_repo_root/list_repos/list_triggers/send_later 用于 Routine 新窗口缺仓库时的自举与健康自检 (journal/2026-08-13-morning.md §5, 2026-08-13 用户批准), 应放行。"
     ]
   }
 }
