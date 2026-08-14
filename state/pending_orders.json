@@ -1,155 +1,59 @@
 {
-  "trade_date": "2026-08-13",
-  "generated_at": "2026-08-14T02:49:49Z",
-  "status": "executed",
+  "trade_date": "2026-08-14",
+  "generated_at": "2026-08-14T21:52:00Z",
+  "status": "awaiting_execution",
   "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 (2026-08-14 周五) 09:25 ET",
-  "buying_power_at_generation": 4618.71,
-  "rerun_note": "充值后重跑 (用户 2026-08-13 ~22:45 ET 指示「我又充钱了, 再跑一次盘后主跑」): daily.py --plan-only --force 用新净值 $10,157.77 / BP $4,618.71 重出信号, 注码自动放大 $628.75→$1,015.78 (净值×10%, 同 08-04 入金先例)。取代当晚 22:35 ET status=executed 的旧批次 (GE/RTX 均超当时 cap $486.32 整单跳过, 见 git 历史)。今晚已挂的 5 笔出场卖单仍在券商排队, 本次重跑 place_now 为空, 无重复下单。",
+  "valid_until": "次一交易日 (2026-08-17 周一) 09:25 ET",
+  "buying_power_at_generation": 6247.02,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "GE",
-      "dollar_amount": 1015.78,
+      "symbol": "AVGO",
+      "dollar_amount": 1018.6,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 360.64,
-      "review_est_price": 360.58,
-      "rsi2": 6.91,
+      "est_price": 392.99,
+      "review_est_price": 393.08,
+      "rsi2": 4.64,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "RTX",
-      "dollar_amount": 1015.78,
+      "symbol": "STLD",
+      "dollar_amount": 1018.6,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 220.48,
-      "review_est_price": 220.48,
-      "rsi2": 7.99,
+      "est_price": 255.77,
+      "review_est_price": 255.89,
+      "rsi2": 6.29,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "option_alert": {
-    "names": [
-      "XLI",
-      "AMZN",
-      "DIA"
-    ],
+    "names": ["XLV", "DIA"],
     "scenarios": {
-      "XLI": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 66.78,
-        "spot": 185.79,
-        "structure": "vertical_spread",
-        "est_premium_usd": 1050
-      },
-      "AMZN": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 10.31,
-        "spot": 265.13,
-        "structure": "vertical_spread",
-        "est_premium_usd": 1240
-      },
-      "DIA": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 58.06,
-        "spot": 537.91,
-        "structure": "vertical_spread",
-        "est_premium_usd": 3120
-      }
+      "XLV": {"scenario": "1d_-1%", "rsi2_now": 23.63, "spot": 167.37, "structure": "credit_put_spread", "est_premium_usd": 1451},
+      "DIA": {"scenario": "1d_-1%", "rsi2_now": 25.35, "spot": 536.8, "structure": "credit_put_spread", "est_premium_usd": 4687}
     },
-    "reserve_usd": 1050.0
+    "reserve_usd": 1451.0
   },
   "news_precheck": {
-    "symbols": [
-      "GE",
-      "RTX"
-    ],
+    "symbols": ["AVGO", "STLD"],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-06→2026-08-13 (重跑时重拉)"
+    "source": "integrations.py news 2026-08-07→2026-08-14 (AVGO 19篇无红旗, STLD 无新闻)"
   },
   "funding_projection": {
-    "cap_usd": 3568.71,
-    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 4618.71 − 1050.00",
-    "total_usd": 2031.56,
+    "cap_usd": 4796.02,
+    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 6247.02 − 1451.00",
+    "total_usd": 2037.2,
     "per_seq": [
-      {
-        "seq": 1,
-        "symbol": "GE",
-        "cumulative": 1015.78,
-        "projection": "≤ cap ✓"
-      },
-      {
-        "seq": 2,
-        "symbol": "RTX",
-        "cumulative": 2031.56,
-        "projection": "≤ cap ✓"
-      }
+      {"seq": 1, "symbol": "AVGO", "cumulative": 1018.6, "projection": "≤ cap ✓"},
+      {"seq": 2, "symbol": "STLD", "cumulative": 2037.2, "projection": "≤ cap ✓"}
     ],
-    "note": "生成时 BP=cash=unleveraged_BP=$4,618.71 (无杠杆, 防杠杆闸 ✓)。reserve $1,050 = 引擎 suggested_reserve_usd (XLI 最便宜单组价差成本; 入金后 BP×35%=$1,616.55 不再是约束)。两单合计 $2,031.56 全部装得下且余 $1,537。4C 执行时仍以实时 min(buying_power, cash) 重算 (红线9)。"
-  },
-  "executed_at": "2026-08-14T03:03:00Z",
-  "execution_summary": {
-    "mode": "盘外限价模式 (4C 混合执行), 2026-08-13 23:00-23:03 ET 用户基于逐笔明细回复「1. 执行」",
-    "reserve_kept": "option_alert 保留 $1,050 未撤销; 执行前实时 cap = min(BP,cash) 4618.71 − 1050 = 3568.71 ≥ 两单累计 2031.56 ✓ (防杠杆闸 BP=cash ✓)",
-    "executed_seqs": [
-      1,
-      2
-    ],
-    "legs": [
-      {
-        "seq": 1,
-        "symbol": "GE",
-        "leg": 1,
-        "type": "limit",
-        "qty": 2.0,
-        "limit_price": 364.25,
-        "fill_price": 360.94,
-        "cost": 721.88,
-        "state": "filled (24h盘即时)",
-        "order_id": "6a7e850d-f5bf-4875-9597-33b47c4b41e4",
-        "ref_id": "8f59e841-6eed-44e8-899f-f6be05eacf7d"
-      },
-      {
-        "seq": 1,
-        "symbol": "GE",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 293.9,
-        "state": "queued 排 2026-08-14 开盘",
-        "order_id": "6a7e851e-671c-4cc0-b4e8-0473bb1cd5bd",
-        "ref_id": "22465e6d-8107-4450-bbfe-85b8f2a6b32f"
-      },
-      {
-        "seq": 2,
-        "symbol": "RTX",
-        "leg": 1,
-        "type": "limit",
-        "qty": 4.0,
-        "limit_price": 222.68,
-        "fill_price": 219.99,
-        "cost": 879.96,
-        "state": "filled (24h盘即时)",
-        "order_id": "6a7e8529-88b5-4e51-b878-1d1635e715ee",
-        "ref_id": "27c01536-e2b5-49d5-9271-e932c6907552"
-      },
-      {
-        "seq": 2,
-        "symbol": "RTX",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 135.82,
-        "state": "queued 排 2026-08-14 开盘",
-        "order_id": "6a7e854b-9e55-4c8b-b0ae-ef21ffdb9a5a",
-        "ref_id": "c25d6b7c-0e72-445c-8680-4e34f5a1305e"
-      }
-    ],
-    "totals": "GE 721.88+293.90=1015.78; RTX 879.96+135.82=1015.78 — 每单恰等于引擎金额, 未放大",
-    "writeback": "①腿已 apply 至 state/positions.json; ②腿开盘成交由晨检回写"
+    "note": "生成时 BP=cash=unleveraged_BP=$6,247.02 (无杠杆, 防杠杆闸 ✓); 另有 $3,870.53 入金在途未计入。reserve $1,451 = 引擎 suggested_reserve_usd (XLV 最便宜单组价差成本)。两单合计 $2,037.20 全装得下且余 $2,758.82。周一开盘另有 4 笔出场卖单成交回款。4C 执行时仍以实时 min(buying_power, cash) 重算 (红线9)。"
   }
 }

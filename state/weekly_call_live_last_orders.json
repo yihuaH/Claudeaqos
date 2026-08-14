@@ -1,35 +1,40 @@
 {
-  "date": "2026-08-13",
+  "date": "2026-08-14",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [],
-  "warnings": [],
-  "near_signals": [
+  "skips": [
     {
-      "symbol": "XLI",
-      "rsi2_now": 66.78,
-      "scenario": "1d_-1%",
-      "spot": 185.79,
-      "structure": "vertical_spread",
-      "est_premium_usd": 1050
+      "symbol": "AVGO",
+      "reason": "credit_leg_spread_too_wide(best=13.08%)",
+      "rsi2": 4.64,
+      "spot": 392.99
     },
     {
       "symbol": "AMZN",
-      "rsi2_now": 10.31,
+      "reason": "credit_leg_spread_too_wide(best=9.97%)",
+      "rsi2": 6.02,
+      "spot": 262.65
+    }
+  ],
+  "warnings": [],
+  "near_signals": [
+    {
+      "symbol": "XLV",
+      "rsi2_now": 23.63,
       "scenario": "1d_-1%",
-      "spot": 265.13,
-      "structure": "vertical_spread",
-      "est_premium_usd": 1240
+      "spot": 167.37,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 1451
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 58.06,
+      "rsi2_now": 25.35,
       "scenario": "1d_-1%",
-      "spot": 537.91,
-      "structure": "vertical_spread",
-      "est_premium_usd": 3120
+      "spot": 536.8,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4687
     }
   ],
-  "suggested_reserve_usd": 261.86
+  "suggested_reserve_usd": 1451.0
 }

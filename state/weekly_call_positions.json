@@ -19,6 +19,13 @@
       "reason": "spread_too_wide(best=3.50%)",
       "rsi2": 5.75,
       "spot": 302.25
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "AVGO",
+      "reason": "spread_too_wide(best=3.18%)",
+      "rsi2": 4.64,
+      "spot": 392.99
     }
   ]
 }

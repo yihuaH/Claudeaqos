@@ -10,41 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "CVS": {
-      "qty": 107.0,
-      "entry_price": 95.209439,
-      "entry_date": "2026-08-07",
-      "cost": 10187.41,
-      "tranches": 1
-    },
-    "VIK": {
-      "qty": 99.0,
-      "entry_price": 104.647778,
-      "entry_date": "2026-08-11",
-      "cost": 10360.13,
-      "tranches": 1
-    },
-    "DAL": {
-      "qty": 115.0,
-      "entry_price": 89.182783,
-      "entry_date": "2026-08-11",
-      "cost": 10256.02,
-      "tranches": 1
-    },
-    "WELL": {
-      "qty": 43.0,
-      "entry_price": 226.17,
-      "entry_date": "2026-08-12",
-      "cost": 9725.31,
-      "tranches": 1
-    },
-    "CSX": {
-      "qty": 196.0,
-      "entry_price": 49.99,
-      "entry_date": "2026-08-12",
-      "cost": 9798.04,
-      "tranches": 1
-    },
     "ROST": {
       "qty": 39.0,
       "entry_price": 249.06,
@@ -66,11 +31,18 @@
       "cost": 9591.91,
       "tranches": 1
     },
-    "MA": {
-      "qty": 17.0,
-      "entry_price": 563.846471,
-      "entry_date": "2026-08-13",
-      "cost": 9585.39,
+    "GE": {
+      "qty": 27.0,
+      "entry_price": 363.95,
+      "entry_date": "2026-08-14",
+      "cost": 9826.65,
+      "tranches": 1
+    },
+    "RTX": {
+      "qty": 44.0,
+      "entry_price": 221.694546,
+      "entry_date": "2026-08-14",
+      "cost": 9754.56,
       "tranches": 1
     }
   },
@@ -568,6 +540,78 @@
       "side": "buy",
       "qty": 17.0,
       "price": 563.846471,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "CVS",
+      "side": "sell",
+      "qty": 107.0,
+      "price": 94.582897,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "VIK",
+      "side": "sell",
+      "qty": 99.0,
+      "price": 105.51,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 115.0,
+      "price": 90.682348,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 43.0,
+      "price": 233.809768,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 196.0,
+      "price": 50.1,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "MA",
+      "side": "sell",
+      "qty": 17.0,
+      "price": 567.197647,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "GE",
+      "side": "buy",
+      "qty": 27.0,
+      "price": 363.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "RTX",
+      "side": "buy",
+      "qty": 44.0,
+      "price": 221.694546,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

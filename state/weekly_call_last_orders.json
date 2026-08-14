@@ -1,35 +1,56 @@
 {
-  "date": "2026-08-13",
+  "date": "2026-08-14",
   "halted": false,
   "sells": [],
-  "buys": [],
-  "skips": [],
+  "buys": [
+    {
+      "symbol": "AMZN260826C00230000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 32.8,
+      "underlying": "AMZN",
+      "strike": 230.0,
+      "expiry": "2026-08-26",
+      "dte": 12,
+      "spot": 262.65,
+      "rsi2": 6.02,
+      "model_price": 35.807,
+      "entry_quote": {
+        "bid": 32.729,
+        "ask": 32.87,
+        "mid": 32.7995,
+        "spread_pct": 0.43
+      }
+    }
+  ],
+  "skips": [
+    {
+      "symbol": "AVGO",
+      "reason": "spread_too_wide(best=3.18%)",
+      "rsi2": 4.64,
+      "spot": 392.99
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLI",
-      "rsi2_now": 66.78,
+      "symbol": "XLV",
+      "rsi2_now": 23.63,
       "scenario": "1d_-1%",
-      "spot": 185.79,
+      "spot": 167.37,
       "structure": "single",
-      "est_premium_usd": 1882
-    },
-    {
-      "symbol": "AMZN",
-      "rsi2_now": 10.31,
-      "scenario": "1d_-1%",
-      "spot": 265.13,
-      "structure": "single",
-      "est_premium_usd": 3127
+      "est_premium_usd": 1694
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 58.06,
+      "rsi2_now": 25.35,
       "scenario": "1d_-1%",
-      "spot": 537.91,
+      "spot": 536.8,
       "structure": "single",
-      "est_premium_usd": 5446
+      "est_premium_usd": 5434
     }
   ],
-  "suggested_reserve_usd": 1882.0
+  "suggested_reserve_usd": 1694.0
 }
