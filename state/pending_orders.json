@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-13",
   "generated_at": "2026-08-14T01:55:53Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-14 周五) 09:25 ET",
   "buying_power_at_generation": 748.18,
@@ -92,5 +92,24 @@
     ],
     "note": "按生成时 BP 的投影, 仅供参考; 4C 执行时一律以**实时** min(buying_power, cash) 重算, 超出的整单跳过不缩量 (红线9)。"
   },
-  "note": "2 单合计 $1257.5; 生成时 BP=cash=unleveraged_BP=$748.18 (无杠杆, 防杠杆闸 ✓)。option_alert 保留 $261.86 (=BP×35%, 三只预警 XLI/AMZN/DIA 中最便宜单张成本仍超此封顶, 按 BP×35% 封顶) → 4C 可用 cap $486.32。按当前 BP 投影 **两单都装不下** (seq1 GE $628.75 已超 cap); 若用户选择不留弹药 (撤销 option_alert), cap 升至 $748.18, 仍不足以覆盖 seq1 GE ($628.75 尚可但 seq2 RTX 累计 $1257.5 超)。实际以执行时实时 BP (含今日 5 笔出场卖单成交后的现金) 重算, 卖单成交入账后可用资金会显著提高。"
+  "note": "2 单合计 $1257.5; 生成时 BP=cash=unleveraged_BP=$748.18 (无杠杆, 防杠杆闸 ✓)。option_alert 保留 $261.86 (=BP×35%, 三只预警 XLI/AMZN/DIA 中最便宜单张成本仍超此封顶, 按 BP×35% 封顶) → 4C 可用 cap $486.32。按当前 BP 投影 **两单都装不下** (seq1 GE $628.75 已超 cap); 若用户选择不留弹药 (撤销 option_alert), cap 升至 $748.18, 仍不足以覆盖 seq1 GE ($628.75 尚可但 seq2 RTX 累计 $1257.5 超)。实际以执行时实时 BP (含今日 5 笔出场卖单成交后的现金) 重算, 卖单成交入账后可用资金会显著提高。",
+  "executed_at": "2026-08-14T02:35:00Z",
+  "execution_summary": {
+    "mode": "盘外限价模式 (4C 混合执行), 2026-08-13 22:21-22:35 ET 用户先「执行」后见逐笔预览再「保留」",
+    "reserve_kept": "用户明确选择保留 option_alert 弹药 $261.86 (4C-2C 未撤销)",
+    "funding_check": "实时 BP $748.18 = cash = unleveraged_BP (防杠杆闸 ✓); cap = 748.18 − 261.86 = 486.32; seq1 GE $628.75 与 seq2 RTX $628.75 均单独超 cap → 两单整单跳过不缩量 (红线9), 未发起任何 review/place 调用",
+    "executed_seqs": [],
+    "skipped_seqs": [
+      {
+        "seq": 1,
+        "symbol": "GE",
+        "reason": "dollar_amount 628.75 > cap 486.32, 超实时资金上限, 整单跳过"
+      },
+      {
+        "seq": 2,
+        "symbol": "RTX",
+        "reason": "dollar_amount 628.75 > cap 486.32, 超实时资金上限, 整单跳过"
+      }
+    ]
+  }
 }
