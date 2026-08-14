@@ -52,6 +52,14 @@ def bs_call(S, K, T, sig, r=0.04):
     return S * _ncdf(d1) - K * math.exp(-r * T) * _ncdf(d2)
 
 
+def bs_put(S, K, T, sig, r=0.04):
+    if T <= 1e-9 or sig <= 1e-9:
+        return max(K - S, 0.0)
+    d1 = (math.log(S / K) + (r + 0.5 * sig * sig) * T) / (sig * math.sqrt(T))
+    d2 = d1 - sig * math.sqrt(T)
+    return K * math.exp(-r * T) * _ncdf(-d2) - S * _ncdf(-d1)
+
+
 def realized_vol(closes, window):
     if len(closes) < window + 1:
         return None
@@ -164,10 +172,89 @@ def _pick_vertical(sym, spot, chain, cc, today):
     return None, "no_valid_short_quote"
 
 
+def _pick_credit_put(sym, spot, chain, cc, today):
+    """牛市看跌信用价差 bull put spread (2026-08-13 用户「直接实盘」授权, 回测依据
+    journal/2026-08-13-pcs-bt.md: 同信号卖方 OTM put 价差 6/6 窗口胜买方且回撤减半)。
+    卖腿 = 行权价 ≤ short_put_moneyness×spot 的**最高**档 put (贴近目标从下),
+      gate: 点差 ≤ max_credit_leg_spread_pct 且 bid ≥ min_bid;
+    买腿 (保护) = 同到期、行权价 ≤ long_put_moneyness×spot 的最高档 (< 卖腿),
+      gate: 点差 ≤ max_far_leg_spread_pct 且 bid > 0 (远虚值便宜腿, 百分比点差天然更宽)。
+    净贷记 = 卖腿bid − 买腿ask (最保守: 卖出吃 bid、买入付 ask)。
+    每张风险 (=占用抵押) = 宽度 − 净贷记; 注码/预算/BP 全部按风险计。
+    返回 (order_dict, skip_reason)。"""
+    target_short = cc["short_put_moneyness"] * spot
+    cands = {}
+    for occ, q in chain.items():
+        meta = parse_occ(occ)
+        if not meta or meta["type"] != "P":
+            continue
+        d = dte(meta["expiry"], today)
+        if not (cc["min_dte_calendar"] <= d <= cc["max_dte_calendar"]):
+            continue
+        cands.setdefault((d, meta["expiry"]), []).append((meta["strike"], occ, meta, q))
+    if not cands:
+        return None, "no_put_in_window"
+    best_sp = None
+    for (d, expiry) in sorted(cands):
+        rows = sorted(cands[(d, expiry)], reverse=True)   # 行权价降序
+        shorts = [r for r in rows if r[0] <= target_short]
+        if not shorts:
+            continue
+        s_strike, s_occ, s_meta, s_q = shorts[0]          # ≤0.97×spot 最高档
+        sm = _mid(s_q)
+        if sm is None or s_q["bid"] < cc["min_bid"]:
+            continue
+        ssp = _spread_pct(s_q)
+        best_sp = ssp if best_sp is None else min(best_sp, ssp)
+        # 双档闸: 百分比 或 绝对点差 (美元/股) 过其一即可 — OTM put 权利金常只有几毛,
+        # 纯百分比闸对便宜腿失灵 (8% of $0.35 = 3¢ 不现实); 绝对档 = 回测盈亏假设的口径
+        # (pcs-bt 的 ab≤$0.10/股/腿 才稳定为正), 把成交约束进回测验证过的摩擦包络。
+        s_abs = s_q["ask"] - s_q["bid"]
+        if (ssp > float(cc["max_credit_leg_spread_pct"])
+                and s_abs > float(cc.get("max_credit_leg_spread_abs", 0.10))):
+            continue
+        target_long = cc["long_put_moneyness"] * spot
+        longs = [r for r in rows if r[0] <= target_long and r[0] < s_strike]
+        max_far = float(cc.get("max_far_leg_spread_pct",
+                               cc["max_credit_leg_spread_pct"] * 2))
+        for l_strike, l_occ, l_meta, l_q in longs:        # 已降序 = 贴近 0.88 从下
+            lm = _mid(l_q)
+            if lm is None or (l_q["bid"] or 0) <= 0:
+                continue
+            lsp = _spread_pct(l_q)
+            l_abs = l_q["ask"] - l_q["bid"]
+            if lsp > max_far and l_abs > float(cc.get("max_far_leg_spread_abs", 0.10)):
+                continue
+            credit = s_q["bid"] - l_q["ask"]              # 最保守可成交净贷记
+            if credit <= 0:
+                continue
+            width = s_strike - l_strike
+            risk = width - credit
+            if risk <= 0:
+                continue
+            if risk * 100.0 > cc["max_premium_per_contract_usd"]:
+                return None, f"risk_too_large({risk * 100:.0f})"
+            return {"structure": "credit_put_spread", "dte": d, "expiry": expiry,
+                    "short": {"occ": s_occ, "meta": s_meta, "quote": s_q, "mid": sm,
+                              "spread_pct": round(ssp, 3)},
+                    "long": {"occ": l_occ, "meta": l_meta, "quote": l_q, "mid": lm,
+                             "spread_pct": round(lsp, 3)},
+                    "net_credit": round(credit, 2),
+                    "mid": round(risk, 2),   # mid=每股风险 → cmd_signal 的注码/预算/BP 按风险计
+                    "max_value": round(width, 2),
+                    "spread_pct": round(ssp, 3)}, None
+        # 本到期无合格买腿 → 试更远到期
+    if best_sp is not None:
+        return None, f"credit_leg_spread_too_wide(best={best_sp:.2f}%)"
+    return None, "no_valid_put_quote"
+
+
 def _pick_structure(sym, spot, chain, cc, today):
-    """按配置 contract.structure 分派: 'single' (默认) 或 'vertical_spread'。"""
+    """按配置 contract.structure 分派: 'single' (默认) / 'vertical_spread' / 'credit_put_spread'。"""
     if cc.get("structure") == "vertical_spread":
         return _pick_vertical(sym, spot, chain, cc, today)
+    if cc.get("structure") == "credit_put_spread":
+        return _pick_credit_put(sym, spot, chain, cc, today)
     return _pick_contract(sym, spot, chain, cc, today)
 
 
@@ -235,6 +322,37 @@ def cmd_signal(a):
         else:
             warnings.append(f"{occ}: 底层 {u} 指标数据不足, 跳过出场检查 (DTE={d})")
         if not reason:
+            continue
+        if pos.get("structure") == "credit_put_spread":
+            # 平仓 = 买回卖腿 + 卖出买腿 (direction=debit)。属风险减少的出场类,
+            # 沿用 4A/4D 出场全自动语义; 若平台分类器把 buy_to_close 当买入拦截
+            # (首个出场将实测), 按红线6 记 journal + PushNotification 用户人工触发。
+            sq = (chains.get(u) or {}).get(occ) or {}
+            lq = (chains.get(u) or {}).get(pos["long_occ"]) or {}
+            sask, lbid = sq.get("ask"), lq.get("bid")
+            if sask is None or lbid is None:
+                spot_now = (ind.get(u) or {}).get("close") or pos["strike"]
+                sask = max(pos["strike"] - spot_now, 0.01) if sask is None else sask
+                lbid = max(pos["long_strike"] - spot_now, 0.0) if lbid is None else lbid
+                warnings.append(f"{occ}: 信用价差平仓缺腿报价, est 按内在价值兜底")
+            net = round(max(float(sask) - float(lbid), 0.01), 2)
+            exiting_und.add(u)
+            out["sells"].append({
+                "structure": "credit_put_spread", "qty": int(pos["contracts"]),
+                "bucket": BUCKET, "reason": reason, "direction": "debit",
+                "est_price": net, "underlying": u, "expiry": pos["expiry"],
+                "legs": [
+                    {"symbol": occ, "side": "buy", "position_effect": "close",
+                     "strike": pos["strike"], "quote": sq},
+                    {"symbol": pos["long_occ"], "side": "sell", "position_effect": "close",
+                     "strike": pos["long_strike"], "quote": lq},
+                ],
+                "exit_quote": {"short_ask": sask, "long_bid": lbid, "net_debit": net,
+                               "mid": (round(_mid(sq) - _mid(lq), 4)
+                                       if _mid(sq) is not None and _mid(lq) is not None else None),
+                               "spread_pct": round(_spread_pct(sq), 3) if _spread_pct(sq) else None,
+                               "long_spread_pct": round(_spread_pct(lq), 3) if _spread_pct(lq) else None},
+            })
             continue
         q = (chains.get(u) or {}).get(occ) or {}
         m = _mid(q)
@@ -313,8 +431,9 @@ def cmd_signal(a):
         if pv is None:
             raise SystemExit("budget 配置为百分比但未传 --portfolio-value")
         bud_cap = pv * float(bud["max_open_premium_pct_of_portfolio"]) / 100.0
-    open_prem = sum(float(p["entry_premium"]) * 100 * int(p["contracts"])
-                    for p in positions.values())
+    # 敞口口径: debit 仓 = 已付权利金; credit 仓 = 每张风险 (宽度−贷记, 即占用抵押)
+    open_prem = sum(float(p.get("risk_per_contract") or p["entry_premium"]) * 100
+                    * int(p["contracts"]) for p in positions.values())
     bp_left = float(a.buying_power) if getattr(a, "buying_power", None) is not None else None
     spent = 0.0
 
@@ -380,6 +499,36 @@ def cmd_signal(a):
         spent += cost
         rv = ind[sym]["rv"]
         iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
+        if pick.get("structure") == "credit_put_spread":
+            sm_, lm_ = pick["short"]["meta"], pick["long"]["meta"]
+            rf = float(cfg["model"]["risk_free"])
+            model = (bs_put(spot, sm_["strike"], pick["dte"] / 365.0, iv, rf)
+                     - bs_put(spot, lm_["strike"], pick["dte"] / 365.0, iv, rf))
+            out["buys"].append({
+                "structure": "credit_put_spread", "qty": qty, "bucket": BUCKET,
+                "reason": "rsi2_entry_put_credit",
+                "legs": [
+                    {"symbol": pick["short"]["occ"], "side": "sell", "position_effect": "open",
+                     "strike": sm_["strike"], "quote": pick["short"]["quote"],
+                     "spread_pct": pick["short"]["spread_pct"]},
+                    {"symbol": pick["long"]["occ"], "side": "buy", "position_effect": "open",
+                     "strike": lm_["strike"], "quote": pick["long"]["quote"],
+                     "spread_pct": pick["long"]["spread_pct"]},
+                ],
+                "est_price": pick["net_credit"], "direction": "credit",
+                "underlying": sym, "expiry": pick["expiry"], "dte": pick["dte"],
+                "spot": round(spot, 4), "rsi2": round(rsi2v, 2),
+                "model_price": round(model, 4),
+                "entry_quote": {"mid": round(pick["short"]["mid"] - pick["long"]["mid"], 4),
+                                "spread_pct": pick["short"]["spread_pct"],
+                                "long_spread_pct": pick["long"]["spread_pct"],
+                                "net_credit_conservative": pick["net_credit"]},
+                "risk_per_contract": round(pick["mid"], 2),
+                "max_value_per_contract": pick["max_value"],
+                "max_loss_usd": round(pick["mid"] * 100 * qty, 2),
+                "max_gain_usd": round(pick["net_credit"] * 100 * qty, 2),
+            })
+            continue
         if pick.get("structure") == "vertical_spread":
             lm, sm = pick["long"]["meta"], pick["short"]["meta"]
             model = (bs_call(spot, lm["strike"], pick["dte"] / 365.0, iv, float(cfg["model"]["risk_free"]))
@@ -456,10 +605,16 @@ def cmd_signal(a):
             rvn = i.get("rv")
             ivn = max(0.15, min(1.5, (rvn or 0.30) * float(cfg["model"]["iv_rv_mult"])))
             tn = (int(cc["min_dte_calendar"]) + int(cc["max_dte_calendar"])) / 2.0 / 365.0
-            est = bs_call(px, cc["moneyness"] * px, tn, ivn, float(cfg["model"]["risk_free"]))
-            if cc.get("structure") == "vertical_spread":
-                est -= bs_call(px, cc["short_moneyness"] * px, tn, ivn,
-                               float(cfg["model"]["risk_free"]))
+            rf = float(cfg["model"]["risk_free"])
+            if cc.get("structure") == "credit_put_spread":
+                # credit 形态需要预留的是抵押 = 宽度 − 模型净贷记 (每股风险)
+                mc = (bs_put(px, cc["short_put_moneyness"] * px, tn, ivn, rf)
+                      - bs_put(px, cc["long_put_moneyness"] * px, tn, ivn, rf))
+                est = (cc["short_put_moneyness"] - cc["long_put_moneyness"]) * px - mc
+            else:
+                est = bs_call(px, cc["moneyness"] * px, tn, ivn, rf)
+                if cc.get("structure") == "vertical_spread":
+                    est -= bs_call(px, cc["short_moneyness"] * px, tn, ivn, rf)
             near.append({"symbol": sym, "rsi2_now": round(i["rsi2"], 2),
                          "scenario": scenario, "spot": round(px, 2),
                          "structure": cc.get("structure", "single"),
@@ -493,8 +648,8 @@ def cmd_apply(a):
     fills = load_json(a.fills)
     ctx = load_json(a.context) if a.context else {}
     def _key(o):
-        """价差单以**买腿 OCC** 为仓位主键 (与 fills 约定一致)。"""
-        if o.get("structure") == "vertical_spread":
+        """价差单以**首腿 OCC** 为仓位主键 (vertical=买腿, credit_put=卖腿; 与 fills 约定一致)。"""
+        if o.get("structure") in ("vertical_spread", "credit_put_spread"):
             return o["legs"][0]["symbol"]
         return o["symbol"]
     ctx_buys = {_key(o): o for o in ctx.get("buys", [])}
@@ -527,6 +682,21 @@ def cmd_apply(a):
                             "short_strike": smeta["strike"],
                             "max_value_per_contract": c.get("max_value_per_contract"),
                             "entry_legs": c.get("legs")})
+            # 信用 put 价差: 主键 = 卖腿 OCC, price = 净贷记; 存保护买腿 + 每张风险
+            elif (f.get("structure") == "credit_put_spread"
+                  or c.get("structure") == "credit_put_spread"):
+                long_occ = f.get("long_symbol") or (c.get("legs") or [{}, {}])[1].get("symbol")
+                lmeta = parse_occ(long_occ) if long_occ else None
+                if not lmeta:
+                    raise SystemExit(f"信用价差成交缺保护腿 OCC: {occ} (人工对账)")
+                risk_pc = f.get("risk_per_contract") or c.get("risk_per_contract")
+                if risk_pc is None:
+                    risk_pc = round(meta["strike"] - lmeta["strike"] - price, 2)
+                rec.update({"structure": "credit_put_spread", "long_occ": long_occ,
+                            "long_strike": lmeta["strike"],
+                            "risk_per_contract": float(risk_pc),
+                            "max_value_per_contract": c.get("max_value_per_contract"),
+                            "entry_legs": c.get("legs")})
             positions[occ] = rec
         else:
             pos = positions.pop(occ, None)
@@ -536,14 +706,22 @@ def cmd_apply(a):
             ep = float(pos["entry_premium"])
             eq = pos.get("entry_quote") or {}
             xq = c.get("exit_quote") or {}
+            if pos.get("structure") == "credit_put_spread":
+                # credit: 开仓收 ep, 平仓付 price → 盈亏 = ep − price; 百分比按每张风险归一
+                rk = float(pos.get("risk_per_contract") or 0)
+                pnl_usd = round((ep - price) * 100.0 * qty, 2)
+                pnl_pct = round((ep - price) / rk * 100.0, 2) if rk else None
+            else:
+                pnl_usd = round((price - ep) * 100.0 * qty, 2)
+                pnl_pct = round((price / ep - 1) * 100.0, 2) if ep else None
             ledger.setdefault("round_trips", []).append({
                 "occ": occ, "structure": pos.get("structure", "single"),
-                "short_occ": pos.get("short_occ"),
+                "short_occ": pos.get("short_occ"), "long_occ": pos.get("long_occ"),
                 "underlying": meta["underlying"],
                 "entry_date": pos["entry_date"], "exit_date": today,
                 "entry_premium": ep, "exit_premium": price,
-                "pnl_pct": round((price / ep - 1) * 100.0, 2) if ep else None,
-                "pnl_usd": round((price - ep) * 100.0 * qty, 2),
+                "pnl_pct": pnl_pct,
+                "pnl_usd": pnl_usd,
                 "reason": f.get("reason", c.get("reason", "")),
                 "entry_spread_pct": eq.get("spread_pct"),
                 "exit_spread_pct": xq.get("spread_pct"),
@@ -589,6 +767,19 @@ def cmd_report(a):
     open_mtm = []
     for occ, pos in sorted(positions.items()):
         q = (chains.get(pos["underlying"]) or {}).get(occ) or {}
+        if pos.get("structure") == "credit_put_spread":
+            # 保守盯市: 平仓成本 = 卖腿ask − 保护腿bid; 浮盈 = 收到贷记 − 平仓成本
+            lq = (chains.get(pos["underlying"]) or {}).get(pos["long_occ"]) or {}
+            mark = None
+            if q.get("ask") is not None and lq.get("bid") is not None:
+                mark = round(max(float(q["ask"]) - float(lq["bid"]), 0.0), 2)
+            upnl = (round((pos["entry_premium"] - mark) * 100 * pos["contracts"], 2)
+                    if mark is not None else None)
+            open_mtm.append({"occ": occ, "structure": "credit_put_spread",
+                             "entry_premium": pos["entry_premium"],
+                             "entry_date": pos["entry_date"], "mark_close_cost": mark,
+                             "unrealized_usd": upnl, "dte": dte(pos["expiry"], today)})
+            continue
         mark = q.get("bid")  # 保守: 按 bid 盯市
         upnl = round((mark - pos["entry_premium"]) * 100 * pos["contracts"], 2) if mark else None
         open_mtm.append({"occ": occ, "entry_premium": pos["entry_premium"],

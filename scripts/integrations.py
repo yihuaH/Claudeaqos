@@ -335,20 +335,23 @@ def chains(underlyings, date_str, dte_max, out_path):
     out = {}
     for u in underlyings:
         acc = {}
-        token = None
-        while True:
-            url = (f"https://data.alpaca.markets/v1beta1/options/snapshots/{u}"
-                   f"?feed=indicative&type=call&limit=1000"
-                   f"&expiration_date_gte={date_str}&expiration_date_lte={lte}")
-            if token:
-                url += f"&page_token={token}"
-            j = _get(url, hdrs, timeout=60)
-            for occ, s in (j.get("snapshots") or {}).items():
-                q = s.get("latestQuote") or {}
-                acc[occ] = {"bid": q.get("bp"), "ask": q.get("ap")}
-            token = j.get("next_page_token")
-            if not token:
-                break
+        # call+put 双拉 (2026-08-13 用户「直接实盘」credit_put_spread 形态后 put 链成为必需;
+        # call 保留供 paper 摩擦轨道与旧持仓出场)
+        for typ in ("call", "put"):
+            token = None
+            while True:
+                url = (f"https://data.alpaca.markets/v1beta1/options/snapshots/{u}"
+                       f"?feed=indicative&type={typ}&limit=1000"
+                       f"&expiration_date_gte={date_str}&expiration_date_lte={lte}")
+                if token:
+                    url += f"&page_token={token}"
+                j = _get(url, hdrs, timeout=60)
+                for occ, s in (j.get("snapshots") or {}).items():
+                    q = s.get("latestQuote") or {}
+                    acc[occ] = {"bid": q.get("bp"), "ask": q.get("ap")}
+                token = j.get("next_page_token")
+                if not token:
+                    break
         out[u] = acc
     with open(out_path, "w") as f:
         json.dump(out, f)
