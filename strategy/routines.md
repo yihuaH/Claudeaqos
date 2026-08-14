@@ -1,4 +1,4 @@
-# Routine 唤醒词 (2026-08-08 精简版 · 2026-08-13 起每次开新窗口)
+# Routine 唤醒词 (2026-08-08 精简版 · 2026-08-14 起全部唤醒到常驻对话)
 
 原唤醒词每条 800-1500 字, 且与 `playbook.md` 高度重复 —— 一旦改流程要同时改两处, 界面里的那份
 还改不了 (Routine 文本无法在线更新, 只能重建)。现把流程搬进 `scripts/session.py`,
@@ -9,36 +9,38 @@
 
 ---
 
-## 会话模式: 每次开新窗口 (2026-08-13 用户「每日的主跑, 战报, 收盘等还是开新窗口吧」)
+## 会话模式: 全部唤醒到常驻对话 (2026-08-14 用户「所有的主跑 晨间 等全部都推送到这个对话框」)
 
-三个每日 Routine 与周度股票池刷新已重建为 **create_new_session_on_fire** —— 每次触发开一个
-全新会话, 不再唤回长久会话 (原 session_017Jqv…「Daily report sending window」, 该会话保留,
-仅不再被任何 Routine 唤醒)。当前触发器清单:
+四条 Routine 已重建为 **persistent_session 自绑定** —— 每次触发唤醒同一个常驻对话
+`session_01NYPNGq5j25cGqpoLrWiA7t`, 所有主跑/晨检/战报/周度刷新的过程与产出都出现在该对话里,
+用户可直接在里面回复「执行」消费 pending 清单。新窗口模式 (2026-08-13) 的四条触发器停用保留。
+当前触发器清单:
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
-| 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01Y566pgrN57xjs2RXZN3Mad` | ✅ 新窗口 |
-| 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_019cdJ9TLSZfZhQDN77bEGrX` | ✅ 新窗口 |
-| 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01LSG22K25Jgqc9SR19YNVef` | ✅ 新窗口 |
-| 周度股票池刷新 (周一 15:00 ET) | `0 19 * * 1` | `trig_01W7opsqjExxvDSHGsxUeKYq` | ✅ 新窗口 |
-| (旧) 主跑 → 长久会话 | `45 21 * * 1-5` | `trig_01JjYFiFewuCPxSEDauXmafN` | ⏸ 2026-08-13 停用 (保留可回退) |
-| (旧) 晨检+战报 → 长久会话 | `45 14,22 * * 1-5` | `trig_01MieoRch6D7Um9fY65yBGCW` | ⏸ 2026-08-13 停用 (保留可回退) |
-| (旧) 周度股票池刷新 → 长久会话 | `0 19 * * 1` | `trig_01Mum8dwjyp3khnYeFYtipbw` | ⏸ 2026-08-13 停用 (保留可回退) |
+| 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
+| 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
+| 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
+| 周度股票池刷新 (周一 15:00 ET) | `0 19 * * 1` | `trig_01PvM5Mj89pokXgPwkMECZrd` | ✅ → 常驻对话 |
+| (旧) 主跑 · 每次新窗口 | `45 21 * * 1-5` | `trig_01Y566pgrN57xjs2RXZN3Mad` | ⏸ 2026-08-14 停用 (保留可回退) |
+| (旧) 晨间核查 · 每次新窗口 | `45 14 * * 1-5` | `trig_019cdJ9TLSZfZhQDN77bEGrX` | ⏸ 2026-08-14 停用 (保留可回退) |
+| (旧) 收盘战报 · 每次新窗口 | `45 22 * * 1-5` | `trig_01LSG22K25Jgqc9SR19YNVef` | ⏸ 2026-08-14 停用 (保留可回退) |
+| (旧) 周度股票池刷新 · 每次新窗口 | `0 19 * * 1` | `trig_01W7opsqjExxvDSHGsxUeKYq` | ⏸ 2026-08-14 停用 (保留可回退) |
+| (旧) 晨检首跑健康检查 08-14 一次性 | run_once 15:15 UTC | `trig_01FBwEJyR9fQMu1UQWQPtSy6` | ⏸ 2026-08-14 停用 (专查新窗口模式, 切换后会误报) |
+| (更旧) 主跑 → 长久会话 session_017Jqv… | `45 21 * * 1-5` | `trig_01JjYFiFewuCPxSEDauXmafN` | ⏸ 2026-08-13 停用 |
+| (更旧) 晨检+战报 → 长久会话 session_017Jqv… | `45 14,22 * * 1-5` | `trig_01MieoRch6D7Um9fY65yBGCW` | ⏸ 2026-08-13 停用 |
+| (更旧) 周度股票池刷新 → 长久会话 session_017Jqv… | `0 19 * * 1` | `trig_01Mum8dwjyp3khnYeFYtipbw` | ⏸ 2026-08-13 停用 |
 
-⚠️ **连接器注意** (2026-08-13 实测): 经 API 从任务会话重建的触发器**带不上 Robinhood
-(cash-printer) 连接器** (平台限制: 连接器只能从持有可传递授权的会话或 Routines 界面带入)。
-用户需在 claude.ai Routines 界面为新建 Routine 手工添加 Robinhood 工具
-(用户 2026-08-13「我可以自己加 robinhood 工具」; 三条每日已添加并验证带 cash-printer,
-周度刷新新触发器待添加)。唤醒词均已内置缺连接器时的安全行为: 主跑不交易只通知 /
-晨检不动单只通知 / 战报照发但注明「券商侧未核对」/ 周度刷新不刷新只通知。
+⚠️ **连接器注意** (2026-08-13 实测, 2026-08-14 依旧): 经 API 建的触发器**带不上 Robinhood
+(cash-printer) 连接器** (平台限制: 连接器只能从持有可传递授权的会话或 Routines 界面带入;
+本次四条新触发器创建时平台同样警告 no passable connector grants)。**用户需在 claude.ai
+Routines 界面为四条新 Routine 手工添加 Robinhood 工具** (老流程, 用户 2026-08-13「我可以
+自己加 robinhood 工具」)。常驻对话本身持有 cash-printer, 触发唤醒时连接器是否随会话自带
+待 08-14 首跑实测; 唤醒词均已内置缺连接器时的安全行为: 主跑不交易只通知 / 晨检不动单只通知 /
+战报照发但注明「券商侧未核对」/ 周度刷新不刷新只通知。
 
-⚠️ **仓库源注意** (2026-08-13 晨检首跑实测, 见 `journal/2026-08-13-morning.md` §5): 经 API
-重建的触发器**同样带不上仓库源** —— 新窗口会话启动时 `/home/user/Claudeaqos` 不存在、GitHub
-侧无任何仓库 scope, 晨检首跑因此零产出 (会话按安全行为只发通知即结束)。**治本 = 用户在
-Routines 界面为四条新触发器添加仓库 `yihuaH/Claudeaqos`** (与补挂连接器同处)。过渡期兜底:
-四条唤醒词末尾已追加自举条款 —— 目录不存在时先 `add_repo(yihuaH, Claudeaqos, access=push)`
-附加仓库并 clone 继续, 失败则按各自缺工具的安全行为通知后结束 (`update_trigger` 只改了
-prompt, cron/绑定不动; routines.md 下方 ①②③ 的唤醒词文本为追加前的原文)。
+**仓库源**: 常驻对话已绑定仓库 `yihuaH/Claudeaqos` (本会话即在其中工作), 新窗口模式的
+缺仓库问题理论上消失; 四条唤醒词仍保留 `add_repo` 自举兜底 (容器重建后仓库源丢失时自救)。
 
 注: cron 为 UTC, 按夏令时 (ET=UTC−4) 换算; 冬令时 (ET=UTC−5) 需整体 +1 小时重调。
 
@@ -52,7 +54,11 @@ cd /home/user/Claudeaqos && git fetch origin Main && git checkout -B Main origin
 ```
 
 照它输出的清单执行。规则以 `CLAUDE.md` 硬性红线 + `strategy/playbook.md` 为准。
-新窗口回写一律 push origin Main; 若被拒则 push 工作分支再开 PR 合并回 Main (CLAUDE.md 分支约定)。
+回写一律 push origin Main; 若被拒则 push 工作分支再开 PR 合并回 Main (CLAUDE.md 分支约定)。
+
+下方 ①②③ 为 2026-08-13 新窗口版唤醒词存档; 2026-08-14 常驻对话版仅措辞微调
+(「新窗口缺 Robinhood 连接器」→「本会话缺 Robinhood 连接器」+ 各自的 add_repo 自举兜底),
+流程完全一致, 以触发器内实际文本为准。
 
 ---
 
@@ -100,18 +106,21 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
 迟到)。显式指定窗口可以避免「主跑迟到 40 分钟被判成战报窗口」这类错配。自动判断保留给人工调用
 (`python3 scripts/session.py brief`)。
 
-## 新窗口模式的注意点
+## 常驻对话模式的注意点 (2026-08-14 起)
 
-- **用户回复「执行」**: pending 清单存在 Main 上, 与会话无关 — 用户可在任何有人值守窗口
-  (当天的战报/晨检新窗口、或任意手开会话) 说「执行」, 按 playbook 4C/4D 消费。
-- **跨会话 context**: 新窗口没有前一天的对话记忆, 一切以 Main 上的账本/journal/pending 文件为准
-  (本来就是既定原则, `state/weekly_call_*_last_orders.json` 等回收 context 文件因此存在)。
-- **旧长久会话**: 仍可手动使用 (用户在里面说「执行」依然有效), 只是不再被任何 Routine 唤醒。
+- **用户回复「执行」**: pending 清单存在 Main 上, 与会话无关 — 最顺手的是直接在常驻对话里说
+  「执行」(战报/晨检就在里面), 也可在任意手开的有人值守会话说, 按 playbook 4C/4D 消费。
+- **跨会话 context**: 虽然常驻对话有连续记忆, 但一切仍以 Main 上的账本/journal/pending 文件
+  为准 (既定原则, 对话可能被平台压缩/摘要, `state/weekly_call_*_last_orders.json` 等回收
+  context 文件继续存在)。
+- **长对话风险**: 所有窗口挤同一对话, 会话上下文会持续变长被摘要; 各窗口本就设计成
+  幂等 + 以 Main 文件为准, 摘要丢细节不影响正确性。
+- **旧会话**: 新窗口模式的历史会话与更早的 session_017Jqv… 均保留可查, 只是不再被唤醒。
 
 ## 维护约定
 
 - **流程变更只改 `scripts/session.py` 的 `CHECKLIST` + `playbook.md`**, 唤醒词不动。
-- Routine 的**会话绑定方式** (唤回长久会话 vs 每次新窗口) 无法在线修改, 只能删掉重建;
+- Routine 的**会话绑定方式** (常驻对话 vs 每次新窗口) 无法在线修改, 只能删掉重建;
   经 API 重建后需在界面补挂 Robinhood 连接器 (见上)。
 - 唤醒词里若仍残留旧的分支名或 confirm 闸门描述, 一律以 `CLAUDE.md` 与 `playbook.md` 为准
   (CLAUDE.md「分支约定」已有同款声明)。
