@@ -1,5 +1,5 @@
 {
-  "_purpose": "周call 实盘实验仓 (账户 802095265, 用户 2026-08-04 授权链: 「我可以接受全赔」→「你先搞出引擎, 多少钱不要管, 我后续会追加投资的」)。形态 = 回测最优 (RSI-2 × 深ITM 0.90 × 无期权止损 × 跟正股出场 × spread gate ≤2%)。买入 semi_auto (红线9): 引擎出单→pending_option_orders.json→用户「执行」; 出场卖单全自动。budget 为硬顶 (红线3), 用户追加投资后需同步上调 max_open_premium_usd。",
+  "_purpose": "周度期权实盘实验仓 (账户 802095265, 用户 2026-08-04 授权链: 「我可以接受全赔」→「你先搞出引擎, 多少钱不要管, 我后续会追加投资的」)。形态沿革: 深ITM买call (08-04) → 牛市看涨价差 (08-07) → **牛市看跌信用价差 credit_put_spread (2026-08-13 用户「直接实盘」, 依据 journal/2026-08-13-pcs-bt.md)**。开仓 semi_auto (红线9, 开仓=风险增加, 无论现金方向): 引擎出单→pending_option_orders.json→用户「执行」; 平仓属出场类全自动 (credit 形态平仓是 debit 买回组合单, 分类器兼容性首个出场实测, 见 _contract_note ⑤)。budget 为硬顶 (红线3), 百分比制随净值自动伸缩。",
   "enabled": true,
   "universe": [
     "SPY",
@@ -37,16 +37,17 @@
     "_underlying_stop_note": "**刻意保持 5%, 不跟随股票轨道 2026-08-07 的 5→7% 调整** — 两条理由: ① 价差买腿行权价在 -6% 处, 5% 止损**先于**买腿失去内在价值触发, 是最大亏损的天然缓冲; 放宽到 7% 会在买腿已变虚值后才出场, 等于放弃这层保护 (单腿形态同理, 深ITM 0.90 在 -10% 处, 缓冲更厚但逻辑相同)。② 7% 的依据是**正股**收益扫描 (+1.030% vs +0.968%); 期权有 ~6 倍杠杆, -5% 正股≈-45% 期权、-7%≈-60%+, 非线性放大使正股结论不能直接搬运。若要改, 须用期权口径单独回测。"
   },
   "contract": {
-    "moneyness": 0.94,
-    "floor_moneyness": 0.85,
+    "structure": "credit_put_spread",
+    "short_put_moneyness": 0.97,
+    "long_put_moneyness": 0.88,
     "min_dte_calendar": 8,
     "max_dte_calendar": 17,
-    "max_spread_pct": 2.0,
+    "max_credit_leg_spread_pct": 8.0,
+    "max_credit_leg_spread_abs": 0.10,
+    "max_far_leg_spread_pct": 16.0,
+    "max_far_leg_spread_abs": 0.10,
     "min_bid": 0.05,
-    "max_premium_per_contract_usd": 3000,
-    "structure": "vertical_spread",
-    "short_moneyness": 1.03,
-    "max_short_leg_spread_pct": 8.0
+    "max_premium_per_contract_usd": 3000
   },
   "sizing": {
     "position_pct_of_portfolio": 20,
@@ -55,7 +56,7 @@
   "budget": {
     "max_open_premium_pct_of_portfolio": 40
   },
-  "_budget_note": "未平仓权利金总额硬顶 = 账户净值 × 40% (2026-08-04 用户改为百分比制并采纳推荐值; 追加投资后自动伸缩, 无需手调)。机会主义运行 (用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(40%净值-已占用, 实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。40% 的依据: 期权整张交易, 低于 ~33% 在当前账户规模 (~$2.2k) 下连最便宜合格合约 (XLF ~$700) 都容不下; 用户已接受该桶全损。改百分比只能由用户定 (红线3)。",
+  "_budget_note": "未平仓**在险额**总额硬顶 = 账户净值 × 40% (2026-08-04 用户定百分比制; 2026-08-13 起 credit 形态在险额 = 每张(宽度−贷记) = 占用抵押, debit 遗留仓 = 已付权利金; 追加投资后自动伸缩, 无需手调)。机会主义运行 (用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(40%净值-已占用, 实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。40% 的依据: 期权整张交易, 低于 ~33% 在当前账户规模 (~$2.2k) 下连最便宜合格合约 (XLF ~$700) 都容不下; 用户已接受该桶全损。改百分比只能由用户定 (红线3)。",
   "circuit_breaker": {
     "max_cumulative_realized_loss_pct_of_portfolio": 40
   },
@@ -65,14 +66,14 @@
     "allow_unknown_earnings": true
   },
   "validation": {
-    "start_date": "2026-08-04",
+    "start_date": "2026-08-14",
     "min_round_trips": 15,
     "min_trading_days": 30,
     "go_bar": {
-      "max_median_leg_spread_pct": 2.25,
+      "max_median_leg_spread_pct": 8.0,
       "min_median_trade_pnl_pct": 0.0
     },
-    "_note": "实盘自评报告 (report 命令) 沿用同一 go_bar 口径: 若实测中位点差/盈亏跌破, 主动向用户建议关停。"
+    "_note": "实盘自评报告 (report 命令) 沿用同一 go_bar 口径: 若实测中位点差/盈亏跌破, 主动向用户建议关停。2026-08-13 形态切换 credit_put_spread 后验证时钟重置 (start_date 08-04→08-14), 点差 bar 2.25→8.0 重校 (卖腿是 ~$2-5 的 OTM put, 百分比点差天然比深ITM call 宽; 回测盈亏假设的绝对半点差 ≤$0.10/股/腿, 折中位 % 约 4-8; 首批实测后回校)。"
   },
   "model": {
     "iv_rv_mult": 1.25,
@@ -80,5 +81,5 @@
     "risk_free": 0.04
   },
   "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。",
-  "_contract_note": "牛市价差 (2026-08-07 用户「直接部署到实盘」, 跳过 paper 验证期; 回测 72 笔: 价差 0.94→1.03 均值 +16.0%/中位 +20.3%/胜率 86%, 优于深ITM单腿 +9.8%/+11.3%/75%, 且单张成本 $1,204 vs $2,361 — 卖掉 +3% 以上涨幅换掉时间价值成本, 与 RSI-2「3天涨1-3%」形态天然匹配; 虚值腿点差假设从×1压到×4仍胜出, 不脆弱)。买腿 = 深ITM ≤0.94×spot 最高档, 过 max_spread_pct 2%; 卖腿 = 同到期 ≥1.03×spot 最低档, 过 max_short_leg_spread_pct 8% (虚值腿百分比点差天然更宽)。净借记 = 买腿ask − 卖腿bid (最保守口径)。⚠️ **未经 paper 验证**: 组合单真实成交价、临到期平仓难度均为实盘首测; **pin risk (行权价夹心)**: 到期时股价落在两腿之间 → 买腿被行权需接 100 股、卖腿作废, 故 force_exit_dte_lte=2 必须严格执行, 绝不留到到期日。"
+  "_contract_note": "**牛市看跌信用价差 credit_put_spread (2026-08-13 用户「直接实盘」授权, 沿 08-07 直上先例跳过 paper)**。回测依据 journal/2026-08-13-pcs-bt.md: 同 RSI-2 信号下卖 0.97P/买 0.88P 全 8 假设格正收益、6/6 子窗口胜原买方价差且回撤减半; 机制 = 过点差资金少 3 倍 + 超卖日 IV 抬价从逆风(买贵)变顺风(卖贵)。卖腿 = ≤0.97×spot 最高档 put 过 8% gate; 保护腿 = 同到期 ≤0.88×spot 最高档过 16% gate; 净贷记 = 卖腿bid − 买腿ask (最保守)。**每张风险 = 宽度 − 贷记 = 占用抵押**; 注码/预算/BP 全按风险计。⚠️ **五条未验证风险 (模型局限, 首批实盘重点观察记 journal)**: ① 无 put skew — 真实贷记应更高但止损买回也更贵; ② 日线回测低估跳空尾部; ③ 回测样本无 2008 式崩盘, 连续崩盘下信用形态会高频打到单笔最大亏损 (每笔已被 20%NV 风险归一封顶); ④ 短腿跌进实值有**提前被行权**风险 (美式 put), force_exit_dte_lte=2 与 -5% 正股止损 (卖腿 -3% 处, 止损先于深度实值) 是两道护栏, 绝不留到到期; ⑤ **平仓方向反转为 debit 买回组合单** — 若平台分类器把无人值守 buy_to_close 当买入拦截 (首个出场实测), 立即 PushNotification 用户人工触发并记 journal (红线6), 不得反复重试。原 vertical_spread (08-07–08-13, 0 成交 1 skip) 注记见 git 历史。"
 }

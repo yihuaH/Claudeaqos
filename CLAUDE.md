@@ -43,7 +43,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周call 实盘实验仓 (同形态, semi_auto 买入) | 实盘 | ✅ active·机会主义 (2026-08-04 用户定调「有合适就买, 没有就不买」; budget=净值×40% 自动伸缩, 注码=净值×20%/信号; 白名单18只·股票类专属 (2026-08-05 剔 GLD/TLT), 可负担档=XLF/XLE/BAC) | `weekly_calls_live.json enabled` + `budget` |
+| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget=净值×40% 按**在险额**计, 注码=净值×20% 风险/信号; 白名单21只·股票类专属; 开仓 semi_auto、平仓自动但方向是买回 — 分类器兼容性首个出场实测) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 
@@ -69,7 +69,7 @@
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
-- `scripts/weekly_calls.py` — 周call 确定性引擎 (signal / apply / report; 2026-08-04 用户授权), RSI-2 同形信号 × 深ITM(0.90) 买call × 无期权止损 × 跟正股出场, 双轨共用:
+- `scripts/weekly_calls.py` — 周度期权确定性引擎 (signal / apply / report; 2026-08-04 用户授权), RSI-2 同形信号 × 跟正股出场, 支持 single / vertical_spread / **credit_put_spread** (2026-08-13 用户「直接实盘」, 实盘现行形态: 卖0.97P/买0.88P 收贷记, 每张风险=宽度−贷记, 点差双档闸 pct|abs), 双轨共用:
   - paper 摩擦实测: `strategy/weekly_calls.json` + `state/weekly_call_positions.json` 账本 (round_trips/skip_log 摩擦数据) + `state/weekly_call_last_orders.json` (次日跨会话回收 context); 实测真实点差 vs 回测模型
   - 实盘实验仓: `strategy/weekly_calls_live.json` (budget+实时BP 双硬顶) + `state/weekly_call_live_positions.json` 账本 + `state/weekly_call_live_last_orders.json`; 买入 semi_auto 走 `state/pending_option_orders.json` (playbook 4D), 出场卖单全自动
 - `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)

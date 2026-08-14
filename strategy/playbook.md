@@ -280,6 +280,24 @@
 - **纪律**: 轨道熔断 (累计已实现亏 ≥$1000, 与 budget 同步调) 触发 → 引擎自动只出不进, 通知用户;
   合约过期未平/疑似被行权 → 红线 6 停该仓、人工对账; report 自评跌破 go_bar 口径 →
   主动建议用户关停。**引擎没出的单绝不下, 出了的绝不放大** (4A/4C 通用规则同样适用)。
+
+**形态更替: 牛市看跌信用价差 (credit_put_spread, 2026-08-13 用户「直接实盘」授权, 回测
+`journal/2026-08-13-pcs-bt.md`: 同信号卖方 6/6 窗口胜买方且回撤减半)** — 引擎输出
+`structure: "credit_put_spread"` (卖 ≤0.97×spot put + 买 ≤0.88×spot 保护 put, 收净贷记) 时,
+上文价差规则按以下差异执行:
+- **开仓 = credit 组合单, 仍走 semi_auto** (开仓=风险增加, 与现金方向无关):
+  `place_option_order(legs=[卖腿 open, 保护腿 open], type="limit", price=净贷记, direction="credit")`,
+  限价保护方向反转 — 贷记是**收钱**, 下限 = 引擎 est×0.97, **绝不下调限价追单**;
+  执行前实时 BP ≥ 每张风险×张数 (券商抵押占用 = 宽度−贷记)。
+- **平仓 = debit 组合单 (买回), 属出场类照常全自动**: 限价 = 引擎 est×1.03 封顶。
+  ⚠️ 平仓方向是「买」— 若平台分类器把无人值守的 buy_to_close 当买入拦截 (首个出场实测):
+  **不反复重试**, 记 journal + PushNotification 请用户人工触发 (红线6)。
+- **回写**: fills `{"symbol": <卖腿OCC>, "side": "buy"(开)/"sell"(平), "qty", "price": 净贷记/净借记,
+  "structure": "credit_put_spread", "long_symbol": <保护腿OCC>}` — 账本以**卖腿 OCC 为主键**;
+  side 是生命周期语义 (开/平), 不是现金方向。盈亏 = 贷记 − 买回成本, 百分比按每张风险归一。
+- **风险要点**: 每张最大亏损 = 宽度−贷记 (=抵押), budget 40% 顶按**在险额**计;
+  短腿 (−3% 处) 跌进实值有美式提前行权风险 — −5% 正股止损先行 + `force_exit_dte_lte=2`
+  两道护栏, **绝不留到到期**; 五条模型局限与观察项见 `weekly_calls_live.json _contract_note`。
 ## 5. 回写与日志
 
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
