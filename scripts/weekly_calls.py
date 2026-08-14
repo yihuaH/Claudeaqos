@@ -476,7 +476,11 @@ def cmd_signal(a):
             target = pv * float(pos_pct) / 100.0
             qty = int(target // per_cost)
             if qty < 1:
-                if per_cost <= 2 * target:  # 贵档例外: 单张 ≤ 2×目标仓 (如 IWM) 允许 1 张
+                # 贵档例外: 单张 ≤ max_single_position_pct_of_portfolio×净值 允许 1 张
+                # (2026-08-14 用户「都改到50%和5000」参数化; 缺省保持原 2×目标仓 = 40%)
+                tier_pct = (cfg.get("sizing") or {}).get("max_single_position_pct_of_portfolio")
+                tier_cap = pv * float(tier_pct) / 100.0 if tier_pct is not None else 2 * target
+                if per_cost <= tier_cap:
                     qty = 1
                 else:
                     skips.append({"symbol": sym, "reason": f"premium_exceeds_position_cap"

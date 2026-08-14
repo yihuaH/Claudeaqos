@@ -16,7 +16,7 @@
 9. 半自动买入 (execution.mode=semi_auto, 用户 2026-07-20 设立, 取代原 confirm 闸门): 实盘新买入与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation) 在无人值守会话**可 review、不得 place** (平台分类器只拦截无人值守 place, review 不受限; 不要反复尝试下单) — 只能由主流程写入 `state/pending_orders.json` (逐字段来自引擎输出), 待用户在有人值守会话明确说"执行"后按 playbook 4C 原样执行 (当日窗口市价; 盘外买单混合执行=整股即时限价①腿 + 余量分数市价排次开②腿, 2026-07-27 用户改进; 有效至次一交易日 09:25 ET; 隔夜轨道买单仅当日)。出场/止损/兜底卖出与纸面轨道不受限, 照常全自动 (可直接 place)。
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
-   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) 同受 semi_auto 约束 — 无人值守只写 `state/pending_option_orders.json`, 用户「执行」后按 playbook 4D 下限价单 (有效至次一交易日 10:30 ET, 推荐执行窗 09:45–10:30 ET 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。预算硬顶 = **账户净值 × 40%** (`weekly_calls_live.json budget`, 用户 2026-08-04 定百分比制, 随净值自动伸缩) 与实时 buying_power 双封顶 (红线3), 百分比只能由用户改。
+   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) 同受 semi_auto 约束 — 无人值守只写 `state/pending_option_orders.json`, 用户「执行」后按 playbook 4D 下限价单 (有效至次一交易日 10:30 ET, 推荐执行窗 09:45–10:30 ET 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。预算硬顶 = **账户净值 × 50%** (`weekly_calls_live.json budget`, 用户 2026-08-04 定百分比制、2026-08-14「都改到50%和5000」上调, 随净值自动伸缩) 与实时 buying_power 双封顶 (红线3), 百分比只能由用户改。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
 
@@ -43,7 +43,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget=净值×40% 按**在险额**计, 注码=净值×20% 风险/信号; 白名单21只·股票类专属; 开仓 semi_auto、平仓自动但方向是买回 — 分类器兼容性首个出场实测) | `weekly_calls_live.json enabled` + `budget` |
+| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget=净值×**50%** 按**在险额**计·熔断同步, 注码=净值×20% 风险/信号·贵档单仓 ≤50% 净值·单张风险 ≤$5,000 (2026-08-14 用户「都改到50%和5000」, DIA 解锁); 白名单21只·股票类专属; 开仓 semi_auto、平仓自动但方向是买回 — 分类器兼容性首个出场实测) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 
