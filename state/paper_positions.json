@@ -17,13 +17,6 @@
       "cost": 10187.41,
       "tranches": 1
     },
-    "ILMN": {
-      "qty": 54.0,
-      "entry_price": 190.421667,
-      "entry_date": "2026-08-10",
-      "cost": 10282.77,
-      "tranches": 1
-    },
     "VIK": {
       "qty": 99.0,
       "entry_price": 104.647778,
@@ -50,6 +43,34 @@
       "entry_price": 49.99,
       "entry_date": "2026-08-12",
       "cost": 9798.04,
+      "tranches": 1
+    },
+    "ROST": {
+      "qty": 39.0,
+      "entry_price": 249.06,
+      "entry_date": "2026-08-13",
+      "cost": 9713.34,
+      "tranches": 1
+    },
+    "AAPL": {
+      "qty": 32.0,
+      "entry_price": 302.75,
+      "entry_date": "2026-08-13",
+      "cost": 9688.0,
+      "tranches": 1
+    },
+    "CRS": {
+      "qty": 18.0,
+      "entry_price": 532.883889,
+      "entry_date": "2026-08-13",
+      "cost": 9591.91,
+      "tranches": 1
+    },
+    "MA": {
+      "qty": 17.0,
+      "entry_price": 563.846471,
+      "entry_date": "2026-08-13",
+      "cost": 9585.39,
       "tranches": 1
     }
   },
@@ -502,6 +523,51 @@
       "side": "buy",
       "qty": 196.0,
       "price": 49.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "ILMN",
+      "side": "sell",
+      "qty": 54.0,
+      "price": 191.09,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "ROST",
+      "side": "buy",
+      "qty": 39.0,
+      "price": 249.06,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "AAPL",
+      "side": "buy",
+      "qty": 32.0,
+      "price": 302.75,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "CRS",
+      "side": "buy",
+      "qty": 18.0,
+      "price": 532.883889,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "MA",
+      "side": "buy",
+      "qty": 17.0,
+      "price": 563.846471,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

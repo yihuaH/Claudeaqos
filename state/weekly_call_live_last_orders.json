@@ -1,50 +1,35 @@
 {
-  "date": "2026-08-12",
+  "date": "2026-08-13",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [
-    {
-      "symbol": "AAPL",
-      "reason": "spread_too_wide(best=3.50%)",
-      "rsi2": 5.75,
-      "spot": 302.25
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
+      "symbol": "XLI",
+      "rsi2_now": 66.78,
+      "scenario": "1d_-1%",
+      "spot": 185.79,
+      "structure": "vertical_spread",
+      "est_premium_usd": 1050
+    },
+    {
       "symbol": "AMZN",
-      "rsi2_now": 14.93,
+      "rsi2_now": 10.31,
       "scenario": "1d_-1%",
-      "spot": 267.28,
+      "spot": 265.13,
       "structure": "vertical_spread",
-      "est_premium_usd": 1249
-    },
-    {
-      "symbol": "GOOGL",
-      "rsi2_now": 11.68,
-      "scenario": "1d_-1%",
-      "spot": 343.54,
-      "structure": "vertical_spread",
-      "est_premium_usd": 1650
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 17.8,
-      "scenario": "2d_-1%x2",
-      "spot": 492.43,
-      "structure": "vertical_spread",
-      "est_premium_usd": 2320
+      "est_premium_usd": 1240
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 24.87,
+      "rsi2_now": 58.06,
       "scenario": "1d_-1%",
-      "spot": 537.15,
+      "spot": 537.91,
       "structure": "vertical_spread",
-      "est_premium_usd": 3114
+      "est_premium_usd": 3120
     }
   ],
-  "suggested_reserve_usd": 718.52
+  "suggested_reserve_usd": 261.86
 }
