@@ -47,20 +47,21 @@
     "max_far_leg_spread_pct": 16.0,
     "max_far_leg_spread_abs": 0.10,
     "min_bid": 0.05,
-    "max_premium_per_contract_usd": 3000
+    "max_premium_per_contract_usd": 5000
   },
   "sizing": {
     "position_pct_of_portfolio": 20,
-    "_note": "每信号 ≈ 净值×20% (全凯利档, 2026-08-05 用户「中间档试一下」→ D20 回测采纳: 中位+47%/最差+31%, 优于1张制与40-50%重注制)。便宜档自动折多张 (XLE≈2张); 单张 >20% 但 ≤40% 净值的贵档 (如 IWM) 允许 1 张; 更贵跳过记 premium_exceeds_position_cap。**并持数与每日新仓数不限** (用户 2026-08-05 指示) — 总敞口由 budget=净值×40% 与实时 BP 双硬顶封锁 (「接受全赔」边界=40%桶不变)。"
+    "max_single_position_pct_of_portfolio": 50,
+    "_note": "每信号 ≈ 净值×20% (全凯利档, 2026-08-05 用户「中间档试一下」→ D20 回测采纳)。便宜档自动折多张; 单张 >20% 但 ≤ max_single_position_pct_of_portfolio (50%, 2026-08-14 用户「都改到50%和5000」由 40% 上调, 为让 DIA 一组 ~$4.7k 可交易) 净值的贵档允许 1 张; 更贵跳过记 premium_exceeds_position_cap。**并持数与每日新仓数不限** (用户 2026-08-05 指示) — 总敞口由 budget=净值×50% 与实时 BP 双硬顶封锁。⚠️ 贵档一张即压上半个净值的风险 (如 DIA), 集中度风险用户知情接受。"
   },
   "budget": {
-    "max_open_premium_pct_of_portfolio": 40
+    "max_open_premium_pct_of_portfolio": 50
   },
-  "_budget_note": "未平仓**在险额**总额硬顶 = 账户净值 × 40% (2026-08-04 用户定百分比制; 2026-08-13 起 credit 形态在险额 = 每张(宽度−贷记) = 占用抵押, debit 遗留仓 = 已付权利金; 追加投资后自动伸缩, 无需手调)。机会主义运行 (用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(40%净值-已占用, 实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。40% 的依据: 期权整张交易, 低于 ~33% 在当前账户规模 (~$2.2k) 下连最便宜合格合约 (XLF ~$700) 都容不下; 用户已接受该桶全损。改百分比只能由用户定 (红线3)。",
+  "_budget_note": "未平仓**在险额**总额硬顶 = 账户净值 × 50% (2026-08-04 用户定百分比制 40%; 2026-08-14 用户「都改到50%和5000」上调至 50%, 熔断同步; 2026-08-13 起 credit 形态在险额 = 每张(宽度−贷记) = 占用抵押, debit 遗留仓 = 已付权利金; 追加投资后自动伸缩, 无需手调)。机会主义运行 (用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(40%净值-已占用, 实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。40% 的依据: 期权整张交易, 低于 ~33% 在当前账户规模 (~$2.2k) 下连最便宜合格合约 (XLF ~$700) 都容不下; 用户已接受该桶全损。改百分比只能由用户定 (红线3)。",
   "circuit_breaker": {
-    "max_cumulative_realized_loss_pct_of_portfolio": 40
+    "max_cumulative_realized_loss_pct_of_portfolio": 50
   },
-  "_circuit_breaker_note": "累计已实现亏损达净值×40% → 引擎只出不进并通知用户 (桶亏完即停, 对应用户「接受全赔」的边界)。",
+  "_circuit_breaker_note": "累计已实现亏损达净值×50% → 引擎只出不进并通知用户 (桶亏完即停, 对应用户「接受全赔」的边界; 与 budget 同步调, 2026-08-14 用户「都改到50%和5000」随预算 40→50)。",
   "defense": {
     "earnings_blackout_days": 7,
     "allow_unknown_earnings": true
