@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-13",
   "generated_at": "2026-08-14T02:49:49Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-14 周五) 09:25 ET",
   "buying_power_at_generation": 4618.71,
@@ -92,5 +92,64 @@
       }
     ],
     "note": "生成时 BP=cash=unleveraged_BP=$4,618.71 (无杠杆, 防杠杆闸 ✓)。reserve $1,050 = 引擎 suggested_reserve_usd (XLI 最便宜单组价差成本; 入金后 BP×35%=$1,616.55 不再是约束)。两单合计 $2,031.56 全部装得下且余 $1,537。4C 执行时仍以实时 min(buying_power, cash) 重算 (红线9)。"
+  },
+  "executed_at": "2026-08-14T03:03:00Z",
+  "execution_summary": {
+    "mode": "盘外限价模式 (4C 混合执行), 2026-08-13 23:00-23:03 ET 用户基于逐笔明细回复「1. 执行」",
+    "reserve_kept": "option_alert 保留 $1,050 未撤销; 执行前实时 cap = min(BP,cash) 4618.71 − 1050 = 3568.71 ≥ 两单累计 2031.56 ✓ (防杠杆闸 BP=cash ✓)",
+    "executed_seqs": [
+      1,
+      2
+    ],
+    "legs": [
+      {
+        "seq": 1,
+        "symbol": "GE",
+        "leg": 1,
+        "type": "limit",
+        "qty": 2.0,
+        "limit_price": 364.25,
+        "fill_price": 360.94,
+        "cost": 721.88,
+        "state": "filled (24h盘即时)",
+        "order_id": "6a7e850d-f5bf-4875-9597-33b47c4b41e4",
+        "ref_id": "8f59e841-6eed-44e8-899f-f6be05eacf7d"
+      },
+      {
+        "seq": 1,
+        "symbol": "GE",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 293.9,
+        "state": "queued 排 2026-08-14 开盘",
+        "order_id": "6a7e851e-671c-4cc0-b4e8-0473bb1cd5bd",
+        "ref_id": "22465e6d-8107-4450-bbfe-85b8f2a6b32f"
+      },
+      {
+        "seq": 2,
+        "symbol": "RTX",
+        "leg": 1,
+        "type": "limit",
+        "qty": 4.0,
+        "limit_price": 222.68,
+        "fill_price": 219.99,
+        "cost": 879.96,
+        "state": "filled (24h盘即时)",
+        "order_id": "6a7e8529-88b5-4e51-b878-1d1635e715ee",
+        "ref_id": "27c01536-e2b5-49d5-9271-e932c6907552"
+      },
+      {
+        "seq": 2,
+        "symbol": "RTX",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 135.82,
+        "state": "queued 排 2026-08-14 开盘",
+        "order_id": "6a7e854b-9e55-4c8b-b0ae-ef21ffdb9a5a",
+        "ref_id": "c25d6b7c-0e72-445c-8680-4e34f5a1305e"
+      }
+    ],
+    "totals": "GE 721.88+293.90=1015.78; RTX 879.96+135.82=1015.78 — 每单恰等于引擎金额, 未放大",
+    "writeback": "①腿已 apply 至 state/positions.json; ②腿开盘成交由晨检回写"
   }
 }

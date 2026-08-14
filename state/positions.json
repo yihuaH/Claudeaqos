@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 6253.66,
+  "high_water_mark": 10157.62,
   "halted": false,
   "strategy_positions": {
     "CVS": {
@@ -56,6 +56,20 @@
       "entry_price": 533.6205,
       "entry_date": "2026-08-13",
       "cost": 622.9,
+      "tranches": 1
+    },
+    "GE": {
+      "qty": 2.0,
+      "entry_price": 360.94,
+      "entry_date": "2026-08-13",
+      "cost": 721.88,
+      "tranches": 1
+    },
+    "RTX": {
+      "qty": 4.0,
+      "entry_price": 219.99,
+      "entry_date": "2026-08-13",
+      "cost": 879.96,
       "tranches": 1
     }
   },
@@ -798,6 +812,24 @@
       "price": 531.77,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "GE",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 360.94,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-13",
+      "symbol": "RTX",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 219.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
