@@ -1,42 +1,7 @@
 {
-  "high_water_mark": 10157.62,
+  "high_water_mark": 10164.78,
   "halted": false,
   "strategy_positions": {
-    "CVS": {
-      "qty": 6.406526,
-      "entry_price": 96.3877,
-      "entry_date": "2026-08-06",
-      "cost": 617.51,
-      "tranches": 1
-    },
-    "DAL": {
-      "qty": 6.937443,
-      "entry_price": 89.3932,
-      "entry_date": "2026-08-11",
-      "cost": 620.16,
-      "tranches": 1
-    },
-    "VIK": {
-      "qty": 11.0,
-      "entry_price": 103.5509,
-      "entry_date": "2026-08-11",
-      "cost": 1139.06,
-      "tranches": 2
-    },
-    "CSX": {
-      "qty": 12.358723,
-      "entry_price": 50.1403,
-      "entry_date": "2026-08-12",
-      "cost": 619.67,
-      "tranches": 1
-    },
-    "WELL": {
-      "qty": 2.723446,
-      "entry_price": 227.5316,
-      "entry_date": "2026-08-12",
-      "cost": 619.67,
-      "tranches": 1
-    },
     "ROST": {
       "qty": 2.487378,
       "entry_price": 250.4243,
@@ -59,17 +24,17 @@
       "tranches": 1
     },
     "GE": {
-      "qty": 2.0,
-      "entry_price": 360.94,
+      "qty": 2.810758,
+      "entry_price": 361.3901,
       "entry_date": "2026-08-13",
-      "cost": 721.88,
+      "cost": 1015.78,
       "tranches": 1
     },
     "RTX": {
-      "qty": 4.0,
-      "entry_price": 219.99,
+      "qty": 4.611801,
+      "entry_price": 220.2567,
       "entry_date": "2026-08-13",
-      "cost": 879.96,
+      "cost": 1015.78,
       "tranches": 1
     }
   },
@@ -830,6 +795,69 @@
       "price": 219.99,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "GE",
+      "side": "buy",
+      "qty": 0.810758,
+      "price": 362.5,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "RTX",
+      "side": "buy",
+      "qty": 0.611801,
+      "price": 222.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "CVS",
+      "side": "sell",
+      "qty": 6.406526,
+      "price": 94.65,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 6.937443,
+      "price": 91.04,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "VIK",
+      "side": "sell",
+      "qty": 11.0,
+      "price": 105.98,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 12.358723,
+      "price": 50.05,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 2.723446,
+      "price": 234.14,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
