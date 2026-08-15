@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-14",
   "generated_at": "2026-08-14T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-17 周一) 09:25 ET",
   "buying_power_at_generation": 6247.02,
@@ -34,15 +34,33 @@
     }
   ],
   "option_alert": {
-    "names": ["XLV", "DIA"],
+    "names": [
+      "XLV",
+      "DIA"
+    ],
     "scenarios": {
-      "XLV": {"scenario": "1d_-1%", "rsi2_now": 23.63, "spot": 167.37, "structure": "credit_put_spread", "est_premium_usd": 1451},
-      "DIA": {"scenario": "1d_-1%", "rsi2_now": 25.35, "spot": 536.8, "structure": "credit_put_spread", "est_premium_usd": 4687}
+      "XLV": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 23.63,
+        "spot": 167.37,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 1451
+      },
+      "DIA": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 25.35,
+        "spot": 536.8,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 4687
+      }
     },
     "reserve_usd": 1451.0
   },
   "news_precheck": {
-    "symbols": ["AVGO", "STLD"],
+    "symbols": [
+      "AVGO",
+      "STLD"
+    ],
     "red_flagged": [],
     "source": "integrations.py news 2026-08-07→2026-08-14 (AVGO 19篇无红旗, STLD 无新闻)"
   },
@@ -51,9 +69,75 @@
     "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 6247.02 − 1451.00",
     "total_usd": 2037.2,
     "per_seq": [
-      {"seq": 1, "symbol": "AVGO", "cumulative": 1018.6, "projection": "≤ cap ✓"},
-      {"seq": 2, "symbol": "STLD", "cumulative": 2037.2, "projection": "≤ cap ✓"}
+      {
+        "seq": 1,
+        "symbol": "AVGO",
+        "cumulative": 1018.6,
+        "projection": "≤ cap ✓"
+      },
+      {
+        "seq": 2,
+        "symbol": "STLD",
+        "cumulative": 2037.2,
+        "projection": "≤ cap ✓"
+      }
     ],
     "note": "生成时 BP=cash=unleveraged_BP=$6,247.02 (无杠杆, 防杠杆闸 ✓); 另有 $3,870.53 入金在途未计入。reserve $1,451 = 引擎 suggested_reserve_usd (XLV 最便宜单组价差成本)。两单合计 $2,037.20 全装得下且余 $2,758.82。周一开盘另有 4 笔出场卖单成交回款。4C 执行时仍以实时 min(buying_power, cash) 重算 (红线9)。"
+  },
+  "executed_at": "2026-08-15T01:28:20Z",
+  "execution_summary": {
+    "mode": "盘外限价模式 (4C 混合执行), 2026-08-14 ~21:27 ET 用户基于战报逐笔明细回复「执行」",
+    "reserve_kept": "option_alert 保留 $1,451 未撤销; 执行前实时 cap = min(BP,cash) 6247.02 − 1451 = 4796.02 ≥ 两单累计 2037.20 ✓ (防杠杆闸 BP=cash ✓)",
+    "executed_seqs": [
+      1,
+      2
+    ],
+    "note": "执行时点已过周五 20:00 ET, 24h 盘周末关闭 — ①腿限价单 (AVGO 2股@396.92 / STLD 3股@258.33) 下单后 queued 无法即时成交, 按协议撤销 0 成交, 全额改走②腿分数市价排周一开盘 (等效 whole==0 退化情形, 合计恰等于引擎金额未放大)",
+    "legs": [
+      {
+        "seq": 1,
+        "symbol": "AVGO",
+        "leg": 1,
+        "type": "limit",
+        "qty": 2,
+        "limit_price": 396.92,
+        "state": "cancelled (24h盘周末关闭无法即时成交, 0成交撤销)",
+        "order_id": "6a7fc078-055e-4cf2-9247-a24b65747bb4",
+        "ref_id": "e5c8a3b6-1f75-4da2-9e9c-7b6a2c58d1f3"
+      },
+      {
+        "seq": 1,
+        "symbol": "AVGO",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 1018.6,
+        "state": "queued 排 2026-08-17 开盘",
+        "order_id": "6a7fc0b2-7ff1-44b9-a921-772cf684b992",
+        "ref_id": "a7e0c5d8-3b97-4fc4-9abe-9d8c4e70f3b5"
+      },
+      {
+        "seq": 2,
+        "symbol": "STLD",
+        "leg": 1,
+        "type": "limit",
+        "qty": 3,
+        "limit_price": 258.33,
+        "state": "cancelled (同上, 0成交撤销)",
+        "order_id": "6a7fc07a-5c08-4bce-9490-8cd96f3bf1cc",
+        "ref_id": "f6d9b4c7-2a86-4eb3-8fad-8c7b3d69e2a4"
+      },
+      {
+        "seq": 2,
+        "symbol": "STLD",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 1018.6,
+        "state": "queued 排 2026-08-17 开盘",
+        "order_id": "6a7fc0b4-a063-40a7-9aaf-97228ad816e9",
+        "ref_id": "b8f1d6e9-4ca8-4ad5-8bcf-0e9d5f81a4c6"
+      }
+    ],
+    "totals": "AVGO $1,018.60 + STLD $1,018.60 = $2,037.20 — 每单恰等于引擎金额, 未放大",
+    "writeback": "两单均排周一开盘成交, 由周一晨检回写 state (今夜无成交无 apply)"
   }
 }
