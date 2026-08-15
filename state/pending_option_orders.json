@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-14",
   "generated_at": "2026-08-15T02:05:00Z",
-  "status": "awaiting_execution",
+  "status": "blocked_platform",
   "valid_until": "次一交易日 (2026-08-17 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "note": "点差闸放宽 8→12% (b58aa22, 用户当晚指示) 后重跑引擎产出; 引擎输入与当日主跑完全相同 (bars/quotes/chains/earnings 同批)。",
   "orders": [
@@ -53,5 +53,12 @@
       "max_gain_usd": 142.0,
       "limit_floor": 1.38
     }
-  ]
+  ],
+  "execution_attempt": {
+    "attempted_at": "2026-08-15T02:12:00Z",
+    "review": "order_checks 空, 抵押 $2,250, 手续费 $0.08, 卖腿报价 1.64/1.77 (保守贷记 1.45 > 限价 1.38)",
+    "place_result": "API 400: Multi-leg options orders aren't supported in Robinhood agentic accounts yet",
+    "conclusion": "agentic 账户暂不支持多腿组合单 — credit_put_spread 实盘轨道的 MCP 执行通道不通 (开仓与组合平仓同受限)。按红线6 未重试、未拆腿。",
+    "manual_option": "用户可在 Robinhood App 手动下同一笔单 (卖 AMZN 2026-08-28 P252.5 + 买 P230, 1 张, 净贷记限价 ≥$1.38, gfd), 周一 10:30 ET 前有效; 若手动开仓, 平仓也须手动或拆腿处理 (先买回卖腿=减风险, 后卖出保护腿), 系统只能盯市提醒"
+  }
 }
