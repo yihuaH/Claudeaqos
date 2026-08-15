@@ -1,57 +1,57 @@
 {
-  "trade_date": "2026-08-05",
-  "generated_at": "2026-08-05T21:52:00Z",
-  "generated_by": "收盘后主跑 §7C 步骤7 (实盘周call实验仓首单)",
-  "status": "cancelled_unfilled",
-  "valid_until": "2026-08-06 10:30 ET (推荐执行窗 09:45-10:30 ET = 北京 21:45-22:30; 提前执行=当场挂限价单)",
-  "buying_power_at_generation": 2123.81,
-  "funding_note": "⚠️ 本单 (~$1,186 含缓冲) 与股票 pending XOM ($1,238.54) 合计 ~$2,424, 明晨 BP ≈ $2,419 (今日 BP $2,123.81 + ODFL 卖款 $295.16 周四结算) — 两者几乎恰好用满, 若都执行, 后执行者按实时 BP 微量下调/跳过 (4C/4D 规则)。建议执行顺序: 先期权 (整张不可调) 后股票 (金额可缩)。",
-  "sizing_note": "D20 注码: 净值 $6,192.68 × 20% = $1,238.54 目标 → 2 张 × $589.50 = $1,179。budget 40% = $2,477 内, 未放大。",
-  "exec_protocol": "用户「执行」后按 4D: review_option_order → place_option_order limit = min(est×1.03=$6.07, 执行时 ask), gfd; 盘中即时、盘后排次开。",
+  "trade_date": "2026-08-14",
+  "generated_at": "2026-08-15T02:05:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-17 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
+  "note": "点差闸放宽 8→12% (b58aa22, 用户当晚指示) 后重跑引擎产出; 引擎输入与当日主跑完全相同 (bars/quotes/chains/earnings 同批)。",
   "orders": [
     {
       "seq": 1,
       "action": "buy_to_open",
-      "occ": "XLE260814C00051500",
-      "underlying": "XLE",
-      "strike": 51.5,
-      "expiry": "2026-08-14",
-      "dte": 9,
-      "contracts": 2,
-      "est_price": 5.89,
-      "est_total_usd": 1179.0,
-      "spot": 57.29,
-      "rsi2": 7.62,
-      "model_price": 5.8437,
+      "structure": "credit_put_spread",
+      "underlying": "AMZN",
+      "qty": 1,
+      "legs": [
+        {
+          "symbol": "AMZN260828P00252500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 252.5,
+          "quote": {
+            "bid": 1.62,
+            "ask": 1.79
+          },
+          "spread_pct": 9.971
+        },
+        {
+          "symbol": "AMZN260828P00230000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 230.0,
+          "quote": {
+            "bid": 0.18,
+            "ask": 0.2
+          },
+          "spread_pct": 10.526
+        }
+      ],
+      "expiry": "2026-08-28",
+      "dte": 14,
+      "spot": 262.65,
+      "rsi2": 6.02,
+      "est_price": 1.42,
+      "direction": "credit",
       "entry_quote": {
-        "bid": 5.86,
-        "ask": 5.93,
-        "mid": 5.895,
-        "spread_pct": 1.187
+        "mid": 1.515,
+        "spread_pct": 9.971,
+        "long_spread_pct": 10.526,
+        "net_credit_conservative": 1.42
       },
-      "reason": "rsi2_entry_call",
-      "state_file": "state/weekly_call_live_positions.json",
-      "note": "昨日 near_signals 预警 (XLE 再跌1%触发) 今日兑现: 收跌1.33%, RSI2 7.62。深ITM 0.899, 点差 1.19% 过关, 模型价偏差 +0.9%。"
+      "model_price": 6.8566,
+      "risk_per_contract": 21.08,
+      "max_loss_usd": 2108.0,
+      "max_gain_usd": 142.0,
+      "limit_floor": 1.38
     }
-  ],
-  "executed_at": "2026-08-06T01:43:00Z",
-  "executed_legs": [
-    {
-      "occ": "XLE260814C00051500",
-      "order_id": "6a73e6a0-44be-4c1b-b557-f2fefbbc519f",
-      "contracts": 2,
-      "limit": 5.95,
-      "state": "queued",
-      "fills_at": "2026-08-06 开盘 (期权无盘后交易)",
-      "note": "limit=min(est5.89×1.03=6.07, 收盘ask5.93)→tick取5.95; 盘后报价5.75/6.25为宽价, 开盘按实价成交≤5.95"
-    }
-  ],
-  "outcome": {
-    "result": "未成交, 已于 2026-08-06 11:10 ET 撤单",
-    "reason": "限价 $5.95 挂了一整晚+今晨: XLE 今日反弹, 该合约 mark 已升至 $6.325 (bid6.20/ask6.45), 限价始终在市场下方; pending 有效期 (08-06 10:30 ET) 已过 → 按 playbook 晨检规则撤销挂单 (减风险动作), 由今晚主跑用当日数据重新决策。",
-    "cancel_confirmed_at": "2026-08-06T15:10:04Z",
-    "filled_contracts": 0,
-    "cost": 0.0,
-    "note": "限价保护按设计生效: 拒绝追高。若 XLE 今日收盘仍超卖, 今晚引擎会以新价重出信号; 若已反弹脱离超卖区, 则本次机会自然作废 (不追)。"
-  }
+  ]
 }

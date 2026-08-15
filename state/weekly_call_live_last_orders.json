@@ -2,19 +2,62 @@
   "date": "2026-08-14",
   "halted": false,
   "sells": [],
-  "buys": [],
+  "buys": [
+    {
+      "structure": "credit_put_spread",
+      "qty": 1,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
+      "legs": [
+        {
+          "symbol": "AMZN260828P00252500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 252.5,
+          "quote": {
+            "bid": 1.62,
+            "ask": 1.79
+          },
+          "spread_pct": 9.971
+        },
+        {
+          "symbol": "AMZN260828P00230000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 230.0,
+          "quote": {
+            "bid": 0.18,
+            "ask": 0.2
+          },
+          "spread_pct": 10.526
+        }
+      ],
+      "est_price": 1.42,
+      "direction": "credit",
+      "underlying": "AMZN",
+      "expiry": "2026-08-28",
+      "dte": 14,
+      "spot": 262.65,
+      "rsi2": 6.02,
+      "model_price": 6.8566,
+      "entry_quote": {
+        "mid": 1.515,
+        "spread_pct": 9.971,
+        "long_spread_pct": 10.526,
+        "net_credit_conservative": 1.42
+      },
+      "risk_per_contract": 21.08,
+      "max_value_per_contract": 22.5,
+      "max_loss_usd": 2108.0,
+      "max_gain_usd": 142.0
+    }
+  ],
   "skips": [
     {
       "symbol": "AVGO",
       "reason": "credit_leg_spread_too_wide(best=13.08%)",
       "rsi2": 4.64,
       "spot": 392.99
-    },
-    {
-      "symbol": "AMZN",
-      "reason": "credit_leg_spread_too_wide(best=9.97%)",
-      "rsi2": 6.02,
-      "spot": 262.65
     }
   ],
   "warnings": [],
