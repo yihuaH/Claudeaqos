@@ -43,7 +43,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget=净值×**50%** 按**在险额**计·熔断同步, 注码=净值×20% 风险/信号·贵档单仓 ≤50% 净值·单张风险 ≤$5,000 (2026-08-14 用户「都改到50%和5000」, DIA 解锁); 白名单21只·股票类专属; 开仓 semi_auto、平仓自动但方向是买回 — 分类器兼容性首个出场实测) | `weekly_calls_live.json enabled` + `budget` |
+| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget=净值×**50%** 按**在险额**计·熔断同步, 注码=净值×20% 风险/信号·贵档单仓 ≤50% 净值·单张风险 ≤$5,000 (2026-08-14 用户「都改到50%和5000」, DIA 解锁); 白名单21只·股票类专属; 开仓/平仓均**手动通道** (2026-08-15 实测 agentic 暂不支持多腿 place, 引擎出单+对话发参数+用户 App 执行, 详 playbook 4D 注记; 08-17 首笔 $1.53 成交)) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 

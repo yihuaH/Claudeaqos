@@ -298,6 +298,22 @@
 - **风险要点**: 每张最大亏损 = 宽度−贷记 (=抵押), budget 40% 顶按**在险额**计;
   短腿 (−3% 处) 跌进实值有美式提前行权风险 — −5% 正股止损先行 + `force_exit_dte_lte=2`
   两道护栏, **绝不留到到期**; 五条模型局限与观察项见 `weekly_calls_live.json _contract_note`。
+
+- **⚠️ 执行通道实测 (2026-08-15 首次 place 实测, 4D「未验证三件事」之③成真): agentic 账户暂不支持
+  多腿组合单** — `place_option_order` 多腿一律 API 400 ("Multi-leg options orders aren't supported
+  in Robinhood agentic accounts yet"; review 能过, place 被拒; 账户本身 Level 3 无问题, 纯通道限制,
+  "yet" 表示平台路线图上)。**绝不拆腿单独下** (单腿裸露禁止)。在平台开放前, pcs 开仓与组合平仓
+  一律走**手动通道** (2026-08-15 用户确认, 08-17 首笔 $1.53 全价成交验证跑通):
+  - **开仓**: 引擎照常出单 → 写 pending_option_orders.json → 会话在对话中给出 App 操作参数
+    (账户须选 Agentic ••••5265; Put Credit Spread; 卖腿/买腿行权价与到期; 净贷记限价下限 = 引擎
+    est×0.97 **绝不更低**, 挂更高属用户自主加价合规) → 用户 App 手动下单。会话经 get_option_orders
+    可见用户手动单 (placed_agent=user), 核对腿/价/量后在 pending 记 manual_order_placed;
+    成交由晨检/主跑回收, weekly_calls.py apply 回写 (fills 格式照常, 卖腿 OCC 主键)。
+  - **平仓**: 出场信号照常由引擎判定 (正股−5% / RSI2≥65 / 10天 / DTE≤2 强平), 触发时会话**立即
+    在常驻对话发布精确平仓参数** (买回卖腿+卖出保护腿组合, 净借记限价 = 引擎 est×1.03 封顶) +
+    PushNotification, 由用户 App 手动执行; 用户未及时操作时按红线 6 持续提醒, DTE≤2 强平提醒
+    须**逐日升级至成交为止** (pin risk 护栏优先级最高)。
+  - 未成交处置照旧 (10:30 ET 窗口, 绝不追价); 平台开放多腿后本注记作废、恢复上文自动协议。
 ## 5. 回写与日志
 
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
