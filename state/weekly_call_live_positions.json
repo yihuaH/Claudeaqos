@@ -2,8 +2,65 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
-  "trades": [],
+  "positions": {
+    "AMZN260828P00252500": {
+      "underlying": "AMZN",
+      "strike": 252.5,
+      "expiry": "2026-08-28",
+      "contracts": 1,
+      "entry_premium": 1.53,
+      "entry_date": "2026-08-17",
+      "entry_underlying": 262.65,
+      "entry_rsi2": 6.02,
+      "entry_quote": {
+        "mid": 1.515,
+        "spread_pct": 9.971,
+        "long_spread_pct": 10.526,
+        "net_credit_conservative": 1.42
+      },
+      "model_price": 6.8566,
+      "structure": "credit_put_spread",
+      "long_occ": "AMZN260828P00230000",
+      "long_strike": 230.0,
+      "risk_per_contract": 21.08,
+      "max_value_per_contract": 22.5,
+      "entry_legs": [
+        {
+          "symbol": "AMZN260828P00252500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 252.5,
+          "quote": {
+            "bid": 1.62,
+            "ask": 1.79
+          },
+          "spread_pct": 9.971
+        },
+        {
+          "symbol": "AMZN260828P00230000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 230.0,
+          "quote": {
+            "bid": 0.18,
+            "ask": 0.2
+          },
+          "spread_pct": 10.526
+        }
+      ]
+    }
+  },
+  "trades": [
+    {
+      "date": "2026-08-17",
+      "symbol": "AMZN260828P00252500",
+      "side": "buy",
+      "qty": 1,
+      "price": 1.53,
+      "bucket": "weekly_calls",
+      "reason": ""
+    }
+  ],
   "round_trips": [],
   "skip_log": [
     {
@@ -12,6 +69,13 @@
       "reason": "spread_too_wide(best=5.84%)",
       "rsi2": 3.83,
       "spot": 303.54
+    },
+    {
+      "date": "2026-08-14",
+      "symbol": "AVGO",
+      "reason": "credit_leg_spread_too_wide(best=13.08%)",
+      "rsi2": 4.64,
+      "spot": 392.99
     }
   ]
 }

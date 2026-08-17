@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-14",
   "generated_at": "2026-08-15T02:05:00Z",
-  "status": "manual_order_placed",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-17 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "note": "点差闸放宽 8→12% (b58aa22, 用户当晚指示) 后重跑引擎产出; 引擎输入与当日主跑完全相同 (bars/quotes/chains/earnings 同批)。",
   "orders": [
@@ -66,6 +66,16 @@
     "placed_agent": "user",
     "placed_at": "2026-08-15T03:16:18Z",
     "price": 1.53,
-    "note": "用户在 App 手动挂出 (MCP 多腿被平台拒后的人工通道); 限价 $1.53 = 挂单时中间价, ≥ 引擎下限 $1.38 合规。queued 排周一开盘; 周一 10:30 ET 未成交按协议撤销 (用户可在窗内下调限价, 底线 $1.38)。成交后晨检/主跑经 get_option_orders 回收, weekly_calls.py apply 回写账本。"
+    "note": "用户在 App 手动挂出 (MCP 多腿被平台拒后的人工通道); 限价 $1.53 = 挂单时中间价, ≥ 引擎下限 $1.38 合规。queued 排周一开盘; 周一 10:30 ET 未成交按协议撤销 (用户可在窗内下调限价, 底线 $1.38)。成交后晨检/主跑经 get_option_orders 回收, weekly_calls.py apply 回写账本。",
+    "outcome": {
+      "state": "filled",
+      "filled_at": "2026-08-17T13:33:54Z",
+      "net_credit": 1.53,
+      "legs": {
+        "sell P252.5": 1.69,
+        "buy P230": 0.16
+      },
+      "note": "手动通道首笔成交: $1.53 全价 (=挂单中间价), 优于引擎保守估 1.42; 已 apply 至 weekly_call_live_positions.json"
+    }
   }
 }

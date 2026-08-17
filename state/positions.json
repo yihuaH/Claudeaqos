@@ -9,32 +9,18 @@
       "cost": 622.9,
       "tranches": 1
     },
-    "AAPL": {
-      "qty": 2.057828,
-      "entry_price": 302.6978,
-      "entry_date": "2026-08-13",
-      "cost": 622.9,
+    "AVGO": {
+      "qty": 2.564063,
+      "entry_price": 397.26,
+      "entry_date": "2026-08-17",
+      "cost": 1018.6,
       "tranches": 1
     },
-    "CRS": {
-      "qty": 1.167309,
-      "entry_price": 533.6205,
-      "entry_date": "2026-08-13",
-      "cost": 622.9,
-      "tranches": 1
-    },
-    "GE": {
-      "qty": 2.810758,
-      "entry_price": 361.3901,
-      "entry_date": "2026-08-13",
-      "cost": 1015.78,
-      "tranches": 1
-    },
-    "RTX": {
-      "qty": 4.611801,
-      "entry_price": 220.2567,
-      "entry_date": "2026-08-13",
-      "cost": 1015.78,
+    "STLD": {
+      "qty": 3.994509,
+      "entry_price": 255.0,
+      "entry_date": "2026-08-17",
+      "cost": 1018.6,
       "tranches": 1
     }
   },
@@ -858,6 +844,60 @@
       "price": 234.14,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "AAPL",
+      "side": "sell",
+      "qty": 2.057828,
+      "price": 306.13,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "CRS",
+      "side": "sell",
+      "qty": 1.167309,
+      "price": 546.78,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "GE",
+      "side": "sell",
+      "qty": 2.810758,
+      "price": 367.87,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "RTX",
+      "side": "sell",
+      "qty": 4.611801,
+      "price": 222.92,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "AVGO",
+      "side": "buy",
+      "qty": 2.564063,
+      "price": 397.26,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "STLD",
+      "side": "buy",
+      "qty": 3.994509,
+      "price": 255.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

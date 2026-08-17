@@ -111,9 +111,11 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 1018.6,
-        "state": "queued 排 2026-08-17 开盘",
+        "state": "filled 2026-08-17 09:30 ET",
         "order_id": "6a7fc0b2-7ff1-44b9-a921-772cf684b992",
-        "ref_id": "a7e0c5d8-3b97-4fc4-9abe-9d8c4e70f3b5"
+        "ref_id": "a7e0c5d8-3b97-4fc4-9abe-9d8c4e70f3b5",
+        "fill_qty": 2.564063,
+        "fill_price": 397.26
       },
       {
         "seq": 2,
@@ -132,12 +134,14 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 1018.6,
-        "state": "queued 排 2026-08-17 开盘",
+        "state": "filled 2026-08-17 09:30 ET",
         "order_id": "6a7fc0b4-a063-40a7-9aaf-97228ad816e9",
-        "ref_id": "b8f1d6e9-4ca8-4ad5-8bcf-0e9d5f81a4c6"
+        "ref_id": "b8f1d6e9-4ca8-4ad5-8bcf-0e9d5f81a4c6",
+        "fill_qty": 3.994509,
+        "fill_price": 255.0
       }
     ],
     "totals": "AVGO $1,018.60 + STLD $1,018.60 = $2,037.20 — 每单恰等于引擎金额, 未放大",
-    "writeback": "两单均排周一开盘成交, 由周一晨检回写 state (今夜无成交无 apply)"
+    "writeback": "②腿开盘成交已于 2026-08-17 晨检 apply 至 state/positions.json"
   }
 }
