@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-17",
   "generated_at": "2026-08-18T01:35:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "market_window_until_et": "15:55",
   "valid_until": "次一交易日 (2026-08-18 周二) 09:25 ET",
   "buying_power_at_generation": 5442.9,
@@ -33,18 +33,57 @@
     }
   ],
   "option_alert": {
-    "names": ["XLF", "XLP", "XLV", "GOOGL", "SPY"],
+    "names": [
+      "XLF",
+      "XLP",
+      "XLV",
+      "GOOGL",
+      "SPY"
+    ],
     "scenarios": {
-      "XLF": {"scenario": "1d_-1%", "rsi2_now": 14.59, "spot": 57.58, "structure": "credit_put_spread", "est_premium_usd": 508},
-      "XLP": {"scenario": "1d_-1%", "rsi2_now": 18.48, "spot": 84.68, "structure": "credit_put_spread", "est_premium_usd": 729},
-      "XLV": {"scenario": "1d_-1%", "rsi2_now": 16.35, "spot": 167.05, "structure": "credit_put_spread", "est_premium_usd": 1455},
-      "GOOGL": {"scenario": "1d_-1%", "rsi2_now": 21.0, "spot": 344.0, "structure": "credit_put_spread", "est_premium_usd": 2311},
-      "SPY": {"scenario": "1d_-1%", "rsi2_now": 26.96, "spot": 772.67, "structure": "credit_put_spread", "est_premium_usd": 6778}
+      "XLF": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 14.59,
+        "spot": 57.58,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 508
+      },
+      "XLP": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 18.48,
+        "spot": 84.68,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 729
+      },
+      "XLV": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 16.35,
+        "spot": 167.05,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 1455
+      },
+      "GOOGL": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 21.0,
+        "spot": 344.0,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 2311
+      },
+      "SPY": {
+        "scenario": "1d_-1%",
+        "rsi2_now": 26.96,
+        "spot": 772.67,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 6778
+      }
     },
     "reserve_usd": 508.0
   },
   "news_precheck": {
-    "symbols": ["TRV", "MMM"],
+    "symbols": [
+      "TRV",
+      "MMM"
+    ],
     "red_flagged": [],
     "source": "integrations.py news 2026-08-10→2026-08-17 (TRV 1篇无红旗, MMM 无新闻)"
   },
@@ -53,9 +92,66 @@
     "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 5442.90 − 508.00",
     "total_usd": 2028.66,
     "per_seq": [
-      {"seq": 1, "symbol": "TRV", "cumulative": 1014.33, "projection": "≤ cap ✓"},
-      {"seq": 2, "symbol": "MMM", "cumulative": 2028.66, "projection": "≤ cap ✓"}
+      {
+        "seq": 1,
+        "symbol": "TRV",
+        "cumulative": 1014.33,
+        "projection": "≤ cap ✓"
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "cumulative": 2028.66,
+        "projection": "≤ cap ✓"
+      }
     ],
     "note": "生成时 BP $5,442.90 = unleveraged_BP (防杠杆闸 ✓), cash $7,692.90 (BP 较低因 AMZN 价差占用抵押 $2,250); 取小 = $5,442.90。reserve $508 = 引擎 suggested_reserve_usd (XLF 最便宜单组在险额)。两单合计 $2,028.66 全装得下余 $2,906.24。4C 执行时以实时 min(BP,cash) 重算 (红线9)。"
+  },
+  "executed_at": "2026-08-18T01:31:50Z",
+  "execution_summary": {
+    "mode": "盘外限价模式 (4C 混合执行), 2026-08-17 21:31 ET 用户基于补跑逐笔明细回复「执行」",
+    "reserve_kept": "option_alert 保留 $508 未撤销; 执行前实时 min(BP,cash)=BP $5,442.96 (=unleveraged, 防杠杆闸 ✓), cap = 5442.96 − 508 = 4934.96 ≥ 累计 2028.66 ✓",
+    "executed_seqs": [
+      1,
+      2
+    ],
+    "legs": [
+      {
+        "seq": 1,
+        "symbol": "TRV",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 1014.33,
+        "state": "queued 排 2026-08-18 开盘",
+        "order_id": "6a83b5f6-4154-4738-af85-adbb27be7c61",
+        "ref_id": "f2a8c14d-6b39-4e71-95d8-3c7e0f42a1b8",
+        "note": "①腿被券商拒: review 返回 EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (TRV 不支持 24h 时段); 执行时点 21:31 ET 已过 extended_hours (20:00 ET), 按 playbook 降级链 all_day→extended→regular 落到 regular_hours, 等效 whole==0 退化 → 全额走②腿分数市价排开盘, 金额未放大"
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "leg": 1,
+        "type": "limit",
+        "qty": 5.0,
+        "limit_price": 182.01,
+        "fill_price": 180.21,
+        "cost": 901.05,
+        "state": "filled (24h盘即时, 成交价优于限价)",
+        "order_id": "6a83b5f9-c3f3-4f88-a0d4-9e2636b92cfb",
+        "ref_id": "a3b9d25e-7c40-4f82-86e9-4d8f1a53b2c9"
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 113.28,
+        "state": "queued 排 2026-08-18 开盘",
+        "order_id": "6a83b606-f8d4-48f1-8c3d-1d49673664b6",
+        "ref_id": "b4c0e36f-8d51-4a93-97fa-5e9021c64d3a"
+      }
+    ],
+    "totals": "TRV 1014.33 (全②腿); MMM 901.05+113.28=1014.33 — 每单恰等于引擎金额, 未放大",
+    "writeback": "MMM ①腿已 apply 至 state/positions.json; TRV 全额与 MMM ②腿开盘成交由 08-18 晨检回写"
   }
 }

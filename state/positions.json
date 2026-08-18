@@ -22,6 +22,13 @@
       "entry_date": "2026-08-17",
       "cost": 1018.6,
       "tranches": 1
+    },
+    "MMM": {
+      "qty": 5.0,
+      "entry_price": 180.21,
+      "entry_date": "2026-08-17",
+      "cost": 901.05,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -896,6 +903,15 @@
       "side": "buy",
       "qty": 3.994509,
       "price": 255.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 180.21,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
