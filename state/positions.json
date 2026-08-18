@@ -29,6 +29,13 @@
       "entry_date": "2026-08-17",
       "cost": 901.05,
       "tranches": 1
+    },
+    "TMO": {
+      "qty": 1.0,
+      "entry_price": 591.37,
+      "entry_date": "2026-08-17",
+      "cost": 591.37,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -912,6 +919,15 @@
       "side": "buy",
       "qty": 5.0,
       "price": 180.21,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "TMO",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 591.37,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
