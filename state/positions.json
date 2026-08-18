@@ -24,17 +24,24 @@
       "tranches": 1
     },
     "MMM": {
-      "qty": 5.0,
-      "entry_price": 180.21,
+      "qty": 5.627242,
+      "entry_price": 180.2535,
       "entry_date": "2026-08-17",
-      "cost": 901.05,
+      "cost": 1014.33,
       "tranches": 1
     },
     "TMO": {
-      "qty": 1.0,
-      "entry_price": 591.37,
+      "qty": 1.718647,
+      "entry_price": 590.3248,
       "entry_date": "2026-08-17",
-      "cost": 591.37,
+      "cost": 1014.56,
+      "tranches": 1
+    },
+    "TRV": {
+      "qty": 2.754741,
+      "entry_price": 368.2124,
+      "entry_date": "2026-08-18",
+      "cost": 1014.33,
       "tranches": 1
     }
   },
@@ -928,6 +935,33 @@
       "side": "buy",
       "qty": 1.0,
       "price": 591.37,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "TRV",
+      "side": "buy",
+      "qty": 2.754741,
+      "price": 368.2124,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 0.627242,
+      "price": 180.6,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "TMO",
+      "side": "buy",
+      "qty": 0.718647,
+      "price": 588.87,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

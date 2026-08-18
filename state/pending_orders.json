@@ -100,12 +100,14 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 423.19,
-        "state": "queued 排 2026-08-18 开盘",
+        "state": "filled 2026-08-18 09:30 ET",
         "order_id": "6a83bb9b-c648-4759-a1fe-5ba75c519c62",
-        "ref_id": "e8f2a59b-0c73-4d16-b4e8-7a3c9f02d5e6"
+        "ref_id": "e8f2a59b-0c73-4d16-b4e8-7a3c9f02d5e6",
+        "fill_qty": 0.718647,
+        "fill_price": 588.87
       }
     ],
     "totals": "TMO 591.37 + 423.19 = 1014.56 — 恰等于引擎金额, 未放大",
-    "writeback": "①腿已 apply 至 state/positions.json; ②腿开盘成交由 08-18 晨检回写"
+    "writeback": "①②腿均已 apply 至 state/positions.json (②腿由 08-18 晨检回收)"
   }
 }
