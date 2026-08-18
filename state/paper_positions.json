@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "ROST": {
-      "qty": 39.0,
-      "entry_price": 249.06,
-      "entry_date": "2026-08-13",
-      "cost": 9713.34,
-      "tranches": 1
-    },
     "AVGO": {
       "qty": 25.0,
       "entry_price": 396.4452,
@@ -29,6 +22,20 @@
       "entry_price": 254.149474,
       "entry_date": "2026-08-17",
       "cost": 9657.68,
+      "tranches": 1
+    },
+    "TRV": {
+      "qty": 27.0,
+      "entry_price": 371.495926,
+      "entry_date": "2026-08-18",
+      "cost": 10030.39,
+      "tranches": 1
+    },
+    "MMM": {
+      "qty": 54.0,
+      "entry_price": 180.961667,
+      "entry_date": "2026-08-18",
+      "cost": 9771.93,
       "tranches": 1
     }
   },
@@ -652,6 +659,33 @@
       "side": "buy",
       "qty": 38.0,
       "price": 254.149474,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "ROST",
+      "side": "sell",
+      "qty": 39.0,
+      "price": 237.106667,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "TRV",
+      "side": "buy",
+      "qty": 27.0,
+      "price": 371.495926,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 54.0,
+      "price": 180.961667,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

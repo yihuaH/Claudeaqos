@@ -6,39 +6,5 @@
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
-  "orders": [
-    {
-      "coid": "cq-2026-08-17-ROST-sell",
-      "order_id": "3a863e65-de30-490b-b953-dbdeefe7eddf",
-      "symbol": "ROST",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "228.22",
-      "qty": "39",
-      "bucket": "strategy",
-      "reason": "stop_loss"
-    },
-    {
-      "coid": "cq-2026-08-17-TRV-buy",
-      "order_id": "3a3b177b-1c1c-4efc-b9f2-325d56865082",
-      "symbol": "TRV",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "375.45",
-      "qty": "27",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-17-MMM-buy",
-      "order_id": "6b135cf3-92d9-4d6b-b5fb-3da8ba1ace2c",
-      "symbol": "MMM",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "185.62",
-      "qty": "54",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    }
-  ]
+  "orders": []
 }

@@ -75,6 +75,27 @@
       "reason": "premium_too_large(7053)",
       "rsi2": 7.73,
       "spot": 480.35
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "AVGO",
+      "reason": "spread_too_wide(best=4.92%)",
+      "rsi2": 1.62,
+      "spot": 380.0
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "DIA",
+      "reason": "premium_too_large(5828)",
+      "rsi2": 4.06,
+      "spot": 532.91
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "QQQ",
+      "reason": "premium_too_large(10238)",
+      "rsi2": 9.94,
+      "spot": 717.51
     }
   ]
 }

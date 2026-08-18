@@ -1,68 +1,91 @@
 {
-  "date": "2026-08-17",
+  "date": "2026-08-18",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "AVGO",
-      "reason": "risk_too_large(6424)",
-      "rsi2": 4.46,
-      "spot": 392.43
+      "reason": "risk_too_large(6055)",
+      "rsi2": 1.62,
+      "spot": 380.0
     },
     {
       "symbol": "DIA",
-      "reason": "budget_exceeded(cost=4750,cap=5072,open=2108)",
-      "rsi2": 6.95
+      "reason": "budget_exceeded(cost=4994,cap=5024,open=2108)",
+      "rsi2": 4.06
     },
     {
-      "symbol": "MSFT",
-      "reason": "budget_exceeded(cost=4175,cap=5072,open=2108)",
-      "rsi2": 7.73
+      "symbol": "XLI",
+      "reason": "credit_leg_spread_too_wide(best=62.58%)",
+      "rsi2": 7.54,
+      "spot": 183.57
+    },
+    {
+      "symbol": "QQQ",
+      "reason": "risk_too_large(6342)",
+      "rsi2": 9.94,
+      "spot": 717.51
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLF",
-      "rsi2_now": 14.59,
+      "symbol": "NVDA",
+      "rsi2_now": 10.25,
       "scenario": "1d_-1%",
-      "spot": 57.58,
+      "spot": 219.74,
       "structure": "credit_put_spread",
-      "est_premium_usd": 508
-    },
-    {
-      "symbol": "XLP",
-      "rsi2_now": 18.48,
-      "scenario": "1d_-1%",
-      "spot": 84.68,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 729
-    },
-    {
-      "symbol": "XLV",
-      "rsi2_now": 16.35,
-      "scenario": "1d_-1%",
-      "spot": 167.05,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 1455
+      "est_premium_usd": 1569
     },
     {
       "symbol": "GOOGL",
-      "rsi2_now": 21.0,
+      "rsi2_now": 28.16,
       "scenario": "1d_-1%",
-      "spot": 344.0,
+      "spot": 344.2,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2311
+      "est_premium_usd": 2316
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 13.26,
+      "scenario": "1d_-1%",
+      "spot": 300.23,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2606
+    },
+    {
+      "symbol": "TSM",
+      "rsi2_now": 14.19,
+      "scenario": "2d_-1%x2",
+      "spot": 413.41,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2926
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 18.77,
+      "scenario": "1d_-1%",
+      "spot": 481.63,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 3033
+    },
+    {
+      "symbol": "SMH",
+      "rsi2_now": 15.75,
+      "scenario": "2d_-1%x2",
+      "spot": 569.77,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 3865
     },
     {
       "symbol": "SPY",
-      "rsi2_now": 26.96,
+      "rsi2_now": 10.17,
       "scenario": "1d_-1%",
-      "spot": 772.67,
+      "spot": 767.45,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6778
+      "est_premium_usd": 6727
     }
   ],
-  "suggested_reserve_usd": 508.0
+  "suggested_reserve_usd": 839.91
 }

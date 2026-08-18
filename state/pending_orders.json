@@ -1,113 +1,78 @@
 {
-  "trade_date": "2026-08-17",
-  "batch": "supplementary-after-rule-change",
-  "generated_at": "2026-08-18T02:05:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-08-18 周二) 09:25 ET",
-  "buying_power_at_generation": 5442.96,
-  "supersedes": {
-    "commit": "703fe56",
-    "note": "本文件取代同日第一批次 (TRV/MMM, status=executed)。上一批完整执行记录见 git 703fe56 与 journal/2026-08-17.md「半自动买入执行」小节: TRV $1,014.33 市价 queued 排开盘 (order 6a83b5f6), MMM 5股@180.21 已成交 + $113.28 queued (orders 6a83b5f9 / 6a83b606)。"
-  },
-  "rerun_note": "用户 2026-08-17 22:0x ET 指示「重跑一下主跑」—— 因当晚上线财报上涨跳空豁免 (commit cd64591) 需重新评估当日信号。驱动器幂等保护已生效需 --force; 用 --plan-only --force 只读重跑 (不重复排纸面单), 输入为当日收盘 bars/quotes + 实时券商持仓。",
-  "dedup": {
-    "skipped_symbols": [
-      "TRV"
-    ],
-    "reason": "引擎本次重跑仍出 TRV $1,014.56, 但同标的 $1,014.33 市价单已于 21:31 ET 挂出并 queued 排 08-18 开盘 (order 6a83b5f6-4154-4738-af85-adbb27be7c61) —— 重复下单将导致双倍敞口, 按红线2「绝不放大」去重跳过。TRV 敞口以已挂单为准。"
-  },
+  "trade_date": "2026-08-18",
+  "generated_at": "2026-08-18T21:55:00Z",
+  "status": "awaiting_execution",
+  "market_window_until_et": "15:55",
+  "valid_until": "次一交易日 (2026-08-19 周三) 09:25 ET",
+  "buying_power_at_generation": 2399.74,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "TMO",
-      "dollar_amount": 1014.56,
+      "symbol": "AVGO",
+      "dollar_amount": 1004.72,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in",
+      "tranche": 2,
+      "avg_entry_price": 397.26,
+      "drawdown_pct": -4.34,
+      "est_price": 380.0,
+      "rsi2": 1.62,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 2,
+      "action": "buy",
+      "symbol": "EMR",
+      "dollar_amount": 1004.72,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 585.51,
-      "rsi2": 8.46,
+      "est_price": 157.78,
+      "rsi2": 4.81,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "exemption_note": "本单因 defense.earnings_gap_up_exempt 放行: TMO 2026-07-23 财报日 +8.71% 上涨跳空原被近20日异动闸拦截, 豁免上线后不再拦。**首笔经该豁免入场的实盘仓位**, 按变更 journal 的观察项单独跟踪盈亏与尾部。"
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "USFD",
+      "dollar_amount": 385.3,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 106.91,
+      "rsi2": 5.38,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
     }
   ],
   "option_alert": {
-    "names": [
-      "XLF",
-      "XLP",
-      "XLV",
-      "GOOGL",
-      "SPY"
-    ],
+    "names": ["NVDA", "GOOGL", "IWM", "TSM", "MSFT", "SMH", "SPY"],
     "scenarios": {
-      "XLF": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 14.59,
-        "spot": 57.58,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 508
-      }
+      "NVDA": {"scenario": "1d_-1%", "rsi2_now": 10.25, "structure": "credit_put_spread", "est_premium_usd": 1569},
+      "GOOGL": {"scenario": "1d_-1%", "rsi2_now": 28.16, "structure": "credit_put_spread", "est_premium_usd": 2316},
+      "IWM": {"scenario": "1d_-1%", "rsi2_now": 13.26, "structure": "credit_put_spread", "est_premium_usd": 2606},
+      "TSM": {"scenario": "1d_-1%", "rsi2_now": 14.19, "structure": "credit_put_spread", "est_premium_usd": 2926},
+      "MSFT": {"scenario": "1d_-1%", "rsi2_now": 18.77, "structure": "credit_put_spread", "est_premium_usd": 3033},
+      "SMH": {"scenario": "1d_-1%", "rsi2_now": 15.75, "structure": "credit_put_spread", "est_premium_usd": 3865},
+      "SPY": {"scenario": "1d_-1%", "rsi2_now": 10.17, "structure": "credit_put_spread", "est_premium_usd": 6727}
     },
-    "reserve_usd": 508.0
+    "reserve_usd": 839.91
   },
   "news_precheck": {
-    "symbols": [
-      "TMO"
-    ],
+    "symbols": ["AVGO", "EMR", "USFD"],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-10→2026-08-17 (TMO 2篇无红旗)"
+    "source": "integrations.py news 2026-08-11→2026-08-18 (AVGO 22篇/USFD 1篇/EMR 0篇, 均无红旗)"
   },
   "funding_projection": {
-    "cap_usd": 4934.96,
-    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 5442.96 − 508.00",
-    "total_usd": 1014.56,
-    "already_queued_usd": 1127.61,
+    "cap_usd": 1559.83,
+    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 2399.74 − 839.91",
+    "total_usd": 2394.74,
     "per_seq": [
-      {
-        "seq": 1,
-        "symbol": "TMO",
-        "cumulative": 1014.56,
-        "projection": "≤ cap ✓"
-      }
+      {"seq": 1, "symbol": "AVGO", "cumulative": 1004.72, "projection": "≤ cap ✓"},
+      {"seq": 2, "symbol": "EMR", "cumulative": 2009.44, "projection": "⛔ 超 cap, 按 4C-2C 整单跳过 (不缩量)"},
+      {"seq": 3, "symbol": "USFD", "cumulative": 2394.74, "projection": "⛔ 超 cap, 整单跳过"}
     ],
-    "note": "实时 BP $5,442.96 = unleveraged (防杠杆闸 ✓)。已挂待成交单占用 $1,127.61 (TRV 1014.33 + MMM 113.28) + 弹药保留 $508 + 本单 $1,014.56 = $2,650.17, 远低于 BP。4C 执行时以实时 min(BP,cash) 重算 (红线9)。"
-  },
-  "executed_at": "2026-08-18T01:55:39Z",
-  "execution_summary": {
-    "mode": "盘外限价模式 (4C 混合执行), 2026-08-17 21:55 ET 用户基于逐笔明细回复「执行」",
-    "reserve_kept": "option_alert 保留 $508 未撤销; 执行前实时 BP $3,414.30 = unleveraged (防杠杆闸 ✓; BP 已被券商预扣排队中的 TRV/MMM), cap = 3414.30 − 508 = 2906.30 ≥ 1014.56 ✓",
-    "executed_seqs": [
-      1
-    ],
-    "legs": [
-      {
-        "seq": 1,
-        "symbol": "TMO",
-        "leg": 1,
-        "type": "limit",
-        "qty": 1.0,
-        "limit_price": 591.37,
-        "fill_price": 591.37,
-        "cost": 591.37,
-        "state": "filled (24h盘即时, 按限价满额成交)",
-        "order_id": "6a83bb8a-0f21-4ef1-931c-8203d0e34f11",
-        "ref_id": "d7e1f48a-9b62-4c05-a3d7-6f2b8e91c4d5",
-        "friction_note": "成交价 591.37 = 限价上限, 较当日收盘 585.51 高 +1.00% —— 24h 盘薄流动性实测点差 (对比同夜 MMM 成交 180.21 优于限价 182.01)。限价保护按设计封顶, 未超引擎容差。"
-      },
-      {
-        "seq": 1,
-        "symbol": "TMO",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 423.19,
-        "state": "filled 2026-08-18 09:30 ET",
-        "order_id": "6a83bb9b-c648-4759-a1fe-5ba75c519c62",
-        "ref_id": "e8f2a59b-0c73-4d16-b4e8-7a3c9f02d5e6",
-        "fill_qty": 0.718647,
-        "fill_price": 588.87
-      }
-    ],
-    "totals": "TMO 591.37 + 423.19 = 1014.56 — 恰等于引擎金额, 未放大",
-    "writeback": "①②腿均已 apply 至 state/positions.json (②腿由 08-18 晨检回收)"
+    "note": "⚠️ 资金紧张: 生成时 BP $2,399.74 = unleveraged (防杠杆闸 ✓), 弹药保留 $839.91 后 cap 仅 $1,559.83, 三单合计 $2,394.74 装不下。按 4C-2C 只有 seq1 (AVGO 加仓) 能执行, EMR/USFD 整单跳过不缩量。**变量**: 账户有 $3,870.53 入金在途, 若执行时已到账则 BP 大增、三单全可执行; 用户亦可回复「不留了」撤销弹药保留 (撤销后 cap=$2,399.74, 可容 seq1+seq2)。4C 执行时一律以实时 min(BP,cash) 重算 (红线9)。"
   }
 }
