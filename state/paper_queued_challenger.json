@@ -1,75 +1,42 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-14",
+  "date": "2026-08-17",
   "coid_prefix": "cq",
-  "next_open": "2026-08-17T09:30:00-04:00",
+  "next_open": "2026-08-18T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "orders": [
     {
-      "coid": "cq-2026-08-14-AAPL-sell",
-      "order_id": "be26bb63-8a9c-412c-b482-df59c62d712f",
-      "symbol": "AAPL",
+      "coid": "cq-2026-08-17-ROST-sell",
+      "order_id": "3a863e65-de30-490b-b953-dbdeefe7eddf",
+      "symbol": "ROST",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "296.75",
-      "qty": "32",
+      "limit_price": "228.22",
+      "qty": "39",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-08-14-CRS-sell",
-      "order_id": "cf065a77-15cd-4243-a81b-86e6eb0d6305",
-      "symbol": "CRS",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "528.25",
-      "qty": "18",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-08-14-GE-sell",
-      "order_id": "5bf70a03-396e-4589-baab-a34d4a89faa2",
-      "symbol": "GE",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "357.33",
-      "qty": "27",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-08-14-RTX-sell",
-      "order_id": "999fbe9b-1c50-4a54-95fa-18b4c91a67ed",
-      "symbol": "RTX",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "216.28",
-      "qty": "44",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-08-14-AVGO-buy",
-      "order_id": "e08fef72-3395-4f7a-8bf5-a9939dfbc052",
-      "symbol": "AVGO",
+      "coid": "cq-2026-08-17-TRV-buy",
+      "order_id": "3a3b177b-1c1c-4efc-b9f2-325d56865082",
+      "symbol": "TRV",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "404.78",
-      "qty": "25",
+      "limit_price": "375.45",
+      "qty": "27",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     },
     {
-      "coid": "cq-2026-08-14-STLD-buy",
-      "order_id": "4eb8562c-802b-45c4-830e-ce0115138fca",
-      "symbol": "STLD",
+      "coid": "cq-2026-08-17-MMM-buy",
+      "order_id": "6b135cf3-92d9-4d6b-b5fb-3da8ba1ace2c",
+      "symbol": "MMM",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "263.44",
-      "qty": "38",
+      "limit_price": "185.62",
+      "qty": "54",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

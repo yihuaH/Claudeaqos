@@ -2,8 +2,36 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
-  "trades": [],
+  "positions": {
+    "AMZN260826C00230000": {
+      "underlying": "AMZN",
+      "strike": 230.0,
+      "expiry": "2026-08-26",
+      "contracts": 1,
+      "entry_premium": 33.75,
+      "entry_date": "2026-08-17",
+      "entry_underlying": 262.65,
+      "entry_rsi2": 6.02,
+      "entry_quote": {
+        "bid": 32.729,
+        "ask": 32.87,
+        "mid": 32.7995,
+        "spread_pct": 0.43
+      },
+      "model_price": 35.807
+    }
+  },
+  "trades": [
+    {
+      "date": "2026-08-17",
+      "symbol": "AMZN260826C00230000",
+      "side": "buy",
+      "qty": 1,
+      "price": 33.75,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    }
+  ],
   "round_trips": [],
   "skip_log": [
     {
@@ -26,6 +54,27 @@
       "reason": "spread_too_wide(best=3.18%)",
       "rsi2": 4.64,
       "spot": 392.99
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "AVGO",
+      "reason": "spread_too_wide(best=2.50%)",
+      "rsi2": 4.46,
+      "spot": 392.43
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "DIA",
+      "reason": "premium_too_large(5962)",
+      "rsi2": 6.95,
+      "spot": 534.19
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "MSFT",
+      "reason": "premium_too_large(7053)",
+      "rsi2": 7.73,
+      "spot": 480.35
     }
   ]
 }

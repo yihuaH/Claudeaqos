@@ -1,56 +1,70 @@
 {
-  "date": "2026-08-14",
+  "date": "2026-08-17",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "symbol": "AMZN260826C00230000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 32.8,
-      "underlying": "AMZN",
-      "strike": 230.0,
-      "expiry": "2026-08-26",
-      "dte": 12,
-      "spot": 262.65,
-      "rsi2": 6.02,
-      "model_price": 35.807,
-      "entry_quote": {
-        "bid": 32.729,
-        "ask": 32.87,
-        "mid": 32.7995,
-        "spread_pct": 0.43
-      }
-    }
-  ],
+  "buys": [],
   "skips": [
     {
       "symbol": "AVGO",
-      "reason": "spread_too_wide(best=3.18%)",
-      "rsi2": 4.64,
-      "spot": 392.99
+      "reason": "spread_too_wide(best=2.50%)",
+      "rsi2": 4.46,
+      "spot": 392.43
+    },
+    {
+      "symbol": "DIA",
+      "reason": "premium_too_large(5962)",
+      "rsi2": 6.95,
+      "spot": 534.19
+    },
+    {
+      "symbol": "MSFT",
+      "reason": "premium_too_large(7053)",
+      "rsi2": 7.73,
+      "spot": 480.35
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLV",
-      "rsi2_now": 23.63,
+      "symbol": "XLF",
+      "rsi2_now": 14.59,
       "scenario": "1d_-1%",
-      "spot": 167.37,
+      "spot": 57.58,
       "structure": "single",
-      "est_premium_usd": 1694
+      "est_premium_usd": 583
     },
     {
-      "symbol": "DIA",
-      "rsi2_now": 25.35,
+      "symbol": "XLP",
+      "rsi2_now": 18.48,
       "scenario": "1d_-1%",
-      "spot": 536.8,
+      "spot": 84.68,
       "structure": "single",
-      "est_premium_usd": 5434
+      "est_premium_usd": 857
+    },
+    {
+      "symbol": "XLV",
+      "rsi2_now": 16.35,
+      "scenario": "1d_-1%",
+      "spot": 167.05,
+      "structure": "single",
+      "est_premium_usd": 1691
+    },
+    {
+      "symbol": "GOOGL",
+      "rsi2_now": 21.0,
+      "scenario": "1d_-1%",
+      "spot": 344.0,
+      "structure": "single",
+      "est_premium_usd": 3782
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 26.96,
+      "scenario": "1d_-1%",
+      "spot": 772.67,
+      "structure": "single",
+      "est_premium_usd": 7822
     }
   ],
-  "suggested_reserve_usd": 1694.0
+  "suggested_reserve_usd": 583.0
 }

@@ -4,17 +4,5 @@
   "coid_prefix": "cqw",
   "next_open": "2026-08-17T09:30:00-04:00",
   "skipped": [],
-  "orders": [
-    {
-      "coid": "cqw-2026-08-14-AMZN260826C00230000-buy",
-      "order_id": "97bb5a5f-3cae-45c0-aab6-e9ba07747bff",
-      "symbol": "AMZN260826C00230000",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "33.78",
-      "qty": "1",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call"
-    }
-  ]
+  "orders": []
 }
