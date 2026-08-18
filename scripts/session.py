@@ -112,8 +112,9 @@ CHECKLIST = {
             "get_portfolio(802095265) → total_value, buying_power (用 BP 不用 cash)",
             "get_equity_positions(802095265) → 存 <wd>/positions.json (**建议直接存原始输出**, 带 "
             "average_buy_price 才能验成本基); 与 state/positions.json 的一致性由驱动器 position_check 闸自动核对",
-            "财报: 对持仓+RSI2<10 候选逐个 get_earnings_results → {\"SYM\":\"YYYY-MM-DD\"|null} 存 <wd>/earnings.json "
-            "(不知候选时先跑一次 --plan-only 看 plan.json 的 stock.candidates)",
+            "财报: 对持仓+RSI2<10 候选逐个 get_earnings_results → **新格式** "
+            "{\"SYM\":{\"next\":\"YYYY-MM-DD\"|null,\"past\":[已发生财报日...]}} 存 <wd>/earnings.json "
+            "(past 供财报上涨跳空豁免, 缺则豁免静默失效; 不知候选时先跑一次 --plan-only 看 plan.json 的 stock.candidates)",
             "券商官方收盘 (≤20 只: 持仓+买单候选): get_equity_quotes → 取 close 字段 → "
             "{\"SYM\":{date,price,source}} 存 <wd>/broker_closes.json",
         ]),

@@ -145,14 +145,37 @@ def cmd_signal(a):
         else:
             warnings.append("防御: 无财报日数据, 今日跳过全部新入场 (出场照常)")
 
+    def _earnings_next(sym):
+        """下次财报日。兼容两种 earnings 格式:
+        旧 {"SYM": "YYYY-MM-DD"|null}; 新 {"SYM": {"next": ...|null, "past": [...]}}。"""
+        v = earnings.get(sym) if earnings else None
+        return v.get("next") if isinstance(v, dict) else v
+
     def days_to_earnings(sym):
         """返回距下次财报的天数; None = 数据缺失或无近期财报 (值为 null)。"""
-        if not earnings or earnings.get(sym) is None:
+        nxt = _earnings_next(sym)
+        if not earnings or nxt is None:
             return None
         try:
-            return (_date.fromisoformat(earnings[sym]) - _date.fromisoformat(today)).days
+            return (_date.fromisoformat(nxt) - _date.fromisoformat(today)).days
         except ValueError:
             return None
+
+    def earnings_reaction_days(sym):
+        """财报的市场反应交易日集合 = 财报当日 (盘前 am 公布) + 次一交易日 (盘后 pm 公布)。
+        仅在 earnings 为新格式且带 past 时非空; 旧格式返回空集 → 豁免自动失效 (向后兼容)。"""
+        v = earnings.get(sym) if earnings else None
+        if not isinstance(v, dict):
+            return set()
+        past = v.get("past") or []
+        days = series.get(sym, ([], []))[0]
+        out = set()
+        for ed in past:
+            out.add(ed)
+            nxt = next((d for d in days if d > ed), None)
+            if nxt:
+                out.add(nxt)
+        return out
 
     # 用实时报价补上今天的临时收盘价
     series = {}
@@ -385,10 +408,29 @@ def cmd_signal(a):
                 continue
             look = int(defense.get("move_lookback_days", 20))
             thr = float(defense.get("max_daily_move_pct", 8.0))
+            # 财报上涨跳空豁免 (2026-08-17 用户「直接上实盘」授权, 依据
+            # journal/2026-08-14-research-defense-move-filter.md: 财报**上涨**跳空后的信号
+            # 均值 +1.01%/胜率 66.7% 不输基准 (+0.45%/66.3%), 而财报**下跌**跳空后为 -0.44%/53.3%
+            # 明确负期望 —— 故只豁免上涨方向, 下跌异动与非财报异动一律照拦)。
+            # 判定用真实财报日 (回测用跳空占比代理, 实盘用 earnings.past 更准), 无 past 数据则自动失效。
+            exempt_gap_up = bool(defense.get("earnings_gap_up_exempt"))
+            er_days = earnings_reaction_days(sym) if exempt_gap_up else set()
+            dts = series[sym][0][-(look + 1):]
             w = series[sym][1][-(look + 1):]
-            if any(w[j - 1] and abs(w[j] / w[j - 1] - 1) * 100.0 >= thr
-                   for j in range(1, len(w))):
-                warnings.append(f"{sym}: 近{look}日有单日异动 ≥{thr}%, 防御性跳过入场")
+            hit = None
+            for j in range(1, len(w)):
+                if not w[j - 1]:
+                    continue
+                chg = (w[j] / w[j - 1] - 1) * 100.0
+                if abs(chg) < thr:
+                    continue
+                if chg > 0 and dts[j] in er_days:
+                    continue        # 财报上涨跳空 → 豁免
+                hit = (dts[j], chg)
+                break
+            if hit:
+                warnings.append(f"{sym}: 近{look}日有单日异动 ≥{thr}% "
+                                f"({hit[0]} {hit[1]:+.1f}%), 防御性跳过入场")
                 continue
         cands.append((i["rsi2"], sym))
     cands.sort()
@@ -533,7 +575,11 @@ def main():
                    help='实时报价: {"SYM": price} 或 get_equity_quotes 原始输出')
     s.add_argument("--positions", help="券商持仓文件(简单映射或原始输出), 用于校准可卖数量/当日买入")
     s.add_argument("--macro", help='宏观数据文件 {"vix": 16.5, ...} (integrations.py macro 产出); 缺省则不做宏观过滤')
-    s.add_argument("--earnings", help='财报日映射 {"SYM": "YYYY-MM-DD" 或 null=近期无财报}; '
+    s.add_argument("--earnings", help='财报日映射。新格式 (2026-08-17): '
+                                      '{"SYM": {"next": "YYYY-MM-DD"|null, "past": ["YYYY-MM-DD", ...]}}, '
+                                      'past = 已发生的财报日 (get_earnings_results 返回的历史季度), '
+                                      '供 defense.earnings_gap_up_exempt 判定财报上涨跳空豁免; '
+                                      '旧格式 {"SYM": "YYYY-MM-DD"|null} 仍受支持 (豁免自动失效)。'
                                       'config 含 defense 而未提供此文件时, 防御性跳过全部新入场')
     s.add_argument("--date", required=True, help="今天日期 YYYY-MM-DD")
     s.add_argument("--portfolio-value", required=True)

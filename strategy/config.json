@@ -26,6 +26,7 @@
     "earnings_exit_days": 1,
     "max_daily_move_pct": 8.0,
     "move_lookback_days": 20,
+    "earnings_gap_up_exempt": true,
     "max_per_sector": 3,
     "exempt_symbols": [
       "QQQM",
@@ -37,7 +38,7 @@
       "GLDM",
       "TLT"
     ],
-    "note": "个股防御层 (与纸面实验同参); exempt_symbols=ETF 池, 豁免财报/异动过滤; sectors 运行时由 universe.json 提供"
+    "note": "个股防御层 (与纸面实验同参); exempt_symbols=ETF 池, 豁免财报/异动过滤; sectors 运行时由 universe.json 提供。earnings_gap_up_exempt (2026-08-17 用户「直接上实盘」): 近20日异动闸对**财报日上涨跳空**豁免 (下跌异动与非财报异动照拦), 需 earnings 传新格式带 past 历史财报日, 缺 past 则自动失效; 依据 journal/2026-08-14-research-defense-move-filter.md。"
   },
   "entry": {
     "rsi2_max": 10.0,

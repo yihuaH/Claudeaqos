@@ -41,9 +41,12 @@
    - `get_equity_positions(802095265)` → 整理成 `{"SYM":{"qty":x,"available":y,"intraday":z}}` 存 scratchpad
      (**推荐直接存原始输出**: 带 `average_buy_price`, 下一步的持仓一致性闸才能交叉验证成本基是否守恒)。
      与 `state/positions.json` 的一致性由驱动器的 `position_check` 闸自动核对, 见步骤 3;
-   - **财报日**: `get_earnings_calendar` 或对 RSI2<10 候选逐个 `get_earnings_results` →
-     `{"SYM":"YYYY-MM-DD"|null}` 存 scratchpad (**不得跳过**, 财报回避每日必须生效;
-     不知当日候选时先跑一次 `--plan-only` 看 `plan.json` 的 `stock.candidates`)。
+   - **财报日**: 对持仓 + RSI2<10 候选逐个 `get_earnings_results` (一次调用即返回 8 个季度),
+     存 scratchpad 为 **新格式** (2026-08-17 起):
+     `{"SYM": {"next": "<最近一条 eps.actual=null 的 report.date>"|null, "past": ["<eps.actual 非 null 的 report.date>", ...]}}`
+     —— `next` 供财报黑窗 (原有), `past` 供**财报上涨跳空豁免** (`defense.earnings_gap_up_exempt`,
+     见 §4 前的防御层说明)。旧格式 `{"SYM":"YYYY-MM-DD"|null}` 仍兼容但**豁免会静默失效**, 务必用新格式。
+     (**不得跳过**, 财报回避每日必须生效; 不知当日候选时先跑一次 `--plan-only` 看 `plan.json` 的 `stock.candidates`)
    - **券商官方收盘 (行情管道交叉核对, 2026-08-08 用户批准, 每日必做)**: 对**持仓 + 当日买单候选**
      (≤20 只, 超过 20 只时 `get_equity_quotes` 不返回官方 close) 调 `get_equity_quotes`, 取其
      **`close` 字段** (`source=sip-list-exchange-close`) 逐字段整理成
