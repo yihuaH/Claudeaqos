@@ -415,11 +415,16 @@ def cmd_signal(a):
 
     # --- 入场 (RSI-2 同形) ---
     def days_to_earnings(sym):
-        if not earnings or earnings.get(sym) is None:
+        """兼容两种 earnings 格式 (2026-08-17): 旧 {"SYM": "YYYY-MM-DD"|null};
+        新 {"SYM": {"next": "YYYY-MM-DD"|null, "past": [...]}} (past 仅 signals.py 的
+        财报上涨跳空豁免使用, 本引擎只取 next)。"""
+        v = earnings.get(sym) if earnings else None
+        nxt = v.get("next") if isinstance(v, dict) else v
+        if not earnings or nxt is None:
             return None
         try:
-            return (_date.fromisoformat(earnings[sym]) - _date.fromisoformat(today)).days
-        except ValueError:
+            return (_date.fromisoformat(nxt) - _date.fromisoformat(today)).days
+        except (ValueError, TypeError):
             return None
 
     # 实盘硬顶 (红线3, 上限不是建议): budget = 未平仓权利金总额封顶, 支持绝对额 (usd) 或
