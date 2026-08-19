@@ -10,10 +10,10 @@
       "tranches": 1
     },
     "AVGO": {
-      "qty": 4.564063,
-      "entry_price": 389.552,
+      "qty": 5.222465,
+      "entry_price": 387.4262,
       "entry_date": "2026-08-17",
-      "cost": 1777.94,
+      "cost": 2023.32,
       "tranches": 2
     },
     "STLD": {
@@ -42,6 +42,20 @@
       "entry_price": 368.2124,
       "entry_date": "2026-08-18",
       "cost": 1014.33,
+      "tranches": 1
+    },
+    "EMR": {
+      "qty": 6.29721,
+      "entry_price": 159.55,
+      "entry_date": "2026-08-19",
+      "cost": 1004.72,
+      "tranches": 1
+    },
+    "USFD": {
+      "qty": 3.536809,
+      "entry_price": 108.94,
+      "entry_date": "2026-08-19",
+      "cost": 385.3,
       "tranches": 1
     }
   },
@@ -973,6 +987,33 @@
       "price": 379.67,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "AVGO",
+      "side": "buy",
+      "qty": 0.658402,
+      "price": 372.69,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "EMR",
+      "side": "buy",
+      "qty": 6.29721,
+      "price": 159.55,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "USFD",
+      "side": "buy",
+      "qty": 3.536809,
+      "price": 108.94,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
@@ -996,6 +1037,16 @@
         "cost": 547.56
       },
       "note": "仅按拆股比例调整份额与均价, 成本基与美元敞口不变; trades[] 历史记录保持原样 (如实反映当时成交价)。未产生任何订单 (红线2)。"
+    }
+  ],
+  "ledger_corrections": [
+    {
+      "date": "2026-08-19",
+      "symbol": "AVGO",
+      "field": "tranches",
+      "from": 3,
+      "to": 2,
+      "reason": "会话 apply 加仓②腿时 fills.reason 误用 'rsi2_scale_in' (应为 'rsi2_scale_in_leg2'), 导致同一档被计两次。实际敞口正确 (成本 $2,023.32 = 净值 20.1% = 2档×10%), 仅计数字段错。无交易影响 (tranches=3 只会让引擎更保守地不再加仓)。仅改此字段, qty/cost/entry_price/entry_date 不动。"
     }
   ]
 }

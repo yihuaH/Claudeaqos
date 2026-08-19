@@ -168,9 +168,11 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 245.38,
-        "state": "queued 排 2026-08-19 开盘",
+        "state": "filled 2026-08-19 09:30 ET",
         "order_id": "6a851c4b-8669-4586-a47e-d435f6d421bc",
-        "ref_id": "e3f6a9c4-5b07-4db8-a0c9-4d1e8f62b3a5"
+        "ref_id": "e3f6a9c4-5b07-4db8-a0c9-4d1e8f62b3a5",
+        "fill_qty": 0.658402,
+        "fill_price": 372.69
       },
       {
         "seq": 3,
@@ -178,10 +180,12 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 385.3,
-        "state": "queued 排 2026-08-19 开盘",
+        "state": "filled 2026-08-19 09:30 ET",
         "order_id": "6a851c3d-5ba0-49ae-abce-0562f67f9e35",
         "ref_id": "d2e5f8b3-4a96-4ca7-9fb8-3c0d7e51a2f4",
-        "note": "①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (USFD 不支持 24h, 同 TRV 08-17 先例); 23:00 ET 已过 extended_hours, 降级至 regular_hours → 全额②腿, 金额未放大"
+        "note": "①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (USFD 不支持 24h, 同 TRV 08-17 先例); 23:00 ET 已过 extended_hours, 降级至 regular_hours → 全额②腿, 金额未放大",
+        "fill_qty": 3.536809,
+        "fill_price": 108.94
       },
       {
         "seq": 2,
@@ -189,14 +193,16 @@
         "leg": 2,
         "type": "market",
         "dollar_amount": 1004.72,
-        "state": "queued 排 2026-08-19 开盘",
+        "state": "filled 2026-08-19 09:30 ET",
         "order_id": "6a851da8-7e09-4abf-968e-7bd3530c06e5",
         "ref_id": "f4a7b0d5-6c18-4ec9-b1da-5e2f9a73c4b6",
-        "note": "首轮因弹药保留超 cap 被跳过; 用户撤销保留后补执行。①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR (EMR 不支持 24h, 第3例) → 全额②腿排开盘, 金额未放大"
+        "note": "首轮因弹药保留超 cap 被跳过; 用户撤销保留后补执行。①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR (EMR 不支持 24h, 第3例) → 全额②腿排开盘, 金额未放大",
+        "fill_qty": 6.29721,
+        "fill_price": 159.55
       }
     ],
     "totals": "AVGO 759.34+245.38=1004.72; USFD 385.30; EMR 1004.72 — 三单均恰等引擎金额, 未放大",
-    "writeback": "AVGO ①腿已 apply; 两笔②腿开盘成交由 08-19 晨检回写",
+    "writeback": "全部腿已 apply 至 state/positions.json (②腿由 08-19 晨检回收)",
     "reserve_revocation": {
       "revoked_at": "2026-08-19T03:06:00Z",
       "amount_usd": 839.91,
