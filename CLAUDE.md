@@ -43,7 +43,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget **不设上限** 与单张风险 **不设上限** (2026-08-18 用户「不设上限」, 由 50%/$5,000 取消); 仍生效: 实时 BP 双封顶 (红线3 防杠杆闸)·熔断 (累计已实现亏 ≥ 净值×50%, 独立配置未动)·注码=净值×20% 风险/信号·**贵档单仓 ≤50% 净值 (sizing.max_single_position_pct_of_portfolio, 未取消)**·点差闸·DTE闸; 白名单21只·股票类专属; 开仓/平仓均**手动通道** (2026-08-15 实测 agentic 暂不支持多腿 place, 引擎出单+对话发参数+用户 App 执行, 详 playbook 4D 注记; 08-17 首笔 $1.53 成交)) | `weekly_calls_live.json enabled` + `budget` |
+| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget **不设上限** 与单张风险 **不设上限** (2026-08-18 用户「不设上限」, 由 50%/$5,000 取消); 仍生效: 实时 BP 双封顶 (红线3 防杠杆闸)·熔断 (累计已实现亏 ≥ 净值×50%, 独立配置未动)·注码=净值×20% 风险/信号·**贵档单仓亦不设上限** (2026-08-18 用户「取消掉」, 三闸全撤)·点差闸·DTE闸。⚠️ 期权规模唯一硬约束现为**实时 buying_power**, 单笔在险额可超净值一半 (实测 AVGO 一张 = 净值 60.2%), 用户知情接受; 白名单21只·股票类专属; 开仓/平仓均**手动通道** (2026-08-15 实测 agentic 暂不支持多腿 place, 引擎出单+对话发参数+用户 App 执行, 详 playbook 4D 注记; 08-17 首笔 $1.53 成交)) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 

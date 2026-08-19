@@ -30,6 +30,8 @@ from options_overlay import parse_occ, dte  # noqa: E402
 
 BUCKET = "weekly_calls"
 
+_UNSET = object()   # 区分「字段缺失」与「显式 null=不设上限」(2026-08-18)
+
 # near_signals 预警门槛 (2026-08-06 用 7 只 × ~242 天实测转化率校准):
 # 1 日档 (再跌1%即触发) 转化率 44% — 全收; 2 日档随当前 RSI2 衰减 (<25:28% / 25-40:22% / ≥40:17%),
 # 故 2 日档只在 RSI2 < 25 时预警。避免中性标的 (RSI2≈50) 白扣买入力。
@@ -486,8 +488,14 @@ def cmd_signal(a):
             if qty < 1:
                 # 贵档例外: 单张 ≤ max_single_position_pct_of_portfolio×净值 允许 1 张
                 # (2026-08-14 用户「都改到50%和5000」参数化; 缺省保持原 2×目标仓 = 40%)
-                tier_pct = (cfg.get("sizing") or {}).get("max_single_position_pct_of_portfolio")
-                tier_cap = pv * float(tier_pct) / 100.0 if tier_pct is not None else 2 * target
+                tier_pct = (cfg.get("sizing") or {}).get(
+                    "max_single_position_pct_of_portfolio", _UNSET)
+                if tier_pct is None:            # 显式 null = **不设上限** (2026-08-18 用户「取消掉」)
+                    tier_cap = float("inf")
+                elif tier_pct is _UNSET:        # 字段缺失 = 原缺省 2×目标仓 (向后兼容)
+                    tier_cap = 2 * target
+                else:
+                    tier_cap = pv * float(tier_pct) / 100.0
                 if per_cost <= tier_cap:
                     qty = 1
                 else:
