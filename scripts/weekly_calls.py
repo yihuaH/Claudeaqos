@@ -112,7 +112,8 @@ def _pick_contract(sym, spot, chain, cc, today):
         best_spread = sp if best_spread is None else min(best_spread, sp)
         if sp > cc["max_spread_pct"]:
             continue
-        if m * 100.0 > cc["max_premium_per_contract_usd"]:
+        _pcap = cc.get("max_premium_per_contract_usd")   # null = 不设上限 (2026-08-18 用户)
+        if _pcap is not None and m * 100.0 > float(_pcap):
             return None, f"premium_too_large({m * 100:.0f})"
         return {"occ": occ, "meta": meta, "quote": q, "mid": m,
                 "spread_pct": round(sp, 3), "dte": d}, None
@@ -158,7 +159,8 @@ def _pick_vertical(sym, spot, chain, cc, today):
         net = long_pick["quote"]["ask"] - q["bid"]
         if net <= 0:
             continue
-        if net * 100.0 > cc["max_premium_per_contract_usd"]:
+        _pcap = cc.get("max_premium_per_contract_usd")   # null = 不设上限
+        if _pcap is not None and net * 100.0 > float(_pcap):
             return None, f"net_debit_too_large({net * 100:.0f})"
         width = strike - long_pick["meta"]["strike"]
         return {"structure": "vertical_spread", "dte": long_pick["dte"], "expiry": expiry,
@@ -232,7 +234,8 @@ def _pick_credit_put(sym, spot, chain, cc, today):
             risk = width - credit
             if risk <= 0:
                 continue
-            if risk * 100.0 > cc["max_premium_per_contract_usd"]:
+            _pcap = cc.get("max_premium_per_contract_usd")   # null = 不设上限
+            if _pcap is not None and risk * 100.0 > float(_pcap):
                 return None, f"risk_too_large({risk * 100:.0f})"
             return {"structure": "credit_put_spread", "dte": d, "expiry": expiry,
                     "short": {"occ": s_occ, "meta": s_meta, "quote": s_q, "mid": sm,
