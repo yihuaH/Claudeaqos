@@ -19,6 +19,23 @@
         "spread_pct": 0.43
       },
       "model_price": 35.807
+    },
+    "XLI260828C00160000": {
+      "underlying": "XLI",
+      "strike": 160.0,
+      "expiry": "2026-08-28",
+      "contracts": 1,
+      "entry_premium": 24.9,
+      "entry_date": "2026-08-19",
+      "entry_underlying": 183.57,
+      "entry_rsi2": 7.54,
+      "entry_quote": {
+        "bid": 24,
+        "ask": 24.43,
+        "mid": 24.215,
+        "spread_pct": 1.776
+      },
+      "model_price": 23.7454
     }
   },
   "trades": [
@@ -28,6 +45,15 @@
       "side": "buy",
       "qty": 1,
       "price": 33.75,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "XLI260828C00160000",
+      "side": "buy",
+      "qty": 1,
+      "price": 24.9,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
     }
@@ -96,6 +122,20 @@
       "reason": "premium_too_large(10238)",
       "rsi2": 9.94,
       "spot": 717.51
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "QQQ",
+      "reason": "premium_too_large(9194)",
+      "rsi2": 8.33,
+      "spot": 716.08
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "SMH",
+      "reason": "premium_too_large(8224)",
+      "rsi2": 9.85,
+      "spot": 560.92
     }
   ]
 }

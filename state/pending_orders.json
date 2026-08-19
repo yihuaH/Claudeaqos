@@ -1,213 +1,68 @@
 {
-  "trade_date": "2026-08-18",
-  "generated_at": "2026-08-18T21:55:00Z",
-  "status": "executed",
-  "market_window_until_et": "15:55",
-  "valid_until": "次一交易日 (2026-08-19 周三) 09:25 ET",
-  "buying_power_at_generation": 2399.74,
+  "trade_date": "2026-08-19",
+  "generated_at": "2026-08-19T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-20 周四) 09:25 ET",
+  "buying_power_at_generation": 5.0,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "AVGO",
-      "dollar_amount": 1004.72,
+      "symbol": "FITB",
+      "dollar_amount": 1002.55,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "tranche": 2,
-      "avg_entry_price": 397.26,
-      "drawdown_pct": -4.34,
-      "est_price": 380.0,
-      "rsi2": 1.62,
+      "reason": "rsi2_entry",
+      "est_price": 54.96,
+      "rsi2": 1.38,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "EMR",
-      "dollar_amount": 1004.72,
+      "symbol": "PH",
+      "dollar_amount": 1002.55,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 157.78,
-      "rsi2": 4.81,
+      "est_price": 1023.25,
+      "rsi2": 1.65,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "USFD",
-      "dollar_amount": 385.3,
+      "symbol": "MTB",
+      "dollar_amount": 555.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 106.91,
-      "rsi2": 5.38,
+      "est_price": 244.55,
+      "rsi2": 2.13,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
-  "option_alert": {
-    "names": [
-      "NVDA",
-      "GOOGL",
-      "IWM",
-      "TSM",
-      "MSFT",
-      "SMH",
-      "SPY"
-    ],
-    "scenarios": {
-      "NVDA": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 10.25,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 1569
-      },
-      "GOOGL": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 28.16,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 2316
-      },
-      "IWM": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 13.26,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 2606
-      },
-      "TSM": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 14.19,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 2926
-      },
-      "MSFT": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 18.77,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 3033
-      },
-      "SMH": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 15.75,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 3865
-      },
-      "SPY": {
-        "scenario": "1d_-1%",
-        "rsi2_now": 10.17,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 6727
-      }
-    },
-    "reserve_usd": 839.91
-  },
   "news_precheck": {
     "symbols": [
-      "AVGO",
-      "EMR",
-      "USFD"
+      "FITB",
+      "PH",
+      "MTB"
     ],
-    "red_flagged": [],
-    "source": "integrations.py news 2026-08-11→2026-08-18 (AVGO 22篇/USFD 1篇/EMR 0篇, 均无红旗)"
+    "red_flagged": [
+      "PH"
+    ],
+    "source": "integrations.py news 2026-08-12→2026-08-19",
+    "assessment": "PH 红旗**疑似误报**: 命中关键词 bankruptcy 出自并购综述标题「Deal Dispatch: ... 777 Partners Bankruptcy」, 破产主体为第三方 777 Partners, 与 Parker-Hannifin 无关。FITB/MTB 无新闻。按红线2 引擎选股不因新闻改动, 提示供用户 4C 一票否决。"
   },
   "funding_projection": {
-    "cap_usd": 1559.83,
-    "cap_formula": "min(buying_power, cash) − option_alert.reserve_usd = 2399.74 − 839.91",
-    "total_usd": 2394.74,
-    "per_seq": [
-      {
-        "seq": 1,
-        "symbol": "AVGO",
-        "cumulative": 1004.72,
-        "projection": "≤ cap ✓"
-      },
-      {
-        "seq": 2,
-        "symbol": "EMR",
-        "cumulative": 2009.44,
-        "projection": "⛔ 超 cap, 按 4C-2C 整单跳过 (不缩量)"
-      },
-      {
-        "seq": 3,
-        "symbol": "USFD",
-        "cumulative": 2394.74,
-        "projection": "⛔ 超 cap, 整单跳过"
-      }
-    ],
-    "note": "⚠️ 资金紧张: 生成时 BP $2,399.74 = unleveraged (防杠杆闸 ✓), 弹药保留 $839.91 后 cap 仅 $1,559.83, 三单合计 $2,394.74 装不下。按 4C-2C 只有 seq1 (AVGO 加仓) 能执行, EMR/USFD 整单跳过不缩量。**变量**: 账户有 $3,870.53 入金在途, 若执行时已到账则 BP 大增、三单全可执行; 用户亦可回复「不留了」撤销弹药保留 (撤销后 cap=$2,399.74, 可容 seq1+seq2)。4C 执行时一律以实时 min(BP,cash) 重算 (红线9)。"
+    "cap_usd": 5.0,
+    "cap_formula": "生成时实时 min(buying_power, cash) — 无 option_alert 保留 (今日引擎未出 near_signals 保留额)",
+    "total_usd": 2560.99,
+    "engine_cash_basis": "引擎现金池 = BP $5.00 + 当日卖单预估回款 $2,561.05 (ROST 583.75 + STLD 922.79 + TMO 1054.51) = $2,566.05, 三单用尽 $2,560.99",
+    "note": "⚠️ **买单资金完全依赖当日卖单回款**。当前实时 BP 仅 $5.00 (cash $2,255 − AMZN 价差抵押 $2,250), 入金 $3,870.53 仍未到账。三笔卖单 (STLD/TMO 已挂 + ROST 待用户决定) 均为 market+regular_hours 排 08-20 开盘。**故执行时序关键**: (a) 09:30 开盘前执行 → 实时 BP≈$5, 三单全部跳过; (b) 开盘后卖单成交 → BP 恢复约 $2,561, 可执行。**若用户决定 ROST 持有过财报不卖, 回款减少 $583.75, 买单能力相应下降**, 按 seq 顺序判定。4C 执行一律以实时 min(BP,cash) 重算 (红线9)。"
   },
-  "executed_at": "2026-08-19T03:00:27Z",
-  "execution_summary": {
-    "mode": "盘外限价模式 (4C 混合执行), 2026-08-18 23:00 ET 用户回复「执行」",
-    "reserve_kept": "option_alert 保留 $839.91 于 2026-08-18 23:06 ET 经用户「把保留弹药取出来」**一票撤销** (playbook 4C-2C 用户撤销权); 撤销后 cap = 实时 BP $1,009.72 (=unleveraged ✓), EMR $1,004.72 装得下 (余 $5.00), 补执行。",
-    "executed_seqs": [
-      1,
-      2,
-      3
-    ],
-    "skipped_seqs": [],
-    "seq_accounting": "seq1 AVGO 1004.72 (累计 1004.72 ≤ cap ✓) → seq2 EMR 跳过 → seq3 USFD 385.30 (跳过 EMR 后累计 1390.02 ≤ cap ✓)",
-    "legs": [
-      {
-        "seq": 1,
-        "symbol": "AVGO",
-        "leg": 1,
-        "type": "limit",
-        "qty": 2.0,
-        "limit_price": 383.8,
-        "fill_price": 379.67,
-        "cost": 759.34,
-        "state": "filled (24h盘即时, 成交价优于限价与收盘)",
-        "order_id": "6a851c3c-6e12-4b17-af04-50c485d02de1",
-        "ref_id": "c1d4e7a2-3f85-4b96-8ea7-2b9c6d40f1e3"
-      },
-      {
-        "seq": 1,
-        "symbol": "AVGO",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 245.38,
-        "state": "filled 2026-08-19 09:30 ET",
-        "order_id": "6a851c4b-8669-4586-a47e-d435f6d421bc",
-        "ref_id": "e3f6a9c4-5b07-4db8-a0c9-4d1e8f62b3a5",
-        "fill_qty": 0.658402,
-        "fill_price": 372.69
-      },
-      {
-        "seq": 3,
-        "symbol": "USFD",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 385.3,
-        "state": "filled 2026-08-19 09:30 ET",
-        "order_id": "6a851c3d-5ba0-49ae-abce-0562f67f9e35",
-        "ref_id": "d2e5f8b3-4a96-4ca7-9fb8-3c0d7e51a2f4",
-        "note": "①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (USFD 不支持 24h, 同 TRV 08-17 先例); 23:00 ET 已过 extended_hours, 降级至 regular_hours → 全额②腿, 金额未放大",
-        "fill_qty": 3.536809,
-        "fill_price": 108.94
-      },
-      {
-        "seq": 2,
-        "symbol": "EMR",
-        "leg": 2,
-        "type": "market",
-        "dollar_amount": 1004.72,
-        "state": "filled 2026-08-19 09:30 ET",
-        "order_id": "6a851da8-7e09-4abf-968e-7bd3530c06e5",
-        "ref_id": "f4a7b0d5-6c18-4ec9-b1da-5e2f9a73c4b6",
-        "note": "首轮因弹药保留超 cap 被跳过; 用户撤销保留后补执行。①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR (EMR 不支持 24h, 第3例) → 全额②腿排开盘, 金额未放大",
-        "fill_qty": 6.29721,
-        "fill_price": 159.55
-      }
-    ],
-    "totals": "AVGO 759.34+245.38=1004.72; USFD 385.30; EMR 1004.72 — 三单均恰等引擎金额, 未放大",
-    "writeback": "全部腿已 apply 至 state/positions.json (②腿由 08-19 晨检回收)",
-    "reserve_revocation": {
-      "revoked_at": "2026-08-19T03:06:00Z",
-      "amount_usd": 839.91,
-      "user_instruction": "近两天有期权信号吗? 没有的话就把保留弹药取出来",
-      "evidence": "弹药保留自 08-05 启用后 4 次 (08-13 $261.86 / 08-14 $1,451 / 08-17 $508 / 08-18 $839.91) 转化率 0; 近两日实盘期权 skip 原因均为 risk_too_large 与 budget_exceeded, 无一因 buying_power 不足 —— 保留的资源不是瓶颈。"
-    }
+  "linked_decision": {
+    "pending_user_decision": "ROST earnings_exit 卖单是否执行 (用户 08-18 要求出场前询问是否破例持有过财报)",
+    "impact": "ROST 不卖 → 少 $583.75 回款且保留 −6.28% 浮亏敞口过财报; 卖 → 实现亏损 $39.14 并释放资金"
   }
 }

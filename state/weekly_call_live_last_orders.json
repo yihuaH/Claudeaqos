@@ -1,91 +1,122 @@
 {
-  "date": "2026-08-18",
+  "date": "2026-08-19",
   "halted": false,
-  "sells": [],
+  "sells": [
+    {
+      "structure": "credit_put_spread",
+      "qty": 1,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength",
+      "direction": "debit",
+      "est_price": 0.87,
+      "underlying": "AMZN",
+      "expiry": "2026-08-28",
+      "legs": [
+        {
+          "symbol": "AMZN260828P00252500",
+          "side": "buy",
+          "position_effect": "close",
+          "strike": 252.5,
+          "quote": {
+            "bid": 0.84,
+            "ask": 0.97
+          }
+        },
+        {
+          "symbol": "AMZN260828P00230000",
+          "side": "sell",
+          "position_effect": "close",
+          "strike": 230.0,
+          "quote": {
+            "bid": 0.1,
+            "ask": 0.13
+          }
+        }
+      ],
+      "exit_quote": {
+        "short_ask": 0.97,
+        "long_bid": 0.1,
+        "net_debit": 0.87,
+        "mid": 0.79,
+        "spread_pct": 14.365,
+        "long_spread_pct": 26.087
+      }
+    }
+  ],
   "buys": [],
   "skips": [
     {
-      "symbol": "AVGO",
-      "reason": "risk_too_large(6055)",
-      "rsi2": 1.62,
-      "spot": 380.0
-    },
-    {
-      "symbol": "DIA",
-      "reason": "budget_exceeded(cost=4994,cap=5024,open=2108)",
-      "rsi2": 4.06
-    },
-    {
       "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=62.58%)",
-      "rsi2": 7.54,
-      "spot": 183.57
+      "reason": "credit_leg_spread_too_wide(best=49.28%)",
+      "rsi2": 3.69,
+      "spot": 181.95
+    },
+    {
+      "symbol": "NVDA",
+      "reason": "insufficient_buying_power(cost=1702,bp_left=5)",
+      "rsi2": 5.98
     },
     {
       "symbol": "QQQ",
-      "reason": "risk_too_large(6342)",
-      "rsi2": 9.94,
-      "spot": 717.51
+      "reason": "insufficient_buying_power(cost=6245,bp_left=5)",
+      "rsi2": 8.33
+    },
+    {
+      "symbol": "SMH",
+      "reason": "insufficient_buying_power(cost=6670,bp_left=5)",
+      "rsi2": 9.85
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "NVDA",
-      "rsi2_now": 10.25,
+      "symbol": "XLF",
+      "rsi2_now": 23.25,
       "scenario": "1d_-1%",
-      "spot": 219.74,
+      "spot": 57.48,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1569
+      "est_premium_usd": 508
+    },
+    {
+      "symbol": "BAC",
+      "rsi2_now": 16.84,
+      "scenario": "1d_-1%",
+      "spot": 63.17,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 544
     },
     {
       "symbol": "GOOGL",
-      "rsi2_now": 28.16,
+      "rsi2_now": 51.17,
       "scenario": "1d_-1%",
-      "spot": 344.2,
+      "spot": 344.72,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2316
+      "est_premium_usd": 2324
     },
     {
-      "symbol": "IWM",
-      "rsi2_now": 13.26,
+      "symbol": "AMD",
+      "rsi2_now": 12.18,
       "scenario": "1d_-1%",
-      "spot": 300.23,
+      "spot": 466.42,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2606
+      "est_premium_usd": 2672
     },
     {
       "symbol": "TSM",
-      "rsi2_now": 14.19,
-      "scenario": "2d_-1%x2",
-      "spot": 413.41,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2926
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 18.77,
+      "rsi2_now": 12.65,
       "scenario": "1d_-1%",
-      "spot": 481.63,
+      "spot": 412.09,
       "structure": "credit_put_spread",
-      "est_premium_usd": 3033
-    },
-    {
-      "symbol": "SMH",
-      "rsi2_now": 15.75,
-      "scenario": "2d_-1%x2",
-      "spot": 569.77,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 3865
+      "est_premium_usd": 2918
     },
     {
       "symbol": "SPY",
-      "rsi2_now": 10.17,
+      "rsi2_now": 35.1,
       "scenario": "1d_-1%",
-      "spot": 767.45,
+      "spot": 769.06,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6727
+      "est_premium_usd": 6742
     }
   ],
-  "suggested_reserve_usd": 839.91
+  "suggested_reserve_usd": 1.75
 }
