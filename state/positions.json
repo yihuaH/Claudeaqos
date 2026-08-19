@@ -10,11 +10,11 @@
       "tranches": 1
     },
     "AVGO": {
-      "qty": 2.564063,
-      "entry_price": 397.26,
+      "qty": 4.564063,
+      "entry_price": 389.552,
       "entry_date": "2026-08-17",
-      "cost": 1018.6,
-      "tranches": 1
+      "cost": 1777.94,
+      "tranches": 2
     },
     "STLD": {
       "qty": 3.994509,
@@ -964,6 +964,15 @@
       "price": 588.87,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-18",
+      "symbol": "AVGO",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 379.67,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [
