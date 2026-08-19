@@ -140,19 +140,13 @@
   "executed_at": "2026-08-19T03:00:27Z",
   "execution_summary": {
     "mode": "盘外限价模式 (4C 混合执行), 2026-08-18 23:00 ET 用户回复「执行」",
-    "reserve_kept": "option_alert 保留 $839.91 未撤销; 实时 BP $2,399.74 = unleveraged (防杠杆闸 ✓), 入金 $3,870.53 仍未到账, cap = 2399.74 − 839.91 = $1,559.83",
+    "reserve_kept": "option_alert 保留 $839.91 于 2026-08-18 23:06 ET 经用户「把保留弹药取出来」**一票撤销** (playbook 4C-2C 用户撤销权); 撤销后 cap = 实时 BP $1,009.72 (=unleveraged ✓), EMR $1,004.72 装得下 (余 $5.00), 补执行。",
     "executed_seqs": [
       1,
+      2,
       3
     ],
-    "skipped_seqs": [
-      {
-        "seq": 2,
-        "symbol": "EMR",
-        "dollar_amount": 1004.72,
-        "reason": "4C-2C 资金约束: 累计 1004.72+1004.72=2009.44 > cap 1559.83, 整单跳过不缩量 (引擎金额确定性, 红线2)"
-      }
-    ],
+    "skipped_seqs": [],
     "seq_accounting": "seq1 AVGO 1004.72 (累计 1004.72 ≤ cap ✓) → seq2 EMR 跳过 → seq3 USFD 385.30 (跳过 EMR 后累计 1390.02 ≤ cap ✓)",
     "legs": [
       {
@@ -188,9 +182,26 @@
         "order_id": "6a851c3d-5ba0-49ae-abce-0562f67f9e35",
         "ref_id": "d2e5f8b3-4a96-4ca7-9fb8-3c0d7e51a2f4",
         "note": "①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR 'instrument is untradable for 24 hour trading' (USFD 不支持 24h, 同 TRV 08-17 先例); 23:00 ET 已过 extended_hours, 降级至 regular_hours → 全额②腿, 金额未放大"
+      },
+      {
+        "seq": 2,
+        "symbol": "EMR",
+        "leg": 2,
+        "type": "market",
+        "dollar_amount": 1004.72,
+        "state": "queued 排 2026-08-19 开盘",
+        "order_id": "6a851da8-7e09-4abf-968e-7bd3530c06e5",
+        "ref_id": "f4a7b0d5-6c18-4ec9-b1da-5e2f9a73c4b6",
+        "note": "首轮因弹药保留超 cap 被跳过; 用户撤销保留后补执行。①腿被券商拒: EQUITY_ALL_DAY_TRADING_ERROR (EMR 不支持 24h, 第3例) → 全额②腿排开盘, 金额未放大"
       }
     ],
-    "totals": "AVGO 759.34+245.38=1004.72; USFD 385.30 (全②腿) — 均恰等引擎金额, 未放大; EMR 未执行",
-    "writeback": "AVGO ①腿已 apply; 两笔②腿开盘成交由 08-19 晨检回写"
+    "totals": "AVGO 759.34+245.38=1004.72; USFD 385.30; EMR 1004.72 — 三单均恰等引擎金额, 未放大",
+    "writeback": "AVGO ①腿已 apply; 两笔②腿开盘成交由 08-19 晨检回写",
+    "reserve_revocation": {
+      "revoked_at": "2026-08-19T03:06:00Z",
+      "amount_usd": 839.91,
+      "user_instruction": "近两天有期权信号吗? 没有的话就把保留弹药取出来",
+      "evidence": "弹药保留自 08-05 启用后 4 次 (08-13 $261.86 / 08-14 $1,451 / 08-17 $508 / 08-18 $839.91) 转化率 0; 近两日实盘期权 skip 原因均为 risk_too_large 与 budget_exceeded, 无一因 buying_power 不足 —— 保留的资源不是瓶颈。"
+    }
   }
 }
