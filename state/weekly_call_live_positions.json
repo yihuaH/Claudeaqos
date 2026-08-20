@@ -2,54 +2,7 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "AMZN260828P00252500": {
-      "underlying": "AMZN",
-      "strike": 252.5,
-      "expiry": "2026-08-28",
-      "contracts": 1,
-      "entry_premium": 1.53,
-      "entry_date": "2026-08-17",
-      "entry_underlying": 262.65,
-      "entry_rsi2": 6.02,
-      "entry_quote": {
-        "mid": 1.515,
-        "spread_pct": 9.971,
-        "long_spread_pct": 10.526,
-        "net_credit_conservative": 1.42
-      },
-      "model_price": 6.8566,
-      "structure": "credit_put_spread",
-      "long_occ": "AMZN260828P00230000",
-      "long_strike": 230.0,
-      "risk_per_contract": 21.08,
-      "max_value_per_contract": 22.5,
-      "entry_legs": [
-        {
-          "symbol": "AMZN260828P00252500",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 252.5,
-          "quote": {
-            "bid": 1.62,
-            "ask": 1.79
-          },
-          "spread_pct": 9.971
-        },
-        {
-          "symbol": "AMZN260828P00230000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 230.0,
-          "quote": {
-            "bid": 0.18,
-            "ask": 0.2
-          },
-          "spread_pct": 10.526
-        }
-      ]
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -59,9 +12,38 @@
       "price": 1.53,
       "bucket": "weekly_calls",
       "reason": ""
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "AMZN260828P00252500",
+      "side": "sell",
+      "qty": 1,
+      "price": 1.34,
+      "bucket": "weekly_calls",
+      "reason": ""
     }
   ],
-  "round_trips": [],
+  "round_trips": [
+    {
+      "occ": "AMZN260828P00252500",
+      "structure": "credit_put_spread",
+      "short_occ": null,
+      "long_occ": "AMZN260828P00230000",
+      "underlying": "AMZN",
+      "entry_date": "2026-08-17",
+      "exit_date": "2026-08-20",
+      "entry_premium": 1.53,
+      "exit_premium": 1.34,
+      "pnl_pct": 0.9,
+      "pnl_usd": 19.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 9.971,
+      "exit_spread_pct": 14.365,
+      "entry_mid": 1.515,
+      "exit_mid": 0.79,
+      "model_price": 6.8566
+    }
+  ],
   "skip_log": [
     {
       "date": "2026-08-04",
@@ -76,6 +58,31 @@
       "reason": "credit_leg_spread_too_wide(best=13.08%)",
       "rsi2": 4.64,
       "spot": 392.99
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "XLI",
+      "reason": "credit_leg_spread_too_wide(best=49.28%)",
+      "rsi2": 3.69,
+      "spot": 181.95
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "NVDA",
+      "reason": "insufficient_buying_power(cost=1702,bp_left=5)",
+      "rsi2": 5.98
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "QQQ",
+      "reason": "insufficient_buying_power(cost=6245,bp_left=5)",
+      "rsi2": 8.33
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "SMH",
+      "reason": "insufficient_buying_power(cost=6670,bp_left=5)",
+      "rsi2": 9.85
     }
   ]
 }
