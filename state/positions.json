@@ -2,13 +2,6 @@
   "high_water_mark": 10164.78,
   "halted": false,
   "strategy_positions": {
-    "ROST": {
-      "qty": 2.487378,
-      "entry_price": 250.4243,
-      "entry_date": "2026-08-13",
-      "cost": 622.9,
-      "tranches": 1
-    },
     "AVGO": {
       "qty": 5.222465,
       "entry_price": 387.4262,
@@ -16,25 +9,11 @@
       "cost": 2023.32,
       "tranches": 2
     },
-    "STLD": {
-      "qty": 3.994509,
-      "entry_price": 255.0,
-      "entry_date": "2026-08-17",
-      "cost": 1018.6,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 5.627242,
       "entry_price": 180.2535,
       "entry_date": "2026-08-17",
       "cost": 1014.33,
-      "tranches": 1
-    },
-    "TMO": {
-      "qty": 1.718647,
-      "entry_price": 590.3248,
-      "entry_date": "2026-08-17",
-      "cost": 1014.56,
       "tranches": 1
     },
     "TRV": {
@@ -1014,6 +993,33 @@
       "price": 108.94,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "STLD",
+      "side": "sell",
+      "qty": 3.994509,
+      "price": 229.36,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "TMO",
+      "side": "sell",
+      "qty": 1.718647,
+      "price": 616.98,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "ROST",
+      "side": "sell",
+      "qty": 2.487378,
+      "price": 230.2501,
+      "bucket": "strategy",
+      "reason": "earnings_exit"
     }
   ],
   "corporate_actions": [
