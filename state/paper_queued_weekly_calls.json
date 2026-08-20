@@ -1,28 +1,17 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-19",
+  "date": "2026-08-20",
   "coid_prefix": "cqw",
-  "next_open": "2026-08-20T09:30:00-04:00",
+  "next_open": "2026-08-21T09:30:00-04:00",
   "skipped": [],
   "orders": [
     {
-      "coid": "cqw-2026-08-19-AMZN260826C00230000-sell",
-      "order_id": "95ec801e-ef7c-4418-8eb4-be6cb32f74d3",
-      "symbol": "AMZN260826C00230000",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "34.8",
-      "qty": "1",
-      "bucket": "weekly_calls",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cqw-2026-08-19-NVDA260904C00195000-buy",
-      "order_id": "251f952f-c408-4169-95d2-3ef83504832e",
-      "symbol": "NVDA260904C00195000",
+      "coid": "cqw-2026-08-20-BAC260828C00054000-buy",
+      "order_id": "1a69e70a-2e57-4c99-b560-1472af6dc743",
+      "symbol": "BAC260828C00054000",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "24.73",
+      "limit_price": "8.12",
       "qty": "1",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"

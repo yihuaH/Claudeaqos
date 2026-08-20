@@ -1,31 +1,34 @@
 {
-  "trade_date": "2026-08-19",
-  "generated_at": "2026-08-19T21:55:00Z",
-  "status": "expired",
-  "valid_until": "次一交易日 (2026-08-20 周四) 09:25 ET",
-  "buying_power_at_generation": 5.0,
+  "trade_date": "2026-08-20",
+  "generated_at": "2026-08-20T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-21 周五) 09:25 ET",
+  "buying_power_at_generation": 4647.91,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "FITB",
-      "dollar_amount": 1002.55,
+      "symbol": "EMR",
+      "dollar_amount": 991.64,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 54.96,
-      "rsi2": 1.38,
+      "reason": "rsi2_scale_in",
+      "est_price": 154.72,
+      "rsi2": 1.51,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "tranche": 2,
+      "avg_entry_price": 159.55,
+      "drawdown_pct": -3.03
     },
     {
       "seq": 2,
       "action": "buy",
       "symbol": "PH",
-      "dollar_amount": 1002.55,
+      "dollar_amount": 991.64,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1023.25,
-      "rsi2": 1.65,
+      "est_price": 1000.13,
+      "rsi2": 0.6,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
@@ -33,38 +36,88 @@
       "seq": 3,
       "action": "buy",
       "symbol": "MTB",
-      "dollar_amount": 555.89,
+      "dollar_amount": 991.64,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 244.55,
-      "rsi2": 2.13,
+      "est_price": 238.25,
+      "rsi2": 0.84,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "FITB",
+      "dollar_amount": 991.64,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 54.5,
+      "rsi2": 1.02,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "DAL",
+      "dollar_amount": 991.64,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 81.06,
+      "rsi2": 1.24,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 6,
+      "action": "buy",
+      "symbol": "STLD",
+      "dollar_amount": 68.31,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 219.0,
+      "rsi2": 1.35,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "news_precheck": {
     "symbols": [
-      "FITB",
+      "EMR",
       "PH",
-      "MTB"
+      "MTB",
+      "FITB",
+      "DAL",
+      "STLD"
     ],
     "red_flagged": [
       "PH"
     ],
-    "source": "integrations.py news 2026-08-12→2026-08-19",
-    "assessment": "PH 红旗**疑似误报**: 命中关键词 bankruptcy 出自并购综述标题「Deal Dispatch: ... 777 Partners Bankruptcy」, 破产主体为第三方 777 Partners, 与 Parker-Hannifin 无关。FITB/MTB 无新闻。按红线2 引擎选股不因新闻改动, 提示供用户 4C 一票否决。"
+    "source": "integrations.py news 2026-08-13→2026-08-20",
+    "assessment": "PH 红旗**与 08-19 同一条,已判定为误报**: 命中 bankruptcy 出自并购综述「Deal Dispatch: … 777 Partners Bankruptcy」, 破产主体为第三方, 与 Parker-Hannifin 无关。"
+  },
+  "option_alert": {
+    "reserve_usd": 1626.77,
+    "note": "引擎 suggested_reserve_usd。⚠️ 本日期权轨道**实际出单**在险额 $3390 远超此保留额 — reserve 口径 (最便宜预警标的单张成本) 未跟上取消上限后的实际注码规模, 见下 funding_conflict。"
+  },
+  "funding_conflict": {
+    "detected": true,
+    "stock_buys_usd": 5026.51,
+    "option_buys_collateral_usd": 3390.0,
+    "combined_usd": 8416.51,
+    "available_usd": 5031.52,
+    "overshoot_usd": 3384.99,
+    "root_cause": "股票引擎 (signals.py) 与期权引擎 (weekly_calls.py) 各自独立以同一笔 buying_power 计算订单, 轨道间无资金协调。此前期权轨道被三闸 (单张$5000/预算50%/单仓50%) 卡死从未成交, 故问题未暴露; 2026-08-18 取消三闸后首次显现。**非引擎 bug** —— 各引擎自身均遵守 BP 约束。",
+    "resolution_required": "跨轨道执行优先级未定义, 需用户决定。4C/4D 执行时一律以实时 min(BP,cash) 逐单判定, 装不下整单跳过 (不缩量), 故**不会真的超支**; 但先执行哪个轨道会决定谁拿到资金。",
+    "options_for_user": [
+      "A. 股票优先 (主策略优先, 期权为实验仓) — 股票 $5027 吃掉大部分, 期权大概率全跳过",
+      "B. 期权优先 (刚取消上限, 优先验证) — 期权 $3390 先占, 股票按 seq 顺序装剩余 $1642",
+      "C. 按 option_alert reserve 分账 (playbook 原意) — 期权限 $1,626.77 内 (仅够 BAC 2 张或 NVDA 1 张), 其余给股票"
+    ]
   },
   "funding_projection": {
-    "cap_usd": 5.0,
-    "cap_formula": "生成时实时 min(buying_power, cash) — 无 option_alert 保留 (今日引擎未出 near_signals 保留额)",
-    "total_usd": 2560.99,
-    "engine_cash_basis": "引擎现金池 = BP $5.00 + 当日卖单预估回款 $2,561.05 (ROST 583.75 + STLD 922.79 + TMO 1054.51) = $2,566.05, 三单用尽 $2,560.99",
-    "note": "⚠️ **买单资金完全依赖当日卖单回款**。当前实时 BP 仅 $5.00 (cash $2,255 − AMZN 价差抵押 $2,250), 入金 $3,870.53 仍未到账。三笔卖单 (STLD/TMO 已挂 + ROST 待用户决定) 均为 market+regular_hours 排 08-20 开盘。**故执行时序关键**: (a) 09:30 开盘前执行 → 实时 BP≈$5, 三单全部跳过; (b) 开盘后卖单成交 → BP 恢复约 $2,561, 可执行。**若用户决定 ROST 持有过财报不卖, 回款减少 $583.75, 买单能力相应下降**, 按 seq 顺序判定。4C 执行一律以实时 min(BP,cash) 重算 (红线9)。"
-  },
-  "linked_decision": {
-    "pending_user_decision": "ROST earnings_exit 卖单是否执行 (用户 08-18 要求出场前询问是否破例持有过财报)",
-    "impact": "ROST 不卖 → 少 $583.75 回款且保留 −6.28% 浮亏敞口过财报; 卖 → 实现亏损 $39.14 并释放资金",
-    "resolution": "用户截止 09:25 ET 未答复 → 按 08-18 约定的默认 (遵守纪律) 执行 ROST 出场; 10:48 ET 盘中市价成交 @230.2501。执行时 ROST 已跌至 −7.95% (跌破 −7% 止损线), 即使无财报出场规则 stop_loss 亦会触发, 双重理由。"
-  },
-  "expiry_note": "3 张买单 (FITB/PH/MTB) 有效期至 2026-08-20 09:25 ET, 用户未回复「执行」→ 过期作废。背景: 生成时实时 BP 仅 $5.00, 买单资金完全依赖当日卖单回款, 而回款要等 09:30 开盘后才到位 —— 即时间窗与资金窗天然错配 (09:25 截止 vs 09:30 回款)。当晚主跑会用新数据重新决策。"
+    "cap_formula": "执行时实时 min(buying_power, cash); 本文件生成时 BP $4647.91 + USFD 卖出回款 $383.61 = $5031.52",
+    "total_usd": 5026.51,
+    "note": "股票买单合计 $5026.51 已略超可用资金, 即使不考虑期权也需按 seq 截断; 末单 STLD $68.31 为引擎按余额分配的零头。"
+  }
 }

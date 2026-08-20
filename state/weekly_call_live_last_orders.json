@@ -1,122 +1,161 @@
 {
-  "date": "2026-08-19",
+  "date": "2026-08-20",
   "halted": false,
-  "sells": [
+  "sells": [],
+  "buys": [
     {
       "structure": "credit_put_spread",
       "qty": 1,
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "direction": "debit",
-      "est_price": 0.87,
-      "underlying": "AMZN",
-      "expiry": "2026-08-28",
+      "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "AMZN260828P00252500",
-          "side": "buy",
-          "position_effect": "close",
-          "strike": 252.5,
+          "symbol": "NVDA260828P00210000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 210.0,
           "quote": {
-            "bid": 0.84,
-            "ask": 0.97
-          }
+            "bid": 3.58,
+            "ask": 3.69
+          },
+          "spread_pct": 3.026
         },
         {
-          "symbol": "AMZN260828P00230000",
-          "side": "sell",
-          "position_effect": "close",
-          "strike": 230.0,
+          "symbol": "NVDA260828P00190000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 190.0,
           "quote": {
-            "bid": 0.1,
-            "ask": 0.13
-          }
+            "bid": 0.42,
+            "ask": 0.44
+          },
+          "spread_pct": 4.651
         }
       ],
-      "exit_quote": {
-        "short_ask": 0.97,
-        "long_bid": 0.1,
-        "net_debit": 0.87,
-        "mid": 0.79,
-        "spread_pct": 14.365,
-        "long_spread_pct": 26.087
-      }
+      "est_price": 3.14,
+      "direction": "credit",
+      "underlying": "NVDA",
+      "expiry": "2026-08-28",
+      "dte": 8,
+      "spot": 216.85,
+      "rsi2": 4.71,
+      "model_price": 2.867,
+      "entry_quote": {
+        "mid": 3.205,
+        "spread_pct": 3.026,
+        "long_spread_pct": 4.651,
+        "net_credit_conservative": 3.14
+      },
+      "risk_per_contract": 16.86,
+      "max_value_per_contract": 20.0,
+      "max_loss_usd": 1686.0,
+      "max_gain_usd": 314.0
+    },
+    {
+      "structure": "credit_put_spread",
+      "qty": 3,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
+      "legs": [
+        {
+          "symbol": "BAC260904P00060000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 60.0,
+          "quote": {
+            "bid": 0.39,
+            "ask": 0.45
+          },
+          "spread_pct": 14.286
+        },
+        {
+          "symbol": "BAC260904P00054000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 54.0,
+          "quote": {
+            "bid": 0.03,
+            "ask": 0.07
+          },
+          "spread_pct": 80.0
+        }
+      ],
+      "est_price": 0.32,
+      "direction": "credit",
+      "underlying": "BAC",
+      "expiry": "2026-09-04",
+      "dte": 15,
+      "spot": 61.86,
+      "rsi2": 6.16,
+      "model_price": 0.3665,
+      "entry_quote": {
+        "mid": 0.37,
+        "spread_pct": 14.286,
+        "long_spread_pct": 80.0,
+        "net_credit_conservative": 0.32
+      },
+      "risk_per_contract": 5.68,
+      "max_value_per_contract": 6.0,
+      "max_loss_usd": 1704.0,
+      "max_gain_usd": 96.0
     }
   ],
-  "buys": [],
   "skips": [
     {
       "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=49.28%)",
-      "rsi2": 3.69,
-      "spot": 181.95
-    },
-    {
-      "symbol": "NVDA",
-      "reason": "insufficient_buying_power(cost=1702,bp_left=5)",
-      "rsi2": 5.98
+      "reason": "credit_leg_spread_too_wide(best=54.55%)",
+      "rsi2": 1.56,
+      "spot": 179.77
     },
     {
       "symbol": "QQQ",
-      "reason": "insufficient_buying_power(cost=6245,bp_left=5)",
-      "rsi2": 8.33
+      "reason": "insufficient_buying_power(cost=6188,bp_left=4648)",
+      "rsi2": 3.85
     },
     {
-      "symbol": "SMH",
-      "reason": "insufficient_buying_power(cost=6670,bp_left=5)",
-      "rsi2": 9.85
+      "symbol": "GOOGL",
+      "reason": "credit_leg_spread_too_wide(best=19.53%)",
+      "rsi2": 8.54,
+      "spot": 340.67
+    },
+    {
+      "symbol": "DIA",
+      "reason": "credit_leg_spread_too_wide(best=13.55%)",
+      "rsi2": 8.66,
+      "spot": 527.51
+    },
+    {
+      "symbol": "XLF",
+      "reason": "insufficient_buying_power(cost=1497,bp_left=1258)",
+      "rsi2": 9.05
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLF",
-      "rsi2_now": 23.25,
+      "symbol": "IWM",
+      "rsi2_now": 15.06,
       "scenario": "1d_-1%",
-      "spot": 57.48,
+      "spot": 297.67,
       "structure": "credit_put_spread",
-      "est_premium_usd": 508
+      "est_premium_usd": 2578
     },
     {
-      "symbol": "BAC",
-      "rsi2_now": 16.84,
-      "scenario": "1d_-1%",
-      "spot": 63.17,
+      "symbol": "SMH",
+      "rsi2_now": 21.37,
+      "scenario": "2d_-1%x2",
+      "spot": 562.65,
       "structure": "credit_put_spread",
-      "est_premium_usd": 544
-    },
-    {
-      "symbol": "GOOGL",
-      "rsi2_now": 51.17,
-      "scenario": "1d_-1%",
-      "spot": 344.72,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2324
-    },
-    {
-      "symbol": "AMD",
-      "rsi2_now": 12.18,
-      "scenario": "1d_-1%",
-      "spot": 466.42,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2672
-    },
-    {
-      "symbol": "TSM",
-      "rsi2_now": 12.65,
-      "scenario": "1d_-1%",
-      "spot": 412.09,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2918
+      "est_premium_usd": 3813
     },
     {
       "symbol": "SPY",
-      "rsi2_now": 35.1,
+      "rsi2_now": 10.88,
       "scenario": "1d_-1%",
-      "spot": 769.06,
+      "spot": 762.6,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6742
+      "est_premium_usd": 6704
     }
   ],
-  "suggested_reserve_usd": 1.75
+  "suggested_reserve_usd": 1626.77
 }

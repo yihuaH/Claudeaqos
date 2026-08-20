@@ -1,81 +1,105 @@
 {
-  "trade_date": "2026-08-14",
-  "generated_at": "2026-08-15T02:05:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-08-17 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
-  "note": "点差闸放宽 8→12% (b58aa22, 用户当晚指示) 后重跑引擎产出; 引擎输入与当日主跑完全相同 (bars/quotes/chains/earnings 同批)。",
+  "trade_date": "2026-08-20",
+  "generated_at": "2026-08-20T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-21 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
+  "execution_channel": "**手动** (agentic 不支持多腿组合单, playbook 4D 注记)",
   "orders": [
     {
       "seq": 1,
       "action": "buy_to_open",
       "structure": "credit_put_spread",
-      "underlying": "AMZN",
+      "underlying": "NVDA",
       "qty": 1,
       "legs": [
         {
-          "symbol": "AMZN260828P00252500",
+          "symbol": "NVDA260828P00210000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 252.5,
+          "strike": 210.0,
           "quote": {
-            "bid": 1.62,
-            "ask": 1.79
+            "bid": 3.58,
+            "ask": 3.69
           },
-          "spread_pct": 9.971
+          "spread_pct": 3.026
         },
         {
-          "symbol": "AMZN260828P00230000",
+          "symbol": "NVDA260828P00190000",
           "side": "buy",
           "position_effect": "open",
-          "strike": 230.0,
+          "strike": 190.0,
           "quote": {
-            "bid": 0.18,
-            "ask": 0.2
+            "bid": 0.42,
+            "ask": 0.44
           },
-          "spread_pct": 10.526
+          "spread_pct": 4.651
         }
       ],
       "expiry": "2026-08-28",
-      "dte": 14,
-      "spot": 262.65,
-      "rsi2": 6.02,
-      "est_price": 1.42,
+      "dte": 8,
+      "spot": 216.85,
+      "rsi2": 4.71,
+      "est_price": 3.14,
       "direction": "credit",
       "entry_quote": {
-        "mid": 1.515,
-        "spread_pct": 9.971,
-        "long_spread_pct": 10.526,
-        "net_credit_conservative": 1.42
+        "mid": 3.205,
+        "spread_pct": 3.026,
+        "long_spread_pct": 4.651,
+        "net_credit_conservative": 3.14
       },
-      "model_price": 6.8566,
-      "risk_per_contract": 21.08,
-      "max_loss_usd": 2108.0,
-      "max_gain_usd": 142.0,
-      "limit_floor": 1.38
+      "risk_per_contract": 16.86,
+      "max_loss_usd": 1686.0,
+      "max_gain_usd": 314.0,
+      "limit_floor": 3.05
+    },
+    {
+      "seq": 2,
+      "action": "buy_to_open",
+      "structure": "credit_put_spread",
+      "underlying": "BAC",
+      "qty": 3,
+      "legs": [
+        {
+          "symbol": "BAC260904P00060000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 60.0,
+          "quote": {
+            "bid": 0.39,
+            "ask": 0.45
+          },
+          "spread_pct": 14.286
+        },
+        {
+          "symbol": "BAC260904P00054000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 54.0,
+          "quote": {
+            "bid": 0.03,
+            "ask": 0.07
+          },
+          "spread_pct": 80.0
+        }
+      ],
+      "expiry": "2026-09-04",
+      "dte": 15,
+      "spot": 61.86,
+      "rsi2": 6.16,
+      "est_price": 0.32,
+      "direction": "credit",
+      "entry_quote": {
+        "mid": 0.37,
+        "spread_pct": 14.286,
+        "long_spread_pct": 80.0,
+        "net_credit_conservative": 0.32
+      },
+      "risk_per_contract": 5.68,
+      "max_loss_usd": 1704.0,
+      "max_gain_usd": 96.0,
+      "limit_floor": 0.31
     }
   ],
-  "execution_attempt": {
-    "attempted_at": "2026-08-15T02:12:00Z",
-    "review": "order_checks 空, 抵押 $2,250, 手续费 $0.08, 卖腿报价 1.64/1.77 (保守贷记 1.45 > 限价 1.38)",
-    "place_result": "API 400: Multi-leg options orders aren't supported in Robinhood agentic accounts yet",
-    "conclusion": "agentic 账户暂不支持多腿组合单 — credit_put_spread 实盘轨道的 MCP 执行通道不通 (开仓与组合平仓同受限)。按红线6 未重试、未拆腿。",
-    "manual_option": "用户可在 Robinhood App 手动下同一笔单 (卖 AMZN 2026-08-28 P252.5 + 买 P230, 1 张, 净贷记限价 ≥$1.38, gfd), 周一 10:30 ET 前有效; 若手动开仓, 平仓也须手动或拆腿处理 (先买回卖腿=减风险, 后卖出保护腿), 系统只能盯市提醒"
-  },
-  "manual_order": {
-    "order_id": "6a7fda02-bcc3-4c89-94b8-ea0f481bccf0",
-    "placed_agent": "user",
-    "placed_at": "2026-08-15T03:16:18Z",
-    "price": 1.53,
-    "note": "用户在 App 手动挂出 (MCP 多腿被平台拒后的人工通道); 限价 $1.53 = 挂单时中间价, ≥ 引擎下限 $1.38 合规。queued 排周一开盘; 周一 10:30 ET 未成交按协议撤销 (用户可在窗内下调限价, 底线 $1.38)。成交后晨检/主跑经 get_option_orders 回收, weekly_calls.py apply 回写账本。",
-    "outcome": {
-      "state": "filled",
-      "filled_at": "2026-08-17T13:33:54Z",
-      "net_credit": 1.53,
-      "legs": {
-        "sell P252.5": 1.69,
-        "buy P230": 0.16
-      },
-      "note": "手动通道首笔成交: $1.53 全价 (=挂单中间价), 优于引擎保守估 1.42; 已 apply 至 weekly_call_live_positions.json"
-    }
-  }
+  "caps_note": "2026-08-18 取消三闸 (单张$5000/预算50%/单仓50%) 后**首批期权买单**。NVDA 1张在险 $1,686 = 净值 17.0%; BAC 3张 $1,704 = 17.2%; 合计 34.2% 净值 — 在旧规则下会被拦。",
+  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict: 与股票买单合计超可用资金 $3385, 优先级待用户决定。"
 }
