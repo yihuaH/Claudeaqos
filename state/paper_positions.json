@@ -10,20 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "AVGO": {
-      "qty": 25.0,
-      "entry_price": 396.4452,
-      "entry_date": "2026-08-17",
-      "cost": 9911.13,
-      "tranches": 1
-    },
-    "STLD": {
-      "qty": 38.0,
-      "entry_price": 254.149474,
-      "entry_date": "2026-08-17",
-      "cost": 9657.68,
-      "tranches": 1
-    },
     "TRV": {
       "qty": 27.0,
       "entry_price": 371.495926,
@@ -36,6 +22,41 @@
       "entry_price": 180.961667,
       "entry_date": "2026-08-18",
       "cost": 9771.93,
+      "tranches": 1
+    },
+    "CRWD": {
+      "qty": 48.0,
+      "entry_price": 198.592292,
+      "entry_date": "2026-08-20",
+      "cost": 9532.43,
+      "tranches": 1
+    },
+    "PH": {
+      "qty": 9.0,
+      "entry_price": 1019.277778,
+      "entry_date": "2026-08-20",
+      "cost": 9173.5,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 116.0,
+      "entry_price": 81.891552,
+      "entry_date": "2026-08-20",
+      "cost": 9499.42,
+      "tranches": 1
+    },
+    "FITB": {
+      "qty": 176.0,
+      "entry_price": 54.76,
+      "entry_date": "2026-08-20",
+      "cost": 9637.76,
+      "tranches": 1
+    },
+    "MTB": {
+      "qty": 39.0,
+      "entry_price": 244.31,
+      "entry_date": "2026-08-20",
+      "cost": 9528.09,
       "tranches": 1
     }
   },
@@ -688,6 +709,203 @@
       "price": 180.961667,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-19",
+      "symbol": "AVGO",
+      "side": "sell",
+      "qty": 25.0,
+      "price": 372.1864,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "STLD",
+      "side": "sell",
+      "qty": 38.0,
+      "price": 226.06,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "CRWD",
+      "side": "buy",
+      "qty": 48.0,
+      "price": 198.592292,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "PH",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 1019.277778,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 116.0,
+      "price": 81.891552,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "FITB",
+      "side": "buy",
+      "qty": 176.0,
+      "price": 54.76,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-20",
+      "symbol": "MTB",
+      "side": "buy",
+      "qty": 39.0,
+      "price": 244.31,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ],
+  "excluded_from_edge": [
+    {
+      "date": "2026-08-21",
+      "kind": "execution_layer_accident",
+      "title": "重复卖单致转空 (2026-08-18~21) — 幽灵腿盈亏, 从挑战者 edge 计算中剔除",
+      "precedent": "同 2026-08-11「虚假止损」处理",
+      "root_cause": "paper.py _submit 遇 403 raise SystemExit → 排队清单未落盘 → 成交回不到账本 → 引擎重复出卖单。已于 2026-08-21 修补 4 项, 详 journal/2026-08-21-paper-wash-trade-fix.md",
+      "legitimate_exits_applied": [
+        {
+          "symbol": "AVGO",
+          "qty": 25,
+          "price": 372.1864,
+          "date": "2026-08-19",
+          "reason": "stop_loss"
+        },
+        {
+          "symbol": "STLD",
+          "qty": 38,
+          "price": 226.06,
+          "date": "2026-08-20",
+          "reason": "stop_loss"
+        }
+      ],
+      "phantom_legs": [
+        {
+          "symbol": "AVGO",
+          "sells": [
+            {
+              "qty": 25,
+              "price": 365.318,
+              "date": "2026-08-20"
+            },
+            {
+              "qty": 25,
+              "price": 371.0112,
+              "date": "2026-08-21"
+            }
+          ],
+          "cover": {
+            "qty": 50,
+            "price": 367.65,
+            "date": "2026-08-21"
+          },
+          "pnl_usd": 25.73
+        },
+        {
+          "symbol": "STLD",
+          "sells": [
+            {
+              "qty": 38,
+              "price": 225.049211,
+              "date": "2026-08-21"
+            }
+          ],
+          "cover": {
+            "qty": 38,
+            "price": 228.72,
+            "date": "2026-08-21"
+          },
+          "pnl_usd": -139.49
+        }
+      ],
+      "phantom_pnl_total_usd": -517.29,
+      "note": "幽灵腿净亏 $113.76 已实际发生于纸面账户 equity, 但不属策略行为, 评估挑战者 edge 时须剔除。",
+      "duplicate_entry_legs": {
+        "cause": "同一根因 — 首次买入未回账本, 引擎次日重出同一张入场单, 仓位变成 2 倍",
+        "unwound_at": "2026-08-21 (卖掉重复腿, 恢复原定 1 档)",
+        "legs": [
+          {
+            "symbol": "PH",
+            "qty": 9,
+            "dup_buy_price": 1019.277778,
+            "unwind_sell_price": 998.31,
+            "pnl_usd": -188.71
+          },
+          {
+            "symbol": "DAL",
+            "qty": 118,
+            "dup_buy_price": 81.891552,
+            "unwind_sell_price": 82.41,
+            "pnl_usd": 61.18
+          },
+          {
+            "symbol": "FITB",
+            "qty": 176,
+            "dup_buy_price": 54.76,
+            "unwind_sell_price": 54.36,
+            "pnl_usd": -70.4
+          },
+          {
+            "symbol": "MTB",
+            "qty": 40,
+            "dup_buy_price": 244.31,
+            "unwind_sell_price": 239.17,
+            "pnl_usd": -205.6
+          }
+        ],
+        "pnl_total_usd": -403.53,
+        "note": "重复腿买价用 08-20 那笔 (被撤销的一档); 首档按原价保留在账本。此段盈亏同样从 edge 剔除。"
+      },
+      "missing_buys_backfilled": [
+        {
+          "symbol": "CRWD",
+          "qty": 48,
+          "price": 198.592292,
+          "date": "2026-08-20"
+        },
+        {
+          "symbol": "PH",
+          "qty": 9,
+          "price": 1019.277778,
+          "date": "2026-08-20"
+        },
+        {
+          "symbol": "DAL",
+          "qty": 116,
+          "price": 81.891552,
+          "date": "2026-08-20"
+        },
+        {
+          "symbol": "FITB",
+          "qty": 176,
+          "price": 54.76,
+          "date": "2026-08-20"
+        },
+        {
+          "symbol": "MTB",
+          "qty": 39,
+          "price": 244.31,
+          "date": "2026-08-20"
+        }
+      ]
     }
   ]
 }
