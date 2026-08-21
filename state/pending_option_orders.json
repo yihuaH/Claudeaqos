@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-20",
   "generated_at": "2026-08-20T21:55:00Z",
-  "status": "manual_order_placed",
+  "status": "closed_out",
   "valid_until": "次一交易日 (2026-08-21 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "execution_channel": "**手动** (agentic 不支持多腿组合单, playbook 4D 注记)",
   "orders": [
@@ -145,5 +145,33 @@
       "note": "低于主跑预留的 $3,390 (因限价更高→贷记更多→在险更少), 余出 $39 缓冲"
     },
     "unfilled_handling": "按 playbook 4D: 08-21 10:30 ET 执行窗结束仍未成交 → cancel_option_order 撤销 (手动单若撤不动则请用户在 App 撤), 记 cancelled_unfilled; **绝不改限价追单**"
-  }
+  },
+  "settled_at": "2026-08-21T14:48:00Z",
+  "outcome": [
+    {
+      "underlying": "NVDA",
+      "result": "filled",
+      "order_id": "6a87b8b4-b75b-4071-8d87-17fe9d4dea23",
+      "filled_at": "2026-08-21T13:51:20Z",
+      "net_credit": 3.26,
+      "legs": {
+        "sell NVDA260828P00210000": 3.63,
+        "buy NVDA260828P00190000": 0.37
+      },
+      "risk_per_contract": 16.74,
+      "max_loss_usd": 1674.0,
+      "max_gain_usd": 326.0,
+      "note": "用户限价 3.26 (= 理论最优 3.27 减 1 分) 竟然成交, 优于引擎保守估 3.14。已 weekly_calls.py apply 回写 live 账本。"
+    },
+    {
+      "underlying": "BAC",
+      "result": "cancelled_unfilled",
+      "order_id": "6a87b91c-fa0d-44dd-baaa-b6db9f83d973",
+      "cancelled_at": "2026-08-21T14:47:45Z",
+      "limit": 0.41,
+      "engine_est": 0.32,
+      "reason": "过 10:30 ET 执行窗仍 confirmed 未成交 → playbook 4D 晨检撤单。**未改限价追单** (红线2)。",
+      "note": "用户限价 0.41 高于引擎 est 0.32 达 28%, 需两腿同时打最优侧才成交。不记 skip_log (属执行层结果, 非引擎 gate 拦截)。"
+    }
+  ]
 }

@@ -24,17 +24,17 @@
       "tranches": 1
     },
     "EMR": {
-      "qty": 6.29721,
-      "entry_price": 159.55,
+      "qty": 12.635592,
+      "entry_price": 157.995,
       "entry_date": "2026-08-19",
-      "cost": 1004.72,
-      "tranches": 1
+      "cost": 1996.36,
+      "tranches": 2
     },
-    "USFD": {
-      "qty": 3.536809,
-      "entry_price": 108.94,
-      "entry_date": "2026-08-19",
-      "cost": 385.3,
+    "STLD": {
+      "qty": 0.304478,
+      "entry_price": 224.3508,
+      "entry_date": "2026-08-21",
+      "cost": 68.31,
       "tranches": 1
     }
   },
@@ -1020,6 +1020,33 @@
       "price": 230.2501,
       "bucket": "strategy",
       "reason": "earnings_exit"
+    },
+    {
+      "date": "2026-08-21",
+      "symbol": "USFD",
+      "side": "sell",
+      "qty": 3.536809,
+      "price": 109.0,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-21",
+      "symbol": "EMR",
+      "side": "buy",
+      "qty": 6.338382,
+      "price": 156.45,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-08-21",
+      "symbol": "STLD",
+      "side": "buy",
+      "qty": 0.304478,
+      "price": 224.3508,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
@@ -1053,6 +1080,13 @@
       "from": 3,
       "to": 2,
       "reason": "会话 apply 加仓②腿时 fills.reason 误用 'rsi2_scale_in' (应为 'rsi2_scale_in_leg2'), 导致同一档被计两次。实际敞口正确 (成本 $2,023.32 = 净值 20.1% = 2档×10%), 仅计数字段错。无交易影响 (tranches=3 只会让引擎更保守地不再加仓)。仅改此字段, qty/cost/entry_price/entry_date 不动。"
+    },
+    {
+      "date": "2026-08-21",
+      "field": "trades[USFD].reason",
+      "from": "rsi2_exit",
+      "to": "exit_strength",
+      "note": "回写时 reason 写错 (08-20 引擎判定为 exit_strength)。reason 仅入 trades 日志, 不参与持仓/成本计算, 无交易影响。"
     }
   ]
 }
