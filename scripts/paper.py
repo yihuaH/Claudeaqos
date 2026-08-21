@@ -52,6 +52,16 @@ def _get_by_coid(coid):
     return _req("GET", f"/v2/orders:by_client_order_id?client_order_id={coid}")
 
 
+class OrderRejected(Exception):
+    """单笔下单被券商拒绝。**必须逐单捕获, 绝不允许中断整批** —— 2026-08-18~21 转空事故
+    的根因就是这里原先 raise SystemExit, 导致 _run_queued 在写排队清单前死掉,
+    已提交的卖单次日无从回收, 账本与券商脱钩后引擎重复出卖单直至卖成空头。"""
+
+    def __init__(self, symbol, side, detail):
+        super().__init__(f"{symbol} {side}: {detail}")
+        self.symbol, self.side, self.detail = symbol, side, detail
+
+
 def _submit(order, coid):
     # 默认 market/day; order 可覆盖 type/time_in_force (排队模式用 limit/day)
     body = {"type": "market", "time_in_force": "day", **order, "client_order_id": coid}
@@ -61,7 +71,7 @@ def _submit(order, coid):
         detail = e.read().decode()[:200]
         if e.code == 422 and "client_order_id" in detail:
             return _get_by_coid(coid)  # 重试幂等: 复用已提交的同名订单
-        raise SystemExit(f"下单失败 {order.get('symbol')}: HTTP {e.code} {detail}")
+        raise OrderRejected(order.get("symbol"), order.get("side"), f"HTTP {e.code} {detail}")
 
 
 OCC_RE = re.compile(r"^[A-Z.]{1,6}\d{6}[CP]\d{8}$")  # 期权 OCC 符号, 整张合约交易
@@ -124,8 +134,55 @@ def _sell_full_or_none(sym, want, date, timeout_s):
     try:
         closed = _req("DELETE", f"/v2/positions/{sym}")
     except urllib.error.HTTPError as e:
-        raise SystemExit(f"平仓失败 {sym}: HTTP {e.code} {e.read().decode()[:200]}")
+        raise OrderRejected(sym, "sell", f"平仓失败 HTTP {e.code} {e.read().decode()[:200]}")
     return _wait_fill_by_id(closed["id"], timeout_s)
+
+
+def _wash_conflicts(plan):
+    """同一标的同日既有卖单又有买单 → Alpaca 判 potential wash trade, 403 拒掉后提交的那张
+    (挑战者 3% 止损砍仓 + 同日 RSI-2 再入场就会撞上; 实盘无此形态)。
+    返回冲突标的集合 —— 调用方**保留卖单 (出场优先), 跳过买单**并显式记录。
+    注: 冲突集按**原始 plan** 计算, 故卖单即便随后被防转空闸跳过, 同标的买单仍会被跳过 ——
+    偏保守 (账本与券商已脱钩时不再加仓于该标的), 有意为之。"""
+    sells = {o["symbol"] for side, o in plan if side == "sell"}
+    buys = {o["symbol"] for side, o in plan if side == "buy"}
+    return sells & buys
+
+
+def _is_long_only_sell(side, o):
+    """本轨道正股为纯多头; 期权 (OCC) 与备兑开仓 (sell_to_open) 是正当空头, 不受防转空闸约束。"""
+    return (side == "sell" and not OCC_RE.match(o["symbol"])
+            and o.get("position_intent") != "sell_to_open")
+
+
+def _clamp_sell_qty(sym, want):
+    """防转空闸: 卖量不得超过券商实际持仓, 否则卖穿零变空头 (2026-08-18~21 事故的直接杀伤面)。
+    返回 (可卖量, 说明); 可卖量 ≤ 0 表示该卖单整单跳过。账本与券商脱钩时以**券商为准**。"""
+    held = _position_qty(sym)
+    if held is None:
+        return 0.0, "券商无持仓 → 卖单跳过 (账本与券商已脱钩, 防转空)"
+    if held <= 0:
+        return 0.0, f"券商持仓 {held} ≤ 0 → 卖单跳过 (已是空头, 防继续放大)"
+    if want > held + FULL_EXIT_EPS:
+        return held, f"卖量 {want} > 券商持仓 {held} → 截断至持仓量 (防转空)"
+    return want, ""
+
+
+def _prepare(side, o, conflicts, notes):
+    """两闸前置: wash 冲突买单跳过 / 正股卖单按券商持仓截断。返回 None 表示整单跳过。"""
+    sym = o["symbol"]
+    if side == "buy" and sym in conflicts:
+        notes.append(f"{sym} buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)")
+        return None
+    if _is_long_only_sell(side, o):
+        okqty, why = _clamp_sell_qty(sym, float(o["qty"]))
+        if why:
+            notes.append(f"{sym} sell: {why}")
+        if okqty <= 0:
+            return None
+        if okqty != float(o["qty"]):
+            return {**o, "qty": okqty}
+    return o
 
 
 def cmd_run(a):
@@ -152,25 +209,33 @@ def cmd_run(a):
                              "(顺延下一交易日; 加 --allow-queue 可排队至次开)")
         return _run_queued(a, plan, clk)
 
-    fills, warnings = [], []
-    for side, o in plan:
+    conflicts = _wash_conflicts(plan)
+    fills, warnings, skipped, failed = [], [], [], []
+    for side, o0 in plan:
+        o = _prepare(side, o0, conflicts, skipped)
+        if o is None:
+            continue
         sym = o["symbol"]
         coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
-        done = None
-        if side == "sell" and not OCC_RE.match(sym):
-            done = _sell_full_or_none(sym, float(o["qty"]), a.date, a.timeout)
-        if done is None:
-            body = {"symbol": sym, "side": side}
-            if o.get("position_intent"):
-                body["position_intent"] = o["position_intent"]
-            if OCC_RE.match(sym):
-                body["qty"] = str(int(o["qty"]))  # 期权只能整张
-            elif side == "sell":
-                body["qty"] = str(o["qty"])
-            else:
-                body["notional"] = str(o["dollar_amount"])
-            _submit(body, coid)
-            done = _wait_fill(coid, a.timeout)
+        try:
+            done = None
+            if side == "sell" and not OCC_RE.match(sym):
+                done = _sell_full_or_none(sym, float(o["qty"]), a.date, a.timeout)
+            if done is None:
+                body = {"symbol": sym, "side": side}
+                if o.get("position_intent"):
+                    body["position_intent"] = o["position_intent"]
+                if OCC_RE.match(sym):
+                    body["qty"] = str(int(o["qty"]))  # 期权只能整张
+                elif side == "sell":
+                    body["qty"] = str(o["qty"])
+                else:
+                    body["notional"] = str(o["dollar_amount"])
+                _submit(body, coid)
+                done = _wait_fill(coid, a.timeout)
+        except OrderRejected as e:      # 单笔被拒 → 记录后继续跑完整批
+            failed.append({"symbol": sym, "side": side, "detail": e.detail})
+            continue
         fq = float(done.get("filled_qty") or 0)
         if fq > 0:
             fills.append({"symbol": sym, "side": side, "qty": fq,
@@ -180,7 +245,7 @@ def cmd_run(a):
         else:
             warnings.append(f"{sym} {side}: 未成交 (status={done['status']})")
 
-    out = {"fills": fills, "warnings": warnings}
+    out = {"fills": fills, "warnings": warnings, "skipped": skipped, "failed": failed}
     if a.fills_out:
         with open(a.fills_out, "w") as f:
             json.dump(out, f, indent=2, ensure_ascii=False)
@@ -222,31 +287,44 @@ def _queue_limit_body(side, o):
 def _run_queued(a, plan, clk):
     """市场未开盘且 --allow-queue: 逐单提交 limit/day 挂至次开, 不等成交。
     幂等 (同 coid 重跑复用已挂单); 排队清单写 --queued-out 供次日 sync 回收。"""
-    queued, skipped = [], []
-    for side, o in plan:
-        sym = o["symbol"]
-        coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
-        body = _queue_limit_body(side, o)
-        if body is None:
-            skipped.append(f"{sym} {side}: 排队限价下买不起 1 整股, 跳过")
-            continue
-        sub_o = _submit(body, coid)
-        queued.append({"coid": coid, "order_id": sub_o.get("id"), "symbol": sym,
-                       "side": side, "status": sub_o.get("status"),
-                       "limit_price": body.get("limit_price"), "qty": body.get("qty"),
-                       "bucket": o.get("bucket", "strategy"), "reason": o.get("reason", "")})
-    qstate = {"queued_when": "market_closed", "date": a.date, "coid_prefix": a.coid_prefix,
-              "next_open": clk.get("next_open"), "skipped": skipped, "orders": queued}
-    if a.queued_out:
-        with open(a.queued_out, "w") as f:
-            json.dump(qstate, f, indent=2, ensure_ascii=False)
-            f.write("\n")
+    conflicts = _wash_conflicts(plan)
+    queued, skipped, failed = [], [], []
+    try:
+        for side, o0 in plan:
+            o = _prepare(side, o0, conflicts, skipped)
+            if o is None:
+                continue
+            sym = o["symbol"]
+            coid = f"{a.coid_prefix}-{a.date}-{sym}-{side}"
+            body = _queue_limit_body(side, o)
+            if body is None:
+                skipped.append(f"{sym} {side}: 排队限价下买不起 1 整股, 跳过")
+                continue
+            try:
+                sub_o = _submit(body, coid)
+            except OrderRejected as e:  # 单笔被拒 → 记录后继续跑完整批
+                failed.append({"symbol": sym, "side": side, "detail": e.detail})
+                continue
+            queued.append({"coid": coid, "order_id": sub_o.get("id"), "symbol": sym,
+                           "side": side, "status": sub_o.get("status"),
+                           "limit_price": body.get("limit_price"), "qty": body.get("qty"),
+                           "bucket": o.get("bucket", "strategy"), "reason": o.get("reason", "")})
+    finally:
+        # ⚠️ 排队清单**无论如何都要落盘** —— 已提交的单子只能靠这份清单在次日 sync 回收;
+        # 清单丢失 = 成交回不到账本 = 引擎次日重复出单 (2026-08-18~21 卖成空头事故根因)。
+        qstate = {"queued_when": "market_closed", "date": a.date, "coid_prefix": a.coid_prefix,
+                  "next_open": clk.get("next_open"), "skipped": skipped,
+                  "failed": failed, "orders": queued}
+        if a.queued_out:
+            with open(a.queued_out, "w") as f:
+                json.dump(qstate, f, indent=2, ensure_ascii=False)
+                f.write("\n")
     if a.fills_out:  # 今日无成交, 写空 fills 让 signals.py apply 干净空跑
         with open(a.fills_out, "w") as f:
             json.dump({"fills": []}, f, indent=2, ensure_ascii=False)
             f.write("\n")
     print(json.dumps({"market": "closed", "mode": "queued_for_next_open",
-                      "queued": len(queued), "skipped": skipped,
+                      "queued": len(queued), "skipped": skipped, "failed": failed,
                       "next_open": clk.get("next_open"),
                       "queued_out": a.queued_out, "fills": []},
                      indent=2, ensure_ascii=False))
