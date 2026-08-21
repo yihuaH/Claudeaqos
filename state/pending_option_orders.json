@@ -101,5 +101,8 @@
     }
   ],
   "caps_note": "2026-08-18 取消三闸 (单张$5000/预算50%/单仓50%) 后**首批期权买单**。NVDA 1张在险 $1,686 = 净值 17.0%; BAC 3张 $1,704 = 17.2%; 合计 34.2% 净值 — 在旧规则下会被拦。",
-  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict: 与股票买单合计超可用资金 $3385, 优先级待用户决定。"
+  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict: 与股票买单合计超可用资金 $3385, 优先级待用户决定。",
+  "manual_notice_delivered_at": "2026-08-21T02:25:00Z",
+  "funding_decision": "用户 2026-08-21 指示「期权优先」→ 两单抵押 $3,390 优先占用可用资金; 股票轨道让出, 见 state/pending_orders.json execution_summary",
+  "spread_gate_note": "BAC 两腿均靠**绝对点差逃生闸**过关 (短腿 14.29%>12% 但 abs $0.06≤$0.10; 长腿 80%>24% 但 abs $0.04≤$0.10) — 引擎双闸设计如此 (便宜腿百分比天然虚高), 非越界。⚠️ 但报价源仍是 feed=indicative, 实际 NBBO 可能更宽, 实盘挂单成交情况须回校。"
 }
