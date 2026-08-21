@@ -1,64 +1,19 @@
 {
-  "date": "2026-08-20",
+  "date": "2026-08-21",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "symbol": "BAC260828C00054000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 7.88,
-      "underlying": "BAC",
-      "strike": 54.0,
-      "expiry": "2026-08-28",
-      "dte": 8,
-      "spot": 61.86,
-      "rsi2": 6.16,
-      "model_price": 7.9073,
-      "entry_quote": {
-        "bid": 7.86,
-        "ask": 7.89,
-        "mid": 7.875,
-        "spread_pct": 0.381
-      }
-    }
-  ],
-  "skips": [
-    {
-      "symbol": "QQQ",
-      "reason": "premium_too_large(10124)",
-      "rsi2": 3.85,
-      "spot": 710.93
-    }
-  ],
+  "buys": [],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "IWM",
-      "rsi2_now": 15.06,
-      "scenario": "1d_-1%",
-      "spot": 297.67,
-      "structure": "single",
-      "est_premium_usd": 3014
-    },
-    {
       "symbol": "SMH",
-      "rsi2_now": 21.37,
-      "scenario": "2d_-1%x2",
-      "spot": 562.65,
-      "structure": "single",
-      "est_premium_usd": 6146
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 10.88,
+      "rsi2_now": 16.07,
       "scenario": "1d_-1%",
-      "spot": 762.6,
+      "spot": 560.42,
       "structure": "single",
-      "est_premium_usd": 7720
+      "est_premium_usd": 6079
     }
   ],
-  "suggested_reserve_usd": 3014.0
+  "suggested_reserve_usd": 6079.0
 }

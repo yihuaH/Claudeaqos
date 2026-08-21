@@ -1,10 +1,78 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-17",
+  "date": "2026-08-21",
   "coid_prefix": "cq",
-  "next_open": "2026-08-18T09:30:00-04:00",
+  "next_open": "2026-08-24T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
-  "orders": []
+  "failed": [],
+  "orders": [
+    {
+      "coid": "cq-2026-08-21-CRWD-sell",
+      "order_id": "f2b161d2-31cd-4735-b171-d276fa161ed5",
+      "symbol": "CRWD",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "186.19",
+      "qty": "48",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-08-21-ATI-buy",
+      "order_id": "a04bd231-115a-4230-ab09-71b2529f180c",
+      "symbol": "ATI",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "213.22",
+      "qty": "46",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-21-JCI-buy",
+      "order_id": "2b144d5f-33ec-4ae2-a9ce-cfc5ca04bb2d",
+      "symbol": "JCI",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "147.34",
+      "qty": "67",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-21-KEYS-buy",
+      "order_id": "7e8c9512-dcac-4e82-b345-e7f8ae2a2da4",
+      "symbol": "KEYS",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "325.61",
+      "qty": "30",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-21-RTX-buy",
+      "order_id": "dc057406-c682-4f03-afb2-85f0a328f931",
+      "symbol": "RTX",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "216.21",
+      "qty": "45",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-21-HWM-buy",
+      "order_id": "8c384f20-4a2b-4e31-b205-c3e057ad31dc",
+      "symbol": "HWM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "279.83",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
 }

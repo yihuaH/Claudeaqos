@@ -53,6 +53,23 @@
         "spread_pct": 0.75
       },
       "model_price": 24.2244
+    },
+    "BAC260828C00054000": {
+      "underlying": "BAC",
+      "strike": 54.0,
+      "expiry": "2026-08-28",
+      "contracts": 1,
+      "entry_premium": 8.1,
+      "entry_date": "2026-08-21",
+      "entry_underlying": 61.86,
+      "entry_rsi2": 6.16,
+      "entry_quote": {
+        "bid": 7.86,
+        "ask": 7.89,
+        "mid": 7.875,
+        "spread_pct": 0.381
+      },
+      "model_price": 7.9073
     }
   },
   "trades": [
@@ -80,6 +97,15 @@
       "side": "buy",
       "qty": 1,
       "price": 24.65,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-08-21",
+      "symbol": "BAC260828C00054000",
+      "side": "buy",
+      "qty": 1,
+      "price": 8.1,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
     }

@@ -1,88 +1,28 @@
 {
-  "trade_date": "2026-08-20",
-  "generated_at": "2026-08-20T21:55:00Z",
-  "status": "closed_out",
-  "valid_until": "次一交易日 (2026-08-21 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
-  "execution_channel": "**手动** (agentic 不支持多腿组合单, playbook 4D 注记)",
+  "trade_date": "2026-08-21",
+  "generated_at": "2026-08-21T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-24 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
+  "channel": "手动 (agentic 账户不支持多腿组合单, playbook 4D 注记)",
   "orders": [
     {
       "seq": 1,
       "action": "buy_to_open",
       "structure": "credit_put_spread",
-      "underlying": "NVDA",
-      "qty": 1,
+      "qty": 4,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "NVDA260828P00210000",
+          "symbol": "BAC260904P00059000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 210.0,
+          "strike": 59.0,
           "quote": {
-            "bid": 3.58,
-            "ask": 3.69
+            "bid": 0.26,
+            "ask": 0.28
           },
-          "spread_pct": 3.026
-        },
-        {
-          "symbol": "NVDA260828P00190000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 190.0,
-          "quote": {
-            "bid": 0.42,
-            "ask": 0.44
-          },
-          "spread_pct": 4.651
-        }
-      ],
-      "expiry": "2026-08-28",
-      "dte": 8,
-      "spot": 216.85,
-      "rsi2": 4.71,
-      "est_price": 3.14,
-      "direction": "credit",
-      "entry_quote": {
-        "mid": 3.205,
-        "spread_pct": 3.026,
-        "long_spread_pct": 4.651,
-        "net_credit_conservative": 3.14
-      },
-      "risk_per_contract": 16.86,
-      "max_loss_usd": 1686.0,
-      "max_gain_usd": 314.0,
-      "limit_floor": 3.05,
-      "manual_order_placed": {
-        "order_id": "6a87b8b4-b75b-4071-8d87-17fe9d4dea23",
-        "placed_agent": "user",
-        "placed_at": "2026-08-21T02:32Z / 02:34Z",
-        "opening_strategy": "short_put_spread",
-        "direction": "credit",
-        "type": "limit",
-        "time_in_force": "gfd",
-        "market_hours": "regular_hours",
-        "state": "queued",
-        "limit_price": 3.26,
-        "vs_engine": "引擎 est 3.14 / 下限 3.05 → 用户挂 3.26, **高于 est** = 自主加价 (playbook 4D 允许), 合规",
-        "verified": "腿/行权价/到期/张数/方向 逐项与引擎输出一致 ✓"
-      }
-    },
-    {
-      "seq": 2,
-      "action": "buy_to_open",
-      "structure": "credit_put_spread",
-      "underlying": "BAC",
-      "qty": 3,
-      "legs": [
-        {
-          "symbol": "BAC260904P00060000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 60.0,
-          "quote": {
-            "bid": 0.39,
-            "ask": 0.45
-          },
-          "spread_pct": 14.286
+          "spread_pct": 7.407
         },
         {
           "symbol": "BAC260904P00054000",
@@ -90,88 +30,33 @@
           "position_effect": "open",
           "strike": 54.0,
           "quote": {
-            "bid": 0.03,
-            "ask": 0.07
+            "bid": 0.01,
+            "ask": 0.03
           },
-          "spread_pct": 80.0
+          "spread_pct": 100.0
         }
       ],
-      "expiry": "2026-09-04",
-      "dte": 15,
-      "spot": 61.86,
-      "rsi2": 6.16,
-      "est_price": 0.32,
+      "est_price": 0.23,
       "direction": "credit",
+      "underlying": "BAC",
+      "expiry": "2026-09-04",
+      "dte": 14,
+      "spot": 61.69,
+      "rsi2": 5.29,
+      "model_price": 0.1666,
       "entry_quote": {
-        "mid": 0.37,
-        "spread_pct": 14.286,
-        "long_spread_pct": 80.0,
-        "net_credit_conservative": 0.32
+        "mid": 0.25,
+        "spread_pct": 7.407,
+        "long_spread_pct": 100.0,
+        "net_credit_conservative": 0.23
       },
-      "risk_per_contract": 5.68,
-      "max_loss_usd": 1704.0,
-      "max_gain_usd": 96.0,
-      "limit_floor": 0.31,
-      "manual_order_placed": {
-        "order_id": "6a87b91c-fa0d-44dd-baaa-b6db9f83d973",
-        "placed_agent": "user",
-        "placed_at": "2026-08-21T02:32Z / 02:34Z",
-        "opening_strategy": "short_put_spread",
-        "direction": "credit",
-        "type": "limit",
-        "time_in_force": "gfd",
-        "market_hours": "regular_hours",
-        "state": "queued",
-        "limit_price": 0.41,
-        "vs_engine": "引擎 est 0.32 / 下限 0.31 → 用户挂 0.41, **高于 est** = 自主加价 (playbook 4D 允许), 合规",
-        "verified": "腿/行权价/到期/张数/方向 逐项与引擎输出一致 ✓"
-      }
+      "risk_per_contract": 4.77,
+      "max_value_per_contract": 5.0,
+      "max_loss_usd": 1908.0,
+      "max_gain_usd": 92.0,
+      "limit_floor": 0.22
     }
   ],
-  "caps_note": "2026-08-18 取消三闸 (单张$5000/预算50%/单仓50%) 后**首批期权买单**。NVDA 1张在险 $1,686 = 净值 17.0%; BAC 3张 $1,704 = 17.2%; 合计 34.2% 净值 — 在旧规则下会被拦。",
-  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict: 与股票买单合计超可用资金 $3385, 优先级待用户决定。",
-  "manual_notice_delivered_at": "2026-08-21T02:25:00Z",
-  "funding_decision": "用户 2026-08-21 指示「期权优先」→ 两单抵押 $3,390 优先占用可用资金; 股票轨道让出, 见 state/pending_orders.json execution_summary",
-  "spread_gate_note": "BAC 两腿均靠**绝对点差逃生闸**过关 (短腿 14.29%>12% 但 abs $0.06≤$0.10; 长腿 80%>24% 但 abs $0.04≤$0.10) — 引擎双闸设计如此 (便宜腿百分比天然虚高), 非越界。⚠️ 但报价源仍是 feed=indicative, 实际 NBBO 可能更宽, 实盘挂单成交情况须回校。",
-  "verification": {
-    "checked_at": "2026-08-21T02:36Z",
-    "tool": "get_option_orders(account 802095265, created_at_gte 2026-08-20T20:00Z)",
-    "result": "2/2 单已由用户 App 下出, 参数全部正确, 均 queued 排 08-21 09:30 ET 开盘",
-    "fill_probability_note": "两笔限价均落在**理论最优价减 $0.01** (NVDA 最优 3.27 挂 3.26; BAC 最优 0.42 挂 0.41), 需两腿同时打到各自最优侧才成交 — 成交概率低。属用户自主选择, 引擎不干预 (红线2)。",
-    "collateral_if_filled": {
-      "NVDA": 1674.0,
-      "BAC": 1677.0,
-      "total": 3351.0,
-      "note": "低于主跑预留的 $3,390 (因限价更高→贷记更多→在险更少), 余出 $39 缓冲"
-    },
-    "unfilled_handling": "按 playbook 4D: 08-21 10:30 ET 执行窗结束仍未成交 → cancel_option_order 撤销 (手动单若撤不动则请用户在 App 撤), 记 cancelled_unfilled; **绝不改限价追单**"
-  },
-  "settled_at": "2026-08-21T14:48:00Z",
-  "outcome": [
-    {
-      "underlying": "NVDA",
-      "result": "filled",
-      "order_id": "6a87b8b4-b75b-4071-8d87-17fe9d4dea23",
-      "filled_at": "2026-08-21T13:51:20Z",
-      "net_credit": 3.26,
-      "legs": {
-        "sell NVDA260828P00210000": 3.63,
-        "buy NVDA260828P00190000": 0.37
-      },
-      "risk_per_contract": 16.74,
-      "max_loss_usd": 1674.0,
-      "max_gain_usd": 326.0,
-      "note": "用户限价 3.26 (= 理论最优 3.27 减 1 分) 竟然成交, 优于引擎保守估 3.14。已 weekly_calls.py apply 回写 live 账本。"
-    },
-    {
-      "underlying": "BAC",
-      "result": "cancelled_unfilled",
-      "order_id": "6a87b91c-fa0d-44dd-baaa-b6db9f83d973",
-      "cancelled_at": "2026-08-21T14:47:45Z",
-      "limit": 0.41,
-      "engine_est": 0.32,
-      "reason": "过 10:30 ET 执行窗仍 confirmed 未成交 → playbook 4D 晨检撤单。**未改限价追单** (红线2)。",
-      "note": "用户限价 0.41 高于引擎 est 0.32 达 28%, 需两腿同时打最优侧才成交。不记 skip_log (属执行层结果, 非引擎 gate 拦截)。"
-    }
-  ]
+  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict — 与股票买单合计超 BP, 优先级待用户定",
+  "risk_note": "4 张合计在险 $1,908 = 净值 19.3%; 最大收益 $92 (4.8% / 14天)。长腿点差 100% 靠绝对闸过关。"
 }

@@ -4,17 +4,5 @@
   "coid_prefix": "cqw",
   "next_open": "2026-08-21T09:30:00-04:00",
   "skipped": [],
-  "orders": [
-    {
-      "coid": "cqw-2026-08-20-BAC260828C00054000-buy",
-      "order_id": "1a69e70a-2e57-4c99-b560-1472af6dc743",
-      "symbol": "BAC260828C00054000",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "8.12",
-      "qty": "1",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call"
-    }
-  ]
+  "orders": []
 }

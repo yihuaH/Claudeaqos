@@ -1,72 +1,24 @@
 {
-  "date": "2026-08-20",
+  "date": "2026-08-21",
   "halted": false,
   "sells": [],
   "buys": [
     {
       "structure": "credit_put_spread",
-      "qty": 1,
+      "qty": 4,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "NVDA260828P00210000",
+          "symbol": "BAC260904P00059000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 210.0,
+          "strike": 59.0,
           "quote": {
-            "bid": 3.58,
-            "ask": 3.69
+            "bid": 0.26,
+            "ask": 0.28
           },
-          "spread_pct": 3.026
-        },
-        {
-          "symbol": "NVDA260828P00190000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 190.0,
-          "quote": {
-            "bid": 0.42,
-            "ask": 0.44
-          },
-          "spread_pct": 4.651
-        }
-      ],
-      "est_price": 3.14,
-      "direction": "credit",
-      "underlying": "NVDA",
-      "expiry": "2026-08-28",
-      "dte": 8,
-      "spot": 216.85,
-      "rsi2": 4.71,
-      "model_price": 2.867,
-      "entry_quote": {
-        "mid": 3.205,
-        "spread_pct": 3.026,
-        "long_spread_pct": 4.651,
-        "net_credit_conservative": 3.14
-      },
-      "risk_per_contract": 16.86,
-      "max_value_per_contract": 20.0,
-      "max_loss_usd": 1686.0,
-      "max_gain_usd": 314.0
-    },
-    {
-      "structure": "credit_put_spread",
-      "qty": 3,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "BAC260904P00060000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 60.0,
-          "quote": {
-            "bid": 0.39,
-            "ask": 0.45
-          },
-          "spread_pct": 14.286
+          "spread_pct": 7.407
         },
         {
           "symbol": "BAC260904P00054000",
@@ -74,88 +26,59 @@
           "position_effect": "open",
           "strike": 54.0,
           "quote": {
-            "bid": 0.03,
-            "ask": 0.07
+            "bid": 0.01,
+            "ask": 0.03
           },
-          "spread_pct": 80.0
+          "spread_pct": 100.0
         }
       ],
-      "est_price": 0.32,
+      "est_price": 0.23,
       "direction": "credit",
       "underlying": "BAC",
       "expiry": "2026-09-04",
-      "dte": 15,
-      "spot": 61.86,
-      "rsi2": 6.16,
-      "model_price": 0.3665,
+      "dte": 14,
+      "spot": 61.69,
+      "rsi2": 5.29,
+      "model_price": 0.1666,
       "entry_quote": {
-        "mid": 0.37,
-        "spread_pct": 14.286,
-        "long_spread_pct": 80.0,
-        "net_credit_conservative": 0.32
+        "mid": 0.25,
+        "spread_pct": 7.407,
+        "long_spread_pct": 100.0,
+        "net_credit_conservative": 0.23
       },
-      "risk_per_contract": 5.68,
-      "max_value_per_contract": 6.0,
-      "max_loss_usd": 1704.0,
-      "max_gain_usd": 96.0
+      "risk_per_contract": 4.77,
+      "max_value_per_contract": 5.0,
+      "max_loss_usd": 1908.0,
+      "max_gain_usd": 92.0
     }
   ],
-  "skips": [
-    {
-      "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=54.55%)",
-      "rsi2": 1.56,
-      "spot": 179.77
-    },
-    {
-      "symbol": "QQQ",
-      "reason": "insufficient_buying_power(cost=6188,bp_left=4648)",
-      "rsi2": 3.85
-    },
-    {
-      "symbol": "GOOGL",
-      "reason": "credit_leg_spread_too_wide(best=19.53%)",
-      "rsi2": 8.54,
-      "spot": 340.67
-    },
-    {
-      "symbol": "DIA",
-      "reason": "credit_leg_spread_too_wide(best=13.55%)",
-      "rsi2": 8.66,
-      "spot": 527.51
-    },
-    {
-      "symbol": "XLF",
-      "reason": "insufficient_buying_power(cost=1497,bp_left=1258)",
-      "rsi2": 9.05
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "IWM",
-      "rsi2_now": 15.06,
+      "symbol": "XLI",
+      "rsi2_now": 21.55,
       "scenario": "1d_-1%",
-      "spot": 297.67,
+      "spot": 180.25,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2578
+      "est_premium_usd": 1532
+    },
+    {
+      "symbol": "AMZN",
+      "rsi2_now": 24.96,
+      "scenario": "2d_-1%x2",
+      "spot": 258.63,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 1623
     },
     {
       "symbol": "SMH",
-      "rsi2_now": 21.37,
-      "scenario": "2d_-1%x2",
-      "spot": 562.65,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 3813
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 10.88,
+      "rsi2_now": 16.07,
       "scenario": "1d_-1%",
-      "spot": 762.6,
+      "spot": 560.42,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6704
+      "est_premium_usd": 3837
     }
   ],
-  "suggested_reserve_usd": 1626.77
+  "suggested_reserve_usd": 804.78
 }

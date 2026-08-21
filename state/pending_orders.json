@@ -1,197 +1,70 @@
 {
-  "trade_date": "2026-08-20",
-  "generated_at": "2026-08-20T21:55:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-08-21 周五) 09:25 ET",
-  "buying_power_at_generation": 4647.91,
+  "trade_date": "2026-08-21",
+  "generated_at": "2026-08-21T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-24 周一) 09:25 ET",
+  "buying_power_at_generation": 2299.37,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "EMR",
-      "dollar_amount": 991.64,
+      "symbol": "ATI",
+      "dollar_amount": 989.78,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 154.72,
-      "rsi2": 1.51,
+      "reason": "rsi2_entry",
+      "est_price": 207.01,
+      "rsi2": 2.96,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "tranche": 2,
-      "avg_entry_price": 159.55,
-      "drawdown_pct": -3.03
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "PH",
-      "dollar_amount": 991.64,
+      "symbol": "JCI",
+      "dollar_amount": 989.78,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1000.13,
-      "rsi2": 0.6,
+      "est_price": 143.05,
+      "rsi2": 3.61,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "MTB",
-      "dollar_amount": 991.64,
+      "symbol": "KEYS",
+      "dollar_amount": 314.81,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 238.25,
-      "rsi2": 0.84,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "FITB",
-      "dollar_amount": 991.64,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 54.5,
-      "rsi2": 1.02,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "DAL",
-      "dollar_amount": 991.64,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 81.06,
-      "rsi2": 1.24,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 6,
-      "action": "buy",
-      "symbol": "STLD",
-      "dollar_amount": 68.31,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 219.0,
-      "rsi2": 1.35,
+      "est_price": 316.13,
+      "rsi2": 4.46,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "news_precheck": {
     "symbols": [
-      "EMR",
-      "PH",
-      "MTB",
-      "FITB",
-      "DAL",
-      "STLD"
+      "ATI",
+      "JCI",
+      "KEYS"
     ],
-    "red_flagged": [
-      "PH"
-    ],
-    "source": "integrations.py news 2026-08-13→2026-08-20",
-    "assessment": "PH 红旗**与 08-19 同一条,已判定为误报**: 命中 bankruptcy 出自并购综述「Deal Dispatch: … 777 Partners Bankruptcy」, 破产主体为第三方, 与 Parker-Hannifin 无关。"
-  },
-  "option_alert": {
-    "reserve_usd": 1626.77,
-    "note": "引擎 suggested_reserve_usd。⚠️ 本日期权轨道**实际出单**在险额 $3390 远超此保留额 — reserve 口径 (最便宜预警标的单张成本) 未跟上取消上限后的实际注码规模, 见下 funding_conflict。"
+    "red_flagged": [],
+    "source": "integrations.py news 2026-08-14→2026-08-21",
+    "assessment": "三只均无红旗。"
   },
   "funding_conflict": {
     "detected": true,
-    "stock_buys_usd": 5026.51,
-    "option_buys_collateral_usd": 3390.0,
-    "combined_usd": 8416.51,
-    "available_usd": 5031.52,
-    "overshoot_usd": 3384.99,
-    "root_cause": "股票引擎 (signals.py) 与期权引擎 (weekly_calls.py) 各自独立以同一笔 buying_power 计算订单, 轨道间无资金协调。此前期权轨道被三闸 (单张$5000/预算50%/单仓50%) 卡死从未成交, 故问题未暴露; 2026-08-18 取消三闸后首次显现。**非引擎 bug** —— 各引擎自身均遵守 BP 约束。",
-    "resolution_required": "跨轨道执行优先级未定义, 需用户决定。4C/4D 执行时一律以实时 min(BP,cash) 逐单判定, 装不下整单跳过 (不缩量), 故**不会真的超支**; 但先执行哪个轨道会决定谁拿到资金。",
+    "stock_buys_usd": 2294.37,
+    "option_buys_collateral_usd": 1908.0,
+    "combined_usd": 4202.37,
+    "available_usd": 2299.37,
+    "overshoot_usd": 1903.0,
+    "note": "与 2026-08-20 同一结构性缺口 (两引擎各自独立以同一笔 BP 计算, 轨道间无资金协调)。08-20 用户选「期权优先」为一次性决策, 常规规则仍未定 → 本次仍需用户指定优先级。4C/4D 执行时一律以实时 min(BP,cash) 逐单判定, 装不下整单跳过不缩量, 不会真超支。",
     "options_for_user": [
-      "A. 股票优先 (主策略优先, 期权为实验仓) — 股票 $5027 吃掉大部分, 期权大概率全跳过",
-      "B. 期权优先 (刚取消上限, 优先验证) — 期权 $3390 先占, 股票按 seq 顺序装剩余 $1642",
-      "C. 按 option_alert reserve 分账 (playbook 原意) — 期权限 $1,626.77 内 (仅够 BAC 2 张或 NVDA 1 张), 其余给股票"
+      "A. 股票优先 — ATI+JCI 装下 ($1,979.56), KEYS 零头 $314.81 也装得下 ($2,294.37 ≤ BP), 期权全跳过",
+      "B. 期权优先 (同 08-20) — BAC 4 张占 $1,908, 股票剩 $391.37 只够 KEYS 零头 $314.81",
+      "C. 只做股票不做期权 — BAC 风险收益比薄 (赌 $1,908 赚 $92 = 4.8%/14天), 见下 option_note"
     ]
   },
-  "funding_projection": {
-    "cap_formula": "执行时实时 min(buying_power, cash); 本文件生成时 BP $4647.91 + USFD 卖出回款 $383.61 = $5031.52",
-    "total_usd": 5026.51,
-    "note": "股票买单合计 $5026.51 已略超可用资金, 即使不考虑期权也需按 seq 截断; 末单 STLD $68.31 为引擎按余额分配的零头。"
-  },
-  "executed_at": "2026-08-21T00:15:00Z",
-  "execution_summary": {
-    "user_directive": "期权优先 (2026-08-21 用户指示; 一次性决策, 未定为常规规则)",
-    "cap_formula": "股票 cap = 实时可用 min(BP,cash) $5,031.52 − 期权轨道抵押 $3,390.00 = $1,641.52",
-    "available_usd": 5031.52,
-    "option_collateral_reserved_usd": 3390.0,
-    "stock_cap_usd": 1641.52,
-    "executed_usd": 1059.95,
-    "buffer_left_usd": 581.57,
-    "skip_rule": "逐 seq 累计, 装不下整单跳过不缩量 (红线3 / CLAUDE.md 红线9 防杠杆闸)",
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "EMR",
-        "dollar_amount": 991.64,
-        "result": "executed",
-        "order_id": "6a87b5b3-7508-4eda-aa5c-4170dddd3840",
-        "qty": 6.40925,
-        "order_type": "market",
-        "time_in_force": "regular_hours",
-        "state": "queued",
-        "note": "①腿整股即时限价 review 返回 EQUITY_ALL_DAY_TRADING_ERROR (与 08-18 一致, EMR 不在 24h 交易白名单), 故按 4C 回退为全额市价单排次日开盘"
-      },
-      {
-        "seq": 2,
-        "symbol": "PH",
-        "dollar_amount": 991.64,
-        "result": "skipped",
-        "reason": "4C-2C 期权优先分账后累计 $1,983.28 > cap $1,641.52, 整单跳过不缩量"
-      },
-      {
-        "seq": 3,
-        "symbol": "MTB",
-        "dollar_amount": 991.64,
-        "result": "skipped",
-        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
-      },
-      {
-        "seq": 4,
-        "symbol": "FITB",
-        "dollar_amount": 991.64,
-        "result": "skipped",
-        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
-      },
-      {
-        "seq": 5,
-        "symbol": "DAL",
-        "dollar_amount": 991.64,
-        "result": "skipped",
-        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
-      },
-      {
-        "seq": 6,
-        "symbol": "STLD",
-        "dollar_amount": 68.31,
-        "result": "executed",
-        "order_id": "6a87b5b4-efc5-4ba4-b21b-d9cfb071e5a4",
-        "qty": 0.31163,
-        "order_type": "market",
-        "time_in_force": "regular_hours",
-        "state": "queued",
-        "note": "零头单, 累计 $1,059.95 ≤ cap ✓"
-      }
-    ],
-    "ledger_writeback": "两单均为 queued (排 08-21 开盘), 未成交 → 本次不回写 state/positions.json; 08-21 晨检确认成交后回写"
-  },
-  "corrections": [
-    {
-      "date": "2026-08-21",
-      "field": "(08-20 主跑记录的「入金消失」异常)",
-      "verdict": "误判 — 撤销该异常",
-      "detail": "$3,870.53 于 2026-08-13 当晚已全额进入 cash/BP (现金对账: $748.18→$4,618.71, 增量精确等于入金额)。pending_deposits 字段归零是 ACH 清算完成, 非资金消失。详见 journal/2026-08-21-correction-deposit.md。无交易影响。"
-    }
-  ]
+  "option_note": "BAC 期权单已写入 state/pending_option_orders.json; 其长腿点差 100% (bid 0.01/ask 0.03) 靠绝对点差闸 ($0.02≤$0.10) 过关, 报价源仍为 indicative 非真实 NBBO。"
 }
