@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-20",
   "generated_at": "2026-08-20T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-21 周五) 09:25 ET",
   "buying_power_at_generation": 4647.91,
   "orders": [
@@ -119,5 +119,71 @@
     "cap_formula": "执行时实时 min(buying_power, cash); 本文件生成时 BP $4647.91 + USFD 卖出回款 $383.61 = $5031.52",
     "total_usd": 5026.51,
     "note": "股票买单合计 $5026.51 已略超可用资金, 即使不考虑期权也需按 seq 截断; 末单 STLD $68.31 为引擎按余额分配的零头。"
+  },
+  "executed_at": "2026-08-21T00:15:00Z",
+  "execution_summary": {
+    "user_directive": "期权优先 (2026-08-21 用户指示; 一次性决策, 未定为常规规则)",
+    "cap_formula": "股票 cap = 实时可用 min(BP,cash) $5,031.52 − 期权轨道抵押 $3,390.00 = $1,641.52",
+    "available_usd": 5031.52,
+    "option_collateral_reserved_usd": 3390.0,
+    "stock_cap_usd": 1641.52,
+    "executed_usd": 1059.95,
+    "buffer_left_usd": 581.57,
+    "skip_rule": "逐 seq 累计, 装不下整单跳过不缩量 (红线3 / CLAUDE.md 红线9 防杠杆闸)",
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "EMR",
+        "dollar_amount": 991.64,
+        "result": "executed",
+        "order_id": "6a87b5b3-7508-4eda-aa5c-4170dddd3840",
+        "qty": 6.40925,
+        "order_type": "market",
+        "time_in_force": "regular_hours",
+        "state": "queued",
+        "note": "①腿整股即时限价 review 返回 EQUITY_ALL_DAY_TRADING_ERROR (与 08-18 一致, EMR 不在 24h 交易白名单), 故按 4C 回退为全额市价单排次日开盘"
+      },
+      {
+        "seq": 2,
+        "symbol": "PH",
+        "dollar_amount": 991.64,
+        "result": "skipped",
+        "reason": "4C-2C 期权优先分账后累计 $1,983.28 > cap $1,641.52, 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "MTB",
+        "dollar_amount": 991.64,
+        "result": "skipped",
+        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
+      },
+      {
+        "seq": 4,
+        "symbol": "FITB",
+        "dollar_amount": 991.64,
+        "result": "skipped",
+        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
+      },
+      {
+        "seq": 5,
+        "symbol": "DAL",
+        "dollar_amount": 991.64,
+        "result": "skipped",
+        "reason": "4C-2C 期权优先分账后超 cap, 整单跳过不缩量"
+      },
+      {
+        "seq": 6,
+        "symbol": "STLD",
+        "dollar_amount": 68.31,
+        "result": "executed",
+        "order_id": "6a87b5b4-efc5-4ba4-b21b-d9cfb071e5a4",
+        "qty": 0.31163,
+        "order_type": "market",
+        "time_in_force": "regular_hours",
+        "state": "queued",
+        "note": "零头单, 累计 $1,059.95 ≤ cap ✓"
+      }
+    ],
+    "ledger_writeback": "两单均为 queued (排 08-21 开盘), 未成交 → 本次不回写 state/positions.json; 08-21 晨检确认成交后回写"
   }
 }
