@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-20",
   "generated_at": "2026-08-20T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "manual_order_placed",
   "valid_until": "次一交易日 (2026-08-21 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "execution_channel": "**手动** (agentic 不支持多腿组合单, playbook 4D 注记)",
   "orders": [
@@ -50,7 +50,21 @@
       "risk_per_contract": 16.86,
       "max_loss_usd": 1686.0,
       "max_gain_usd": 314.0,
-      "limit_floor": 3.05
+      "limit_floor": 3.05,
+      "manual_order_placed": {
+        "order_id": "6a87b8b4-b75b-4071-8d87-17fe9d4dea23",
+        "placed_agent": "user",
+        "placed_at": "2026-08-21T02:32Z / 02:34Z",
+        "opening_strategy": "short_put_spread",
+        "direction": "credit",
+        "type": "limit",
+        "time_in_force": "gfd",
+        "market_hours": "regular_hours",
+        "state": "queued",
+        "limit_price": 3.26,
+        "vs_engine": "引擎 est 3.14 / 下限 3.05 → 用户挂 3.26, **高于 est** = 自主加价 (playbook 4D 允许), 合规",
+        "verified": "腿/行权价/到期/张数/方向 逐项与引擎输出一致 ✓"
+      }
     },
     {
       "seq": 2,
@@ -97,12 +111,39 @@
       "risk_per_contract": 5.68,
       "max_loss_usd": 1704.0,
       "max_gain_usd": 96.0,
-      "limit_floor": 0.31
+      "limit_floor": 0.31,
+      "manual_order_placed": {
+        "order_id": "6a87b91c-fa0d-44dd-baaa-b6db9f83d973",
+        "placed_agent": "user",
+        "placed_at": "2026-08-21T02:32Z / 02:34Z",
+        "opening_strategy": "short_put_spread",
+        "direction": "credit",
+        "type": "limit",
+        "time_in_force": "gfd",
+        "market_hours": "regular_hours",
+        "state": "queued",
+        "limit_price": 0.41,
+        "vs_engine": "引擎 est 0.32 / 下限 0.31 → 用户挂 0.41, **高于 est** = 自主加价 (playbook 4D 允许), 合规",
+        "verified": "腿/行权价/到期/张数/方向 逐项与引擎输出一致 ✓"
+      }
     }
   ],
   "caps_note": "2026-08-18 取消三闸 (单张$5000/预算50%/单仓50%) 后**首批期权买单**。NVDA 1张在险 $1,686 = 净值 17.0%; BAC 3张 $1,704 = 17.2%; 合计 34.2% 净值 — 在旧规则下会被拦。",
   "funding_conflict_ref": "见 state/pending_orders.json funding_conflict: 与股票买单合计超可用资金 $3385, 优先级待用户决定。",
   "manual_notice_delivered_at": "2026-08-21T02:25:00Z",
   "funding_decision": "用户 2026-08-21 指示「期权优先」→ 两单抵押 $3,390 优先占用可用资金; 股票轨道让出, 见 state/pending_orders.json execution_summary",
-  "spread_gate_note": "BAC 两腿均靠**绝对点差逃生闸**过关 (短腿 14.29%>12% 但 abs $0.06≤$0.10; 长腿 80%>24% 但 abs $0.04≤$0.10) — 引擎双闸设计如此 (便宜腿百分比天然虚高), 非越界。⚠️ 但报价源仍是 feed=indicative, 实际 NBBO 可能更宽, 实盘挂单成交情况须回校。"
+  "spread_gate_note": "BAC 两腿均靠**绝对点差逃生闸**过关 (短腿 14.29%>12% 但 abs $0.06≤$0.10; 长腿 80%>24% 但 abs $0.04≤$0.10) — 引擎双闸设计如此 (便宜腿百分比天然虚高), 非越界。⚠️ 但报价源仍是 feed=indicative, 实际 NBBO 可能更宽, 实盘挂单成交情况须回校。",
+  "verification": {
+    "checked_at": "2026-08-21T02:36Z",
+    "tool": "get_option_orders(account 802095265, created_at_gte 2026-08-20T20:00Z)",
+    "result": "2/2 单已由用户 App 下出, 参数全部正确, 均 queued 排 08-21 09:30 ET 开盘",
+    "fill_probability_note": "两笔限价均落在**理论最优价减 $0.01** (NVDA 最优 3.27 挂 3.26; BAC 最优 0.42 挂 0.41), 需两腿同时打到各自最优侧才成交 — 成交概率低。属用户自主选择, 引擎不干预 (红线2)。",
+    "collateral_if_filled": {
+      "NVDA": 1674.0,
+      "BAC": 1677.0,
+      "total": 3351.0,
+      "note": "低于主跑预留的 $3,390 (因限价更高→贷记更多→在险更少), 余出 $39 缓冲"
+    },
+    "unfilled_handling": "按 playbook 4D: 08-21 10:30 ET 执行窗结束仍未成交 → cancel_option_order 撤销 (手动单若撤不动则请用户在 App 撤), 记 cancelled_unfilled; **绝不改限价追单**"
+  }
 }
