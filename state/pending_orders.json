@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-21",
   "generated_at": "2026-08-21T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-24 周一) 09:25 ET",
   "buying_power_at_generation": 2299.37,
   "orders": [
@@ -66,5 +66,45 @@
       "C. 只做股票不做期权 — BAC 风险收益比薄 (赌 $1,908 赚 $92 = 4.8%/14天), 见下 option_note"
     ]
   },
-  "option_note": "BAC 期权单已写入 state/pending_option_orders.json; 其长腿点差 100% (bid 0.01/ask 0.03) 靠绝对点差闸 ($0.02≤$0.10) 过关, 报价源仍为 indicative 非真实 NBBO。"
+  "option_note": "BAC 期权单已写入 state/pending_option_orders.json; 其长腿点差 100% (bid 0.01/ask 0.03) 靠绝对点差闸 ($0.02≤$0.10) 过关, 报价源仍为 indicative 非真实 NBBO。",
+  "executed_at": "2026-08-22T02:54:30Z",
+  "execution_summary": {
+    "user_directive": "「执行 期权优先」(2026-08-21 22:54 ET; 与 08-20 同, 仍为一次性决策)",
+    "option_leg_note": "⚠️ 期权腿**由用户自行在 App 下单**, 早于本次执行 (02:51:16 UTC, placed_agent=user): BAC 4 张 sell 9/4 P59 / buy 9/4 P54, 限价 $0.22 credit (= 引擎下限 limit_floor, est $0.23), state=queued 排 08-24 开盘。抵押 $1,912 (4×$500 − 4×$22) 已实际从 BP 扣除。",
+    "cap_formula": "实时 min(buying_power, cash) = min($387.37, $4,299.37) = $387.37。**期权抵押已物理扣除, 不再重复减** —— BP 由 $2,299.37 降至 $387.37 恰为 $1,912。",
+    "available_usd": 387.37,
+    "executed_usd": 314.81,
+    "buffer_left_usd": 72.56,
+    "mode": "盘外 (22:54 ET) — 但 KEYS 买不起 1 整股 (D $314.81 < ①腿限价 $319.29), 故无①腿, 整单走②腿全额分数市价排 08-24 开盘",
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "ATI",
+        "dollar_amount": 989.78,
+        "result": "skipped",
+        "reason": "$989.78 > cap $387.37, 整单跳过不缩量 (红线2/红线3)"
+      },
+      {
+        "seq": 2,
+        "symbol": "JCI",
+        "dollar_amount": 989.78,
+        "result": "skipped",
+        "reason": "$989.78 > cap $387.37, 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "KEYS",
+        "dollar_amount": 314.81,
+        "result": "executed",
+        "order_id": "6a890f53-c043-487f-ac37-068fb1f6a612",
+        "qty": 0.99582,
+        "order_type": "market",
+        "market_hours": "regular_hours",
+        "time_in_force": "gfd",
+        "state": "queued",
+        "review": "order_checks 空, 无告警"
+      }
+    ],
+    "ledger_writeback": "KEYS 排队未成交 → 本次不回写 state/positions.json; 08-24 晨检确认成交后回写"
+  }
 }

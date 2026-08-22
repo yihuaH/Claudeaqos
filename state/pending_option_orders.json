@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-21",
   "generated_at": "2026-08-21T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "manual_order_placed",
   "valid_until": "次一交易日 (2026-08-24 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 账户不支持多腿组合单, playbook 4D 注记)",
   "orders": [
@@ -58,5 +58,21 @@
     }
   ],
   "funding_conflict_ref": "见 state/pending_orders.json funding_conflict — 与股票买单合计超 BP, 优先级待用户定",
-  "risk_note": "4 张合计在险 $1,908 = 净值 19.3%; 最大收益 $92 (4.8% / 14天)。长腿点差 100% 靠绝对闸过关。"
+  "risk_note": "4 张合计在险 $1,908 = 净值 19.3%; 最大收益 $92 (4.8% / 14天)。长腿点差 100% 靠绝对闸过关。",
+  "manual_order": {
+    "placed_by": "user (App)",
+    "placed_at": "2026-08-22T02:51:16Z",
+    "order_id": "6a890ea4-2c70-4355-8a5d-ad099ddc2efb",
+    "state": "queued",
+    "qty": 4,
+    "limit_credit": 0.22,
+    "engine_est": 0.23,
+    "engine_limit_floor": 0.22,
+    "legs": {
+      "sell": "BAC260904P00059000 (9/4 P59)",
+      "buy": "BAC260904P00054000 (9/4 P54)"
+    },
+    "collateral_held_usd": 1912.0,
+    "verified": "get_option_orders 核对: opening_strategy=short_put_spread · direction=credit · 腿/行权价/到期/张数 2/2 与引擎输出一致 ✓ · 限价 $0.22 = 引擎下限, 未低于 ✓"
+  }
 }
