@@ -106,5 +106,18 @@
       }
     ],
     "ledger_writeback": "KEYS 排队未成交 → 本次不回写 state/positions.json; 08-24 晨检确认成交后回写"
-  }
+  },
+  "fill_confirmations": [
+    {
+      "date": "2026-08-24",
+      "symbol": "KEYS",
+      "order_id": "6a890f53-c043-487f-ac37-068fb1f6a612",
+      "filled_qty": 1.013228,
+      "price": 310.7,
+      "filled_at": "2026-08-24T13:31:34Z",
+      "est_price": 316.13,
+      "vs_est_pct": -1.72,
+      "note": "低于 est 1.72% 成交, 分数市价单开盘成交"
+    }
+  ]
 }

@@ -48,6 +48,52 @@
           "spread_pct": 4.651
         }
       ]
+    },
+    "BAC260904P00059000": {
+      "underlying": "BAC",
+      "strike": 59.0,
+      "expiry": "2026-09-04",
+      "contracts": 4,
+      "entry_premium": 0.22,
+      "entry_date": "2026-08-24",
+      "entry_underlying": 61.69,
+      "entry_rsi2": 5.29,
+      "entry_quote": {
+        "mid": 0.25,
+        "spread_pct": 7.407,
+        "long_spread_pct": 100.0,
+        "net_credit_conservative": 0.23
+      },
+      "model_price": 0.1666,
+      "structure": "credit_put_spread",
+      "long_occ": "BAC260904P00054000",
+      "long_strike": 54.0,
+      "risk_per_contract": 4.78,
+      "max_value_per_contract": 5.0,
+      "entry_legs": [
+        {
+          "symbol": "BAC260904P00059000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 59.0,
+          "quote": {
+            "bid": 0.26,
+            "ask": 0.28
+          },
+          "spread_pct": 7.407
+        },
+        {
+          "symbol": "BAC260904P00054000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 54.0,
+          "quote": {
+            "bid": 0.01,
+            "ask": 0.03
+          },
+          "spread_pct": 100.0
+        }
+      ]
     }
   },
   "trades": [
@@ -75,6 +121,15 @@
       "side": "buy",
       "qty": 1,
       "price": 3.26,
+      "bucket": "weekly_calls",
+      "reason": ""
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "BAC260904P00059000",
+      "side": "buy",
+      "qty": 4,
+      "price": 0.22,
       "bucket": "weekly_calls",
       "reason": ""
     }

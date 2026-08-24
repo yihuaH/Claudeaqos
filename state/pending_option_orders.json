@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-21",
   "generated_at": "2026-08-21T21:55:00Z",
-  "status": "manual_order_placed",
+  "status": "filled",
   "valid_until": "次一交易日 (2026-08-24 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 账户不支持多腿组合单, playbook 4D 注记)",
   "orders": [
@@ -74,5 +74,20 @@
     },
     "collateral_held_usd": 1912.0,
     "verified": "get_option_orders 核对: opening_strategy=short_put_spread · direction=credit · 腿/行权价/到期/张数 2/2 与引擎输出一致 ✓ · 限价 $0.22 = 引擎下限, 未低于 ✓"
+  },
+  "fill": {
+    "date": "2026-08-24",
+    "order_id": "6a890ea4-2c70-4355-8a5d-ad099ddc2efb",
+    "filled_at": "2026-08-24T13:30:37Z",
+    "contracts": 4,
+    "net_credit": 0.22,
+    "legs": {
+      "sell BAC260904P00059000": 0.28,
+      "buy BAC260904P00054000": 0.06
+    },
+    "total_credit_usd": 88.0,
+    "risk_per_contract": 4.78,
+    "max_loss_usd": 1912.0,
+    "max_gain_usd": 88.0
   }
 }

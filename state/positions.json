@@ -36,6 +36,13 @@
       "entry_date": "2026-08-21",
       "cost": 68.31,
       "tranches": 1
+    },
+    "KEYS": {
+      "qty": 1.013228,
+      "entry_price": 310.7,
+      "entry_date": "2026-08-24",
+      "cost": 314.81,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1045,6 +1052,15 @@
       "side": "buy",
       "qty": 0.304478,
       "price": 224.3508,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "KEYS",
+      "side": "buy",
+      "qty": 1.013228,
+      "price": 310.7,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
