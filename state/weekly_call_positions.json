@@ -195,6 +195,13 @@
       "reason": "premium_too_large(10124)",
       "rsi2": 3.85,
       "spot": 710.93
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "SMH",
+      "reason": "premium_too_large(7218)",
+      "rsi2": 3.99,
+      "spot": 546.8
     }
   ]
 }

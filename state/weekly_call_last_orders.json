@@ -1,19 +1,73 @@
 {
-  "date": "2026-08-21",
+  "date": "2026-08-24",
   "halted": false,
-  "sells": [],
+  "sells": [
+    {
+      "symbol": "AMZN260826C00230000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "expiry_close",
+      "est_price": 32.39,
+      "exit_quote": {
+        "bid": 31.96,
+        "ask": 32.82,
+        "mid": 32.39,
+        "spread_pct": 2.655
+      }
+    }
+  ],
   "buys": [],
-  "skips": [],
+  "skips": [
+    {
+      "symbol": "SMH",
+      "reason": "premium_too_large(7218)",
+      "rsi2": 3.99,
+      "spot": 546.8
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "SMH",
-      "rsi2_now": 16.07,
+      "symbol": "XLE",
+      "rsi2_now": 20.1,
       "scenario": "1d_-1%",
-      "spot": 560.42,
+      "spot": 63.11,
       "structure": "single",
-      "est_premium_usd": 6079
+      "est_premium_usd": 642
+    },
+    {
+      "symbol": "TSM",
+      "rsi2_now": 20.66,
+      "scenario": "2d_-1%x2",
+      "spot": 410.12,
+      "structure": "single",
+      "est_premium_usd": 4343
+    },
+    {
+      "symbol": "AMD",
+      "rsi2_now": 13.55,
+      "scenario": "1d_-1%",
+      "spot": 456.75,
+      "structure": "single",
+      "est_premium_usd": 5901
+    },
+    {
+      "symbol": "QQQ",
+      "rsi2_now": 12.51,
+      "scenario": "1d_-1%",
+      "spot": 706.32,
+      "structure": "single",
+      "est_premium_usd": 7173
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 29.5,
+      "scenario": "1d_-1%",
+      "spot": 763.47,
+      "structure": "single",
+      "est_premium_usd": 7729
     }
   ],
-  "suggested_reserve_usd": 6079.0
+  "suggested_reserve_usd": 642.0
 }

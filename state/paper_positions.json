@@ -24,13 +24,6 @@
       "cost": 9771.93,
       "tranches": 1
     },
-    "CRWD": {
-      "qty": 48.0,
-      "entry_price": 198.592292,
-      "entry_date": "2026-08-20",
-      "cost": 9532.43,
-      "tranches": 1
-    },
     "PH": {
       "qty": 9.0,
       "entry_price": 1019.277778,
@@ -57,6 +50,41 @@
       "entry_price": 244.31,
       "entry_date": "2026-08-20",
       "cost": 9528.09,
+      "tranches": 1
+    },
+    "ATI": {
+      "qty": 46.0,
+      "entry_price": 208.388261,
+      "entry_date": "2026-08-24",
+      "cost": 9585.86,
+      "tranches": 1
+    },
+    "JCI": {
+      "qty": 67.0,
+      "entry_price": 142.76,
+      "entry_date": "2026-08-24",
+      "cost": 9564.92,
+      "tranches": 1
+    },
+    "KEYS": {
+      "qty": 30.0,
+      "entry_price": 312.166667,
+      "entry_date": "2026-08-24",
+      "cost": 9365.0,
+      "tranches": 1
+    },
+    "RTX": {
+      "qty": 45.0,
+      "entry_price": 209.524889,
+      "entry_date": "2026-08-24",
+      "cost": 9428.62,
+      "tranches": 1
+    },
+    "HWM": {
+      "qty": 8.0,
+      "entry_price": 270.993749,
+      "entry_date": "2026-08-24",
+      "cost": 2167.95,
       "tranches": 1
     }
   },
@@ -770,6 +798,60 @@
       "side": "buy",
       "qty": 39.0,
       "price": 244.31,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "CRWD",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 193.815,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "ATI",
+      "side": "buy",
+      "qty": 46.0,
+      "price": 208.388261,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "JCI",
+      "side": "buy",
+      "qty": 67.0,
+      "price": 142.76,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "KEYS",
+      "side": "buy",
+      "qty": 30.0,
+      "price": 312.166667,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "RTX",
+      "side": "buy",
+      "qty": 45.0,
+      "price": 209.524889,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-24",
+      "symbol": "HWM",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 270.993749,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -1,84 +1,65 @@
 {
-  "date": "2026-08-21",
+  "date": "2026-08-24",
   "halted": false,
   "sells": [],
-  "buys": [
+  "buys": [],
+  "skips": [
     {
-      "structure": "credit_put_spread",
-      "qty": 4,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "BAC260904P00059000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 59.0,
-          "quote": {
-            "bid": 0.26,
-            "ask": 0.28
-          },
-          "spread_pct": 7.407
-        },
-        {
-          "symbol": "BAC260904P00054000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 54.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.03
-          },
-          "spread_pct": 100.0
-        }
-      ],
-      "est_price": 0.23,
-      "direction": "credit",
-      "underlying": "BAC",
-      "expiry": "2026-09-04",
-      "dte": 14,
-      "spot": 61.69,
-      "rsi2": 5.29,
-      "model_price": 0.1666,
-      "entry_quote": {
-        "mid": 0.25,
-        "spread_pct": 7.407,
-        "long_spread_pct": 100.0,
-        "net_credit_conservative": 0.23
-      },
-      "risk_per_contract": 4.77,
-      "max_value_per_contract": 5.0,
-      "max_loss_usd": 1908.0,
-      "max_gain_usd": 92.0
+      "symbol": "SMH",
+      "reason": "insufficient_buying_power(cost=12755,bp_left=72)",
+      "rsi2": 3.99
     }
   ],
-  "skips": [],
   "warnings": [],
   "near_signals": [
     {
+      "symbol": "XLE",
+      "rsi2_now": 20.1,
+      "scenario": "1d_-1%",
+      "spot": 63.11,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 512
+    },
+    {
       "symbol": "XLI",
-      "rsi2_now": 21.55,
+      "rsi2_now": 10.47,
       "scenario": "1d_-1%",
-      "spot": 180.25,
+      "spot": 179.0,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1532
+      "est_premium_usd": 1521
     },
     {
-      "symbol": "AMZN",
-      "rsi2_now": 24.96,
+      "symbol": "AMD",
+      "rsi2_now": 13.55,
+      "scenario": "1d_-1%",
+      "spot": 456.75,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2633
+    },
+    {
+      "symbol": "TSM",
+      "rsi2_now": 20.66,
       "scenario": "2d_-1%x2",
-      "spot": 258.63,
+      "spot": 410.12,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1623
+      "est_premium_usd": 2926
     },
     {
-      "symbol": "SMH",
-      "rsi2_now": 16.07,
+      "symbol": "QQQ",
+      "rsi2_now": 12.51,
       "scenario": "1d_-1%",
-      "spot": 560.42,
+      "spot": 706.32,
       "structure": "credit_put_spread",
-      "est_premium_usd": 3837
+      "est_premium_usd": 5786
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 29.5,
+      "scenario": "1d_-1%",
+      "spot": 763.47,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 6707
     }
   ],
-  "suggested_reserve_usd": 804.78
+  "suggested_reserve_usd": 25.28
 }

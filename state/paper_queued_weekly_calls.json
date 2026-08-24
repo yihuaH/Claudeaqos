@@ -1,8 +1,21 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-20",
+  "date": "2026-08-24",
   "coid_prefix": "cqw",
-  "next_open": "2026-08-21T09:30:00-04:00",
+  "next_open": "2026-08-25T09:30:00-04:00",
   "skipped": [],
-  "orders": []
+  "failed": [],
+  "orders": [
+    {
+      "coid": "cqw-2026-08-24-AMZN260826C00230000-sell",
+      "order_id": "b30bdc00-a8af-44cc-86cb-7289fa2c2000",
+      "symbol": "AMZN260826C00230000",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "31.42",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "expiry_close"
+    }
+  ]
 }

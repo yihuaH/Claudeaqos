@@ -1,76 +1,43 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-21",
+  "date": "2026-08-24",
   "coid_prefix": "cq",
-  "next_open": "2026-08-24T09:30:00-04:00",
+  "next_open": "2026-08-25T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-08-21-CRWD-sell",
-      "order_id": "f2b161d2-31cd-4735-b171-d276fa161ed5",
-      "symbol": "CRWD",
+      "coid": "cq-2026-08-24-TRV-sell",
+      "order_id": "bb0ab132-7127-4638-a8c8-b0118d324640",
+      "symbol": "TRV",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "186.19",
-      "qty": "48",
+      "limit_price": "359.43",
+      "qty": "27",
       "bucket": "strategy",
-      "reason": "stop_loss"
+      "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-08-21-ATI-buy",
-      "order_id": "a04bd231-115a-4230-ab09-71b2529f180c",
-      "symbol": "ATI",
+      "coid": "cq-2026-08-24-TXN-buy",
+      "order_id": "42e64554-338c-442f-97df-99e994734212",
+      "symbol": "TXN",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "213.22",
-      "qty": "46",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-21-JCI-buy",
-      "order_id": "2b144d5f-33ec-4ae2-a9ce-cfc5ca04bb2d",
-      "symbol": "JCI",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "147.34",
-      "qty": "67",
+      "limit_price": "266.71",
+      "qty": "37",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     },
     {
-      "coid": "cq-2026-08-21-KEYS-buy",
-      "order_id": "7e8c9512-dcac-4e82-b345-e7f8ae2a2da4",
-      "symbol": "KEYS",
+      "coid": "cq-2026-08-24-XLK-buy",
+      "order_id": "437f163a-6343-415d-a9e1-5037a1357ebc",
+      "symbol": "XLK",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "325.61",
-      "qty": "30",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-21-RTX-buy",
-      "order_id": "dc057406-c682-4f03-afb2-85f0a328f931",
-      "symbol": "RTX",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "216.21",
-      "qty": "45",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-21-HWM-buy",
-      "order_id": "8c384f20-4a2b-4e31-b205-c3e057ad31dc",
-      "symbol": "HWM",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "279.83",
-      "qty": "8",
+      "limit_price": "185.45",
+      "qty": "11",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
