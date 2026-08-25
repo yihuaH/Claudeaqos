@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "TRV": {
-      "qty": 27.0,
-      "entry_price": 371.495926,
-      "entry_date": "2026-08-18",
-      "cost": 10030.39,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 54.0,
       "entry_price": 180.961667,
@@ -85,6 +78,20 @@
       "entry_price": 270.993749,
       "entry_date": "2026-08-24",
       "cost": 2167.95,
+      "tranches": 1
+    },
+    "TXN": {
+      "qty": 37.0,
+      "entry_price": 262.172973,
+      "entry_date": "2026-08-25",
+      "cost": 9700.4,
+      "tranches": 1
+    },
+    "XLK": {
+      "qty": 11.0,
+      "entry_price": 182.403636,
+      "entry_date": "2026-08-25",
+      "cost": 2006.44,
       "tranches": 1
     }
   },
@@ -852,6 +859,33 @@
       "side": "buy",
       "qty": 8.0,
       "price": 270.993749,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "TRV",
+      "side": "sell",
+      "qty": 27.0,
+      "price": 369.03,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "TXN",
+      "side": "buy",
+      "qty": 37.0,
+      "price": 262.172973,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 11.0,
+      "price": 182.403636,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -1,103 +1,88 @@
 {
-  "trade_date": "2026-08-24",
-  "generated_at": "2026-08-24T21:50:00Z",
-  "status": "expired",
-  "valid_until": "次一交易日 (2026-08-25 周二) 09:25 ET",
-  "buying_power_at_generation": 72.22,
+  "trade_date": "2026-08-25",
+  "generated_at": "2026-08-25T21:50:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-26 周三) 09:25 ET",
+  "buying_power_at_generation": 4995.96,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "TXN",
-      "dollar_amount": 967.33,
+      "symbol": "URI",
+      "dollar_amount": 992.49,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 258.94,
-      "rsi2": 2.57,
+      "est_price": 1053.14,
+      "rsi2": 2.97,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "XLK",
-      "dollar_amount": 967.33,
+      "symbol": "CVX",
+      "dollar_amount": 992.49,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 180.05,
-      "rsi2": 3.48,
+      "est_price": 199.89,
+      "rsi2": 3.67,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "SOXQ",
-      "dollar_amount": 967.33,
+      "symbol": "XLE",
+      "dollar_amount": 992.49,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 89.93,
-      "rsi2": 5.58,
+      "est_price": 62.06,
+      "rsi2": 5.28,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "RTX",
-      "dollar_amount": 967.33,
+      "symbol": "XOM",
+      "dollar_amount": 992.49,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 209.22,
-      "rsi2": 5.76,
+      "est_price": 160.64,
+      "rsi2": 7.34,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 5,
       "action": "buy",
-      "symbol": "EQIX",
-      "dollar_amount": 967.33,
+      "symbol": "OXY",
+      "dollar_amount": 992.49,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1055.2,
-      "rsi2": 8.89,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 6,
-      "action": "buy",
-      "symbol": "URI",
-      "dollar_amount": 115.94,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 1083.56,
-      "rsi2": 9.89,
+      "est_price": 58.41,
+      "rsi2": 9.2,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "news_precheck": {
     "symbols": [
-      "TXN",
-      "XLK",
-      "SOXQ",
-      "RTX",
-      "EQIX",
-      "URI"
+      "URI",
+      "CVX",
+      "XLE",
+      "XOM",
+      "OXY"
     ],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-17→2026-08-24",
-    "assessment": "六只均无红旗。"
+    "source": "integrations.py news 2026-08-18→2026-08-25",
+    "assessment": "五只均无红旗。"
   },
   "funding_note": {
-    "bp_at_generation": 72.22,
-    "pending_sale_proceeds_usd": 4884.0,
-    "detail": "生成时 BP 仅 $72.22 —— 引擎按净值×10% 定注码, 资金来自**已下但未成交的 3 笔出场单** (AVGO≈$1,873 + TRV≈$1,021 + EMR≈$1,991 ≈ $4,885), 均排 08-25 开盘成交。",
-    "timing_gap": "⚠️ 结构性时序错配 (已知问题): 卖款 09:30 开盘才到账, 而本清单 09:25 ET 过期 —— 差 5 分钟。若在 09:25 前执行, 实时 BP 仍只有 $72, 六单会全部被防杠杆闸跳过。**建议执行时点: 08-25 开盘后 (09:30 ET / 北京 21:30) 卖单成交、回款入账之后**, 但那时本清单已过期。实务上以次日主跑重新出单为准。",
-    "no_option_conflict": "本日期权轨道无买单 (SMH 因 BP 不足被跳过), 无跨轨道资金冲突。"
+    "bp_at_generation": 4995.96,
+    "total_usd": 4962.45,
+    "detail": "BP $4,995.96 ≥ 合计 $4,962.45, **资金充足, 无需截断**。三笔出场单 (MMM/STLD/KEYS) 的回款 ≈$1,405 为额外缓冲。",
+    "no_option_conflict": "本日期权轨道无买单 (XLE/XLI 点差闸拦下), 无跨轨道资金冲突。"
   },
-  "expired_at": "2026-08-25T14:50:00Z",
-  "expiry_note": "有效期 08-25 09:25 ET 已过, 未执行。原因如生成时 funding_note 所述: 六单资金全部来自当日开盘才成交的 3 笔出场单 ($4,923.85 回款于 09:30 到账), 09:25 有效期内实时 BP 仅 $72.22, 逐单判定会被防杠杆闸全部跳过。按 playbook 由**当晚主跑用新数据重新出单**。未下任何单。"
+  "sector_note": "五只中 CVX/XLE/XOM/OXY 均属能源 — 行业上限 max_per_sector=3 在**入场时**按持仓计数, 当前 0 只能源持仓故全部放行; 执行时若前 3 只成交, 第 4 只仍会下单 (清单已定, 4C 逐字照抄不改单)。**这是引擎既有口径**, 记录备查。"
 }

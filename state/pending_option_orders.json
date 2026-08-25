@@ -1,93 +1,34 @@
 {
-  "trade_date": "2026-08-21",
-  "generated_at": "2026-08-21T21:55:00Z",
-  "status": "filled",
-  "valid_until": "次一交易日 (2026-08-24 周一) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
-  "channel": "手动 (agentic 账户不支持多腿组合单, playbook 4D 注记)",
-  "orders": [
-    {
-      "seq": 1,
-      "action": "buy_to_open",
-      "structure": "credit_put_spread",
-      "qty": 4,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "BAC260904P00059000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 59.0,
-          "quote": {
-            "bid": 0.26,
-            "ask": 0.28
-          },
-          "spread_pct": 7.407
-        },
-        {
-          "symbol": "BAC260904P00054000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 54.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.03
-          },
-          "spread_pct": 100.0
-        }
-      ],
-      "est_price": 0.23,
-      "direction": "credit",
-      "underlying": "BAC",
-      "expiry": "2026-09-04",
-      "dte": 14,
-      "spot": 61.69,
-      "rsi2": 5.29,
-      "model_price": 0.1666,
-      "entry_quote": {
-        "mid": 0.25,
-        "spread_pct": 7.407,
-        "long_spread_pct": 100.0,
-        "net_credit_conservative": 0.23
-      },
-      "risk_per_contract": 4.77,
-      "max_value_per_contract": 5.0,
-      "max_loss_usd": 1908.0,
-      "max_gain_usd": 92.0,
-      "limit_floor": 0.22
-    }
-  ],
-  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict — 与股票买单合计超 BP, 优先级待用户定",
-  "risk_note": "4 张合计在险 $1,908 = 净值 19.3%; 最大收益 $92 (4.8% / 14天)。长腿点差 100% 靠绝对闸过关。",
-  "manual_order": {
-    "placed_by": "user (App)",
-    "placed_at": "2026-08-22T02:51:16Z",
-    "order_id": "6a890ea4-2c70-4355-8a5d-ad099ddc2efb",
-    "state": "queued",
+  "trade_date": "2026-08-25",
+  "generated_at": "2026-08-25T21:50:00Z",
+  "status": "awaiting_manual_close",
+  "action": "sell_to_close",
+  "channel": "手动 (agentic 账户不支持多腿组合单; 2026-08-21 复测仍 API 400)",
+  "notice_stage": "① 主跑当晚预告已发 (playbook 4D 两步通知); ② 次日盘中会话主动发实时报价执行指令",
+  "urgency": "🟢 常规 (exit_strength; DTE 10, 非强平非止损)",
+  "order": {
+    "underlying": "BAC",
+    "structure": "credit_put_spread",
     "qty": 4,
-    "limit_credit": 0.22,
-    "engine_est": 0.23,
-    "engine_limit_floor": 0.22,
+    "reason": "exit_strength",
+    "direction": "debit",
+    "engine_est_debit": 0.09,
     "legs": {
-      "sell": "BAC260904P00059000 (9/4 P59)",
-      "buy": "BAC260904P00054000 (9/4 P54)"
+      "buy_to_close": "BAC260904P00059000 (9/4 P59)",
+      "sell_to_close": "BAC260904P00054000 (9/4 P54)"
     },
-    "collateral_held_usd": 1912.0,
-    "verified": "get_option_orders 核对: opening_strategy=short_put_spread · direction=credit · 腿/行权价/到期/张数 2/2 与引擎输出一致 ✓ · 限价 $0.22 = 引擎下限, 未低于 ✓"
+    "entry_credit": 0.22,
+    "exit_quote_at_signal": {
+      "short_ask": 0.12,
+      "long_bid": 0.03,
+      "net_debit": 0.09,
+      "mid": 0.06,
+      "spread_pct": 28.571,
+      "long_spread_pct": 66.667
+    },
+    "est_pnl_usd": 52.0,
+    "note": "⚠️ 最终限价**不用此处的昨收 est**, 次日按实时报价 (短腿ask − 长腿bid) 重算 (playbook 4D 限价锚定 2026-08-20 修正)。"
   },
-  "fill": {
-    "date": "2026-08-24",
-    "order_id": "6a890ea4-2c70-4355-8a5d-ad099ddc2efb",
-    "filled_at": "2026-08-24T13:30:37Z",
-    "contracts": 4,
-    "net_credit": 0.22,
-    "legs": {
-      "sell BAC260904P00059000": 0.28,
-      "buy BAC260904P00054000": 0.06
-    },
-    "total_credit_usd": 88.0,
-    "risk_per_contract": 4.78,
-    "max_loss_usd": 1912.0,
-    "max_gain_usd": 88.0
-  }
+  "expiry": "2026-09-04",
+  "dte_at_signal": 10
 }
