@@ -2,33 +2,12 @@
   "high_water_mark": 10164.78,
   "halted": false,
   "strategy_positions": {
-    "AVGO": {
-      "qty": 5.222465,
-      "entry_price": 387.4262,
-      "entry_date": "2026-08-17",
-      "cost": 2023.32,
-      "tranches": 2
-    },
     "MMM": {
       "qty": 5.627242,
       "entry_price": 180.2535,
       "entry_date": "2026-08-17",
       "cost": 1014.33,
       "tranches": 1
-    },
-    "TRV": {
-      "qty": 2.754741,
-      "entry_price": 368.2124,
-      "entry_date": "2026-08-18",
-      "cost": 1014.33,
-      "tranches": 1
-    },
-    "EMR": {
-      "qty": 12.635592,
-      "entry_price": 157.995,
-      "entry_date": "2026-08-19",
-      "cost": 1996.36,
-      "tranches": 2
     },
     "STLD": {
       "qty": 0.304478,
@@ -1063,6 +1042,33 @@
       "price": 310.7,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "AVGO",
+      "side": "sell",
+      "qty": 5.222465,
+      "price": 360.97,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "TRV",
+      "side": "sell",
+      "qty": 2.754741,
+      "price": 370.1,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-25",
+      "symbol": "EMR",
+      "side": "sell",
+      "qty": 12.635592,
+      "price": 159.8,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
