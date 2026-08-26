@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-25",
   "generated_at": "2026-08-25T21:50:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-26 周三) 09:25 ET",
   "buying_power_at_generation": 4995.96,
   "orders": [
@@ -84,5 +84,136 @@
     "detail": "BP $4,995.96 ≥ 合计 $4,962.45, **资金充足, 无需截断**。三笔出场单 (MMM/STLD/KEYS) 的回款 ≈$1,405 为额外缓冲。",
     "no_option_conflict": "本日期权轨道无买单 (XLE/XLI 点差闸拦下), 无跨轨道资金冲突。"
   },
-  "sector_note": "五只中 CVX/XLE/XOM/OXY 均属能源 — 行业上限 max_per_sector=3 在**入场时**按持仓计数, 当前 0 只能源持仓故全部放行; 执行时若前 3 只成交, 第 4 只仍会下单 (清单已定, 4C 逐字照抄不改单)。**这是引擎既有口径**, 记录备查。"
+  "sector_note": "五只中 CVX/XLE/XOM/OXY 均属能源 — 行业上限 max_per_sector=3 在**入场时**按持仓计数, 当前 0 只能源持仓故全部放行; 执行时若前 3 只成交, 第 4 只仍会下单 (清单已定, 4C 逐字照抄不改单)。**这是引擎既有口径**, 记录备查。",
+  "executed_at": "2026-08-26T01:46:30Z",
+  "execution_summary": {
+    "mode": "盘外混合执行 (21:45 ET, 08-25 收盘后)",
+    "cap_formula": "实时 min(buying_power, cash) = min($4,995.96, $8,995.96) = $4,995.96",
+    "total_usd": 4962.45,
+    "buffer_left_usd": 33.51,
+    "skipped": 0,
+    "note": "资金充足, 五单全执行, 无跳过。②腿余量按①腿**限价**计 (保守口径), 保证 cost₁实成 + remaining ≤ D, 绝不放大。",
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "URI",
+        "dollar_amount": 992.49,
+        "legs": [
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 992.49,
+            "order_id": "6a8e453a-765e-4ea7-aef7-a6191a130772",
+            "qty": 0.94241,
+            "state": "queued"
+          }
+        ],
+        "note": "①腿限价 $1,063.67 > 单额 $992.49 → whole=0, 按 4C 规则无①腿, 整单走②腿分数市价排开盘"
+      },
+      {
+        "seq": 2,
+        "symbol": "CVX",
+        "dollar_amount": 992.49,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 4,
+            "limit_price": 201.89,
+            "order_id": "6a8e4544-fab8-4c53-96e6-ae665379c4ee",
+            "state": "unconfirmed"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 184.93,
+            "order_id": "6a8e4549-6731-4a3f-8553-8b784510cac5",
+            "qty": 0.9271,
+            "state": "queued"
+          }
+        ]
+      },
+      {
+        "seq": 3,
+        "symbol": "XLE",
+        "dollar_amount": 992.49,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 15,
+            "limit_price": 62.68,
+            "order_id": "6a8e454f-b1ac-4d5f-b553-9943842eeb88",
+            "state": "unconfirmed"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 52.29,
+            "order_id": "6a8e4554-fd50-4b6c-89f4-cd50a0e06568",
+            "qty": 0.84543,
+            "state": "queued"
+          }
+        ]
+      },
+      {
+        "seq": 4,
+        "symbol": "XOM",
+        "dollar_amount": 992.49,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "extended_hours",
+            "qty": 6,
+            "limit_price": 162.25,
+            "order_id": "6a8e4561-a695-4f39-88ca-5f4f618e84b9",
+            "state": "queued",
+            "downgrade": "⚠️ all_day_hours 被拒 (API 400: instrument is untradable for 24 hour trading) → 按 4C 降级 extended_hours ✓"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 18.99,
+            "order_id": "6a8e4567-1b10-48f1-ba17-8f679b667668",
+            "qty": 0.11877,
+            "state": "queued"
+          }
+        ]
+      },
+      {
+        "seq": 5,
+        "symbol": "OXY",
+        "dollar_amount": 992.49,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 16,
+            "limit_price": 58.99,
+            "order_id": "6a8e456c-2bc7-497d-a809-5ac0cba9b503",
+            "state": "unconfirmed"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 48.65,
+            "order_id": "6a8e4571-49dd-44c0-9de1-87766652184b",
+            "qty": 0.83691,
+            "state": "queued"
+          }
+        ]
+      }
+    ],
+    "h24_whitelist_update": "实测累计 — ✅ 24h 可交易: MMM · TMO · AVGO · CVX · XLE · OXY | ⛔ 不可: TRV · USFD · EMR · **XOM (本次新增)**",
+    "ledger_writeback": "全部 queued/unconfirmed 未成交 → 本次不回写; 08-26 晨检确认成交后回写"
+  }
 }
