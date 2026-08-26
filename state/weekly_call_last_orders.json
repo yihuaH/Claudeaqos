@@ -1,32 +1,34 @@
 {
-  "date": "2026-08-25",
+  "date": "2026-08-26",
   "halted": false,
   "sells": [
     {
-      "symbol": "BAC260828C00054000",
+      "symbol": "XLI260828C00160000",
       "qty": 1,
       "position_intent": "sell_to_close",
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "est_price": 8.39,
+      "reason": "expiry_close",
+      "est_price": 20.41,
       "exit_quote": {
-        "bid": 8.33,
-        "ask": 8.46,
-        "mid": 8.395,
-        "spread_pct": 1.549
+        "bid": 18.56,
+        "ask": 22.26,
+        "mid": 20.41,
+        "spread_pct": 18.128
       }
     }
   ],
   "buys": [],
-  "skips": [
+  "skips": [],
+  "warnings": [],
+  "near_signals": [
     {
-      "symbol": "XLE",
-      "reason": "spread_too_wide(best=3.76%)",
-      "rsi2": 5.28,
-      "spot": 62.06
+      "symbol": "GOOGL",
+      "rsi2_now": 18.97,
+      "scenario": "1d_-1%",
+      "spot": 342.0,
+      "structure": "single",
+      "est_premium_usd": 3606
     }
   ],
-  "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "suggested_reserve_usd": 3606.0
 }

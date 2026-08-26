@@ -1,112 +1,44 @@
 {
-  "trade_date": "2026-08-25",
-  "generated_at": "2026-08-25T21:50:00Z",
-  "status": "closed",
+  "trade_date": "2026-08-26",
+  "generated_at": "2026-08-26T21:55:00Z",
+  "status": "awaiting_manual_close",
   "action": "sell_to_close",
-  "channel": "手动 (agentic 账户不支持多腿组合单; 2026-08-21 复测仍 API 400)",
-  "notice_stage": "① 主跑当晚预告已发 (playbook 4D 两步通知); ② 次日盘中会话主动发实时报价执行指令",
-  "urgency": "🟢 常规 (exit_strength; DTE 10, 非强平非止损)",
+  "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
+  "urgency": "🔴 **强平** — DTE 2, 08-28 到期; 08-27 必须成交",
+  "notice_stage": "① 主跑当晚预告 (本条); ② 08-27 盘中会话主动发实时报价执行指令 (闹钟 trig_01KU16q3bLoR2E6Q6p6CYQCM 10:00 ET)",
   "order": {
-    "underlying": "BAC",
+    "underlying": "NVDA",
     "structure": "credit_put_spread",
-    "qty": 4,
-    "reason": "exit_strength",
+    "qty": 1,
+    "reason": "expiry_close",
     "direction": "debit",
-    "engine_est_debit": 0.09,
+    "engine_est_debit": 5.8,
     "legs": {
-      "buy_to_close": "BAC260904P00059000 (9/4 P59)",
-      "sell_to_close": "BAC260904P00054000 (9/4 P54)"
+      "buy_to_close": "NVDA260828P00210000 (8/28 P210)",
+      "sell_to_close": "NVDA260828P00190000 (8/28 P190)"
     },
-    "entry_credit": 0.22,
+    "entry_credit": 3.26,
     "exit_quote_at_signal": {
-      "short_ask": 0.12,
-      "long_bid": 0.03,
-      "net_debit": 0.09,
-      "mid": 0.06,
-      "spread_pct": 28.571,
-      "long_spread_pct": 66.667
+      "short_ask": 6.36,
+      "long_bid": 0.56,
+      "net_debit": 5.8,
+      "mid": 5.675
     },
-    "est_pnl_usd": 52.0,
-    "note": "⚠️ 最终限价**不用此处的昨收 est**, 次日按实时报价 (短腿ask − 长腿bid) 重算 (playbook 4D 限价锚定 2026-08-20 修正)。"
+    "est_pnl_usd_at_close_quote": -254,
+    "⚠️_earnings_gap": {
+      "note": "⚠️ **上述 est 基于 08-26 收盘报价, 已过时** —— NVDA 财报于 08-26 盘后发布, 盘后正股由 $209.95 跳至 **$219.38 (+4.49%)**。",
+      "regular_close": 209.95,
+      "after_hours": 219.38,
+      "gap_pct": 4.49,
+      "implication": "盘后价 $219.38 **远高于短腿行权价 $210** → 价差趋近作废。若 08-27 维持此价位, 平仓成本应接近 $0, 盈亏接近**最大收益 +$326**。",
+      "expiry_pnl_if_holds": {
+        "at_209.95": 321,
+        "at_219.38": 326
+      }
+    },
+    "final_limit_rule": "⚠️ 最终限价**必须**按 08-27 盘中实时报价重算 (短腿ask − 长腿bid), 绝不用本条的收盘 est (playbook 4D 限价锚定 2026-08-20 修正)。财报跳空后旧 est 严重失真。"
   },
-  "expiry": "2026-09-04",
-  "dte_at_signal": 10,
-  "outcome": {
-    "date": "2026-08-26",
-    "filled": {
-      "contracts": 3,
-      "net_debit": 0.11,
-      "pnl_usd": 33.0,
-      "order_id": "6a8f0810-d8dc-4c7f-a3c0-365df48bcca4",
-      "placed_agent": "user",
-      "filled_at": "2026-08-26T15:36:48Z",
-      "legs": {
-        "buy_to_close BAC260904P00059000": 0.12,
-        "sell_to_close BAC260904P00054000": 0.01
-      }
-    },
-    "remaining": {
-      "contracts": 0,
-      "note": "11:39 ET 用户以 $0.12 平掉最后 1 张, +$10。BAC 已全平。"
-    },
-    "working_order": {
-      "order_id": "6a8f0839-afb2-48d2-9068-1f497123436b",
-      "qty": 1,
-      "limit_debit": 0.01,
-      "state": "cancelled",
-      "assessment": "⚠️ 限价 $0.01 实际不可能成交 —— 仅短腿 P59 现值 bid $0.10, 净借记不可能低到 $0.01。gfd 将于今日收盘作废。"
-    },
-    "cancelled_order": {
-      "order_id": "6a8f0760-ba53-488a-a8c3-a6268238d945",
-      "qty": 1,
-      "limit_debit": 0.09,
-      "state": "cancelled",
-      "note": "用户自行撤销"
-    },
-    "second_fill": {
-      "contracts": 1,
-      "net_debit": 0.12,
-      "pnl_usd": 10.0,
-      "order_id": "6a8f08cc-b537-4fba-a6e5-2e8aff27238e",
-      "placed_agent": "user",
-      "filled_at": "2026-08-26T15:39:57Z",
-      "legs": {
-        "buy_to_close BAC260904P00059000": 0.15,
-        "sell_to_close BAC260904P00054000": 0.03
-      }
-    },
-    "total_pnl_usd": 43.0,
-    "order_sequence": [
-      {
-        "t": "11:33",
-        "limit": 0.09,
-        "qty": 1,
-        "result": "cancelled"
-      },
-      {
-        "t": "11:36",
-        "limit": 0.11,
-        "qty": 3,
-        "result": "filled +$33"
-      },
-      {
-        "t": "11:37",
-        "limit": 0.01,
-        "qty": 1,
-        "result": "cancelled (不可能成交)"
-      },
-      {
-        "t": "11:38",
-        "limit": 0.1,
-        "qty": 1,
-        "result": "cancelled"
-      },
-      {
-        "t": "11:39",
-        "limit": 0.12,
-        "qty": 1,
-        "result": "filled +$10"
-      }
-    ]
-  }
+  "expiry": "2026-08-28",
+  "dte_at_signal": 2,
+  "user_decision_ref": "用户 2026-08-26 决定持仓过财报、08-27 平仓, 详 journal/2026-08-26-nvda-hold-through-earnings.md"
 }

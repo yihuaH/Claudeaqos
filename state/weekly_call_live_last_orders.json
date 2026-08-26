@@ -1,64 +1,60 @@
 {
-  "date": "2026-08-25",
+  "date": "2026-08-26",
   "halted": false,
   "sells": [
     {
       "structure": "credit_put_spread",
-      "qty": 4,
+      "qty": 1,
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
+      "reason": "expiry_close",
       "direction": "debit",
-      "est_price": 0.09,
-      "underlying": "BAC",
-      "expiry": "2026-09-04",
+      "est_price": 5.8,
+      "underlying": "NVDA",
+      "expiry": "2026-08-28",
       "legs": [
         {
-          "symbol": "BAC260904P00059000",
+          "symbol": "NVDA260828P00210000",
           "side": "buy",
           "position_effect": "close",
-          "strike": 59.0,
+          "strike": 210.0,
           "quote": {
-            "bid": 0.09,
-            "ask": 0.12
+            "bid": 6.17,
+            "ask": 6.36
           }
         },
         {
-          "symbol": "BAC260904P00054000",
+          "symbol": "NVDA260828P00190000",
           "side": "sell",
           "position_effect": "close",
-          "strike": 54.0,
+          "strike": 190.0,
           "quote": {
-            "bid": 0.03,
-            "ask": 0.06
+            "bid": 0.56,
+            "ask": 0.62
           }
         }
       ],
       "exit_quote": {
-        "short_ask": 0.12,
-        "long_bid": 0.03,
-        "net_debit": 0.09,
-        "mid": 0.06,
-        "spread_pct": 28.571,
-        "long_spread_pct": 66.667
+        "short_ask": 6.36,
+        "long_bid": 0.56,
+        "net_debit": 5.8,
+        "mid": 5.675,
+        "spread_pct": 3.033,
+        "long_spread_pct": 10.169
       }
     }
   ],
   "buys": [],
-  "skips": [
+  "skips": [],
+  "warnings": [],
+  "near_signals": [
     {
-      "symbol": "XLE",
-      "reason": "credit_leg_spread_too_wide(best=27.69%)",
-      "rsi2": 5.28,
-      "spot": 62.06
-    },
-    {
-      "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=38.30%)",
-      "rsi2": 7.01,
-      "spot": 178.4
+      "symbol": "GOOGL",
+      "rsi2_now": 18.97,
+      "scenario": "1d_-1%",
+      "spot": 342.0,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2461
     }
   ],
-  "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "suggested_reserve_usd": 1207.82
 }
