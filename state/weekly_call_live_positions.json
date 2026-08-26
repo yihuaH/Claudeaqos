@@ -47,7 +47,23 @@
           },
           "spread_pct": 4.651
         }
-      ]
+      ],
+      "user_decision": {
+        "date": "2026-08-26",
+        "decision": "hold_through_earnings_close_next_day",
+        "instruction": "用户「明天平吧」",
+        "context": "NVDA 财报 08-26 盘后; 用户看过新闻扫描/10次历史反应/凯利/隐含分布/IV塌陷模型后主动选择持仓过财报, 08-27 盘中平仓",
+        "at_decision": {
+          "spot": 211.02,
+          "close_cost_conservative": 5.0,
+          "pnl_if_closed_today": -174,
+          "breakeven_at_expiry": 206.74,
+          "cushion_pct": 2.03
+        },
+        "override_note": "⚠️ 本决定是对系统 7 天财报黑窗纪律的**知情覆盖**。该仓位本身是数据缺口产物 (08-20 earnings.json 未含 NVDA), 非策略主动选择。",
+        "journal": "journal/2026-08-26-nvda-hold-through-earnings.md",
+        "next_action": "08-27 10:00 ET 闹钟 trig_01KU16q3bLoR2E6Q6p6CYQCM → 4D 第②步执行指令 (🔴 DTE 1)"
+      }
     },
     "BAC260904P00059000": {
       "underlying": "BAC",
