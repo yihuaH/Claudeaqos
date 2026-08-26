@@ -2,25 +2,39 @@
   "high_water_mark": 10164.78,
   "halted": false,
   "strategy_positions": {
-    "MMM": {
-      "qty": 5.627242,
-      "entry_price": 180.2535,
-      "entry_date": "2026-08-17",
-      "cost": 1014.33,
+    "URI": {
+      "qty": 0.934081,
+      "entry_price": 1062.53,
+      "entry_date": "2026-08-26",
+      "cost": 992.49,
       "tranches": 1
     },
-    "STLD": {
-      "qty": 0.304478,
-      "entry_price": 224.3508,
-      "entry_date": "2026-08-21",
-      "cost": 68.31,
+    "CVX": {
+      "qty": 4.930559,
+      "entry_price": 199.525,
+      "entry_date": "2026-08-26",
+      "cost": 983.77,
       "tranches": 1
     },
-    "KEYS": {
-      "qty": 1.013228,
-      "entry_price": 310.7,
-      "entry_date": "2026-08-24",
-      "cost": 314.81,
+    "XLE": {
+      "qty": 15.851628,
+      "entry_price": 61.8258,
+      "entry_date": "2026-08-26",
+      "cost": 980.04,
+      "tranches": 1
+    },
+    "XOM": {
+      "qty": 6.120007,
+      "entry_price": 159.789,
+      "entry_date": "2026-08-26",
+      "cost": 977.91,
+      "tranches": 1
+    },
+    "OXY": {
+      "qty": 16.839806,
+      "entry_price": 58.139,
+      "entry_date": "2026-08-26",
+      "cost": 979.05,
       "tranches": 1
     }
   },
@@ -1069,6 +1083,114 @@
       "price": 159.8,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "MMM",
+      "side": "sell",
+      "qty": 5.627242,
+      "price": 180.5,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "STLD",
+      "side": "sell",
+      "qty": 0.304478,
+      "price": 231.43,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "KEYS",
+      "side": "sell",
+      "qty": 1.013228,
+      "price": 323.13,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "URI",
+      "side": "buy",
+      "qty": 0.934081,
+      "price": 1062.53,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "CVX",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 199.71,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "CVX",
+      "side": "buy",
+      "qty": 0.930559,
+      "price": 198.73,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "XLE",
+      "side": "buy",
+      "qty": 15.0,
+      "price": 61.85,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "XLE",
+      "side": "buy",
+      "qty": 0.851628,
+      "price": 61.4,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "XOM",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 159.82,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "XOM",
+      "side": "buy",
+      "qty": 0.120007,
+      "price": 158.24,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "OXY",
+      "side": "buy",
+      "qty": 16.0,
+      "price": 58.15,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "OXY",
+      "side": "buy",
+      "qty": 0.839806,
+      "price": 57.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [

@@ -214,6 +214,96 @@
       }
     ],
     "h24_whitelist_update": "实测累计 — ✅ 24h 可交易: MMM · TMO · AVGO · CVX · XLE · OXY | ⛔ 不可: TRV · USFD · EMR · **XOM (本次新增)**",
-    "ledger_writeback": "全部 queued/unconfirmed 未成交 → 本次不回写; 08-26 晨检确认成交后回写"
+    "ledger_writeback": "全部 queued/unconfirmed 未成交 → 本次不回写; 08-26 晨检确认成交后回写",
+    "fills_confirmed_at": "2026-08-26T14:50:00Z",
+    "fills": [
+      {
+        "symbol": "URI",
+        "legs": [
+          {
+            "leg": "②",
+            "qty": 0.934081,
+            "price": 1062.53
+          }
+        ],
+        "total_cost": 992.49,
+        "vs_budget": 0.0
+      },
+      {
+        "symbol": "CVX",
+        "legs": [
+          {
+            "leg": "①",
+            "qty": 4,
+            "price": 199.71,
+            "filled_at": "01:45 UTC (24h 时段即时)"
+          },
+          {
+            "leg": "②",
+            "qty": 0.930559,
+            "price": 198.73
+          }
+        ],
+        "total_cost": 983.77,
+        "vs_budget": -8.72
+      },
+      {
+        "symbol": "XLE",
+        "legs": [
+          {
+            "leg": "①",
+            "qty": 15,
+            "price": 61.85,
+            "filled_at": "01:45 UTC (24h 时段即时)"
+          },
+          {
+            "leg": "②",
+            "qty": 0.851628,
+            "price": 61.4
+          }
+        ],
+        "total_cost": 980.04,
+        "vs_budget": -12.45
+      },
+      {
+        "symbol": "XOM",
+        "legs": [
+          {
+            "leg": "①",
+            "qty": 6,
+            "price": 159.82,
+            "filled_at": "11:00 UTC (盘前 07:00 ET)"
+          },
+          {
+            "leg": "②",
+            "qty": 0.120007,
+            "price": 158.24
+          }
+        ],
+        "total_cost": 977.91,
+        "vs_budget": -14.58
+      },
+      {
+        "symbol": "OXY",
+        "legs": [
+          {
+            "leg": "①",
+            "qty": 16,
+            "price": 58.15,
+            "filled_at": "01:46 UTC (24h 时段即时)"
+          },
+          {
+            "leg": "②",
+            "qty": 0.839806,
+            "price": 57.93
+          }
+        ],
+        "total_cost": 979.05,
+        "vs_budget": -13.44
+      }
+    ],
+    "actual_total_usd": 4913.26,
+    "under_budget_usd": 49.19,
+    "fill_note": "9/9 腿全部成交。①腿**全部低于限价成交** (保守口径设计生效): 实际总支出 $4,913.26 vs 预算 $4,962.45, 少花 $49.19, 绝无超支。CVX/XLE/OXY 的①腿在 24h 时段**即时成交** (下单后 <1 秒), XOM 降级的 extended_hours ①腿于盘前 07:00 ET 成交。"
   }
 }
