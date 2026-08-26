@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-25",
   "generated_at": "2026-08-25T21:50:00Z",
-  "status": "partially_closed",
+  "status": "closed",
   "action": "sell_to_close",
   "channel": "手动 (agentic 账户不支持多腿组合单; 2026-08-21 复测仍 API 400)",
   "notice_stage": "① 主跑当晚预告已发 (playbook 4D 两步通知); ② 次日盘中会话主动发实时报价执行指令",
@@ -46,14 +46,14 @@
       }
     },
     "remaining": {
-      "contracts": 1,
-      "note": "引擎 exit_strength 信号为全平 4 张; 用户手动只平 3 张, 剩 1 张仍持有。"
+      "contracts": 0,
+      "note": "11:39 ET 用户以 $0.12 平掉最后 1 张, +$10。BAC 已全平。"
     },
     "working_order": {
       "order_id": "6a8f0839-afb2-48d2-9068-1f497123436b",
       "qty": 1,
       "limit_debit": 0.01,
-      "state": "confirmed",
+      "state": "cancelled",
       "assessment": "⚠️ 限价 $0.01 实际不可能成交 —— 仅短腿 P59 现值 bid $0.10, 净借记不可能低到 $0.01。gfd 将于今日收盘作废。"
     },
     "cancelled_order": {
@@ -62,6 +62,51 @@
       "limit_debit": 0.09,
       "state": "cancelled",
       "note": "用户自行撤销"
-    }
+    },
+    "second_fill": {
+      "contracts": 1,
+      "net_debit": 0.12,
+      "pnl_usd": 10.0,
+      "order_id": "6a8f08cc-b537-4fba-a6e5-2e8aff27238e",
+      "placed_agent": "user",
+      "filled_at": "2026-08-26T15:39:57Z",
+      "legs": {
+        "buy_to_close BAC260904P00059000": 0.15,
+        "sell_to_close BAC260904P00054000": 0.03
+      }
+    },
+    "total_pnl_usd": 43.0,
+    "order_sequence": [
+      {
+        "t": "11:33",
+        "limit": 0.09,
+        "qty": 1,
+        "result": "cancelled"
+      },
+      {
+        "t": "11:36",
+        "limit": 0.11,
+        "qty": 3,
+        "result": "filled +$33"
+      },
+      {
+        "t": "11:37",
+        "limit": 0.01,
+        "qty": 1,
+        "result": "cancelled (不可能成交)"
+      },
+      {
+        "t": "11:38",
+        "limit": 0.1,
+        "qty": 1,
+        "result": "cancelled"
+      },
+      {
+        "t": "11:39",
+        "limit": 0.12,
+        "qty": 1,
+        "result": "filled +$10"
+      }
+    ]
   }
 }

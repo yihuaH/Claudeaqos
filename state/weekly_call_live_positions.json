@@ -64,66 +64,6 @@
         "journal": "journal/2026-08-26-nvda-hold-through-earnings.md",
         "next_action": "08-27 10:00 ET 闹钟 trig_01KU16q3bLoR2E6Q6p6CYQCM → 4D 第②步执行指令 (🔴 DTE 1)"
       }
-    },
-    "BAC260904P00059000": {
-      "underlying": "BAC",
-      "strike": 59.0,
-      "expiry": "2026-09-04",
-      "contracts": 1,
-      "entry_premium": 0.22,
-      "entry_date": "2026-08-24",
-      "entry_underlying": 61.69,
-      "entry_rsi2": 5.29,
-      "entry_quote": {
-        "mid": 0.25,
-        "spread_pct": 7.407,
-        "long_spread_pct": 100.0,
-        "net_credit_conservative": 0.23
-      },
-      "model_price": 0.1666,
-      "structure": "credit_put_spread",
-      "long_occ": "BAC260904P00054000",
-      "long_strike": 54.0,
-      "risk_per_contract": 4.78,
-      "max_value_per_contract": 5.0,
-      "entry_legs": [
-        {
-          "symbol": "BAC260904P00059000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 59.0,
-          "quote": {
-            "bid": 0.26,
-            "ask": 0.28
-          },
-          "spread_pct": 7.407
-        },
-        {
-          "symbol": "BAC260904P00054000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 54.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.03
-          },
-          "spread_pct": 100.0
-        }
-      ],
-      "partial_closes": [
-        {
-          "date": "2026-08-26",
-          "contracts": 3,
-          "exit_premium": 0.11,
-          "pnl_usd": 33.0,
-          "order_id": "6a8f0810-d8dc-4c7f-a3c0-365df48bcca4",
-          "placed_agent": "user",
-          "legs_fill": {
-            "buy_to_close BAC260904P00059000": 0.12,
-            "sell_to_close BAC260904P00054000": 0.01
-          }
-        }
-      ]
     }
   },
   "trades": [
@@ -171,6 +111,15 @@
       "price": 0.11,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "BAC260904P00059000",
+      "side": "sell",
+      "qty": 1,
+      "price": 0.12,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -213,6 +162,27 @@
       "exit_mid": 0.095,
       "model_price": 0.1666,
       "_partial_note": "⚠️ **部分平仓 3/4 张** (用户手动)。`weekly_calls.py apply` 的卖出分支是 positions.pop(occ) 整仓移除, 不支持部分平仓 —— 若直接跑 apply 会把剩余 1 张从账本抹掉。故本笔**手工对账**: 记 3 张 round_trip + 持仓 contracts 4→1, 未跑 apply。引擎限制已记 anomalies 待修。"
+    },
+    {
+      "occ": "BAC260904P00059000",
+      "structure": "credit_put_spread",
+      "short_occ": "BAC260904P00059000",
+      "long_occ": "BAC260904P00054000",
+      "underlying": "BAC",
+      "entry_date": "2026-08-24",
+      "exit_date": "2026-08-26",
+      "entry_premium": 0.22,
+      "exit_premium": 0.12,
+      "contracts": 1,
+      "pnl_pct": 2.09,
+      "pnl_usd": 10.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 7.407,
+      "exit_spread_pct": null,
+      "entry_mid": 0.25,
+      "exit_mid": 0.11,
+      "model_price": 0.1666,
+      "_note": "BAC 最后 1 张。用户挂价序列 0.09(撤) -> 0.11x3(成) -> 0.01(撤) -> 0.10(撤) -> 0.12(成); 本笔买回 P59 @0.15 / 卖出 P54 @0.03。同上笔手工对账 (apply 不支持部分平仓且 context 已过期)。"
     }
   ],
   "skip_log": [
