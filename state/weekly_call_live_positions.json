@@ -53,7 +53,7 @@
       "underlying": "BAC",
       "strike": 59.0,
       "expiry": "2026-09-04",
-      "contracts": 4,
+      "contracts": 1,
       "entry_premium": 0.22,
       "entry_date": "2026-08-24",
       "entry_underlying": 61.69,
@@ -92,6 +92,20 @@
             "ask": 0.03
           },
           "spread_pct": 100.0
+        }
+      ],
+      "partial_closes": [
+        {
+          "date": "2026-08-26",
+          "contracts": 3,
+          "exit_premium": 0.11,
+          "pnl_usd": 33.0,
+          "order_id": "6a8f0810-d8dc-4c7f-a3c0-365df48bcca4",
+          "placed_agent": "user",
+          "legs_fill": {
+            "buy_to_close BAC260904P00059000": 0.12,
+            "sell_to_close BAC260904P00054000": 0.01
+          }
         }
       ]
     }
@@ -132,6 +146,15 @@
       "price": 0.22,
       "bucket": "weekly_calls",
       "reason": ""
+    },
+    {
+      "date": "2026-08-26",
+      "symbol": "BAC260904P00059000",
+      "side": "sell",
+      "qty": 3,
+      "price": 0.11,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -153,6 +176,27 @@
       "entry_mid": 1.515,
       "exit_mid": 0.79,
       "model_price": 6.8566
+    },
+    {
+      "occ": "BAC260904P00059000",
+      "structure": "credit_put_spread",
+      "short_occ": "BAC260904P00059000",
+      "long_occ": "BAC260904P00054000",
+      "underlying": "BAC",
+      "entry_date": "2026-08-24",
+      "exit_date": "2026-08-26",
+      "entry_premium": 0.22,
+      "exit_premium": 0.11,
+      "contracts": 3,
+      "pnl_pct": 2.3,
+      "pnl_usd": 33.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 7.407,
+      "exit_spread_pct": null,
+      "entry_mid": 0.25,
+      "exit_mid": 0.095,
+      "model_price": 0.1666,
+      "_partial_note": "⚠️ **部分平仓 3/4 张** (用户手动)。`weekly_calls.py apply` 的卖出分支是 positions.pop(occ) 整仓移除, 不支持部分平仓 —— 若直接跑 apply 会把剩余 1 张从账本抹掉。故本笔**手工对账**: 记 3 张 round_trip + 持仓 contracts 4→1, 未跑 apply。引擎限制已记 anomalies 待修。"
     }
   ],
   "skip_log": [
