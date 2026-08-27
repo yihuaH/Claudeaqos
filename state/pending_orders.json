@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-26",
   "generated_at": "2026-08-26T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-27 周四) 09:25 ET",
   "buying_power_at_generation": 3450.91,
   "orders": [
@@ -45,5 +45,61 @@
     "detail": "BP $3,450.91 ≥ 合计 $1,961.74, **资金充足无需截断**。明日 NVDA 价差平仓后另释放 $2,000 抵押。",
     "no_option_conflict": "本日期权轨道无买单, 无跨轨道资金冲突。"
   },
-  "note": "⚠️ LLY 当日 −3.60% ($1,233.66→$1,189.21), SAP −2.47% —— 均为 RSI-2 正常超卖入场形态, 非异常。"
+  "note": "⚠️ LLY 当日 −3.60% ($1,233.66→$1,189.21), SAP −2.47% —— 均为 RSI-2 正常超卖入场形态, 非异常。",
+  "executed_at": "2026-08-27T02:04:00Z",
+  "execution_summary": {
+    "mode": "盘外混合执行 (22:03 ET, 08-26 收盘后)",
+    "cap_formula": "实时 min(buying_power, cash) = min($3,455.30, $5,455.30) = $3,455.30",
+    "total_usd": 1961.74,
+    "buffer_left_usd": 1493.56,
+    "skipped": 0,
+    "note": "资金充足, 两单全执行无跳过。②腿余量按①腿限价计 (保守口径)。",
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "LLY",
+        "dollar_amount": 980.87,
+        "legs": [
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 980.87,
+            "order_id": "6a8f9aed-ebbc-4b1d-b7f3-82a924a0eecc",
+            "qty": 0.82358,
+            "state": "queued"
+          }
+        ],
+        "note": "①腿限价 $1,201.30 > 单额 $980.87 → whole=0, 无①腿, 整单走②腿分数市价排开盘 (同 URI 情形)"
+      },
+      {
+        "seq": 2,
+        "symbol": "SAP",
+        "dollar_amount": 980.87,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "extended_hours",
+            "qty": 4,
+            "limit_price": 213.8,
+            "order_id": "6a8f9af8-aca6-4e13-addc-1e2c58a97e2c",
+            "state": "queued",
+            "downgrade": "⚠️ all_day_hours 被拒 (API 400: instrument is untradable for 24 hour trading) → 按 4C 降级 extended_hours ✓"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 125.67,
+            "order_id": "6a8f9afe-76ad-4c76-b042-82a76dc53a90",
+            "qty": 0.59278,
+            "state": "queued"
+          }
+        ]
+      }
+    ],
+    "h24_whitelist_update": "实测累计 — ✅ 24h 可交易: MMM · TMO · AVGO · CVX · XLE · OXY | ⛔ 不可: TRV · USFD · EMR · XOM · **SAP (本次新增)**",
+    "ledger_writeback": "全部 queued 未成交 → 本次不回写; 08-27 晨检确认成交后回写"
+  }
 }
