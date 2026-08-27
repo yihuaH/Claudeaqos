@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-26",
   "generated_at": "2026-08-26T21:55:00Z",
-  "status": "awaiting_manual_close",
+  "status": "executed",
   "action": "sell_to_close",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
   "urgency": "🔴 **强平** — DTE 2, 08-28 到期; 08-27 必须成交",
@@ -40,5 +40,22 @@
   },
   "expiry": "2026-08-28",
   "dte_at_signal": 2,
-  "user_decision_ref": "用户 2026-08-26 决定持仓过财报、08-27 平仓, 详 journal/2026-08-26-nvda-hold-through-earnings.md"
+  "user_decision_ref": "用户 2026-08-26 决定持仓过财报、08-27 平仓, 详 journal/2026-08-26-nvda-hold-through-earnings.md",
+  "outcome": {
+    "executed_at": "2026-08-27T09:36:34-04:00",
+    "channel_used": "用户 App 手动 (placed_agent=user)",
+    "order_id": "6a903d62-08f6-4202-b1a7-93a5df242fad",
+    "state": "filled",
+    "limit_price": 0.3,
+    "net_debit_filled": 0.3,
+    "leg_fills": {
+      "NVDA260828P00210000": 0.32,
+      "NVDA260828P00190000": 0.02
+    },
+    "fees_usd": 0.1,
+    "underlying_at_fill": 222.4,
+    "pnl_usd": 296.0,
+    "pnl_pct_of_risk": 17.68,
+    "note": "引擎 est_debit 5.80 (08-26 收盘) 已按 final_limit_rule 作废; 实际按 08-27 实时报价成交于 0.30。"
+  }
 }
