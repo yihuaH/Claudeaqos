@@ -100,6 +100,43 @@
       }
     ],
     "h24_whitelist_update": "实测累计 — ✅ 24h 可交易: MMM · TMO · AVGO · CVX · XLE · OXY | ⛔ 不可: TRV · USFD · EMR · XOM · **SAP (本次新增)**",
-    "ledger_writeback": "全部 queued 未成交 → 本次不回写; 08-27 晨检确认成交后回写"
+    "ledger_writeback": "全部 queued 未成交 → 本次不回写; 08-27 晨检确认成交后回写",
+    "fills_confirmed_at": "2026-08-27T14:50:00Z",
+    "fills": [
+      {
+        "symbol": "LLY",
+        "legs": [
+          {
+            "leg": "②",
+            "qty": 0.831245,
+            "price": 1180.0,
+            "filled_at": "09:30:01 ET"
+          }
+        ],
+        "total_cost": 980.87,
+        "vs_budget": 0.0
+      },
+      {
+        "symbol": "SAP",
+        "legs": [
+          {
+            "leg": "①",
+            "qty": 4,
+            "price": 213.49,
+            "filled_at": "07:00 ET (extended_hours)"
+          },
+          {
+            "leg": "②",
+            "qty": 0.581106,
+            "price": 216.26,
+            "filled_at": "09:30:01 ET"
+          }
+        ],
+        "total_cost": 979.63,
+        "vs_budget": -1.24
+      }
+    ],
+    "actual_total_usd": 1960.5,
+    "fill_note": "3/3 腿全成。SAP ①腿 extended_hours 于盘前 07:00 ET 以 $213.49 成交 (低于限价 $213.80); ②腿开盘 $216.26 (盘前买到更便宜)。LLY 开盘 $1,180.00, 低于 est $1,189.41 0.79%。实付 $1,960.50 vs 预算 $1,961.74。"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 10164.78,
+  "high_water_mark": 10325.49215168,
   "halted": false,
   "strategy_positions": {
     "URI": {
@@ -35,6 +35,20 @@
       "entry_price": 58.139,
       "entry_date": "2026-08-26",
       "cost": 979.05,
+      "tranches": 1
+    },
+    "LLY": {
+      "qty": 0.831245,
+      "entry_price": 1180.0,
+      "entry_date": "2026-08-27",
+      "cost": 980.87,
+      "tranches": 1
+    },
+    "SAP": {
+      "qty": 4.581106,
+      "entry_price": 213.8414,
+      "entry_date": "2026-08-27",
+      "cost": 979.63,
       "tranches": 1
     }
   },
@@ -1189,6 +1203,33 @@
       "side": "buy",
       "qty": 0.839806,
       "price": 57.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "LLY",
+      "side": "buy",
+      "qty": 0.831245,
+      "price": 1180.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "SAP",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 213.49,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "SAP",
+      "side": "buy",
+      "qty": 0.581106,
+      "price": 216.26,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
     }
