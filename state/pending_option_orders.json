@@ -1,61 +1,62 @@
 {
-  "trade_date": "2026-08-26",
-  "generated_at": "2026-08-26T21:55:00Z",
-  "status": "executed",
-  "action": "sell_to_close",
+  "trade_date": "2026-08-27",
+  "generated_at": "2026-08-27T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-28 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
-  "urgency": "🔴 **强平** — DTE 2, 08-28 到期; 08-27 必须成交",
-  "notice_stage": "① 主跑当晚预告 (本条); ② 08-27 盘中会话主动发实时报价执行指令 (闹钟 trig_01KU16q3bLoR2E6Q6p6CYQCM 10:00 ET)",
-  "order": {
-    "underlying": "NVDA",
-    "structure": "credit_put_spread",
-    "qty": 1,
-    "reason": "expiry_close",
-    "direction": "debit",
-    "engine_est_debit": 5.8,
-    "legs": {
-      "buy_to_close": "NVDA260828P00210000 (8/28 P210)",
-      "sell_to_close": "NVDA260828P00190000 (8/28 P190)"
-    },
-    "entry_credit": 3.26,
-    "exit_quote_at_signal": {
-      "short_ask": 6.36,
-      "long_bid": 0.56,
-      "net_debit": 5.8,
-      "mid": 5.675
-    },
-    "est_pnl_usd_at_close_quote": -254,
-    "⚠️_earnings_gap": {
-      "note": "⚠️ **上述 est 基于 08-26 收盘报价, 已过时** —— NVDA 财报于 08-26 盘后发布, 盘后正股由 $209.95 跳至 **$219.38 (+4.49%)**。",
-      "regular_close": 209.95,
-      "after_hours": 219.38,
-      "gap_pct": 4.49,
-      "implication": "盘后价 $219.38 **远高于短腿行权价 $210** → 价差趋近作废。若 08-27 维持此价位, 平仓成本应接近 $0, 盈亏接近**最大收益 +$326**。",
-      "expiry_pnl_if_holds": {
-        "at_209.95": 321,
-        "at_219.38": 326
-      }
-    },
-    "final_limit_rule": "⚠️ 最终限价**必须**按 08-27 盘中实时报价重算 (短腿ask − 长腿bid), 绝不用本条的收盘 est (playbook 4D 限价锚定 2026-08-20 修正)。财报跳空后旧 est 严重失真。"
-  },
-  "expiry": "2026-08-28",
-  "dte_at_signal": 2,
-  "user_decision_ref": "用户 2026-08-26 决定持仓过财报、08-27 平仓, 详 journal/2026-08-26-nvda-hold-through-earnings.md",
-  "outcome": {
-    "executed_at": "2026-08-27T09:36:34-04:00",
-    "channel_used": "用户 App 手动 (placed_agent=user)",
-    "order_id": "6a903d62-08f6-4202-b1a7-93a5df242fad",
-    "state": "filled",
-    "limit_price": 0.3,
-    "net_debit_filled": 0.3,
-    "leg_fills": {
-      "NVDA260828P00210000": 0.32,
-      "NVDA260828P00190000": 0.02
-    },
-    "fees_usd": 0.1,
-    "underlying_at_fill": 222.4,
-    "pnl_usd": 296.0,
-    "pnl_pct_of_risk": 17.68,
-    "note": "引擎 est_debit 5.80 (08-26 收盘) 已按 final_limit_rule 作废; 实际按 08-27 实时报价成交于 0.30。"
-  }
+  "orders": [
+    {
+      "seq": 1,
+      "action": "buy_to_open",
+      "structure": "credit_put_spread",
+      "qty": 3,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
+      "legs": [
+        {
+          "symbol": "BAC260911P00059000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 59.0,
+          "quote": {
+            "bid": 0.32,
+            "ask": 0.36
+          },
+          "spread_pct": 11.765
+        },
+        {
+          "symbol": "BAC260911P00053000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 53.0,
+          "quote": {
+            "bid": 0.03,
+            "ask": 0.07
+          },
+          "spread_pct": 80.0
+        }
+      ],
+      "est_price": 0.25,
+      "direction": "credit",
+      "underlying": "BAC",
+      "expiry": "2026-09-11",
+      "dte": 15,
+      "spot": 61.17,
+      "rsi2": 8.13,
+      "model_price": 0.2067,
+      "entry_quote": {
+        "mid": 0.29,
+        "spread_pct": 11.765,
+        "long_spread_pct": 80.0,
+        "net_credit_conservative": 0.25
+      },
+      "risk_per_contract": 5.75,
+      "max_value_per_contract": 6.0,
+      "max_loss_usd": 1725.0,
+      "max_gain_usd": 75.0,
+      "limit_floor": 0.24
+    }
+  ],
+  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict — 与股票买单合计超 BP, 优先级待用户定",
+  "risk_note": "3 张在险 $1725 = 净值 16.7%; 最大收益 $75 (4.3% / 15天)。长腿点差 80% 靠绝对闸过关。"
 }

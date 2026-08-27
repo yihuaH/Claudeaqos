@@ -1,21 +1,54 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-26",
+  "date": "2026-08-27",
   "coid_prefix": "cqw",
-  "next_open": "2026-08-27T09:30:00-04:00",
+  "next_open": "2026-08-28T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cqw-2026-08-26-XLI260828C00160000-sell",
-      "order_id": "d9993f65-348b-4990-84c2-81371e001ba0",
+      "coid": "cqw-2026-08-27-NVDA260904C00195000-sell",
+      "order_id": "59b2928c-37dc-41a6-8c5b-86142c497e2b",
+      "symbol": "NVDA260904C00195000",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "32.59",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cqw-2026-08-27-XLI260828C00160000-sell",
+      "order_id": "23bb8522-28e0-434c-bdd5-ce5c975d798e",
       "symbol": "XLI260828C00160000",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "19.8",
+      "limit_price": "18.47",
       "qty": "1",
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "coid": "cqw-2026-08-27-BAC260904C00052000-buy",
+      "order_id": "68544392-a208-4e00-a397-9ecb1906eb77",
+      "symbol": "BAC260904C00052000",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "9.51",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "coid": "cqw-2026-08-27-AMZN260904C00230000-buy",
+      "order_id": "17cd2f98-f53f-4205-99b3-42b1c764ce21",
+      "symbol": "AMZN260904C00230000",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "27.15",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ]
 }

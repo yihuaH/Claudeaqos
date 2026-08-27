@@ -1,142 +1,96 @@
 {
-  "trade_date": "2026-08-26",
-  "generated_at": "2026-08-26T21:55:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-08-27 周四) 09:25 ET",
-  "buying_power_at_generation": 3450.91,
+  "trade_date": "2026-08-27",
+  "generated_at": "2026-08-27T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-28 周五) 09:25 ET",
+  "buying_power_at_generation": 3464.7,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "LLY",
-      "dollar_amount": 980.87,
+      "symbol": "ABT",
+      "dollar_amount": 1035.15,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1189.41,
-      "rsi2": 6.4,
+      "est_price": 111.59,
+      "rsi2": 5.33,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "SAP",
-      "dollar_amount": 980.87,
+      "symbol": "CPAY",
+      "dollar_amount": 1035.15,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 211.68,
-      "rsi2": 7.62,
+      "est_price": 403.67,
+      "rsi2": 6.79,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "BKNG",
+      "dollar_amount": 1035.15,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 202.56,
+      "rsi2": 7.04,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "BAC",
+      "dollar_amount": 1035.15,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 61.17,
+      "rsi2": 8.13,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "KO",
+      "dollar_amount": 332.3,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 89.06,
+      "rsi2": 9.27,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "news_precheck": {
     "symbols": [
-      "LLY",
-      "SAP"
+      "ABT",
+      "CPAY",
+      "BKNG",
+      "BAC",
+      "KO"
     ],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-19→2026-08-26",
+    "source": "integrations.py news 2026-08-20→2026-08-27",
     "assessment": "无红旗。"
   },
-  "funding_note": {
-    "bp_at_generation": 3450.91,
-    "total_usd": 1961.74,
-    "detail": "BP $3,450.91 ≥ 合计 $1,961.74, **资金充足无需截断**。明日 NVDA 价差平仓后另释放 $2,000 抵押。",
-    "no_option_conflict": "本日期权轨道无买单, 无跨轨道资金冲突。"
+  "funding_conflict": {
+    "detected": true,
+    "stock_buys_usd": 4472.9,
+    "option_buys_collateral_usd": 1725.0,
+    "combined_usd": 6197.9,
+    "available_usd": 3464.7,
+    "overshoot_usd": 2733.2,
+    "note": "⚠️ **第 3 次**跨轨道资金冲突 (前两次 08-20 / 08-25 均由用户逐次决定「期权优先」)。常规规则仍未定。SAP 出场回款 ≈$1,013 于 08-28 开盘到账, 但 pending 09:25 过期 —— 老问题, 该笔回款本批用不上。",
+    "options_for_user": [
+      "A. 股票优先 — 前 3 单 ABT/CPAY/BKNG $3105.45 装得下, 期权跳过",
+      "B. 期权优先 — BAC 价差占 $1725, 股票剩 $1739.70 够 1 单 + KO 零头",
+      "C. 只做股票不做期权"
+    ]
   },
-  "note": "⚠️ LLY 当日 −3.60% ($1,233.66→$1,189.21), SAP −2.47% —— 均为 RSI-2 正常超卖入场形态, 非异常。",
-  "executed_at": "2026-08-27T02:04:00Z",
-  "execution_summary": {
-    "mode": "盘外混合执行 (22:03 ET, 08-26 收盘后)",
-    "cap_formula": "实时 min(buying_power, cash) = min($3,455.30, $5,455.30) = $3,455.30",
-    "total_usd": 1961.74,
-    "buffer_left_usd": 1493.56,
-    "skipped": 0,
-    "note": "资金充足, 两单全执行无跳过。②腿余量按①腿限价计 (保守口径)。",
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "LLY",
-        "dollar_amount": 980.87,
-        "legs": [
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 980.87,
-            "order_id": "6a8f9aed-ebbc-4b1d-b7f3-82a924a0eecc",
-            "qty": 0.82358,
-            "state": "queued"
-          }
-        ],
-        "note": "①腿限价 $1,201.30 > 单额 $980.87 → whole=0, 无①腿, 整单走②腿分数市价排开盘 (同 URI 情形)"
-      },
-      {
-        "seq": 2,
-        "symbol": "SAP",
-        "dollar_amount": 980.87,
-        "legs": [
-          {
-            "leg": "①",
-            "type": "limit",
-            "market_hours": "extended_hours",
-            "qty": 4,
-            "limit_price": 213.8,
-            "order_id": "6a8f9af8-aca6-4e13-addc-1e2c58a97e2c",
-            "state": "queued",
-            "downgrade": "⚠️ all_day_hours 被拒 (API 400: instrument is untradable for 24 hour trading) → 按 4C 降级 extended_hours ✓"
-          },
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 125.67,
-            "order_id": "6a8f9afe-76ad-4c76-b042-82a76dc53a90",
-            "qty": 0.59278,
-            "state": "queued"
-          }
-        ]
-      }
-    ],
-    "h24_whitelist_update": "实测累计 — ✅ 24h 可交易: MMM · TMO · AVGO · CVX · XLE · OXY | ⛔ 不可: TRV · USFD · EMR · XOM · **SAP (本次新增)**",
-    "ledger_writeback": "全部 queued 未成交 → 本次不回写; 08-27 晨检确认成交后回写",
-    "fills_confirmed_at": "2026-08-27T14:50:00Z",
-    "fills": [
-      {
-        "symbol": "LLY",
-        "legs": [
-          {
-            "leg": "②",
-            "qty": 0.831245,
-            "price": 1180.0,
-            "filled_at": "09:30:01 ET"
-          }
-        ],
-        "total_cost": 980.87,
-        "vs_budget": 0.0
-      },
-      {
-        "symbol": "SAP",
-        "legs": [
-          {
-            "leg": "①",
-            "qty": 4,
-            "price": 213.49,
-            "filled_at": "07:00 ET (extended_hours)"
-          },
-          {
-            "leg": "②",
-            "qty": 0.581106,
-            "price": 216.26,
-            "filled_at": "09:30:01 ET"
-          }
-        ],
-        "total_cost": 979.63,
-        "vs_budget": -1.24
-      }
-    ],
-    "actual_total_usd": 1960.5,
-    "fill_note": "3/3 腿全成。SAP ①腿 extended_hours 于盘前 07:00 ET 以 $213.49 成交 (低于限价 $213.80); ②腿开盘 $216.26 (盘前买到更便宜)。LLY 开盘 $1,180.00, 低于 est $1,189.41 0.79%。实付 $1,960.50 vs 预算 $1,961.74。"
-  }
+  "note": "XOM(RSI2 2.04)/LLY(4.42)/URI(7.76) 在候选但已持仓且未触加仓线; COP 被能源行业上限拦 (已持 CVX/XLE/XOM/OXY 中 3 只计数); ROST/SCHW/ABBV/MNST 因资金不足被引擎跳过。"
 }

@@ -10,46 +10,11 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "MTB": {
-      "qty": 39.0,
-      "entry_price": 244.31,
-      "entry_date": "2026-08-20",
-      "cost": 9528.09,
-      "tranches": 1
-    },
-    "JCI": {
-      "qty": 67.0,
-      "entry_price": 142.76,
-      "entry_date": "2026-08-24",
-      "cost": 9564.92,
-      "tranches": 1
-    },
-    "RTX": {
-      "qty": 45.0,
-      "entry_price": 209.524889,
-      "entry_date": "2026-08-24",
-      "cost": 9428.62,
-      "tranches": 1
-    },
-    "HWM": {
-      "qty": 8.0,
-      "entry_price": 270.993749,
-      "entry_date": "2026-08-24",
-      "cost": 2167.95,
-      "tranches": 1
-    },
     "TXN": {
       "qty": 37.0,
       "entry_price": 262.172973,
       "entry_date": "2026-08-25",
       "cost": 9700.4,
-      "tranches": 1
-    },
-    "XLK": {
-      "qty": 11.0,
-      "entry_price": 182.403636,
-      "entry_date": "2026-08-25",
-      "cost": 2006.44,
       "tranches": 1
     },
     "URI": {
@@ -85,6 +50,20 @@
       "entry_price": 58.11,
       "entry_date": "2026-08-26",
       "cost": 9646.26,
+      "tranches": 1
+    },
+    "LLY": {
+      "qty": 8.0,
+      "entry_price": 1185.75,
+      "entry_date": "2026-08-27",
+      "cost": 9486.0,
+      "tranches": 1
+    },
+    "SAP": {
+      "qty": 46.0,
+      "entry_price": 216.851957,
+      "entry_date": "2026-08-27",
+      "cost": 9975.19,
       "tranches": 1
     }
   },
@@ -978,6 +957,69 @@
       "side": "buy",
       "qty": 166.0,
       "price": 58.11,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "MTB",
+      "side": "sell",
+      "qty": 39.0,
+      "price": 237.187692,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "JCI",
+      "side": "sell",
+      "qty": 67.0,
+      "price": 144.2,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "RTX",
+      "side": "sell",
+      "qty": 45.0,
+      "price": 210.828,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "HWM",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 267.98125,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "XLK",
+      "side": "sell",
+      "qty": 11.0,
+      "price": 186.13,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "LLY",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 1185.75,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "SAP",
+      "side": "buy",
+      "qty": 46.0,
+      "price": 216.851957,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
