@@ -2,70 +2,7 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "NVDA260828P00210000": {
-      "underlying": "NVDA",
-      "strike": 210.0,
-      "expiry": "2026-08-28",
-      "contracts": 1,
-      "entry_premium": 3.26,
-      "entry_date": "2026-08-21",
-      "entry_underlying": 216.85,
-      "entry_rsi2": 4.71,
-      "entry_quote": {
-        "mid": 3.205,
-        "spread_pct": 3.026,
-        "long_spread_pct": 4.651,
-        "net_credit_conservative": 3.14
-      },
-      "model_price": 2.867,
-      "structure": "credit_put_spread",
-      "long_occ": "NVDA260828P00190000",
-      "long_strike": 190.0,
-      "risk_per_contract": 16.74,
-      "max_value_per_contract": 20.0,
-      "entry_legs": [
-        {
-          "symbol": "NVDA260828P00210000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 210.0,
-          "quote": {
-            "bid": 3.58,
-            "ask": 3.69
-          },
-          "spread_pct": 3.026
-        },
-        {
-          "symbol": "NVDA260828P00190000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 190.0,
-          "quote": {
-            "bid": 0.42,
-            "ask": 0.44
-          },
-          "spread_pct": 4.651
-        }
-      ],
-      "user_decision": {
-        "date": "2026-08-26",
-        "decision": "hold_through_earnings_close_next_day",
-        "instruction": "用户「明天平吧」",
-        "context": "NVDA 财报 08-26 盘后; 用户看过新闻扫描/10次历史反应/凯利/隐含分布/IV塌陷模型后主动选择持仓过财报, 08-27 盘中平仓",
-        "at_decision": {
-          "spot": 211.02,
-          "close_cost_conservative": 5.0,
-          "pnl_if_closed_today": -174,
-          "breakeven_at_expiry": 206.74,
-          "cushion_pct": 2.03
-        },
-        "override_note": "⚠️ 本决定是对系统 7 天财报黑窗纪律的**知情覆盖**。该仓位本身是数据缺口产物 (08-20 earnings.json 未含 NVDA), 非策略主动选择。",
-        "journal": "journal/2026-08-26-nvda-hold-through-earnings.md",
-        "next_action": "08-27 10:00 ET 闹钟 trig_01KU16q3bLoR2E6Q6p6CYQCM → 4D 第②步执行指令 (🔴 DTE 1)"
-      }
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -120,6 +57,15 @@
       "price": 0.12,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "NVDA260828P00210000",
+      "side": "sell",
+      "qty": 1,
+      "price": 0.3,
+      "bucket": "weekly_calls",
+      "reason": "expiry_close"
     }
   ],
   "round_trips": [
@@ -183,6 +129,36 @@
       "exit_mid": 0.11,
       "model_price": 0.1666,
       "_note": "BAC 最后 1 张。用户挂价序列 0.09(撤) -> 0.11x3(成) -> 0.01(撤) -> 0.10(撤) -> 0.12(成); 本笔买回 P59 @0.15 / 卖出 P54 @0.03。同上笔手工对账 (apply 不支持部分平仓且 context 已过期)。"
+    },
+    {
+      "occ": "NVDA260828P00210000",
+      "structure": "credit_put_spread",
+      "short_occ": null,
+      "long_occ": "NVDA260828P00190000",
+      "underlying": "NVDA",
+      "entry_date": "2026-08-21",
+      "exit_date": "2026-08-27",
+      "entry_premium": 3.26,
+      "exit_premium": 0.3,
+      "pnl_pct": 17.68,
+      "pnl_usd": 296.0,
+      "reason": "expiry_close",
+      "entry_spread_pct": 3.026,
+      "exit_spread_pct": 3.033,
+      "entry_mid": 3.205,
+      "exit_mid": 5.675,
+      "model_price": 2.867,
+      "_note": "⚠️ 两点审计留痕: ① **本仓是用户知情覆盖财报黑窗的产物** — 08-20 earnings.json 缺 NVDA 数据导致建仓, 08-26 用户看过赔率结构后主动选择持仓过财报 (journal/2026-08-26-nvda-hold-through-earnings.md)。结果 +$296 是**单次结果, 不构成决策正确性证据**: 决策时赢顶 +$326 / 输面可达 −$1,674, 历史 10 次里 4 次跌超安全边界。做同类样本统计时须剔除或单列, 不得据此放大同类赌注。 ② **exit_mid 5.675 / exit_spread_pct 3.033 是 08-26 context 的陈旧值, 不是 08-27 真实出场报价** (真实出场 mid ≈ 0.20, 净借记成交 0.30)。摩擦统计用到这两个字段时须排除本笔。",
+      "_exit_actual": {
+        "exit_date_quote_time": "2026-08-27T09:36:34-04:00",
+        "underlying_at_exit": 222.4,
+        "short_leg_fill": 0.32,
+        "long_leg_fill": 0.02,
+        "net_debit": 0.3,
+        "fees_usd": 0.1,
+        "order_id": "6a903d62-08f6-4202-b1a7-93a5df242fad",
+        "placed_agent": "user"
+      }
     }
   ],
   "skip_log": [
