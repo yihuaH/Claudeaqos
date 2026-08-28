@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-08-27",
   "generated_at": "2026-08-27T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-08-28 周五) 09:25 ET",
   "buying_power_at_generation": 3464.7,
   "orders": [
@@ -92,5 +92,95 @@
       "C. 只做股票不做期权"
     ]
   },
-  "note": "XOM(RSI2 2.04)/LLY(4.42)/URI(7.76) 在候选但已持仓且未触加仓线; COP 被能源行业上限拦 (已持 CVX/XLE/XOM/OXY 中 3 只计数); ROST/SCHW/ABBV/MNST 因资金不足被引擎跳过。"
+  "note": "XOM(RSI2 2.04)/LLY(4.42)/URI(7.76) 在候选但已持仓且未触加仓线; COP 被能源行业上限拦 (已持 CVX/XLE/XOM/OXY 中 3 只计数); ROST/SCHW/ABBV/MNST 因资金不足被引擎跳过。",
+  "executed_at": "2026-08-28T01:52:00Z",
+  "execution_summary": {
+    "user_directive": "「期权优先」(2026-08-27) —— 用户回答的是「要不要定常规规则」, 故**记为常规规则**, 非一次性",
+    "cap_formula": "股票 cap = 实时 min(BP $3,464.70, cash $3,464.70) − 期权抵押 $1,725.00 = $1,739.70",
+    "mode": "盘外混合执行 (21:51 ET)",
+    "available_usd": 3464.7,
+    "option_collateral_reserved_usd": 1725.0,
+    "stock_cap_usd": 1739.7,
+    "executed_usd": 1367.45,
+    "buffer_left_usd": 372.25,
+    "skip_rule": "逐 seq 累计, 装不下整单跳过不缩量 (红线3)",
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "ABT",
+        "dollar_amount": 1035.15,
+        "result": "executed",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 9,
+            "limit_price": 112.71,
+            "order_id": "6a90e99b-df54-41f5-98df-b624d1a8471e",
+            "state": "unconfirmed"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 20.76,
+            "order_id": "6a90e9a1-b60f-4f58-b7f8-3358c0443590",
+            "qty": 0.18552,
+            "state": "queued"
+          }
+        ]
+      },
+      {
+        "seq": 2,
+        "symbol": "CPAY",
+        "dollar_amount": 1035.15,
+        "result": "skipped",
+        "reason": "期权优先分账后累计 $2,070.30 > cap $1,739.70, 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "BKNG",
+        "dollar_amount": 1035.15,
+        "result": "skipped",
+        "reason": "超 cap, 整单跳过不缩量"
+      },
+      {
+        "seq": 4,
+        "symbol": "BAC",
+        "dollar_amount": 1035.15,
+        "result": "skipped",
+        "reason": "超 cap, 整单跳过不缩量"
+      },
+      {
+        "seq": 5,
+        "symbol": "KO",
+        "dollar_amount": 332.3,
+        "result": "executed",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 3,
+            "limit_price": 89.95,
+            "order_id": "6a90e9a7-efb7-4706-9a79-954e8ab3fa00",
+            "state": "unconfirmed"
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 62.45,
+            "order_id": "6a90e9ac-d9c0-4b21-abce-e342aa4d1343",
+            "qty": 0.69838,
+            "state": "queued"
+          }
+        ]
+      }
+    ],
+    "h24_whitelist_update": "✅ 24h 可交易新增: ABT · KO (①腿 all_day_hours 均获受理) | 累计 ⛔ 不可: TRV · USFD · EMR · XOM · SAP",
+    "note": "⚠️ BAC (seq4) 被跳过, 但期权轨道的 BAC 信用put价差**仍待用户手动下单** —— 两者是不同轨道的不同头寸, 跳过股票买单不影响期权单。",
+    "ledger_writeback": "4 张腿单全部 queued/unconfirmed 未成交 → 本次不回写; 08-28 晨检确认成交后回写"
+  }
 }
