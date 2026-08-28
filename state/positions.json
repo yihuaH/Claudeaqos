@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 10325.49215168,
+  "high_water_mark": 10352.09,
   "halted": false,
   "strategy_positions": {
     "URI": {
@@ -49,6 +49,27 @@
       "entry_price": 213.8414,
       "entry_date": "2026-08-27",
       "cost": 979.63,
+      "tranches": 1
+    },
+    "ABT": {
+      "qty": 9.0,
+      "entry_price": 111.9,
+      "entry_date": "2026-08-27",
+      "cost": 1007.1,
+      "tranches": 1
+    },
+    "KO": {
+      "qty": 3.0,
+      "entry_price": 89.43,
+      "entry_date": "2026-08-27",
+      "cost": 268.29,
+      "tranches": 1
+    },
+    "BAC": {
+      "qty": 2.0,
+      "entry_price": 61.3,
+      "entry_date": "2026-08-27",
+      "cost": 122.6,
       "tranches": 1
     }
   },
@@ -1232,6 +1253,33 @@
       "price": 216.26,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "ABT",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 111.9,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "KO",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 89.43,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-27",
+      "symbol": "BAC",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 61.3,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

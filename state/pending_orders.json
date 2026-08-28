@@ -135,22 +135,22 @@
         "seq": 2,
         "symbol": "CPAY",
         "dollar_amount": 1035.15,
-        "result": "skipped",
-        "reason": "期权优先分账后累计 $2,070.30 > cap $1,739.70, 整单跳过不缩量"
+        "result": "skipped_then_prorated",
+        "reason": "期权优先分账后累计 $2,070.30 > cap $1,739.70, 首轮整单跳过; 用户随后指示「剩余的bp按比例分给要买的股票」, 见 second_allocation"
       },
       {
         "seq": 3,
         "symbol": "BKNG",
         "dollar_amount": 1035.15,
-        "result": "skipped",
-        "reason": "超 cap, 整单跳过不缩量"
+        "result": "skipped_then_prorated",
+        "reason": "同上"
       },
       {
         "seq": 4,
         "symbol": "BAC",
         "dollar_amount": 1035.15,
-        "result": "skipped",
-        "reason": "超 cap, 整单跳过不缩量"
+        "result": "skipped_then_prorated",
+        "reason": "同上"
       },
       {
         "seq": 5,
@@ -181,6 +181,90 @@
     ],
     "h24_whitelist_update": "✅ 24h 可交易新增: ABT · KO (①腿 all_day_hours 均获受理) | 累计 ⛔ 不可: TRV · USFD · EMR · XOM · SAP",
     "note": "⚠️ BAC (seq4) 被跳过, 但期权轨道的 BAC 信用put价差**仍待用户手动下单** —— 两者是不同轨道的不同头寸, 跳过股票买单不影响期权单。",
-    "ledger_writeback": "4 张腿单全部 queued/unconfirmed 未成交 → 本次不回写; 08-28 晨检确认成交后回写"
+    "ledger_writeback": "①腿 ABT 9@$111.90 / KO 3@$89.43 已成交并回写; ②腿排开盘, 08-28 晨检回写"
+  },
+  "second_allocation": {
+    "user_directive": "「剩余的bp按比例分给要买的股票」(2026-08-27 22:2x ET)",
+    "override": "**覆盖 playbook §4C-2「装不下整单跳过不缩量」** —— 首轮跳过的 CPAY/BKNG/BAC 改为按比例摊分剩余可用资金。用户指令, 非引擎判断, 非会话自主决定 (红线2 约束的是会话的自由裁量, 不是用户的政策决定); 方向为缩量 = 更保守, 不触红线3。",
+    "at": "2026-08-28T02:24:00Z",
+    "available_calc": {
+      "realtime_buying_power": 2106.1,
+      "realtime_cash": 2189.31,
+      "basis_min_bp_cash": 2106.1,
+      "option_collateral_reserved_usd": 1725.0,
+      "min_cash_reserve_usd": 5.0,
+      "allocatable_usd": 376.1
+    },
+    "proration": "三单原额同为 $1,035.15 → 权重各 1/3 → 每只 floor($376.10/3) = $125.36 (合计 $376.08, 余 $0.02 未用)",
+    "orders": [
+      {
+        "seq": 2,
+        "symbol": "CPAY",
+        "dollar_amount": 125.36,
+        "est_price": 403.67,
+        "legs": [
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 125.36,
+            "qty": 0.31055,
+            "order_id": "6a90f165-ddc2-48db-83e0-db958fb6e072",
+            "state": "queued",
+            "note": "whole = floor(125.36 / (403.67×1.010=407.71)) = 0 → 无①腿, 整额走②腿 (playbook 4C)"
+          }
+        ]
+      },
+      {
+        "seq": 3,
+        "symbol": "BKNG",
+        "dollar_amount": 125.36,
+        "est_price": 202.56,
+        "legs": [
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 125.36,
+            "qty": 0.61541,
+            "order_id": "6a90f169-7153-4621-9618-a1fab2d35d6e",
+            "state": "queued",
+            "note": "whole = floor(125.36 / (202.56×1.010=204.59)) = 0 → 无①腿"
+          }
+        ]
+      },
+      {
+        "seq": 4,
+        "symbol": "BAC",
+        "dollar_amount": 125.36,
+        "est_price": 61.17,
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 2,
+            "limit_price": 61.78,
+            "order_id": "6a90f161-e7be-403f-a736-652322df3b56",
+            "state": "filled",
+            "fill_price": 61.3,
+            "cost": 122.6
+          },
+          {
+            "leg": "②",
+            "result": "skipped",
+            "reason": "remaining $125.36 − $122.60 = $2.76 < min_order_usd $5.00 (playbook 4C)"
+          }
+        ]
+      }
+    ],
+    "post_state": {
+      "cash": 2066.71,
+      "buying_power": 1732.78,
+      "queued_holds_usd": 333.93,
+      "check": "自由 BP $1,732.78 ≥ 期权抵押 $1,725.00 ✅ (缓冲 $7.78); 08-28 开盘 SAP 回款 ≈$1,013 到账后余量更宽"
+    },
+    "h24_whitelist_update": "✅ 24h 可交易新增: BAC (①腿 all_day_hours 即时成交 $61.30)",
+    "sizing_caveat": "⚠️ 三只新仓各 ≈$125 = 净值 1.2%, 远低于引擎设计的 10%/仓。出场逻辑 (RSI2≥65 / −7% 止损 / 10日时间止损) 与行业上限槽位照常占用, 但盈亏贡献只有设计值的约 1/8。这是**用户明示的资金分配选择**, 记录在案。"
   }
 }
