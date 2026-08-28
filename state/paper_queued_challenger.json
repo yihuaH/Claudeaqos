@@ -1,87 +1,110 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-27",
+  "date": "2026-08-28",
   "coid_prefix": "cq",
-  "next_open": "2026-08-28T09:30:00-04:00",
+  "next_open": "2026-08-31T09:30:00-04:00",
   "skipped": [
-    "DIA sell: 排队限价下买不起 1 整股, 跳过"
+    "DIA sell: 排队限价下买不起 1 整股, 跳过",
+    "URI buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-08-27-TXN-sell",
-      "order_id": "ed68a09a-e33a-491c-ba4f-5c236d8d1b4a",
-      "symbol": "TXN",
+      "coid": "cq-2026-08-28-URI-sell",
+      "order_id": "db5e3186-4943-494b-86a4-9b1ae1eda9b5",
+      "symbol": "URI",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "258.54",
-      "qty": "37",
+      "limit_price": "999.34",
+      "qty": "9",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-08-27-SAP-sell",
-      "order_id": "bcc145d9-4fe8-4d92-a138-e750a4e2bb76",
-      "symbol": "SAP",
+      "coid": "cq-2026-08-28-CVX-sell",
+      "order_id": "a5227509-abea-4344-b14e-b080698187ab",
+      "symbol": "CVX",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "214.53",
-      "qty": "46",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-08-27-ABT-buy",
-      "order_id": "4c879934-64a0-4960-b1e8-6c655008996a",
-      "symbol": "ABT",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "114.94",
-      "qty": "87",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-27-CPAY-buy",
-      "order_id": "1ccee53f-08fb-41d7-89d2-b4b00196b934",
-      "symbol": "CPAY",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "415.78",
-      "qty": "24",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-27-BKNG-buy",
-      "order_id": "8b221e9f-5229-46f0-bbb3-f0da89857b9d",
-      "symbol": "BKNG",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "208.64",
+      "limit_price": "195.8",
       "qty": "48",
       "bucket": "strategy",
-      "reason": "rsi2_entry"
+      "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-08-27-BAC-buy",
-      "order_id": "3722b156-f716-47e8-9b11-4d2affb1411f",
+      "coid": "cq-2026-08-28-XLE-sell",
+      "order_id": "7918bee9-9388-4277-820b-66d2217ec709",
+      "symbol": "XLE",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "60.8",
+      "qty": "156",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-08-28-OXY-sell",
+      "order_id": "e75f1d21-d823-48d2-b069-6fdb17cb6ae4",
+      "symbol": "OXY",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "57.33",
+      "qty": "166",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-08-28-BAC-sell",
+      "order_id": "e7e6a600-7262-47cb-8e17-efa1beb8d5bd",
       "symbol": "BAC",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "60.45",
+      "qty": "159",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-08-28-WST-buy",
+      "order_id": "20e548a6-26d4-45ee-a30a-e8c6d2a7d736",
+      "symbol": "WST",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "63.01",
-      "qty": "159",
+      "limit_price": "347.59",
+      "qty": "29",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     },
     {
-      "coid": "cq-2026-08-27-KO-buy",
-      "order_id": "600bea34-b00c-4e56-8438-2916ffb15daf",
-      "symbol": "KO",
+      "coid": "cq-2026-08-28-MMM-buy",
+      "order_id": "55fc6864-4578-4566-ac1c-368635551d28",
+      "symbol": "MMM",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "91.73",
-      "qty": "34",
+      "limit_price": "179.57",
+      "qty": "56",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-28-ROST-buy",
+      "order_id": "bacd3a1b-8eac-4ba7-b7a2-077ecafd610f",
+      "symbol": "ROST",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "235.41",
+      "qty": "42",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-08-28-DAL-buy",
+      "order_id": "5e16c861-3c67-48b6-8245-08f85ecf8b96",
+      "symbol": "DAL",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "82.47",
+      "qty": "111",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

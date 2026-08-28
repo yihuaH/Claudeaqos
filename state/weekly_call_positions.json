@@ -19,23 +19,6 @@
         "spread_pct": 1.776
       },
       "model_price": 23.7454
-    },
-    "NVDA260904C00195000": {
-      "underlying": "NVDA",
-      "strike": 195.0,
-      "expiry": "2026-09-04",
-      "contracts": 1,
-      "entry_premium": 24.65,
-      "entry_date": "2026-08-20",
-      "entry_underlying": 217.56,
-      "entry_rsi2": 5.98,
-      "entry_quote": {
-        "bid": 23.92,
-        "ask": 24.1,
-        "mid": 24.01,
-        "spread_pct": 0.75
-      },
-      "model_price": 24.2244
     }
   },
   "trades": [
@@ -92,6 +75,15 @@
       "price": 8.15,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "NVDA260904C00195000",
+      "side": "sell",
+      "qty": 1,
+      "price": 33.2,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -132,6 +124,25 @@
       "entry_mid": 7.875,
       "exit_mid": 8.395,
       "model_price": 7.9073
+    },
+    {
+      "occ": "NVDA260904C00195000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "NVDA",
+      "entry_date": "2026-08-20",
+      "exit_date": "2026-08-28",
+      "entry_premium": 24.65,
+      "exit_premium": 33.2,
+      "pnl_pct": 34.69,
+      "pnl_usd": 855.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 0.75,
+      "exit_spread_pct": 7.353,
+      "entry_mid": 24.01,
+      "exit_mid": 33.6045,
+      "model_price": 24.2244
     }
   ],
   "skip_log": [
@@ -232,6 +243,13 @@
       "reason": "spread_too_wide(best=3.76%)",
       "rsi2": 5.28,
       "spot": 62.06
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=7.03%)",
+      "rsi2": 9.81,
+      "spot": 171.16
     }
   ]
 }

@@ -1,270 +1,97 @@
 {
-  "trade_date": "2026-08-27",
-  "generated_at": "2026-08-27T21:55:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-08-28 周五) 09:25 ET",
-  "buying_power_at_generation": 3464.7,
+  "trade_date": "2026-08-28",
+  "generated_at": "2026-08-28T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-08-31 周一) 09:25 ET",
+  "valid_until_note": "券商 get_equity_quotes 报下次开盘 2026-08-31T09:30:00-04:00 = 周一正常开市 (美国劳动节是九月第一个周一 = 2026-09-07, 不影响本周)。",
+  "buying_power_at_generation": 1004.32,
+  "portfolio_value_at_generation": 10381.74,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ABT",
-      "dollar_amount": 1035.15,
+      "symbol": "URI",
+      "dollar_amount": 1038.17,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 111.59,
-      "rsi2": 5.33,
+      "reason": "rsi2_scale_in",
+      "est_price": 1030.25,
+      "rsi2": 5.4,
+      "tranche": 2,
+      "avg_entry_price": 1062.53,
+      "drawdown_pct": -3.04,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "note": "加仓单, 引擎已排在新开仓单之前 (现金优先), 执行时不得重排 (playbook 4B)"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "CPAY",
-      "dollar_amount": 1035.15,
+      "symbol": "WST",
+      "dollar_amount": 1038.17,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 403.67,
-      "rsi2": 6.79,
+      "est_price": 337.47,
+      "rsi2": 3.81,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "BKNG",
-      "dollar_amount": 1035.15,
+      "symbol": "MMM",
+      "dollar_amount": 1038.17,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 202.56,
-      "rsi2": 7.04,
+      "est_price": 174.34,
+      "rsi2": 4.4,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "BAC",
-      "dollar_amount": 1035.15,
+      "symbol": "ROST",
+      "dollar_amount": 993.55,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 61.17,
-      "rsi2": 8.13,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "KO",
-      "dollar_amount": 332.3,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 89.06,
-      "rsi2": 9.27,
+      "est_price": 228.55,
+      "rsi2": 7.42,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     }
   ],
   "news_precheck": {
-    "symbols": [
-      "ABT",
-      "CPAY",
-      "BKNG",
-      "BAC",
-      "KO"
-    ],
+    "symbols": ["URI", "WST", "MMM", "ROST"],
     "red_flagged": [],
-    "source": "integrations.py news 2026-08-20→2026-08-27",
+    "with_news": 2,
+    "source": "integrations.py news 2026-08-21→2026-08-28",
     "assessment": "无红旗。"
   },
-  "funding_conflict": {
+  "option_alert": {
+    "names": ["XLI", "IWM", "AMD", "DIA"],
+    "scenarios": {
+      "XLI": {"rsi2_now": 15.94, "scenario": "1d_-1%", "spot": 177.14, "est_premium_usd": 1545},
+      "IWM": {"rsi2_now": 13.6, "scenario": "1d_-1%", "spot": 295.75, "est_premium_usd": 2577},
+      "AMD": {"rsi2_now": 19.19, "scenario": "2d_-1%x2", "spot": 465.58, "est_premium_usd": 2977},
+      "DIA": {"rsi2_now": 64.0, "scenario": "1d_-1%", "spot": 535.06, "est_premium_usd": 4724}
+    },
+    "reserve_usd": 351.51,
+    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
+  },
+  "funding_note": {
     "detected": true,
-    "stock_buys_usd": 4472.9,
-    "option_buys_collateral_usd": 1725.0,
-    "combined_usd": 6197.9,
-    "available_usd": 3464.7,
-    "overshoot_usd": 2733.2,
-    "note": "⚠️ **第 3 次**跨轨道资金冲突 (前两次 08-20 / 08-25 均由用户逐次决定「期权优先」)。常规规则仍未定。SAP 出场回款 ≈$1,013 于 08-28 开盘到账, 但 pending 09:25 过期 —— 老问题, 该笔回款本批用不上。",
-    "options_for_user": [
-      "A. 股票优先 — 前 3 单 ABT/CPAY/BKNG $3105.45 装得下, 期权跳过",
-      "B. 期权优先 — BAC 价差占 $1725, 股票剩 $1739.70 够 1 单 + KO 零头",
-      "C. 只做股票不做期权"
-    ]
-  },
-  "note": "XOM(RSI2 2.04)/LLY(4.42)/URI(7.76) 在候选但已持仓且未触加仓线; COP 被能源行业上限拦 (已持 CVX/XLE/XOM/OXY 中 3 只计数); ROST/SCHW/ABBV/MNST 因资金不足被引擎跳过。",
-  "executed_at": "2026-08-28T01:52:00Z",
-  "execution_summary": {
-    "user_directive": "「期权优先」(2026-08-27) —— 用户回答的是「要不要定常规规则」, 故**记为常规规则**, 非一次性",
-    "cap_formula": "股票 cap = 实时 min(BP $3,464.70, cash $3,464.70) − 期权抵押 $1,725.00 = $1,739.70",
-    "mode": "盘外混合执行 (21:51 ET)",
-    "available_usd": 3464.7,
-    "option_collateral_reserved_usd": 1725.0,
-    "stock_cap_usd": 1739.7,
-    "executed_usd": 1367.45,
-    "buffer_left_usd": 372.25,
-    "skip_rule": "逐 seq 累计, 装不下整单跳过不缩量 (红线3)",
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "ABT",
-        "dollar_amount": 1035.15,
-        "result": "executed",
-        "legs": [
-          {
-            "leg": "①",
-            "type": "limit",
-            "market_hours": "all_day_hours",
-            "qty": 9,
-            "limit_price": 112.71,
-            "order_id": "6a90e99b-df54-41f5-98df-b624d1a8471e",
-            "state": "unconfirmed"
-          },
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 20.76,
-            "order_id": "6a90e9a1-b60f-4f58-b7f8-3358c0443590",
-            "qty": 0.18552,
-            "state": "queued"
-          }
-        ]
-      },
-      {
-        "seq": 2,
-        "symbol": "CPAY",
-        "dollar_amount": 1035.15,
-        "result": "skipped_then_prorated",
-        "reason": "期权优先分账后累计 $2,070.30 > cap $1,739.70, 首轮整单跳过; 用户随后指示「剩余的bp按比例分给要买的股票」, 见 second_allocation"
-      },
-      {
-        "seq": 3,
-        "symbol": "BKNG",
-        "dollar_amount": 1035.15,
-        "result": "skipped_then_prorated",
-        "reason": "同上"
-      },
-      {
-        "seq": 4,
-        "symbol": "BAC",
-        "dollar_amount": 1035.15,
-        "result": "skipped_then_prorated",
-        "reason": "同上"
-      },
-      {
-        "seq": 5,
-        "symbol": "KO",
-        "dollar_amount": 332.3,
-        "result": "executed",
-        "legs": [
-          {
-            "leg": "①",
-            "type": "limit",
-            "market_hours": "all_day_hours",
-            "qty": 3,
-            "limit_price": 89.95,
-            "order_id": "6a90e9a7-efb7-4706-9a79-954e8ab3fa00",
-            "state": "unconfirmed"
-          },
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 62.45,
-            "order_id": "6a90e9ac-d9c0-4b21-abce-e342aa4d1343",
-            "qty": 0.69838,
-            "state": "queued"
-          }
-        ]
-      }
+    "stock_buys_usd": 4108.06,
+    "option_alert_reserve_usd": 351.51,
+    "realtime_bp_at_generation": 1004.32,
+    "cap_per_playbook_2C": 652.81,
+    "consequence": "⚠️ **按 2C 规则, 4 单全部装不下** —— cap $652.81 < 最小单 ROST $993.55, 逐 seq 累计整单跳过不缩量 (红线3)。",
+    "why": "今日 4 笔出场 (CVX/XLE/OXY/BAC ≈ $3,109) 与期权抵押释放 ($1,800) 都要等**周一开盘**才到账, 而本清单 09:25 ET 过期 —— 老的时序错配, 非新问题。",
+    "user_options": [
+      "A. 什么都不做 —— 4 单自然过期, 周一晚主跑用新数据重出信号 (钱那时已到账)",
+      "B. 说「不留期权弹药」→ 撤销 $351.51 保留额, cap 回到 $1,004.32, ROST ($993.55) 可装下 1 单",
+      "C. 说「按比例分」→ 沿用 08-27 的做法把可用资金摊给 4 单 (会把每仓做到净值 1.5-2%, 远低于设计的 10%)"
     ],
-    "h24_whitelist_update": "✅ 24h 可交易新增: ABT · KO (①腿 all_day_hours 均获受理) | 累计 ⛔ 不可: TRV · USFD · EMR · XOM · SAP",
-    "note": "⚠️ BAC (seq4) 被跳过, 但期权轨道的 BAC 信用put价差**仍待用户手动下单** —— 两者是不同轨道的不同头寸, 跳过股票买单不影响期权单。",
-    "ledger_writeback": "①腿 ABT 9@$111.90 / KO 3@$89.43 已成交并回写; ②腿排开盘, 08-28 晨检回写"
+    "session_recommendation": "倾向 A。这批信号很强 (WST rsi2 3.81 全场最低), 但周一开盘后钱才到位; 与其用 1/4 的钱勉强买 1 单, 不如让周一晚的主跑用足额资金重新出单 —— RSI-2 超卖状态通常不止持续一天。**这是建议不是决定, 你说了算。**"
   },
-  "second_allocation": {
-    "user_directive": "「剩余的bp按比例分给要买的股票」(2026-08-27 22:2x ET)",
-    "override": "**覆盖 playbook §4C-2「装不下整单跳过不缩量」** —— 首轮跳过的 CPAY/BKNG/BAC 改为按比例摊分剩余可用资金。用户指令, 非引擎判断, 非会话自主决定 (红线2 约束的是会话的自由裁量, 不是用户的政策决定); 方向为缩量 = 更保守, 不触红线3。",
-    "at": "2026-08-28T02:24:00Z",
-    "available_calc": {
-      "realtime_buying_power": 2106.1,
-      "realtime_cash": 2189.31,
-      "basis_min_bp_cash": 2106.1,
-      "option_collateral_reserved_usd": 1725.0,
-      "min_cash_reserve_usd": 5.0,
-      "allocatable_usd": 376.1
-    },
-    "proration": "三单原额同为 $1,035.15 → 权重各 1/3 → 每只 floor($376.10/3) = $125.36 (合计 $376.08, 余 $0.02 未用)",
-    "orders": [
-      {
-        "seq": 2,
-        "symbol": "CPAY",
-        "dollar_amount": 125.36,
-        "est_price": 403.67,
-        "legs": [
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 125.36,
-            "qty": 0.31055,
-            "order_id": "6a90f165-ddc2-48db-83e0-db958fb6e072",
-            "state": "queued",
-            "note": "whole = floor(125.36 / (403.67×1.010=407.71)) = 0 → 无①腿, 整额走②腿 (playbook 4C)"
-          }
-        ]
-      },
-      {
-        "seq": 3,
-        "symbol": "BKNG",
-        "dollar_amount": 125.36,
-        "est_price": 202.56,
-        "legs": [
-          {
-            "leg": "②",
-            "type": "market",
-            "market_hours": "regular_hours",
-            "dollar_amount": 125.36,
-            "qty": 0.61541,
-            "order_id": "6a90f169-7153-4621-9618-a1fab2d35d6e",
-            "state": "queued",
-            "note": "whole = floor(125.36 / (202.56×1.010=204.59)) = 0 → 无①腿"
-          }
-        ]
-      },
-      {
-        "seq": 4,
-        "symbol": "BAC",
-        "dollar_amount": 125.36,
-        "est_price": 61.17,
-        "legs": [
-          {
-            "leg": "①",
-            "type": "limit",
-            "market_hours": "all_day_hours",
-            "qty": 2,
-            "limit_price": 61.78,
-            "order_id": "6a90f161-e7be-403f-a736-652322df3b56",
-            "state": "filled",
-            "fill_price": 61.3,
-            "cost": 122.6
-          },
-          {
-            "leg": "②",
-            "result": "skipped",
-            "reason": "remaining $125.36 − $122.60 = $2.76 < min_order_usd $5.00 (playbook 4C)"
-          }
-        ]
-      }
-    ],
-    "post_state": {
-      "cash": 2066.71,
-      "buying_power": 1732.78,
-      "queued_holds_usd": 333.93,
-      "check": "自由 BP $1,732.78 ≥ 期权抵押 $1,725.00 ✅ (缓冲 $7.78); 08-28 开盘 SAP 回款 ≈$1,013 到账后余量更宽"
-    },
-    "h24_whitelist_update": "✅ 24h 可交易新增: BAC (①腿 all_day_hours 即时成交 $61.30)",
-    "sizing_caveat": "⚠️ 三只新仓各 ≈$125 = 净值 1.2%, 远低于引擎设计的 10%/仓。出场逻辑 (RSI2≥65 / −7% 止损 / 10日时间止损) 与行业上限槽位照常占用, 但盈亏贡献只有设计值的约 1/8。这是**用户明示的资金分配选择**, 记录在案。"
-  }
+  "note": "同日候选中 LLY (rsi2 4.13) / REGN (4.82) / ABBV (5.61) / DAL (7.81) / AMGN (8.12) / XLV (9.81) 未进清单 —— 由引擎防御层与资金约束决定, 非会话筛选。"
 }

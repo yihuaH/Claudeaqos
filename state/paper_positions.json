@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "TXN": {
-      "qty": 37.0,
-      "entry_price": 262.172973,
-      "entry_date": "2026-08-25",
-      "cost": 9700.4,
-      "tranches": 1
-    },
     "URI": {
       "qty": 9.0,
       "entry_price": 1066.76,
@@ -59,11 +52,39 @@
       "cost": 9486.0,
       "tranches": 1
     },
-    "SAP": {
-      "qty": 46.0,
-      "entry_price": 216.851957,
-      "entry_date": "2026-08-27",
-      "cost": 9975.19,
+    "ABT": {
+      "qty": 87.0,
+      "entry_price": 112.26,
+      "entry_date": "2026-08-28",
+      "cost": 9766.62,
+      "tranches": 1
+    },
+    "CPAY": {
+      "qty": 24.0,
+      "entry_price": 410.41,
+      "entry_date": "2026-08-28",
+      "cost": 9849.84,
+      "tranches": 1
+    },
+    "BKNG": {
+      "qty": 48.0,
+      "entry_price": 204.876875,
+      "entry_date": "2026-08-28",
+      "cost": 9834.09,
+      "tranches": 1
+    },
+    "BAC": {
+      "qty": 159.0,
+      "entry_price": 61.581698,
+      "entry_date": "2026-08-28",
+      "cost": 9791.49,
+      "tranches": 1
+    },
+    "KO": {
+      "qty": 34.0,
+      "entry_price": 89.13,
+      "entry_date": "2026-08-28",
+      "cost": 3030.42,
       "tranches": 1
     }
   },
@@ -1020,6 +1041,69 @@
       "side": "buy",
       "qty": 46.0,
       "price": 216.851957,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "TXN",
+      "side": "sell",
+      "qty": 37.0,
+      "price": 263.912973,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "SAP",
+      "side": "sell",
+      "qty": 46.0,
+      "price": 221.373261,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "ABT",
+      "side": "buy",
+      "qty": 87.0,
+      "price": 112.26,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "CPAY",
+      "side": "buy",
+      "qty": 24.0,
+      "price": 410.41,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "BKNG",
+      "side": "buy",
+      "qty": 48.0,
+      "price": 204.876875,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "BAC",
+      "side": "buy",
+      "qty": 159.0,
+      "price": 61.581698,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "KO",
+      "side": "buy",
+      "qty": 34.0,
+      "price": 89.13,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
