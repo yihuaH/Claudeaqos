@@ -2,7 +2,50 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "BAC260911P00059000": {
+      "underlying": "BAC",
+      "strike": 59.0,
+      "expiry": "2026-09-11",
+      "contracts": 3,
+      "entry_premium": 0.22,
+      "entry_date": "2026-08-28",
+      "entry_underlying": 61.17,
+      "entry_rsi2": 8.13,
+      "entry_quote": {
+        "mid": 0.29,
+        "spread_pct": 11.765,
+        "long_spread_pct": 80.0,
+        "net_credit_conservative": 0.25,
+        "actual_fill": 0.22,
+        "actual_legs": {
+          "short_p59": 0.27,
+          "long_p53": 0.05
+        },
+        "feed_note": "报价源 indicative (非 OPRA NBBO)。实测: 卖腿 indicative bid 0.32 → 实际成交 0.27 (−15.6%); 买腿 indicative ask 0.07 → 实际 0.05 (−28.6%); 净贷记 0.25 → 0.22 (−12%)。indicative 高估可得贷记约 12%。"
+      },
+      "model_price": 0.2067,
+      "structure": "credit_put_spread",
+      "long_occ": "BAC260911P00053000",
+      "long_strike": 53.0,
+      "risk_per_contract": 5.78,
+      "max_value_per_contract": 6.0,
+      "entry_legs": [
+        {
+          "symbol": "BAC260911P00059000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 59.0
+        },
+        {
+          "symbol": "BAC260911P00053000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 53.0
+        }
+      ]
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -66,6 +109,15 @@
       "price": 0.3,
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "BAC260911P00059000",
+      "side": "buy",
+      "qty": 3,
+      "price": 0.22,
+      "bucket": "weekly_calls",
+      "reason": ""
     }
   ],
   "round_trips": [

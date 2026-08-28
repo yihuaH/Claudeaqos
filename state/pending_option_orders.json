@@ -1,7 +1,47 @@
 {
   "trade_date": "2026-08-27",
   "generated_at": "2026-08-27T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
+  "execution": {
+    "executed_by": "用户手动 (App), placed_agent=user",
+    "attempt_1": {
+      "order_id": "6a90f656-1b0f-4de9-84f7-84bc74d5824a",
+      "limit": 0.37,
+      "placed_at": "2026-08-28T02:45:42Z",
+      "state": "cancelled",
+      "cancelled_at": "2026-08-28T13:31:39Z",
+      "note": "挂高于理论最好价 $0.33, 开盘未成; 用户开盘后 2 分钟撤单改价"
+    },
+    "attempt_2": {
+      "order_id": "6a918dba-2a32-4aab-bddf-f731d9e26359",
+      "limit": 0.22,
+      "placed_at": "2026-08-28T13:31:38Z",
+      "state": "filled",
+      "filled_at": "2026-08-28T13:31:41Z",
+      "qty": 3,
+      "legs_fill": {"short_BAC260911P00059000": 0.27, "long_BAC260911P00053000": 0.05},
+      "net_credit": 0.22,
+      "gross_credit_usd": 66.0,
+      "collateral_held_usd": 1734.0,
+      "risk_per_contract": 5.78
+    },
+    "deviation": {
+      "field": "limit_price",
+      "session_guardrail_limit_floor": 0.24,
+      "actual": 0.22,
+      "verdict": "**不构成红线2 违规** — `limit_floor` 是 2026-08-27 会话自拟的执行护栏, 不是引擎输出 (全仓 grep: scripts/ 与 strategy/ 均无 limit_floor)。引擎的两个数是 est_price 0.25 (= 卖腿indicative bid − 买腿indicative ask, 最保守净贷记) 与 model_price 0.2067 (公允价模型)。实际成交 0.22 > model_price 0.2067, 按引擎自己的模型仍是正边际。标的/到期/行权价/张数/结构全部与引擎输出逐字段一致。",
+      "root_cause": "护栏 0.24 是按 indicative 报价推的, 而 indicative 高估可得贷记约 12% (见下), 该价在真实盘口不可得。护栏口径需回校, 不是用户报价有问题。"
+    },
+    "feed_calibration": {
+      "note": "⚠️ **首个 credit_put_spread 的 indicative vs 实际成交实测** (CLAUDE.md 记录的『首笔实盘成交后需回校』)",
+      "short_leg": {"indicative_bid": 0.32, "actual_fill": 0.27, "delta_pct": -15.6},
+      "long_leg": {"indicative_ask": 0.07, "actual_fill": 0.05, "delta_pct": -28.6},
+      "net_credit": {"indicative_conservative": 0.25, "actual": 0.22, "delta_pct": -12.0},
+      "implication": "indicative 源对『卖腿 bid』系统性高估 → 净贷记高估约 12%。后续 est_price 与任何执行护栏都应按此打折, 单点样本, 需继续累积。"
+    },
+    "window_note": "playbook 4D 窗口为 09:45-10:30 ET; 实际成交 09:31:41 ET (开盘后 2 分钟), 早于推荐窗口。开盘点差最宽, 但成交价仍高于 model_price, 未造成损失。"
+  },
+  "_status_was": "awaiting_execution",
   "valid_until": "次一交易日 (2026-08-28 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
   "orders": [
