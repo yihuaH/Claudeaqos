@@ -1,7 +1,68 @@
 {
   "trade_date": "2026-08-28",
   "generated_at": "2026-08-28T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
+  "second_allocation": {
+    "user_directive": "用户回「c」= 按比例分 (2026-08-28 18:52 ET), 从我列的三选项中选定",
+    "override": "覆盖 playbook §4C-2C「装不下整单跳过不缩量」—— 用户明示指令, 非会话裁量; 方向为缩量 = 更保守, 不触红线3。**未撤销** option_alert 保留 (用户只选 c 未说「不留了」)。",
+    "at": "2026-08-29T04:51:00Z",
+    "available_calc": {
+      "basis_min_bp_cash": 1004.32,
+      "option_alert_reserve_usd": 351.51,
+      "min_cash_reserve_usd": 5.0,
+      "allocatable_usd": 647.81
+    },
+    "proration": "按各单原额加权 (非均分 —— ROST 原额较小): URI/WST/MMM 各 1038.17/4108.06 = 25.27% → $163.71; ROST 993.55/4108.06 = 24.19% → $156.67; 合计 $647.80, 余 $0.01 未用",
+    "leg_structure": "四只单价 ($1,030 / $337 / $174 / $229) 均高于各自分配额 → whole = 0 → **全部无①腿, 整额走②腿分数股市价排周一开盘** (playbook §4C-2 既有规则)",
+    "orders": [
+      {"seq": 1, "symbol": "URI",  "dollar_amount": 163.71, "reason": "rsi2_scale_in", "est_price": 1030.25, "qty": 0.1589,  "order_id": "6a92652f-d73d-4ca5-b27c-534033cb2ffa", "state": "queued"},
+      {"seq": 2, "symbol": "WST",  "dollar_amount": 163.71, "reason": "rsi2_entry",    "est_price": 337.47,  "qty": 0.4851,  "order_id": "6a926533-a469-4565-ad40-8b59a4baccd0", "state": "queued"},
+      {"seq": 3, "symbol": "MMM",  "dollar_amount": 163.71, "reason": "rsi2_entry",    "est_price": 174.34,  "qty": 0.93999, "order_id": "6a926538-5a8b-458b-90b6-0e4f917c581d", "state": "queued"},
+      {"seq": 4, "symbol": "ROST", "dollar_amount": 156.67, "reason": "rsi2_entry",    "est_price": 228.55,  "qty": 0.68549, "order_id": "6a92653c-e5ed-41ae-a801-2d8a7b51fe2d", "state": "queued"}
+    ],
+    "post_state": {
+      "buying_power_before": 1004.32,
+      "buying_power_after": 356.52,
+      "held_for_queued_usd": 647.8,
+      "check": "剩余 BP $356.52 ≥ option_alert 保留 $351.51 ✅ (缓冲 $5.01 = min_cash_reserve)"
+    },
+    "sizing_caveat": "⚠️ 四只新仓各 ≈$160 = 净值 1.5-1.6%, 引擎设计为 10%/仓。出场逻辑与行业上限槽位照常占用, 盈亏贡献约为设计值的 1/6。用户明示选择, 记录在案。",
+    "scale_in_slot_caveat": "⚠️ **URI 加仓档位副作用**: `signals.py apply` 对 reason=rsi2_scale_in 的成交把 tranches 1→2, 而 2 = `scale_in.max_tranches` 上限 —— 即用 $163.71 (原定第2档 $1,038.17 的 15.8%) **占满了 URI 的加仓额度**, 此后 URI 再跌也不会有第3档。这是既有账本逻辑的机械结果, 非本次新增; 已告知用户, 待其决定是否需要 ledger_corrections 修正 tranches。",
+    "ledger_writeback": "4 单全部 queued 未成交 → 本次不回写; 周一 (08-31) 晨检确认成交后回写"
+  },
+  "_status_was_before_second_allocation": "executed_zero_fills",
+  "execution": {
+    "triggered_by": "用户「执行」(2026-08-28 18:50 ET, 收盘战报窗口)",
+    "executed_at": "2026-08-28T22:52:00Z",
+    "mode": "盘外混合执行 (未触发 —— 无订单通过资金闸)",
+    "realtime_check": {
+      "buying_power": 1004.32,
+      "cash": 2804.32,
+      "basis_min_bp_cash": 1004.32,
+      "option_alert_reserve_usd": 351.51,
+      "reserve_waived_by_user": false,
+      "stock_cap_usd": 652.81
+    },
+    "result": "**0 单执行, 4 单全部整单跳过** (playbook §4C-2C: 累计不得超 实时BP − reserve; 超出整单跳过不缩量, 红线3)",
+    "orders": [
+      {"seq": 1, "symbol": "URI",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap $652.81 (差 $385.36)"},
+      {"seq": 2, "symbol": "WST",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap"},
+      {"seq": 3, "symbol": "MMM",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap"},
+      {"seq": 4, "symbol": "ROST", "dollar_amount": 993.55,  "result": "skipped", "reason": "超 cap (最便宜单仍差 $340.74)"}
+    ],
+    "not_done_and_why": [
+      "**未缩量** —— 引擎金额确定性, 改小即违红线2 (与 08-27「按比例分」不同: 那次是用户明示指令)",
+      "**未撤销弹药保留** —— playbook §4C-2C 规定 reserve 只能由用户明确说「不留了/全买股票」撤销; 用户本次只说「执行」, 会话不得代为撤销",
+      "**未动出场回款** —— 4 笔出场卖单 (≈$3,109) 与期权抵押 ($1,800) 均需周一开盘后才到账, 现在不是可用资金"
+    ],
+    "user_next_options": [
+      "回「不留了」→ 撤销 $351.51 保留, cap → $1,004.32, ROST ($993.55) 可执行 1 单 (缓冲 $10.77)",
+      "回「按比例分」→ 沿用 08-27 做法把 $652.81 (或 $1,004.32) 摊给 4 单, 每仓落到净值 1.6-2.5%",
+      "不再回 → 清单周一 09:25 ET 自然过期, 周一晚主跑用到账后的足额资金重新出单"
+    ],
+    "ledger_writeback": "无成交 → 账本未动"
+  },
+  "_status_was": "awaiting_execution",
   "valid_until": "次一交易日 (2026-08-31 周一) 09:25 ET",
   "valid_until_note": "券商 get_equity_quotes 报下次开盘 2026-08-31T09:30:00-04:00 = 周一正常开市 (美国劳动节是九月第一个周一 = 2026-09-07, 不影响本周)。",
   "buying_power_at_generation": 1004.32,
