@@ -1,102 +1,83 @@
 {
-  "trade_date": "2026-08-27",
-  "generated_at": "2026-08-27T21:55:00Z",
-  "status": "executed",
-  "execution": {
-    "executed_by": "用户手动 (App), placed_agent=user",
-    "attempt_1": {
-      "order_id": "6a90f656-1b0f-4de9-84f7-84bc74d5824a",
-      "limit": 0.37,
-      "placed_at": "2026-08-28T02:45:42Z",
-      "state": "cancelled",
-      "cancelled_at": "2026-08-28T13:31:39Z",
-      "note": "挂高于理论最好价 $0.33, 开盘未成; 用户开盘后 2 分钟撤单改价"
-    },
-    "attempt_2": {
-      "order_id": "6a918dba-2a32-4aab-bddf-f731d9e26359",
-      "limit": 0.22,
-      "placed_at": "2026-08-28T13:31:38Z",
-      "state": "filled",
-      "filled_at": "2026-08-28T13:31:41Z",
-      "qty": 3,
-      "legs_fill": {"short_BAC260911P00059000": 0.27, "long_BAC260911P00053000": 0.05},
-      "net_credit": 0.22,
-      "gross_credit_usd": 66.0,
-      "collateral_held_usd": 1734.0,
-      "risk_per_contract": 5.78
-    },
-    "deviation": {
-      "field": "limit_price",
-      "session_guardrail_limit_floor": 0.24,
-      "actual": 0.22,
-      "verdict": "**不构成红线2 违规** — `limit_floor` 是 2026-08-27 会话自拟的执行护栏, 不是引擎输出 (全仓 grep: scripts/ 与 strategy/ 均无 limit_floor)。引擎的两个数是 est_price 0.25 (= 卖腿indicative bid − 买腿indicative ask, 最保守净贷记) 与 model_price 0.2067 (公允价模型)。实际成交 0.22 > model_price 0.2067, 按引擎自己的模型仍是正边际。标的/到期/行权价/张数/结构全部与引擎输出逐字段一致。",
-      "root_cause": "护栏 0.24 是按 indicative 报价推的, 而 indicative 高估可得贷记约 12% (见下), 该价在真实盘口不可得。护栏口径需回校, 不是用户报价有问题。"
-    },
-    "feed_calibration": {
-      "note": "⚠️ **首个 credit_put_spread 的 indicative vs 实际成交实测** (CLAUDE.md 记录的『首笔实盘成交后需回校』)",
-      "short_leg": {"indicative_bid": 0.32, "actual_fill": 0.27, "delta_pct": -15.6},
-      "long_leg": {"indicative_ask": 0.07, "actual_fill": 0.05, "delta_pct": -28.6},
-      "net_credit": {"indicative_conservative": 0.25, "actual": 0.22, "delta_pct": -12.0},
-      "implication": "indicative 源对『卖腿 bid』系统性高估 → 净贷记高估约 12%。后续 est_price 与任何执行护栏都应按此打折, 单点样本, 需继续累积。"
-    },
-    "window_note": "playbook 4D 窗口为 09:45-10:30 ET; 实际成交 09:31:41 ET (开盘后 2 分钟), 早于推荐窗口。开盘点差最宽, 但成交价仍高于 model_price, 未造成损失。"
-  },
-  "_status_was": "awaiting_execution",
-  "valid_until": "次一交易日 (2026-08-28 周五) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
+  "trade_date": "2026-08-31",
+  "generated_at": "2026-08-31T21:50:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-01 周二) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
   "orders": [
     {
       "seq": 1,
       "action": "buy_to_open",
       "structure": "credit_put_spread",
-      "qty": 3,
+      "qty": 1,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "BAC260911P00059000",
+          "symbol": "IWM260908P00285000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 59.0,
-          "quote": {
-            "bid": 0.32,
-            "ask": 0.36
-          },
-          "spread_pct": 11.765
+          "strike": 285.0,
+          "quote": {"bid": 0.35, "ask": 0.38},
+          "spread_pct": 8.219
         },
         {
-          "symbol": "BAC260911P00053000",
+          "symbol": "IWM260908P00255000",
           "side": "buy",
           "position_effect": "open",
-          "strike": 53.0,
-          "quote": {
-            "bid": 0.03,
-            "ask": 0.07
-          },
-          "spread_pct": 80.0
+          "strike": 255.0,
+          "quote": {"bid": 0.03, "ask": 0.05},
+          "spread_pct": 50.0
         }
       ],
-      "est_price": 0.25,
+      "est_price": 0.3,
       "direction": "credit",
-      "underlying": "BAC",
-      "expiry": "2026-09-11",
-      "dte": 15,
-      "spot": 61.17,
-      "rsi2": 8.13,
-      "model_price": 0.2067,
+      "underlying": "IWM",
+      "expiry": "2026-09-08",
+      "dte": 8,
+      "spot": 293.93,
+      "rsi2": 7.89,
+      "model_price": 0.3137,
       "entry_quote": {
-        "mid": 0.29,
-        "spread_pct": 11.765,
-        "long_spread_pct": 80.0,
-        "net_credit_conservative": 0.25
+        "mid": 0.325,
+        "spread_pct": 8.219,
+        "long_spread_pct": 50.0,
+        "net_credit_conservative": 0.3
       },
-      "risk_per_contract": 5.75,
-      "max_value_per_contract": 6.0,
-      "max_loss_usd": 1725.0,
-      "max_gain_usd": 75.0,
-      "limit_floor": 0.24
+      "risk_per_contract": 29.7,
+      "max_value_per_contract": 30.0,
+      "max_loss_usd": 2970.0,
+      "max_gain_usd": 30.0
     }
   ],
-  "funding_conflict_ref": "见 state/pending_orders.json funding_conflict — 与股票买单合计超 BP, 优先级待用户定",
-  "risk_note": "3 张在险 $1725 = 净值 16.7%; 最大收益 $75 (4.3% / 15天)。长腿点差 80% 靠绝对闸过关。"
+  "session_risk_notes": {
+    "_disclaimer": "以下全部为**提示**, 引擎输出逐字段未改 (红线2)。会话不得删单/改单/改金额; 一票否决权在用户。",
+    "payoff_ratio": {
+      "max_loss_usd": 2970.0,
+      "max_gain_usd": 30.0,
+      "ratio": "99 : 1",
+      "breakeven_win_rate_pct": 99.0,
+      "note": "全赢/全输二元近似下, 需 **99% 胜率**才打平。BAC 那笔是 26:1 (需 96.3%), 本笔风险收益比差了一个数量级。"
+    },
+    "negative_model_edge": {
+      "est_price": 0.3,
+      "model_price": 0.3137,
+      "verdict": "⚠️ **保守净贷记 $0.30 低于引擎自己的公允价模型 $0.3137** —— 按引擎的模型这是**负边际**入场。",
+      "contrast": "对比 08-28 的 BAC: est $0.25 > model $0.2067, 是正边际; 本笔方向相反。"
+    },
+    "feed_discount": {
+      "measured_2026_08_28": "indicative 高估可得贷记约 12% (卖腿 bid 高估 15.6%)",
+      "implied_realistic_credit": 0.264,
+      "note": "若 12% 折扣成立, 实际可成交贷记约 **$0.264**, 比 model_price $0.3137 低 16%。⚠️ 单点样本外推, 仅供参考。"
+    },
+    "size_context": {
+      "max_loss_usd": 2970.0,
+      "portfolio_value": 10439.28,
+      "pct_of_nav": 28.4,
+      "note": "占净值 **28.4%** 换取 $30 (0.29% 净值) 的最大收益。单仓上限、budget 上限、单张风险上限三闸已于 2026-08-18 由用户「取消掉」全撤, 故引擎放行; 唯一硬约束是实时 BP ($5,283.48 ≥ $3,000 抵押 ✓)。"
+    },
+    "why_so_wide": "价差宽度 $30 = 卖腿 ≤0.97×spot ($285.11→$285) 与保护腿 ≤0.88×spot ($258.66→$255) 的固定几何; IWM 现价 $293.93 高, 9% 的相对宽度折算成 $30 的绝对宽度。而 IWM 的 put 便宜 (低 IV), 贷记只有宽度的 **1.0%** (BAC 那笔是 3.7%)。**宽度大 + 贷记薄 = 极端不对称**。",
+    "gates_passed": "点差闸 (卖腿 8.2% ≤12% ✓; 保护腿 50% 但绝对点差 $0.02 ≤ $0.10 ✓) · DTE 8 ✓ · 熔断未触发 ✓ · BP 充足 ✓ — **形式上全部合规**, 上述风险不构成拦截理由, 由用户决定。"
+  },
+  "risk_note": "1 张在险 $2,970 = 净值 28.4%; 最大收益 $30 (1.01% / 8 天, 按在险归一)。"
 }

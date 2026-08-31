@@ -1,158 +1,47 @@
 {
-  "trade_date": "2026-08-28",
-  "generated_at": "2026-08-28T21:55:00Z",
-  "status": "executed",
-  "second_allocation": {
-    "user_directive": "用户回「c」= 按比例分 (2026-08-28 18:52 ET), 从我列的三选项中选定",
-    "override": "覆盖 playbook §4C-2C「装不下整单跳过不缩量」—— 用户明示指令, 非会话裁量; 方向为缩量 = 更保守, 不触红线3。**未撤销** option_alert 保留 (用户只选 c 未说「不留了」)。",
-    "at": "2026-08-29T04:51:00Z",
-    "available_calc": {
-      "basis_min_bp_cash": 1004.32,
-      "option_alert_reserve_usd": 351.51,
-      "min_cash_reserve_usd": 5.0,
-      "allocatable_usd": 647.81
-    },
-    "proration": "按各单原额加权 (非均分 —— ROST 原额较小): URI/WST/MMM 各 1038.17/4108.06 = 25.27% → $163.71; ROST 993.55/4108.06 = 24.19% → $156.67; 合计 $647.80, 余 $0.01 未用",
-    "leg_structure": "四只单价 ($1,030 / $337 / $174 / $229) 均高于各自分配额 → whole = 0 → **全部无①腿, 整额走②腿分数股市价排周一开盘** (playbook §4C-2 既有规则)",
-    "orders": [
-      {"seq": 1, "symbol": "URI",  "dollar_amount": 163.71, "reason": "rsi2_scale_in", "est_price": 1030.25, "qty": 0.1589,  "order_id": "6a92652f-d73d-4ca5-b27c-534033cb2ffa", "state": "queued"},
-      {"seq": 2, "symbol": "WST",  "dollar_amount": 163.71, "reason": "rsi2_entry",    "est_price": 337.47,  "qty": 0.4851,  "order_id": "6a926533-a469-4565-ad40-8b59a4baccd0", "state": "queued"},
-      {"seq": 3, "symbol": "MMM",  "dollar_amount": 163.71, "reason": "rsi2_entry",    "est_price": 174.34,  "qty": 0.93999, "order_id": "6a926538-5a8b-458b-90b6-0e4f917c581d", "state": "queued"},
-      {"seq": 4, "symbol": "ROST", "dollar_amount": 156.67, "reason": "rsi2_entry",    "est_price": 228.55,  "qty": 0.68549, "order_id": "6a92653c-e5ed-41ae-a801-2d8a7b51fe2d", "state": "queued"}
-    ],
-    "post_state": {
-      "buying_power_before": 1004.32,
-      "buying_power_after": 356.52,
-      "held_for_queued_usd": 647.8,
-      "check": "剩余 BP $356.52 ≥ option_alert 保留 $351.51 ✅ (缓冲 $5.01 = min_cash_reserve)"
-    },
-    "sizing_caveat": "⚠️ 四只新仓各 ≈$160 = 净值 1.5-1.6%, 引擎设计为 10%/仓。出场逻辑与行业上限槽位照常占用, 盈亏贡献约为设计值的 1/6。用户明示选择, 记录在案。",
-    "scale_in_slot_caveat": "⚠️ **URI 加仓档位副作用**: `signals.py apply` 对 reason=rsi2_scale_in 的成交把 tranches 1→2, 而 2 = `scale_in.max_tranches` 上限 —— 即用 $163.71 (原定第2档 $1,038.17 的 15.8%) **占满了 URI 的加仓额度**, 此后 URI 再跌也不会有第3档。这是既有账本逻辑的机械结果, 非本次新增; 已告知用户, 待其决定是否需要 ledger_corrections 修正 tranches。",
-    "ledger_writeback": "4 单全部 queued 未成交 → 本次不回写; 周一 (08-31) 晨检确认成交后回写"
-  },
-  "_status_was_before_second_allocation": "executed_zero_fills",
-  "execution": {
-    "triggered_by": "用户「执行」(2026-08-28 18:50 ET, 收盘战报窗口)",
-    "executed_at": "2026-08-28T22:52:00Z",
-    "mode": "盘外混合执行 (未触发 —— 无订单通过资金闸)",
-    "realtime_check": {
-      "buying_power": 1004.32,
-      "cash": 2804.32,
-      "basis_min_bp_cash": 1004.32,
-      "option_alert_reserve_usd": 351.51,
-      "reserve_waived_by_user": false,
-      "stock_cap_usd": 652.81
-    },
-    "result": "**0 单执行, 4 单全部整单跳过** (playbook §4C-2C: 累计不得超 实时BP − reserve; 超出整单跳过不缩量, 红线3)",
-    "orders": [
-      {"seq": 1, "symbol": "URI",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap $652.81 (差 $385.36)"},
-      {"seq": 2, "symbol": "WST",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap"},
-      {"seq": 3, "symbol": "MMM",  "dollar_amount": 1038.17, "result": "skipped", "reason": "超 cap"},
-      {"seq": 4, "symbol": "ROST", "dollar_amount": 993.55,  "result": "skipped", "reason": "超 cap (最便宜单仍差 $340.74)"}
-    ],
-    "not_done_and_why": [
-      "**未缩量** —— 引擎金额确定性, 改小即违红线2 (与 08-27「按比例分」不同: 那次是用户明示指令)",
-      "**未撤销弹药保留** —— playbook §4C-2C 规定 reserve 只能由用户明确说「不留了/全买股票」撤销; 用户本次只说「执行」, 会话不得代为撤销",
-      "**未动出场回款** —— 4 笔出场卖单 (≈$3,109) 与期权抵押 ($1,800) 均需周一开盘后才到账, 现在不是可用资金"
-    ],
-    "user_next_options": [
-      "回「不留了」→ 撤销 $351.51 保留, cap → $1,004.32, ROST ($993.55) 可执行 1 单 (缓冲 $10.77)",
-      "回「按比例分」→ 沿用 08-27 做法把 $652.81 (或 $1,004.32) 摊给 4 单, 每仓落到净值 1.6-2.5%",
-      "不再回 → 清单周一 09:25 ET 自然过期, 周一晚主跑用到账后的足额资金重新出单"
-    ],
-    "ledger_writeback": "无成交 → 账本未动"
-  },
-  "_status_was": "awaiting_execution",
-  "valid_until": "次一交易日 (2026-08-31 周一) 09:25 ET",
-  "valid_until_note": "券商 get_equity_quotes 报下次开盘 2026-08-31T09:30:00-04:00 = 周一正常开市 (美国劳动节是九月第一个周一 = 2026-09-07, 不影响本周)。",
-  "buying_power_at_generation": 1004.32,
-  "portfolio_value_at_generation": 10381.74,
+  "trade_date": "2026-08-31",
+  "generated_at": "2026-08-31T21:50:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-01 周二) 09:25 ET",
+  "buying_power_at_generation": 5283.48,
+  "portfolio_value_at_generation": 10439.28,
   "orders": [
-    {
-      "seq": 1,
-      "action": "buy",
-      "symbol": "URI",
-      "dollar_amount": 1038.17,
-      "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 1030.25,
-      "rsi2": 5.4,
-      "tranche": 2,
-      "avg_entry_price": 1062.53,
-      "drawdown_pct": -3.04,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "note": "加仓单, 引擎已排在新开仓单之前 (现金优先), 执行时不得重排 (playbook 4B)"
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "WST",
-      "dollar_amount": 1038.17,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 337.47,
-      "rsi2": 3.81,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "MMM",
-      "dollar_amount": 1038.17,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 174.34,
-      "rsi2": 4.4,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "ROST",
-      "dollar_amount": 993.55,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 228.55,
-      "rsi2": 7.42,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    }
+    {"seq": 1, "action": "buy", "symbol": "UNP",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 300.67, "rsi2": 3.60, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 2, "action": "buy", "symbol": "AMAT", "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 458.39, "rsi2": 4.53, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 3, "action": "buy", "symbol": "DGX",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 240.30, "rsi2": 4.72, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 4, "action": "buy", "symbol": "AMGN", "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 429.88, "rsi2": 4.89, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 5, "action": "buy", "symbol": "CSX",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 50.51,  "rsi2": 4.93, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
+    {"seq": 6, "action": "buy", "symbol": "WAB",  "dollar_amount": 1043.85, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 285.93, "rsi2": 5.25, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"}
   ],
   "news_precheck": {
-    "symbols": ["URI", "WST", "MMM", "ROST"],
+    "symbols": ["UNP", "AMAT", "DGX", "AMGN", "CSX", "WAB"],
     "red_flagged": [],
-    "with_news": 2,
-    "source": "integrations.py news 2026-08-21→2026-08-28",
+    "with_news": 3,
+    "source": "integrations.py news 2026-08-24→2026-08-31",
     "assessment": "无红旗。"
   },
   "option_alert": {
-    "names": ["XLI", "IWM", "AMD", "DIA"],
+    "names": ["XLF", "XLP", "DIA", "SPY"],
     "scenarios": {
-      "XLI": {"rsi2_now": 15.94, "scenario": "1d_-1%", "spot": 177.14, "est_premium_usd": 1545},
-      "IWM": {"rsi2_now": 13.6, "scenario": "1d_-1%", "spot": 295.75, "est_premium_usd": 2577},
-      "AMD": {"rsi2_now": 19.19, "scenario": "2d_-1%x2", "spot": 465.58, "est_premium_usd": 2977},
-      "DIA": {"rsi2_now": 64.0, "scenario": "1d_-1%", "spot": 535.06, "est_premium_usd": 4724}
+      "XLF": {"rsi2_now": 22.89, "scenario": "1d_-1%", "est_premium_usd": 510},
+      "XLP": {"rsi2_now": 22.15, "scenario": "1d_-1%", "est_premium_usd": 740},
+      "DIA": {"rsi2_now": 11.14, "scenario": "1d_-1%", "est_premium_usd": 4693},
+      "SPY": {"rsi2_now": 30.97, "scenario": "1d_-1%", "est_premium_usd": 6772}
     },
-    "reserve_usd": 351.51,
+    "reserve_usd": 510.0,
     "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
   },
   "funding_note": {
     "detected": true,
-    "stock_buys_usd": 4108.06,
-    "option_alert_reserve_usd": 351.51,
-    "realtime_bp_at_generation": 1004.32,
-    "cap_per_playbook_2C": 652.81,
-    "consequence": "⚠️ **按 2C 规则, 4 单全部装不下** —— cap $652.81 < 最小单 ROST $993.55, 逐 seq 累计整单跳过不缩量 (红线3)。",
-    "why": "今日 4 笔出场 (CVX/XLE/OXY/BAC ≈ $3,109) 与期权抵押释放 ($1,800) 都要等**周一开盘**才到账, 而本清单 09:25 ET 过期 —— 老的时序错配, 非新问题。",
-    "user_options": [
-      "A. 什么都不做 —— 4 单自然过期, 周一晚主跑用新数据重出信号 (钱那时已到账)",
-      "B. 说「不留期权弹药」→ 撤销 $351.51 保留额, cap 回到 $1,004.32, ROST ($993.55) 可装下 1 单",
-      "C. 说「按比例分」→ 沿用 08-27 的做法把可用资金摊给 4 单 (会把每仓做到净值 1.5-2%, 远低于设计的 10%)"
-    ],
-    "session_recommendation": "倾向 A。这批信号很强 (WST rsi2 3.81 全场最低), 但周一开盘后钱才到位; 与其用 1/4 的钱勉强买 1 单, 不如让周一晚的主跑用足额资金重新出单 —— RSI-2 超卖状态通常不止持续一天。**这是建议不是决定, 你说了算。**"
+    "stock_buys_usd": 6263.5,
+    "option_collateral_usd": 3000.0,
+    "option_alert_reserve_usd": 510.0,
+    "realtime_bp": 5283.48,
+    "priority_rule": "期权优先 (CLAUDE.md 红线9 常规规则, 2026-08-27 用户定)",
+    "cap_if_option_executed": 1773.48,
+    "cap_if_option_declined": 4773.48,
+    "consequence": "⚠️ **股票买单能装几单, 取决于你要不要那笔 IWM 期权**:\n• 做期权 → 抵押 $3,000 + 弹药保留 $510 → 股票 cap $1,773.48 → **只装得下 seq1 UNP ($1,043.93)**, 其余 5 单整单跳过\n• 不做期权 → cap $4,773.48 → 装得下 **seq1-4 (UNP/AMAT/DGX/AMGN, 合计 $4,175.72)**, seq5-6 跳过",
+    "note": "以上为按现行规则的机械推算, 执行时以实时 min(BP, cash) 重算为准。"
   },
-  "note": "同日候选中 LLY (rsi2 4.13) / REGN (4.82) / ABBV (5.61) / DAL (7.81) / AMGN (8.12) / XLV (9.81) 未进清单 —— 由引擎防御层与资金约束决定, 非会话筛选。"
+  "note": "候选中 LLY (rsi2 1.61) / MMM (2.27) / ROST (7.39) 已持仓且未触加仓线; XLB (5.00) / XLV (6.17) / XLI (6.99) / WELL (5.86) / RTX (6.74) / BLK (7.82) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。"
 }

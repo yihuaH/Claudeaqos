@@ -1,57 +1,74 @@
 {
-  "date": "2026-08-28",
+  "date": "2026-08-31",
   "halted": false,
-  "sells": [
+  "sells": [],
+  "buys": [
     {
-      "symbol": "XLI260828C00160000",
+      "symbol": "IWM260908C00263000",
       "qty": 1,
-      "position_intent": "sell_to_close",
+      "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
-      "reason": "expiry_close",
-      "est_price": 17.42,
-      "exit_quote": {
-        "bid": 16.47,
-        "ask": 18.38,
-        "mid": 17.425,
-        "spread_pct": 10.961
+      "reason": "rsi2_entry_call",
+      "est_price": 31.8,
+      "underlying": "IWM",
+      "strike": 263.0,
+      "expiry": "2026-09-08",
+      "dte": 8,
+      "spot": 293.93,
+      "rsi2": 7.89,
+      "model_price": 31.1605,
+      "entry_quote": {
+        "bid": 31.6,
+        "ask": 31.99,
+        "mid": 31.795,
+        "spread_pct": 1.227
       }
     }
   ],
-  "buys": [],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "spread_too_wide(best=7.03%)",
-      "rsi2": 9.81,
-      "spot": 171.16
+      "reason": "spread_too_wide(best=8.49%)",
+      "rsi2": 6.17,
+      "spot": 170.54
     }
   ],
-  "warnings": [],
+  "warnings": [
+    "XLI260828C00160000: 已过期未平仓 (expiry 2026-08-28), 疑似被自动行权/交割 — 停该仓操作, 人工对账 (红线6)"
+  ],
   "near_signals": [
     {
-      "symbol": "IWM",
-      "rsi2_now": 13.6,
+      "symbol": "XLF",
+      "rsi2_now": 22.89,
       "scenario": "1d_-1%",
-      "spot": 295.75,
+      "spot": 57.71,
       "structure": "single",
-      "est_premium_usd": 2994
+      "est_premium_usd": 584
     },
     {
-      "symbol": "AMD",
-      "rsi2_now": 19.19,
-      "scenario": "2d_-1%x2",
-      "spot": 465.58,
+      "symbol": "XLP",
+      "rsi2_now": 22.15,
+      "scenario": "1d_-1%",
+      "spot": 84.98,
       "structure": "single",
-      "est_premium_usd": 5333
+      "est_premium_usd": 860
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 64.0,
+      "rsi2_now": 11.14,
       "scenario": "1d_-1%",
-      "spot": 535.06,
+      "spot": 531.57,
       "structure": "single",
-      "est_premium_usd": 5417
+      "est_premium_usd": 5381
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 30.97,
+      "scenario": "1d_-1%",
+      "spot": 767.05,
+      "structure": "single",
+      "est_premium_usd": 7765
     }
   ],
-  "suggested_reserve_usd": 2994.0
+  "suggested_reserve_usd": 584.0
 }

@@ -10,39 +10,11 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "URI": {
-      "qty": 9.0,
-      "entry_price": 1066.76,
-      "entry_date": "2026-08-26",
-      "cost": 9600.84,
-      "tranches": 1
-    },
-    "CVX": {
-      "qty": 48.0,
-      "entry_price": 198.93,
-      "entry_date": "2026-08-26",
-      "cost": 9548.64,
-      "tranches": 1
-    },
-    "XLE": {
-      "qty": 156.0,
-      "entry_price": 61.47,
-      "entry_date": "2026-08-26",
-      "cost": 9589.32,
-      "tranches": 1
-    },
     "XOM": {
       "qty": 60.0,
       "entry_price": 159.066333,
       "entry_date": "2026-08-26",
       "cost": 9543.98,
-      "tranches": 1
-    },
-    "OXY": {
-      "qty": 166.0,
-      "entry_price": 58.11,
-      "entry_date": "2026-08-26",
-      "cost": 9646.26,
       "tranches": 1
     },
     "LLY": {
@@ -73,18 +45,39 @@
       "cost": 9834.09,
       "tranches": 1
     },
-    "BAC": {
-      "qty": 159.0,
-      "entry_price": 61.581698,
-      "entry_date": "2026-08-28",
-      "cost": 9791.49,
-      "tranches": 1
-    },
     "KO": {
       "qty": 34.0,
       "entry_price": 89.13,
       "entry_date": "2026-08-28",
       "cost": 3030.42,
+      "tranches": 1
+    },
+    "WST": {
+      "qty": 29.0,
+      "entry_price": 338.0,
+      "entry_date": "2026-08-31",
+      "cost": 9802.0,
+      "tranches": 1
+    },
+    "MMM": {
+      "qty": 56.0,
+      "entry_price": 173.24,
+      "entry_date": "2026-08-31",
+      "cost": 9701.44,
+      "tranches": 1
+    },
+    "ROST": {
+      "qty": 42.0,
+      "entry_price": 229.97,
+      "entry_date": "2026-08-31",
+      "cost": 9658.74,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 111.0,
+      "entry_price": 78.967568,
+      "entry_date": "2026-08-31",
+      "cost": 8765.4,
       "tranches": 1
     }
   },
@@ -1104,6 +1097,87 @@
       "side": "buy",
       "qty": 34.0,
       "price": 89.13,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "URI",
+      "side": "sell",
+      "qty": 9.0,
+      "price": 1029.358889,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "CVX",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 205.527501,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "XLE",
+      "side": "sell",
+      "qty": 156.0,
+      "price": 63.873846,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "OXY",
+      "side": "sell",
+      "qty": 166.0,
+      "price": 60.453012,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "BAC",
+      "side": "sell",
+      "qty": 159.0,
+      "price": 62.05,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "WST",
+      "side": "buy",
+      "qty": 29.0,
+      "price": 338.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 56.0,
+      "price": 173.24,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "ROST",
+      "side": "buy",
+      "qty": 42.0,
+      "price": 229.97,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 111.0,
+      "price": 78.967568,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

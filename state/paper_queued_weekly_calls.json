@@ -1,15 +1,21 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-28",
+  "date": "2026-08-31",
   "coid_prefix": "cqw",
-  "next_open": "2026-08-31T09:30:00-04:00",
+  "next_open": "2026-09-01T09:30:00-04:00",
   "skipped": [],
-  "failed": [
+  "failed": [],
+  "orders": [
     {
-      "symbol": "XLI260828C00160000",
-      "side": "sell",
-      "detail": "HTTP 422 {\"code\":42210000,\"message\":\"contract \\\"XLI260828C00160000\\\" is expired\"}"
+      "coid": "cqw-2026-08-31-IWM260908C00263000-buy",
+      "order_id": "df2234ba-7809-455e-b66e-a0ff6f51296e",
+      "symbol": "IWM260908C00263000",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "32.75",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
-  ],
-  "orders": []
+  ]
 }

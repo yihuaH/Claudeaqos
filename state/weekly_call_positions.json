@@ -250,6 +250,13 @@
       "reason": "spread_too_wide(best=7.03%)",
       "rsi2": 9.81,
       "spot": 171.16
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=8.49%)",
+      "rsi2": 6.17,
+      "spot": 170.54
     }
   ]
 }
