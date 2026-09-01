@@ -1,32 +1,126 @@
 {
   "trade_date": "2026-08-31",
   "generated_at": "2026-08-31T21:50:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-09-01 周二) 09:25 ET",
   "buying_power_at_generation": 5283.48,
   "portfolio_value_at_generation": 10439.28,
   "orders": [
-    {"seq": 1, "action": "buy", "symbol": "UNP",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 300.67, "rsi2": 3.60, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 2, "action": "buy", "symbol": "AMAT", "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 458.39, "rsi2": 4.53, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 3, "action": "buy", "symbol": "DGX",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 240.30, "rsi2": 4.72, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 4, "action": "buy", "symbol": "AMGN", "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 429.88, "rsi2": 4.89, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 5, "action": "buy", "symbol": "CSX",  "dollar_amount": 1043.93, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 50.51,  "rsi2": 4.93, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"},
-    {"seq": 6, "action": "buy", "symbol": "WAB",  "dollar_amount": 1043.85, "bucket": "strategy", "reason": "rsi2_entry", "est_price": 285.93, "rsi2": 5.25, "state_file": "state/positions.json", "valid_until": "next_open_0925_et"}
+    {
+      "seq": 1,
+      "action": "buy",
+      "symbol": "UNP",
+      "dollar_amount": 1043.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 300.67,
+      "rsi2": 3.6,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 2,
+      "action": "buy",
+      "symbol": "AMAT",
+      "dollar_amount": 1043.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 458.39,
+      "rsi2": 4.53,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "DGX",
+      "dollar_amount": 1043.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 240.3,
+      "rsi2": 4.72,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "AMGN",
+      "dollar_amount": 1043.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 429.88,
+      "rsi2": 4.89,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "CSX",
+      "dollar_amount": 1043.93,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 50.51,
+      "rsi2": 4.93,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 6,
+      "action": "buy",
+      "symbol": "WAB",
+      "dollar_amount": 1043.85,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 285.93,
+      "rsi2": 5.25,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    }
   ],
   "news_precheck": {
-    "symbols": ["UNP", "AMAT", "DGX", "AMGN", "CSX", "WAB"],
+    "symbols": [
+      "UNP",
+      "AMAT",
+      "DGX",
+      "AMGN",
+      "CSX",
+      "WAB"
+    ],
     "red_flagged": [],
     "with_news": 3,
     "source": "integrations.py news 2026-08-24→2026-08-31",
     "assessment": "无红旗。"
   },
   "option_alert": {
-    "names": ["XLF", "XLP", "DIA", "SPY"],
+    "names": [
+      "XLF",
+      "XLP",
+      "DIA",
+      "SPY"
+    ],
     "scenarios": {
-      "XLF": {"rsi2_now": 22.89, "scenario": "1d_-1%", "est_premium_usd": 510},
-      "XLP": {"rsi2_now": 22.15, "scenario": "1d_-1%", "est_premium_usd": 740},
-      "DIA": {"rsi2_now": 11.14, "scenario": "1d_-1%", "est_premium_usd": 4693},
-      "SPY": {"rsi2_now": 30.97, "scenario": "1d_-1%", "est_premium_usd": 6772}
+      "XLF": {
+        "rsi2_now": 22.89,
+        "scenario": "1d_-1%",
+        "est_premium_usd": 510
+      },
+      "XLP": {
+        "rsi2_now": 22.15,
+        "scenario": "1d_-1%",
+        "est_premium_usd": 740
+      },
+      "DIA": {
+        "rsi2_now": 11.14,
+        "scenario": "1d_-1%",
+        "est_premium_usd": 4693
+      },
+      "SPY": {
+        "rsi2_now": 30.97,
+        "scenario": "1d_-1%",
+        "est_premium_usd": 6772
+      }
     },
     "reserve_usd": 510.0,
     "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
@@ -43,5 +137,152 @@
     "consequence": "⚠️ **股票买单能装几单, 取决于你要不要那笔 IWM 期权**:\n• 做期权 → 抵押 $3,000 + 弹药保留 $510 → 股票 cap $1,773.48 → **只装得下 seq1 UNP ($1,043.93)**, 其余 5 单整单跳过\n• 不做期权 → cap $4,773.48 → 装得下 **seq1-4 (UNP/AMAT/DGX/AMGN, 合计 $4,175.72)**, seq5-6 跳过",
     "note": "以上为按现行规则的机械推算, 执行时以实时 min(BP, cash) 重算为准。"
   },
-  "note": "候选中 LLY (rsi2 1.61) / MMM (2.27) / ROST (7.39) 已持仓且未触加仓线; XLB (5.00) / XLV (6.17) / XLI (6.99) / WELL (5.86) / RTX (6.74) / BLK (7.82) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。"
+  "note": "候选中 LLY (rsi2 1.61) / MMM (2.27) / ROST (7.39) 已持仓且未触加仓线; XLB (5.00) / XLV (6.17) / XLI (6.99) / WELL (5.86) / RTX (6.74) / BLK (7.82) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。",
+  "execution": {
+    "user_directive": "「执行股票」(2026-08-31 21:34 ET) —— 只做股票, 放弃 IWM 期权单",
+    "executed_at": "2026-09-01T01:36:00Z",
+    "mode": "盘外混合执行 (playbook §4C-2 盘外限价模式)",
+    "cap_calc": {
+      "realtime_bp": 5283.48,
+      "realtime_cash": 5283.48,
+      "basis_min_bp_cash": 5283.48,
+      "option_collateral_usd": 0.0,
+      "option_collateral_note": "用户弃单 → 不预留 $3,000 抵押",
+      "option_alert_reserve_usd": 510.0,
+      "option_alert_reserve_note": "用户未说「不留了」→ 弹药保留照旧生效 (playbook §4C-2C)",
+      "min_cash_reserve_usd": 5.0,
+      "stock_cap_usd": 4768.48
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "UNP",
+        "dollar_amount": 1043.93,
+        "cum": 1043.93,
+        "result": "executed",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 3,
+            "limit_price": 303.68,
+            "order_id": "6a962bc3-31ca-4050-8049-266a126bab38",
+            "state": "filled",
+            "fill_price": 303.34,
+            "cost": 910.02
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 133.91,
+            "order_id": "6a962bf1-f7fe-4482-8139-8caa7e2e7749",
+            "state": "queued",
+            "qty": 0.44143
+          }
+        ]
+      },
+      {
+        "seq": 2,
+        "symbol": "AMAT",
+        "dollar_amount": 1043.93,
+        "cum": 2087.86,
+        "result": "executed",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 2,
+            "limit_price": 462.97,
+            "order_id": "6a962bc8-7a10-4815-b0ec-9ee32198ab98",
+            "state": "filled",
+            "fill_price": 458.23,
+            "cost": 916.46
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 127.47,
+            "order_id": "6a962bf6-c21f-49e3-99a5-8898d6fc2991",
+            "state": "queued",
+            "qty": 0.27813
+          }
+        ]
+      },
+      {
+        "seq": 3,
+        "symbol": "DGX",
+        "dollar_amount": 1043.93,
+        "cum": 3131.79,
+        "result": "executed_partial",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "extended_hours",
+            "qty": 4,
+            "limit_price": 242.7,
+            "order_id": "6a962bd5-8fbb-43de-9e7b-1757c4ff2734",
+            "state": "queued",
+            "degraded_from": "all_day_hours",
+            "degrade_reason": "review 返回 EQUITY_ALL_DAY_TRADING_ERROR: 'instrument is untradable for 24 hour trading' → 按 playbook §4C-2 降级 all_day_hours → extended_hours (降级后 order_checks={} 干净)"
+          },
+          {
+            "leg": "②",
+            "result": "deferred",
+            "reason": "⚠️ ①腿未成交 (盘后 20:00 已过, extended_hours 单排明早盘前 04:00 ET)。若现在同时下②腿, 两腿可能都成交 → 超出 $1,043.93 分配额。故②腿**推迟到 09-01 晨检**: ①腿成交则按实成算余量补②腿; 未成交则撤①腿。"
+          }
+        ]
+      },
+      {
+        "seq": 4,
+        "symbol": "AMGN",
+        "dollar_amount": 1043.93,
+        "cum": 4175.72,
+        "result": "executed",
+        "legs": [
+          {
+            "leg": "①",
+            "type": "limit",
+            "market_hours": "all_day_hours",
+            "qty": 2,
+            "limit_price": 434.18,
+            "order_id": "6a962bce-127d-4416-a702-1b82b83cb9b0",
+            "state": "filled",
+            "fill_price": 431.12,
+            "cost": 862.24
+          },
+          {
+            "leg": "②",
+            "type": "market",
+            "market_hours": "regular_hours",
+            "dollar_amount": 181.69,
+            "order_id": "6a962bfa-9aef-4084-bab7-00e347294b96",
+            "state": "queued",
+            "qty": 0.42143
+          }
+        ]
+      },
+      {
+        "seq": 5,
+        "symbol": "CSX",
+        "dollar_amount": 1043.93,
+        "result": "skipped",
+        "reason": "累计 $5,219.65 > cap $4,768.48, 整单跳过不缩量 (红线3)"
+      },
+      {
+        "seq": 6,
+        "symbol": "WAB",
+        "dollar_amount": 1043.85,
+        "result": "skipped",
+        "reason": "超 cap, 整单跳过不缩量"
+      }
+    ],
+    "h24_whitelist_update": "✅ 24h 可交易新增: UNP · AMAT · AMGN (①腿 all_day_hours 均即时成交) | ⛔ 新增不可 24h: **DGX** (券商明确报 untradable) | 累计不可: TRV · USFD · EMR · XOM · SAP · DGX",
+    "fills_vs_est": "三笔①腿全部**低于**限价成交: UNP $303.34 (限 303.68) · AMAT $458.23 (限 462.97) · AMGN $431.12 (限 434.18) —— 限价保护正常工作, 未吃满容差",
+    "ledger_writeback": "已成交的三笔①腿已 signals.py apply 回写; ②腿 3 张 + DGX ①腿排队中, 由 09-01 晨检回写"
+  }
 }

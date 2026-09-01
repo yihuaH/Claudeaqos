@@ -1,5 +1,5 @@
 {
-  "high_water_mark": 10419.18,
+  "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
     "URI": {
@@ -70,6 +70,27 @@
       "entry_price": 228.87,
       "entry_date": "2026-08-31",
       "cost": 156.67,
+      "tranches": 1
+    },
+    "UNP": {
+      "qty": 3.0,
+      "entry_price": 303.34,
+      "entry_date": "2026-08-31",
+      "cost": 910.02,
+      "tranches": 1
+    },
+    "AMAT": {
+      "qty": 2.0,
+      "entry_price": 458.23,
+      "entry_date": "2026-08-31",
+      "cost": 916.46,
+      "tranches": 1
+    },
+    "AMGN": {
+      "qty": 2.0,
+      "entry_price": 431.12,
+      "entry_date": "2026-08-31",
+      "cost": 862.24,
       "tranches": 1
     }
   },
@@ -1395,6 +1416,33 @@
       "side": "buy",
       "qty": 0.684537,
       "price": 228.87,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 303.34,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 458.23,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-08-31",
+      "symbol": "AMGN",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 431.12,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
