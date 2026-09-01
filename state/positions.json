@@ -9,13 +9,6 @@
       "cost": 1156.2,
       "tranches": 2
     },
-    "XOM": {
-      "qty": 6.120007,
-      "entry_price": 159.789,
-      "entry_date": "2026-08-26",
-      "cost": 977.91,
-      "tranches": 1
-    },
     "LLY": {
       "qty": 0.831245,
       "entry_price": 1180.0,
@@ -73,24 +66,31 @@
       "tranches": 1
     },
     "UNP": {
-      "qty": 3.0,
-      "entry_price": 303.34,
+      "qty": 3.444883,
+      "entry_price": 303.0379,
       "entry_date": "2026-08-31",
-      "cost": 910.02,
+      "cost": 1043.93,
       "tranches": 1
     },
     "AMAT": {
-      "qty": 2.0,
-      "entry_price": 458.23,
+      "qty": 2.282814,
+      "entry_price": 457.2996,
       "entry_date": "2026-08-31",
-      "cost": 916.46,
+      "cost": 1043.93,
       "tranches": 1
     },
     "AMGN": {
-      "qty": 2.0,
-      "entry_price": 431.12,
+      "qty": 2.420053,
+      "entry_price": 431.3666,
       "entry_date": "2026-08-31",
-      "cost": 862.24,
+      "cost": 1043.93,
+      "tranches": 1
+    },
+    "DGX": {
+      "qty": 4.318682,
+      "entry_price": 241.7242,
+      "entry_date": "2026-09-01",
+      "cost": 1043.93,
       "tranches": 1
     }
   },
@@ -1445,6 +1445,60 @@
       "price": 431.12,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "XOM",
+      "side": "sell",
+      "qty": 6.120007,
+      "price": 163.69,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "DGX",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 241.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "DGX",
+      "side": "buy",
+      "qty": 0.318682,
+      "price": 238.89,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 0.444883,
+      "price": 301.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 0.282814,
+      "price": 450.72,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "AMGN",
+      "side": "buy",
+      "qty": 0.420053,
+      "price": 432.54,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [
