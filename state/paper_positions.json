@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "XOM": {
-      "qty": 60.0,
-      "entry_price": 159.066333,
-      "entry_date": "2026-08-26",
-      "cost": 9543.98,
-      "tranches": 1
-    },
     "LLY": {
       "qty": 8.0,
       "entry_price": 1185.75,
@@ -78,6 +71,27 @@
       "entry_price": 78.967568,
       "entry_date": "2026-08-31",
       "cost": 8765.4,
+      "tranches": 1
+    },
+    "UNP": {
+      "qty": 32.0,
+      "entry_price": 302.22,
+      "entry_date": "2026-09-01",
+      "cost": 9671.04,
+      "tranches": 1
+    },
+    "AMAT": {
+      "qty": 21.0,
+      "entry_price": 449.64,
+      "entry_date": "2026-09-01",
+      "cost": 9442.44,
+      "tranches": 1
+    },
+    "DGX": {
+      "qty": 6.0,
+      "entry_price": 243.931667,
+      "entry_date": "2026-09-01",
+      "cost": 1463.59,
       "tranches": 1
     }
   },
@@ -1178,6 +1192,42 @@
       "side": "buy",
       "qty": 111.0,
       "price": 78.967568,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "XOM",
+      "side": "sell",
+      "qty": 60.0,
+      "price": 163.32,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 32.0,
+      "price": 302.22,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 21.0,
+      "price": 449.64,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "DGX",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 243.931667,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -19,6 +19,23 @@
         "spread_pct": 1.776
       },
       "model_price": 23.7454
+    },
+    "IWM260908C00263000": {
+      "underlying": "IWM",
+      "strike": 263.0,
+      "expiry": "2026-09-08",
+      "contracts": 1,
+      "entry_premium": 29.71,
+      "entry_date": "2026-09-01",
+      "entry_underlying": 293.93,
+      "entry_rsi2": 7.89,
+      "entry_quote": {
+        "bid": 31.6,
+        "ask": 31.99,
+        "mid": 31.795,
+        "spread_pct": 1.227
+      },
+      "model_price": 31.1605
     }
   },
   "trades": [
@@ -84,6 +101,15 @@
       "price": 33.2,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "IWM260908C00263000",
+      "side": "buy",
+      "qty": 1,
+      "price": 29.71,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -257,6 +283,20 @@
       "reason": "spread_too_wide(best=8.49%)",
       "rsi2": 6.17,
       "spot": 170.54
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "DIA",
+      "reason": "premium_too_large(5918)",
+      "rsi2": 3.97,
+      "spot": 527.75
+    },
+    {
+      "date": "2026-09-01",
+      "symbol": "SPY",
+      "reason": "premium_too_large(8715)",
+      "rsi2": 9.69,
+      "spot": 761.78
     }
   ]
 }

@@ -1,96 +1,73 @@
 {
-  "trade_date": "2026-08-31",
-  "generated_at": "2026-08-31T21:50:00Z",
-  "status": "declined_by_user",
-  "valid_until": "次一交易日 (2026-09-01 周二) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
+  "trade_date": "2026-09-01",
+  "generated_at": "2026-09-01T21:50:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-02 周三) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
   "orders": [
     {
       "seq": 1,
       "action": "buy_to_open",
       "structure": "credit_put_spread",
-      "qty": 1,
+      "qty": 4,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
-        {
-          "symbol": "IWM260908P00285000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 285.0,
-          "quote": {
-            "bid": 0.35,
-            "ask": 0.38
-          },
-          "spread_pct": 8.219
-        },
-        {
-          "symbol": "IWM260908P00255000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 255.0,
-          "quote": {
-            "bid": 0.03,
-            "ask": 0.05
-          },
-          "spread_pct": 50.0
-        }
+        {"symbol": "XLF260915P00055000", "side": "sell", "position_effect": "open", "strike": 55.0,
+         "quote": {"bid": 0.09, "ask": 0.13}, "spread_pct": 36.364},
+        {"symbol": "XLF260915P00050000", "side": "buy", "position_effect": "open", "strike": 50.0,
+         "quote": {"bid": 0.01, "ask": 0.07}, "spread_pct": 150.0}
       ],
-      "est_price": 0.3,
+      "est_price": 0.02,
       "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-09-08",
-      "dte": 8,
-      "spot": 293.93,
-      "rsi2": 7.89,
-      "model_price": 0.3137,
-      "entry_quote": {
-        "mid": 0.325,
-        "spread_pct": 8.219,
-        "long_spread_pct": 50.0,
-        "net_credit_conservative": 0.3
-      },
-      "risk_per_contract": 29.7,
-      "max_value_per_contract": 30.0,
-      "max_loss_usd": 2970.0,
-      "max_gain_usd": 30.0
+      "underlying": "XLF",
+      "expiry": "2026-09-15",
+      "dte": 14,
+      "spot": 57.2,
+      "rsi2": 8.87,
+      "model_price": 0.0621,
+      "entry_quote": {"mid": 0.07, "spread_pct": 36.364, "long_spread_pct": 150.0, "net_credit_conservative": 0.02},
+      "risk_per_contract": 4.98,
+      "max_value_per_contract": 5.0,
+      "max_loss_usd": 1992.0,
+      "max_gain_usd": 8.0
     }
   ],
   "session_risk_notes": {
     "_disclaimer": "以下全部为**提示**, 引擎输出逐字段未改 (红线2)。会话不得删单/改单/改金额; 一票否决权在用户。",
+    "headline": "⚠️⚠️ **风险收益比 249 : 1** —— 拿 $1,992 去赚 $8。这是本轨道迄今最极端的一单。",
     "payoff_ratio": {
-      "max_loss_usd": 2970.0,
-      "max_gain_usd": 30.0,
-      "ratio": "99 : 1",
-      "breakeven_win_rate_pct": 99.0,
-      "note": "全赢/全输二元近似下, 需 **99% 胜率**才打平。BAC 那笔是 26:1 (需 96.3%), 本笔风险收益比差了一个数量级。"
+      "max_loss_usd": 1992.0, "max_gain_usd": 8.0, "ratio": "249 : 1",
+      "breakeven_win_rate_pct": 99.6,
+      "note": "二元近似下 8p = 1992(1−p) → 需 **99.6% 胜率**打平。"
     },
     "negative_model_edge": {
-      "est_price": 0.3,
-      "model_price": 0.3137,
-      "verdict": "⚠️ **保守净贷记 $0.30 低于引擎自己的公允价模型 $0.3137** —— 按引擎的模型这是**负边际**入场。",
-      "contrast": "对比 08-28 的 BAC: est $0.25 > model $0.2067, 是正边际; 本笔方向相反。"
+      "est_price": 0.02, "model_price": 0.0621,
+      "est_vs_model_pct": -67.8,
+      "verdict": "⚠️⚠️ **保守净贷记 $0.02 只有引擎公允价模型 $0.0621 的 32%** —— 按引擎自己的模型, 这是**重度负边际**入场, 比昨天 IWM 那笔 (−4.4%) 差一个数量级。"
     },
-    "feed_discount": {
-      "measured_2026_08_28": "indicative 高估可得贷记约 12% (卖腿 bid 高估 15.6%)",
-      "implied_realistic_credit": 0.264,
-      "note": "若 12% 折扣成立, 实际可成交贷记约 **$0.264**, 比 model_price $0.3137 低 16%。⚠️ 单点样本外推, 仅供参考。"
+    "bp_impact": {
+      "collateral_usd": 1992.0, "realtime_bp": 2109.51, "pct_of_bp": 94.4,
+      "note": "抵押吃掉 **94.4% 的可用资金**, 只剩 $117.51。若执行, 本晚 4 张股票买单 (含 3 张加仓) **全部装不下**。"
     },
-    "size_context": {
-      "max_loss_usd": 2970.0,
-      "portfolio_value": 10439.28,
-      "pct_of_nav": 28.4,
-      "note": "占净值 **28.4%** 换取 $30 (0.29% 净值) 的最大收益。单仓上限、budget 上限、单张风险上限三闸已于 2026-08-18 由用户「取消掉」全撤, 故引擎放行; 唯一硬约束是实时 BP ($5,283.48 ≥ $3,000 抵押 ✓)。"
-    },
-    "why_so_wide": "价差宽度 $30 = 卖腿 ≤0.97×spot ($285.11→$285) 与保护腿 ≤0.88×spot ($258.66→$255) 的固定几何; IWM 现价 $293.93 高, 9% 的相对宽度折算成 $30 的绝对宽度。而 IWM 的 put 便宜 (低 IV), 贷记只有宽度的 **1.0%** (BAC 那笔是 3.7%)。**宽度大 + 贷记薄 = 极端不对称**。",
-    "gates_passed": "点差闸 (卖腿 8.2% ≤12% ✓; 保护腿 50% 但绝对点差 $0.02 ≤ $0.10 ✓) · DTE 8 ✓ · 熔断未触发 ✓ · BP 充足 ✓ — **形式上全部合规**, 上述风险不构成拦截理由, 由用户决定。"
+    "spread_gate_note": "卖腿点差 **36.4%** 远超 `max_credit_leg_spread_pct=12`, 但靠绝对闸 (0.13−0.09=$0.04 ≤ $0.10) 放行; 保护腿 150% 同理 ($0.06 ≤ $0.10)。**双档闸 (pct 或 abs 任一过即可) 在低价合约上等于没有百分比闸** —— 这是本单能出来的机制原因。"
   },
-  "risk_note": "1 张在险 $2,970 = 净值 28.4%; 最大收益 $30 (1.01% / 8 天, 按在险归一)。",
-  "decline": {
-    "at": "2026-09-01T01:36:00Z",
-    "user_directive": "「执行股票」—— 明示只做股票, 未执行本期权单",
-    "note": "未下单, 不占用抵押。释放出的 $3,000 使股票 cap 从 $1,773.48 提高到 $4,768.48, 因此本晚成交 4 单而非 1 单。",
-    "engine_output_unchanged": "引擎输出逐字段保留在 orders[] 中未修改 (红线2); 弃单是用户的一票否决, 非会话删单。",
-    "expiry": "本单不再有效; 若 IWM 次日仍满足条件, 09-01 晚主跑会用新数据重新出信号。"
-  }
+  "pattern_finding": {
+    "title": "📐 三笔实盘信用价差的横向对比 —— 低 IV 标的会让风险收益比爆炸",
+    "samples": [
+      {"date": "2026-08-28", "underlying": "BAC", "type": "个股", "width": 6.0,  "credit": 0.22, "credit_over_width_pct": 3.67, "risk_usd": 1734, "gain_usd": 66, "ratio": "26:1",  "est_vs_model": "+20.9% ✅ 正边际", "outcome": "已平, +$27"},
+      {"date": "2026-08-31", "underlying": "IWM", "type": "宽基ETF", "width": 30.0, "credit": 0.30, "credit_over_width_pct": 1.00, "risk_usd": 2970, "gain_usd": 30, "ratio": "99:1",  "est_vs_model": "−4.4% ⚠️ 负边际", "outcome": "用户弃单"},
+      {"date": "2026-09-01", "underlying": "XLF", "type": "行业ETF", "width": 5.0,  "credit": 0.02, "credit_over_width_pct": 0.40, "risk_usd": 1992, "gain_usd": 8,  "ratio": "249:1", "est_vs_model": "−67.8% ⚠️⚠️ 重度负边际", "outcome": "待用户决定"},
+      {"date": "2026-09-02", "underlying": "(下一笔)", "type": "", "width": null, "credit": null, "credit_over_width_pct": null, "risk_usd": null, "gain_usd": null, "ratio": "", "est_vs_model": "", "outcome": "留位, 继续累积样本"}
+    ],
+    "hypothesis": "**贷记/宽度比 (credit_over_width_pct) 是判别指标**: BAC (个股, IV 较高) 3.67% → 比值健康; IWM/XLF (ETF, IV 低) 1.00% / 0.40% → 比值崩塌。行权价由 `0.97×spot` / `0.88×spot` 的**固定几何**决定宽度, 而贷记由 IV 决定 —— 低 IV 标的上, 分母不变分子塌陷, 风险收益比必然爆炸。",
+    "corroborating_signal": "两个坏样本的 `est_price < model_price` 都提前发出了信号, 好样本则相反。**引擎自己的公允价模型就是现成的判别器, 只是目前没有任何闸使用它。**",
+    "proposed_fix_NOT_APPLIED": [
+      "A. 加 `min_credit_over_width_pct` 闸 (例如 ≥2.0%) —— 直接卡住比值崩塌的形态",
+      "B. 加 `min_credit_vs_model_pct` 闸 (例如 est ≥ model×0.9) —— 用引擎自己的模型当下限, 顺带解决挂了很久的 `limit_floor` 口径问题",
+      "C. 把点差双档闸从「pct 或 abs」改成「pct 且 abs」, 或对低价合约单独设百分比闸"
+    ],
+    "red_line_note": "⚠️ **以上三条均未实施。** `weekly_calls.json` 的点差闸与 sizing 属风控参数, 红线8 明确规定**永不自学习**, 会话也不得自行修改 (红线2/3)。**需用户明确批准才动。** 本次仅记录与建议。"
+  },
+  "risk_note": "4 张在险 $1,992 = 净值 19.3%; 最大收益 $8 (0.40% / 14 天, 按在险归一)。"
 }

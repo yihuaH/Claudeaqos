@@ -1,105 +1,122 @@
 {
-  "date": "2026-08-31",
+  "date": "2026-09-01",
   "halted": false,
   "sells": [],
   "buys": [
     {
       "structure": "credit_put_spread",
-      "qty": 1,
+      "qty": 4,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "IWM260908P00285000",
+          "symbol": "XLF260915P00055000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 285.0,
+          "strike": 55.0,
           "quote": {
-            "bid": 0.35,
-            "ask": 0.38
+            "bid": 0.09,
+            "ask": 0.13
           },
-          "spread_pct": 8.219
+          "spread_pct": 36.364
         },
         {
-          "symbol": "IWM260908P00255000",
+          "symbol": "XLF260915P00050000",
           "side": "buy",
           "position_effect": "open",
-          "strike": 255.0,
+          "strike": 50.0,
           "quote": {
-            "bid": 0.03,
-            "ask": 0.05
+            "bid": 0.01,
+            "ask": 0.07
           },
-          "spread_pct": 50.0
+          "spread_pct": 150.0
         }
       ],
-      "est_price": 0.3,
+      "est_price": 0.02,
       "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-09-08",
-      "dte": 8,
-      "spot": 293.93,
-      "rsi2": 7.89,
-      "model_price": 0.3137,
+      "underlying": "XLF",
+      "expiry": "2026-09-15",
+      "dte": 14,
+      "spot": 57.2,
+      "rsi2": 8.87,
+      "model_price": 0.0621,
       "entry_quote": {
-        "mid": 0.325,
-        "spread_pct": 8.219,
-        "long_spread_pct": 50.0,
-        "net_credit_conservative": 0.3
+        "mid": 0.07,
+        "spread_pct": 36.364,
+        "long_spread_pct": 150.0,
+        "net_credit_conservative": 0.02
       },
-      "risk_per_contract": 29.7,
-      "max_value_per_contract": 30.0,
-      "max_loss_usd": 2970.0,
-      "max_gain_usd": 30.0
+      "risk_per_contract": 4.98,
+      "max_value_per_contract": 5.0,
+      "max_loss_usd": 1992.0,
+      "max_gain_usd": 8.0
     }
   ],
   "skips": [
     {
-      "symbol": "XLV",
-      "reason": "no_valid_put_quote",
-      "rsi2": 6.17,
-      "spot": 170.54
+      "symbol": "XLI",
+      "reason": "credit_leg_spread_too_wide(best=27.03%)",
+      "rsi2": 2.99,
+      "spot": 172.73
     },
     {
-      "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=56.72%)",
-      "rsi2": 6.99,
-      "spot": 175.13
+      "symbol": "IWM",
+      "reason": "insufficient_buying_power(cost=2552,bp_left=2110)",
+      "rsi2": 3.09
+    },
+    {
+      "symbol": "DIA",
+      "reason": "insufficient_buying_power(cost=4967,bp_left=2110)",
+      "rsi2": 3.97
+    },
+    {
+      "symbol": "SPY",
+      "reason": "insufficient_buying_power(cost=6741,bp_left=118)",
+      "rsi2": 9.69
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLF",
-      "rsi2_now": 22.89,
-      "scenario": "1d_-1%",
-      "spot": 57.71,
+      "symbol": "AMZN",
+      "rsi2_now": 22.87,
+      "scenario": "2d_-1%x2",
+      "spot": 254.92,
       "structure": "credit_put_spread",
-      "est_premium_usd": 510
+      "est_premium_usd": 2022
     },
     {
-      "symbol": "XLP",
-      "rsi2_now": 22.15,
-      "scenario": "1d_-1%",
-      "spot": 84.98,
+      "symbol": "AMD",
+      "rsi2_now": 18.89,
+      "scenario": "2d_-1%x2",
+      "spot": 459.61,
       "structure": "credit_put_spread",
-      "est_premium_usd": 740
+      "est_premium_usd": 3047
     },
     {
-      "symbol": "DIA",
-      "rsi2_now": 11.14,
-      "scenario": "1d_-1%",
-      "spot": 531.57,
+      "symbol": "TSM",
+      "rsi2_now": 22.85,
+      "scenario": "2d_-1%x2",
+      "spot": 414.0,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4693
+      "est_premium_usd": 3341
     },
     {
-      "symbol": "SPY",
-      "rsi2_now": 30.97,
-      "scenario": "1d_-1%",
-      "spot": 767.05,
+      "symbol": "SMH",
+      "rsi2_now": 20.16,
+      "scenario": "2d_-1%x2",
+      "spot": 545.22,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6772
+      "est_premium_usd": 4172
+    },
+    {
+      "symbol": "QQQ",
+      "rsi2_now": 13.16,
+      "scenario": "1d_-1%",
+      "spot": 707.64,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 6219
     }
   ],
-  "suggested_reserve_usd": 510.0
+  "suggested_reserve_usd": 738.33
 }

@@ -1,18 +1,18 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-31",
+  "date": "2026-09-01",
   "coid_prefix": "cqw",
-  "next_open": "2026-09-01T09:30:00-04:00",
+  "next_open": "2026-09-02T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cqw-2026-08-31-IWM260908C00263000-buy",
-      "order_id": "df2234ba-7809-455e-b66e-a0ff6f51296e",
-      "symbol": "IWM260908C00263000",
+      "coid": "cqw-2026-09-01-XLF260910C00050500-buy",
+      "order_id": "a626dcfc-9670-4b40-9de0-6150fabf0a47",
+      "symbol": "XLF260910C00050500",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "32.75",
+      "limit_price": "6.88",
       "qty": "1",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"

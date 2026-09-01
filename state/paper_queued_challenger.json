@@ -1,54 +1,68 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-08-31",
+  "date": "2026-09-01",
   "coid_prefix": "cq",
-  "next_open": "2026-09-01T09:30:00-04:00",
+  "next_open": "2026-09-02T09:30:00-04:00",
   "skipped": [
-    "DIA sell: 排队限价下买不起 1 整股, 跳过"
+    "DIA sell: 排队限价下买不起 1 整股, 跳过",
+    "UNP buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)",
+    "DGX buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)",
+    "BLK buy: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-08-31-XOM-sell",
-      "order_id": "68ab896b-b18a-4ece-addb-d24f4822d26c",
-      "symbol": "XOM",
+      "coid": "cq-2026-09-01-BKNG-sell",
+      "order_id": "acc15bb0-f322-4398-a2de-8a388601603b",
+      "symbol": "BKNG",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "156.12",
-      "qty": "60",
+      "limit_price": "189.82",
+      "qty": "48",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-08-31-UNP-buy",
-      "order_id": "3a410ca0-8ee8-4fb8-a79f-ff003b823042",
-      "symbol": "UNP",
-      "side": "buy",
+      "coid": "cq-2026-09-01-DAL-sell",
+      "order_id": "4aee6e4d-71ff-45e4-8535-567685c2d84d",
+      "symbol": "DAL",
+      "side": "sell",
       "status": "accepted",
-      "limit_price": "309.69",
+      "limit_price": "74.09",
+      "qty": "111",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-09-01-UNP-sell",
+      "order_id": "7743a0ed-f9bf-40b2-ba28-0d9420a3ad96",
+      "symbol": "UNP",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "281.9",
       "qty": "32",
       "bucket": "strategy",
-      "reason": "rsi2_entry"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-08-31-AMAT-buy",
-      "order_id": "6dc3db2d-0cda-4efd-977f-a6c5d25597d2",
-      "symbol": "AMAT",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "472.14",
-      "qty": "21",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-08-31-DGX-buy",
-      "order_id": "2a48ab7b-e27e-49dd-b579-069772312bcc",
+      "coid": "cq-2026-09-01-DGX-sell",
+      "order_id": "e3ea813a-7a80-4fe9-9ca2-c5bd63378de7",
       "symbol": "DGX",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "229.13",
+      "qty": "6",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-09-01-CSX-buy",
+      "order_id": "e96740db-3839-4465-9cef-0a7a75779d60",
+      "symbol": "CSX",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "247.51",
-      "qty": "6",
+      "limit_price": "50.16",
+      "qty": "198",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
