@@ -79,13 +79,6 @@
       "cost": 1043.93,
       "tranches": 1
     },
-    "AMGN": {
-      "qty": 2.420053,
-      "entry_price": 431.3666,
-      "entry_date": "2026-08-31",
-      "cost": 1043.93,
-      "tranches": 1
-    },
     "DGX": {
       "qty": 4.318682,
       "entry_price": 241.7242,
@@ -1499,6 +1492,15 @@
       "price": 432.54,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "AMGN",
+      "side": "sell",
+      "qty": 2.420053,
+      "price": 440.65,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

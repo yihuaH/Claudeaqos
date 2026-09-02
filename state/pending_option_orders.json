@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-01",
   "generated_at": "2026-09-01T21:50:00Z",
-  "status": "awaiting_execution",
+  "status": "expired_unexecuted",
   "valid_until": "次一交易日 (2026-09-02 周三) 10:30 ET (推荐执行窗 09:45-10:30 ET)",
   "channel": "手动 (agentic 不支持多腿, 2026-08-21 复测仍 API 400)",
   "orders": [
@@ -13,10 +13,28 @@
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
-        {"symbol": "XLF260915P00055000", "side": "sell", "position_effect": "open", "strike": 55.0,
-         "quote": {"bid": 0.09, "ask": 0.13}, "spread_pct": 36.364},
-        {"symbol": "XLF260915P00050000", "side": "buy", "position_effect": "open", "strike": 50.0,
-         "quote": {"bid": 0.01, "ask": 0.07}, "spread_pct": 150.0}
+        {
+          "symbol": "XLF260915P00055000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 55.0,
+          "quote": {
+            "bid": 0.09,
+            "ask": 0.13
+          },
+          "spread_pct": 36.364
+        },
+        {
+          "symbol": "XLF260915P00050000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 50.0,
+          "quote": {
+            "bid": 0.01,
+            "ask": 0.07
+          },
+          "spread_pct": 150.0
+        }
       ],
       "est_price": 0.02,
       "direction": "credit",
@@ -26,7 +44,12 @@
       "spot": 57.2,
       "rsi2": 8.87,
       "model_price": 0.0621,
-      "entry_quote": {"mid": 0.07, "spread_pct": 36.364, "long_spread_pct": 150.0, "net_credit_conservative": 0.02},
+      "entry_quote": {
+        "mid": 0.07,
+        "spread_pct": 36.364,
+        "long_spread_pct": 150.0,
+        "net_credit_conservative": 0.02
+      },
       "risk_per_contract": 4.98,
       "max_value_per_contract": 5.0,
       "max_loss_usd": 1992.0,
@@ -37,17 +60,22 @@
     "_disclaimer": "以下全部为**提示**, 引擎输出逐字段未改 (红线2)。会话不得删单/改单/改金额; 一票否决权在用户。",
     "headline": "⚠️⚠️ **风险收益比 249 : 1** —— 拿 $1,992 去赚 $8。这是本轨道迄今最极端的一单。",
     "payoff_ratio": {
-      "max_loss_usd": 1992.0, "max_gain_usd": 8.0, "ratio": "249 : 1",
+      "max_loss_usd": 1992.0,
+      "max_gain_usd": 8.0,
+      "ratio": "249 : 1",
       "breakeven_win_rate_pct": 99.6,
       "note": "二元近似下 8p = 1992(1−p) → 需 **99.6% 胜率**打平。"
     },
     "negative_model_edge": {
-      "est_price": 0.02, "model_price": 0.0621,
+      "est_price": 0.02,
+      "model_price": 0.0621,
       "est_vs_model_pct": -67.8,
       "verdict": "⚠️⚠️ **保守净贷记 $0.02 只有引擎公允价模型 $0.0621 的 32%** —— 按引擎自己的模型, 这是**重度负边际**入场, 比昨天 IWM 那笔 (−4.4%) 差一个数量级。"
     },
     "bp_impact": {
-      "collateral_usd": 1992.0, "realtime_bp": 2109.51, "pct_of_bp": 94.4,
+      "collateral_usd": 1992.0,
+      "realtime_bp": 2109.51,
+      "pct_of_bp": 94.4,
       "note": "抵押吃掉 **94.4% 的可用资金**, 只剩 $117.51。若执行, 本晚 4 张股票买单 (含 3 张加仓) **全部装不下**。"
     },
     "spread_gate_note": "卖腿点差 **36.4%** 远超 `max_credit_leg_spread_pct=12`, 但靠绝对闸 (0.13−0.09=$0.04 ≤ $0.10) 放行; 保护腿 150% 同理 ($0.06 ≤ $0.10)。**双档闸 (pct 或 abs 任一过即可) 在低价合约上等于没有百分比闸** —— 这是本单能出来的机制原因。"
@@ -55,10 +83,58 @@
   "pattern_finding": {
     "title": "📐 三笔实盘信用价差的横向对比 —— 低 IV 标的会让风险收益比爆炸",
     "samples": [
-      {"date": "2026-08-28", "underlying": "BAC", "type": "个股", "width": 6.0,  "credit": 0.22, "credit_over_width_pct": 3.67, "risk_usd": 1734, "gain_usd": 66, "ratio": "26:1",  "est_vs_model": "+20.9% ✅ 正边际", "outcome": "已平, +$27"},
-      {"date": "2026-08-31", "underlying": "IWM", "type": "宽基ETF", "width": 30.0, "credit": 0.30, "credit_over_width_pct": 1.00, "risk_usd": 2970, "gain_usd": 30, "ratio": "99:1",  "est_vs_model": "−4.4% ⚠️ 负边际", "outcome": "用户弃单"},
-      {"date": "2026-09-01", "underlying": "XLF", "type": "行业ETF", "width": 5.0,  "credit": 0.02, "credit_over_width_pct": 0.40, "risk_usd": 1992, "gain_usd": 8,  "ratio": "249:1", "est_vs_model": "−67.8% ⚠️⚠️ 重度负边际", "outcome": "待用户决定"},
-      {"date": "2026-09-02", "underlying": "(下一笔)", "type": "", "width": null, "credit": null, "credit_over_width_pct": null, "risk_usd": null, "gain_usd": null, "ratio": "", "est_vs_model": "", "outcome": "留位, 继续累积样本"}
+      {
+        "date": "2026-08-28",
+        "underlying": "BAC",
+        "type": "个股",
+        "width": 6.0,
+        "credit": 0.22,
+        "credit_over_width_pct": 3.67,
+        "risk_usd": 1734,
+        "gain_usd": 66,
+        "ratio": "26:1",
+        "est_vs_model": "+20.9% ✅ 正边际",
+        "outcome": "已平, +$27"
+      },
+      {
+        "date": "2026-08-31",
+        "underlying": "IWM",
+        "type": "宽基ETF",
+        "width": 30.0,
+        "credit": 0.3,
+        "credit_over_width_pct": 1.0,
+        "risk_usd": 2970,
+        "gain_usd": 30,
+        "ratio": "99:1",
+        "est_vs_model": "−4.4% ⚠️ 负边际",
+        "outcome": "用户弃单"
+      },
+      {
+        "date": "2026-09-01",
+        "underlying": "XLF",
+        "type": "行业ETF",
+        "width": 5.0,
+        "credit": 0.02,
+        "credit_over_width_pct": 0.4,
+        "risk_usd": 1992,
+        "gain_usd": 8,
+        "ratio": "249:1",
+        "est_vs_model": "−67.8% ⚠️⚠️ 重度负边际",
+        "outcome": "待用户决定"
+      },
+      {
+        "date": "2026-09-02",
+        "underlying": "(下一笔)",
+        "type": "",
+        "width": null,
+        "credit": null,
+        "credit_over_width_pct": null,
+        "risk_usd": null,
+        "gain_usd": null,
+        "ratio": "",
+        "est_vs_model": "",
+        "outcome": "留位, 继续累积样本"
+      }
     ],
     "hypothesis": "**贷记/宽度比 (credit_over_width_pct) 是判别指标**: BAC (个股, IV 较高) 3.67% → 比值健康; IWM/XLF (ETF, IV 低) 1.00% / 0.40% → 比值崩塌。行权价由 `0.97×spot` / `0.88×spot` 的**固定几何**决定宽度, 而贷记由 IV 决定 —— 低 IV 标的上, 分母不变分子塌陷, 风险收益比必然爆炸。",
     "corroborating_signal": "两个坏样本的 `est_price < model_price` 都提前发出了信号, 好样本则相反。**引擎自己的公允价模型就是现成的判别器, 只是目前没有任何闸使用它。**",
@@ -69,5 +145,12 @@
     ],
     "red_line_note": "⚠️ **以上三条均未实施。** `weekly_calls.json` 的点差闸与 sizing 属风控参数, 红线8 明确规定**永不自学习**, 会话也不得自行修改 (红线2/3)。**需用户明确批准才动。** 本次仅记录与建议。"
   },
-  "risk_note": "4 张在险 $1,992 = 净值 19.3%; 最大收益 $8 (0.40% / 14 天, 按在险归一)。"
+  "risk_note": "4 张在险 $1,992 = 净值 19.3%; 最大收益 $8 (0.40% / 14 天, 按在险归一)。",
+  "expiry": {
+    "expired_at": "2026-09-02T10:30:00-04:00",
+    "detected_at": "2026-09-02T10:46:00-04:00",
+    "orders_placed": 0,
+    "note": "同属上面那次会话失败的波及范围 (用户「执行」未被处理)。⚠️ 但即便执行也不推荐 —— 本单风险收益比 249:1 且 est $0.02 仅为 model $0.0621 的 32%, 会话当时的建议就是放弃。**过期在此单上不构成损失。**",
+    "session_failure_ref": "见 state/pending_orders.json expiry.session_failure"
+  }
 }
