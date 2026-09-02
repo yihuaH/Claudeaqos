@@ -1,88 +1,37 @@
 {
-  "date": "2026-09-01",
+  "date": "2026-09-02",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "symbol": "XLF260910C00050500",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 6.68,
-      "underlying": "XLF",
-      "strike": 50.5,
-      "expiry": "2026-09-10",
-      "dte": 9,
-      "spot": 57.2,
-      "rsi2": 8.87,
-      "model_price": 6.7498,
-      "entry_quote": {
-        "bid": 6.62,
-        "ask": 6.74,
-        "mid": 6.68,
-        "spread_pct": 1.796
-      }
-    }
-  ],
-  "skips": [
-    {
-      "symbol": "DIA",
-      "reason": "premium_too_large(5918)",
-      "rsi2": 3.97,
-      "spot": 527.75
-    },
-    {
-      "symbol": "SPY",
-      "reason": "premium_too_large(8715)",
-      "rsi2": 9.69,
-      "spot": 761.78
-    }
-  ],
+  "buys": [],
+  "skips": [],
   "warnings": [
     "XLI260828C00160000: 已过期未平仓 (expiry 2026-08-28), 疑似被自动行权/交割 — 停该仓操作, 人工对账 (红线6)"
   ],
   "near_signals": [
     {
       "symbol": "AMZN",
-      "rsi2_now": 22.87,
+      "rsi2_now": 23.67,
       "scenario": "2d_-1%x2",
-      "spot": 254.92,
+      "spot": 254.98,
       "structure": "single",
-      "est_premium_usd": 2601
-    },
-    {
-      "symbol": "TSM",
-      "rsi2_now": 22.85,
-      "scenario": "2d_-1%x2",
-      "spot": 414.0,
-      "structure": "single",
-      "est_premium_usd": 4213
+      "est_premium_usd": 2600
     },
     {
       "symbol": "AMD",
-      "rsi2_now": 18.89,
-      "scenario": "2d_-1%x2",
-      "spot": 459.61,
-      "structure": "single",
-      "est_premium_usd": 5104
-    },
-    {
-      "symbol": "SMH",
-      "rsi2_now": 20.16,
-      "scenario": "2d_-1%x2",
-      "spot": 545.22,
-      "structure": "single",
-      "est_premium_usd": 5613
-    },
-    {
-      "symbol": "QQQ",
-      "rsi2_now": 13.16,
+      "rsi2_now": 14.75,
       "scenario": "1d_-1%",
-      "spot": 707.64,
+      "spot": 457.06,
       "structure": "single",
-      "est_premium_usd": 7164
+      "est_premium_usd": 4919
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 17.28,
+      "scenario": "1d_-1%",
+      "spot": 496.82,
+      "structure": "single",
+      "est_premium_usd": 5042
     }
   ],
-  "suggested_reserve_usd": 2601.0
+  "suggested_reserve_usd": 2600.0
 }

@@ -1,38 +1,41 @@
 {
-  "trade_date": "2026-09-01",
-  "generated_at": "2026-09-01T21:50:00Z",
-  "status": "expired_session_failure",
-  "valid_until": "次一交易日 (2026-09-02 周三) 09:25 ET",
-  "buying_power_at_generation": 2109.51,
-  "portfolio_value_at_generation": 10296.9,
+  "trade_date": "2026-09-02",
+  "generated_at": "2026-09-02T21:55:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-03 周四) 09:25 ET",
+  "buying_power_at_generation": 3175.88,
+  "cash_at_generation": 3175.88,
+  "portfolio_value_at_generation": 10329.24,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
       "symbol": "AMAT",
-      "dollar_amount": 1029.69,
+      "dollar_amount": 1032.91,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 441.85,
-      "rsi2": 1.42,
+      "est_price": 438.46,
+      "review_est_price": 438.57,
+      "rsi2": 1.1,
       "tranche": 2,
       "avg_entry_price": 457.2996,
-      "drawdown_pct": -3.38,
+      "drawdown_pct": -4.12,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "BKNG",
-      "dollar_amount": 1029.69,
+      "symbol": "MMM",
+      "dollar_amount": 1032.91,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 195.69,
-      "rsi2": 9.86,
+      "est_price": 168.75,
+      "review_est_price": 168.96,
+      "rsi2": 0.82,
       "tranche": 2,
-      "avg_entry_price": 203.9899,
-      "drawdown_pct": -4.07,
+      "avg_entry_price": 174.5,
+      "drawdown_pct": -3.3,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
@@ -40,131 +43,100 @@
       "seq": 3,
       "action": "buy",
       "symbol": "UNP",
-      "dollar_amount": 1029.69,
+      "dollar_amount": 1032.91,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 290.62,
-      "rsi2": 1.02,
+      "est_price": 289.73,
+      "review_est_price": 289.75,
+      "rsi2": 0.9,
       "tranche": 2,
       "avg_entry_price": 303.0379,
-      "drawdown_pct": -4.1,
+      "drawdown_pct": -4.39,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "CSX",
-      "dollar_amount": 75.71,
+      "symbol": "BLK",
+      "dollar_amount": 1032.91,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 48.7,
-      "rsi2": 1.08,
+      "est_price": 1107.08,
+      "review_est_price": 1107.16,
+      "rsi2": 0.69,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "CSX",
+      "dollar_amount": 562.25,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 48.65,
+      "review_est_price": 48.66,
+      "rsi2": 1.03,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "note": "金额 $75.71 是**引擎自己**按剩余现金算出来的零头 (非会话缩量) —— 前三张加仓吃掉 $3,089.07 后所剩"
+      "note": "金额 $562.25 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
     }
   ],
+  "review_precheck": {
+    "all_clean": true,
+    "note": "5 单 review_equity_order 全部 order_checks 为空 — 无购买力/停牌/限制类告警。review_est_price 纯信息性, 不参与 4C 限价计算 (限价基准仍为引擎 est_price)。"
+  },
   "news_precheck": {
     "symbols": [
       "AMAT",
-      "BKNG",
+      "MMM",
       "UNP",
+      "BLK",
       "CSX"
     ],
     "red_flagged": [],
-    "with_news": 3,
-    "source": "integrations.py news 2026-08-25→2026-09-01",
+    "with_news": 4,
+    "source": "integrations.py news 2026-08-26→2026-09-02",
     "assessment": "无红旗。"
   },
   "option_alert": {
     "names": [
       "AMZN",
       "AMD",
-      "TSM",
-      "SMH",
-      "QQQ"
+      "MSFT"
     ],
     "scenarios": {
       "AMZN": {
-        "rsi2_now": 22.87,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 2022
+        "rsi2_now": 23.67,
+        "scenario": "2d_-1%x2",
+        "est_premium_usd": 2030
       },
       "AMD": {
-        "rsi2_now": 18.89,
+        "rsi2_now": 14.75,
         "scenario": "1d_-1%",
-        "est_premium_usd": 3047
+        "est_premium_usd": 3168
       },
-      "TSM": {
-        "rsi2_now": 22.85,
+      "MSFT": {
+        "rsi2_now": 17.28,
         "scenario": "1d_-1%",
-        "est_premium_usd": 3341
-      },
-      "SMH": {
-        "rsi2_now": 20.16,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 4172
-      },
-      "QQQ": {
-        "rsi2_now": 13.16,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 6219
+        "est_premium_usd": 4094
       }
     },
-    "reserve_usd": 738.33,
+    "reserve_usd": 1111.56,
     "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
   },
   "funding_note": {
     "detected": true,
-    "stock_buys_usd": 3164.78,
-    "option_collateral_usd": 1992.0,
-    "option_alert_reserve_usd": 738.33,
-    "realtime_bp": 2109.51,
-    "priority_rule": "期权优先 (CLAUDE.md 红线9 常规规则)",
-    "cap_if_option_executed": -625.82,
-    "cap_if_option_declined": 1366.18,
-    "consequence": "⚠️ **本晚资金极紧, 且与昨晚同构 —— 做不做那笔 XLF 期权决定股票能否成交**:\n• 做期权 → 抵押 $1,992 已超 BP 的 94.4%, 扣完弹药保留后 cap **为负** → **4 单全部装不下**\n• 不做期权 → cap $1,366.18 → 装得下 **seq1 AMAT ($1,029.69)**, seq2-4 跳过",
-    "note": "机械推算, 执行时以实时 min(BP, cash) 重算为准。AMGN 出场回款 ≈$1,060 于 09-02 开盘到账, 但本清单 09:25 过期 —— 老的时序错配。"
+    "stock_buys_usd": 4693.89,
+    "option_orders_today": 0,
+    "option_alert_reserve_usd": 1111.56,
+    "realtime_bp_at_generation": 3175.88,
+    "cap_at_generation": 2064.32,
+    "engine_cash_model": "引擎按「今日 4 张出场卖单成交后」的现金 (3175.88 + 预估回款 ≈1523 ≈ 4698.88) 分配, 故 5 单合计 $4,693.89 ≈ 该数。",
+    "timing_mismatch": "⚠️ **老问题复现**: 今日 4 张出场卖单 (URI/CPAY/WST/ROST) 是 regular_hours 市价, 排 **09-03 09:30 开盘**成交; 而本清单 **09:25 过期** —— 回款到账比清单过期晚 5 分钟, 本批买单**永远吃不到今天的出场回款**。",
+    "consequence": "按今晚实时资金 (BP $3,175.88 − 弹药保留 $1,111.56 = cap $2,064.32) 逐 seq 装箱:\n• seq1 AMAT $1,032.91 ✅ 装得下 (余 $1,031.41)\n• seq2 MMM $1,032.91 ⛔ 差 $1.50 装不下 → 整单跳过不缩量\n• seq3 UNP $1,032.91 ⛔ 跳过\n• seq4 BLK $1,032.91 ⛔ 跳过\n• seq5 CSX $562.25 ✅ 装得下 (余 $469.16)\n合计可执行 $1,595.16 / 5 单中的 2 单。",
+    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若用户放弃弹药保留, cap = $3,175.88 → seq1+seq2+seq5 = $2,628.07 可装, seq3/seq4 仍跳过。"
   },
-  "note": "候选中 MMM (rsi2 1.41) / DGX (1.47) / ROST / WST 等已持仓但未触加仓线或被资金约束; DAL (1.46) / BLK (1.54) / XLB (1.74) / TMO (2.11) / WAB (2.39) / EFA (2.53) / NSC (2.65) / LH (2.92) / XLI (2.99) / IWM (3.09) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。",
-  "expiry": {
-    "expired_at": "2026-09-02T09:25:00-04:00",
-    "detected_at": "2026-09-02T10:46:00-04:00",
-    "orders_placed": 0,
-    "session_failure": {
-      "what_happened": "用户 2026-09-01 18:5x ET 在收盘战报窗口明确回复「执行」。**会话没有执行, 也没有回复** —— 当时错误地判定为「无需回应」, 直接结束了那一轮。",
-      "consequence": "4 张股票买单从未下达。清单于 2026-09-02 09:25 ET 自然过期; 期权清单 10:30 ET 过期。发现时间 2026-09-02 10:46 ET, 两个窗口均已关闭。",
-      "not_the_user_fault": "用户在有效期内 (过期前约 14.5 小时) 就下达了指令, 完全合规。失败在会话侧。",
-      "why_not_execute_now": "playbook §4C-1 规定过期单跳过并标记 —— 25 小时后按昨日信号价执行已不是用户当时授权的那批订单 (价格与 RSI2 都变了)。补执行 = 用旧信号做新决策, 比不执行更糟。",
-      "price_impact_measured_0902_1046": {
-        "AMAT": {
-          "est": 441.85,
-          "now": 437.87,
-          "delta_pct": -0.9,
-          "note": "现在更便宜"
-        },
-        "BKNG": {
-          "est": 195.69,
-          "now": 198.55,
-          "delta_pct": 1.46,
-          "note": "现在更贵"
-        },
-        "UNP": {
-          "est": 290.62,
-          "now": 290.91,
-          "delta_pct": 0.1,
-          "note": "基本持平"
-        },
-        "CSX": {
-          "est": 48.7,
-          "now": 48.7,
-          "delta_pct": 0.0,
-          "note": "持平"
-        },
-        "summary": "四只价格影响基本对冲 (AMAT 便宜、BKNG 变贵、两只持平)。**实质损失不是价差, 是三张加仓单与一张新仓从未建立**。"
-      },
-      "prevention": "「执行」是**不可省略的动作指令**。今后收到「执行」/「执行股票」/「执行期权」等任何执行类指令, 必须当轮完成 4C/4D 全流程并给出回执; 即使判断该轮无其他事可做, 也绝不能以「无需回应」结束。"
-    }
-  }
+  "note": "候选中 RTX (rsi2 1.14) / CTAS (1.79) / NSC (1.86) / WAB (2.56) / GE (4.30) / NTAP (4.38) / EQIX (4.59) / XLI (5.25) / MDB (6.43) 未进清单, 由引擎防御层 (财报黑窗/异动闸) 与资金约束决定, 非会话筛选。URI 因 rsi2 5.36 且今日触发止损出场, 不在买单列。"
 }

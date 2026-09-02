@@ -1,122 +1,42 @@
 {
-  "date": "2026-09-01",
+  "date": "2026-09-02",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "structure": "credit_put_spread",
-      "qty": 4,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "XLF260915P00055000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 55.0,
-          "quote": {
-            "bid": 0.09,
-            "ask": 0.13
-          },
-          "spread_pct": 36.364
-        },
-        {
-          "symbol": "XLF260915P00050000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 50.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.07
-          },
-          "spread_pct": 150.0
-        }
-      ],
-      "est_price": 0.02,
-      "direction": "credit",
-      "underlying": "XLF",
-      "expiry": "2026-09-15",
-      "dte": 14,
-      "spot": 57.2,
-      "rsi2": 8.87,
-      "model_price": 0.0621,
-      "entry_quote": {
-        "mid": 0.07,
-        "spread_pct": 36.364,
-        "long_spread_pct": 150.0,
-        "net_credit_conservative": 0.02
-      },
-      "risk_per_contract": 4.98,
-      "max_value_per_contract": 5.0,
-      "max_loss_usd": 1992.0,
-      "max_gain_usd": 8.0
-    }
-  ],
+  "buys": [],
   "skips": [
     {
       "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=27.03%)",
-      "rsi2": 2.99,
-      "spot": 172.73
-    },
-    {
-      "symbol": "IWM",
-      "reason": "insufficient_buying_power(cost=2552,bp_left=2110)",
-      "rsi2": 3.09
-    },
-    {
-      "symbol": "DIA",
-      "reason": "insufficient_buying_power(cost=4967,bp_left=2110)",
-      "rsi2": 3.97
-    },
-    {
-      "symbol": "SPY",
-      "reason": "insufficient_buying_power(cost=6741,bp_left=118)",
-      "rsi2": 9.69
+      "reason": "credit_leg_spread_too_wide(best=28.99%)",
+      "rsi2": 5.25,
+      "spot": 172.78
     }
   ],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "AMZN",
-      "rsi2_now": 22.87,
+      "rsi2_now": 23.67,
       "scenario": "2d_-1%x2",
-      "spot": 254.92,
+      "spot": 254.98,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2022
+      "est_premium_usd": 2030
     },
     {
       "symbol": "AMD",
-      "rsi2_now": 18.89,
-      "scenario": "2d_-1%x2",
-      "spot": 459.61,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 3047
-    },
-    {
-      "symbol": "TSM",
-      "rsi2_now": 22.85,
-      "scenario": "2d_-1%x2",
-      "spot": 414.0,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 3341
-    },
-    {
-      "symbol": "SMH",
-      "rsi2_now": 20.16,
-      "scenario": "2d_-1%x2",
-      "spot": 545.22,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 4172
-    },
-    {
-      "symbol": "QQQ",
-      "rsi2_now": 13.16,
+      "rsi2_now": 14.75,
       "scenario": "1d_-1%",
-      "spot": 707.64,
+      "spot": 457.06,
       "structure": "credit_put_spread",
-      "est_premium_usd": 6219
+      "est_premium_usd": 3168
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 17.28,
+      "scenario": "1d_-1%",
+      "spot": 496.82,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4094
     }
   ],
-  "suggested_reserve_usd": 738.33
+  "suggested_reserve_usd": 1111.56
 }

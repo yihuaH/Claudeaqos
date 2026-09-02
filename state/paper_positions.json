@@ -31,13 +31,6 @@
       "cost": 9849.84,
       "tranches": 1
     },
-    "BKNG": {
-      "qty": 48.0,
-      "entry_price": 204.876875,
-      "entry_date": "2026-08-28",
-      "cost": 9834.09,
-      "tranches": 1
-    },
     "KO": {
       "qty": 34.0,
       "entry_price": 89.13,
@@ -66,20 +59,6 @@
       "cost": 9658.74,
       "tranches": 1
     },
-    "DAL": {
-      "qty": 111.0,
-      "entry_price": 78.967568,
-      "entry_date": "2026-08-31",
-      "cost": 8765.4,
-      "tranches": 1
-    },
-    "UNP": {
-      "qty": 32.0,
-      "entry_price": 302.22,
-      "entry_date": "2026-09-01",
-      "cost": 9671.04,
-      "tranches": 1
-    },
     "AMAT": {
       "qty": 21.0,
       "entry_price": 449.64,
@@ -87,11 +66,11 @@
       "cost": 9442.44,
       "tranches": 1
     },
-    "DGX": {
-      "qty": 6.0,
-      "entry_price": 243.931667,
-      "entry_date": "2026-09-01",
-      "cost": 1463.59,
+    "CSX": {
+      "qty": 198.0,
+      "entry_price": 48.563485,
+      "entry_date": "2026-09-02",
+      "cost": 9615.57,
       "tranches": 1
     }
   },
@@ -1228,6 +1207,51 @@
       "side": "buy",
       "qty": 6.0,
       "price": 243.931667,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "BKNG",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 197.51,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 111.0,
+      "price": 77.103694,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 32.0,
+      "price": 290.2,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "DGX",
+      "side": "sell",
+      "qty": 6.0,
+      "price": 236.355,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 198.0,
+      "price": 48.563485,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
