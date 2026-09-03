@@ -24,13 +24,6 @@
       "cost": 9766.62,
       "tranches": 1
     },
-    "CPAY": {
-      "qty": 24.0,
-      "entry_price": 410.41,
-      "entry_date": "2026-08-28",
-      "cost": 9849.84,
-      "tranches": 1
-    },
     "KO": {
       "qty": 34.0,
       "entry_price": 89.13,
@@ -38,25 +31,11 @@
       "cost": 3030.42,
       "tranches": 1
     },
-    "WST": {
-      "qty": 29.0,
-      "entry_price": 338.0,
-      "entry_date": "2026-08-31",
-      "cost": 9802.0,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 56.0,
       "entry_price": 173.24,
       "entry_date": "2026-08-31",
       "cost": 9701.44,
-      "tranches": 1
-    },
-    "ROST": {
-      "qty": 42.0,
-      "entry_price": 229.97,
-      "entry_date": "2026-08-31",
-      "cost": 9658.74,
       "tranches": 1
     },
     "AMAT": {
@@ -71,6 +50,41 @@
       "entry_price": 48.563485,
       "entry_date": "2026-09-02",
       "cost": 9615.57,
+      "tranches": 1
+    },
+    "BLK": {
+      "qty": 8.0,
+      "entry_price": 1124.295,
+      "entry_date": "2026-09-03",
+      "cost": 8994.36,
+      "tranches": 1
+    },
+    "UNP": {
+      "qty": 33.0,
+      "entry_price": 290.896364,
+      "entry_date": "2026-09-03",
+      "cost": 9599.58,
+      "tranches": 1
+    },
+    "RTX": {
+      "qty": 48.0,
+      "entry_price": 202.124792,
+      "entry_date": "2026-09-03",
+      "cost": 9701.99,
+      "tranches": 1
+    },
+    "CTAS": {
+      "qty": 49.0,
+      "entry_price": 200.963265,
+      "entry_date": "2026-09-03",
+      "cost": 9847.2,
+      "tranches": 1
+    },
+    "NSC": {
+      "qty": 29.0,
+      "entry_price": 332.134828,
+      "entry_date": "2026-09-03",
+      "cost": 9631.91,
       "tranches": 1
     }
   },
@@ -1252,6 +1266,78 @@
       "side": "buy",
       "qty": 198.0,
       "price": 48.563485,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "CPAY",
+      "side": "sell",
+      "qty": 24.0,
+      "price": 420.84,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "WST",
+      "side": "sell",
+      "qty": 29.0,
+      "price": 342.891724,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "ROST",
+      "side": "sell",
+      "qty": 42.0,
+      "price": 230.5,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "BLK",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 1124.295,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 33.0,
+      "price": 290.896364,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "RTX",
+      "side": "buy",
+      "qty": 48.0,
+      "price": 202.124792,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "CTAS",
+      "side": "buy",
+      "qty": 49.0,
+      "price": 200.963265,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "NSC",
+      "side": "buy",
+      "qty": 29.0,
+      "price": 332.134828,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -1,37 +1,34 @@
 {
-  "date": "2026-09-02",
+  "date": "2026-09-03",
   "halted": false,
-  "sells": [],
-  "buys": [],
-  "skips": [],
-  "warnings": [
-    "XLI260828C00160000: 已过期未平仓 (expiry 2026-08-28), 疑似被自动行权/交割 — 停该仓操作, 人工对账 (红线6)"
-  ],
-  "near_signals": [
+  "sells": [
     {
-      "symbol": "AMZN",
-      "rsi2_now": 23.67,
-      "scenario": "2d_-1%x2",
-      "spot": 254.98,
-      "structure": "single",
-      "est_premium_usd": 2600
-    },
-    {
-      "symbol": "AMD",
-      "rsi2_now": 14.75,
-      "scenario": "1d_-1%",
-      "spot": 457.06,
-      "structure": "single",
-      "est_premium_usd": 4919
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 17.28,
-      "scenario": "1d_-1%",
-      "spot": 496.82,
-      "structure": "single",
-      "est_premium_usd": 5042
+      "symbol": "IWM260908C00263000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength",
+      "est_price": 32.37,
+      "exit_quote": {
+        "bid": 32.21,
+        "ask": 32.52,
+        "mid": 32.365,
+        "spread_pct": 0.958
+      }
     }
   ],
-  "suggested_reserve_usd": 2600.0
+  "buys": [],
+  "skips": [],
+  "warnings": [],
+  "near_signals": [
+    {
+      "symbol": "AMD",
+      "rsi2_now": 12.77,
+      "scenario": "1d_-1%",
+      "spot": 456.16,
+      "structure": "single",
+      "est_premium_usd": 4899
+    }
+  ],
+  "suggested_reserve_usd": 4899.0
 }

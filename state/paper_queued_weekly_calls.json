@@ -1,9 +1,21 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-01",
+  "date": "2026-09-03",
   "coid_prefix": "cqw",
-  "next_open": "2026-09-02T09:30:00-04:00",
+  "next_open": "2026-09-04T09:30:00-04:00",
   "skipped": [],
   "failed": [],
-  "orders": []
+  "orders": [
+    {
+      "coid": "cqw-2026-09-03-IWM260908C00263000-sell",
+      "order_id": "8abdb326-9973-4caf-a096-46e89dd6a2c0",
+      "symbol": "IWM260908C00263000",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "31.4",
+      "qty": "1",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
+    }
+  ]
 }

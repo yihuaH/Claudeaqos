@@ -1,42 +1,19 @@
 {
-  "date": "2026-09-02",
+  "date": "2026-09-03",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [
-    {
-      "symbol": "XLI",
-      "reason": "credit_leg_spread_too_wide(best=28.99%)",
-      "rsi2": 5.25,
-      "spot": 172.78
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "AMZN",
-      "rsi2_now": 23.67,
-      "scenario": "2d_-1%x2",
-      "spot": 254.98,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2030
-    },
-    {
       "symbol": "AMD",
-      "rsi2_now": 14.75,
+      "rsi2_now": 12.77,
       "scenario": "1d_-1%",
-      "spot": 457.06,
+      "spot": 456.16,
       "structure": "credit_put_spread",
-      "est_premium_usd": 3168
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 17.28,
-      "scenario": "1d_-1%",
-      "spot": 496.82,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 4094
+      "est_premium_usd": 3173
     }
   ],
-  "suggested_reserve_usd": 1111.56
+  "suggested_reserve_usd": 1088.96
 }
