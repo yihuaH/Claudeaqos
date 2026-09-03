@@ -73,17 +73,24 @@
       "tranches": 1
     },
     "AMAT": {
-      "qty": 2.282814,
-      "entry_price": 457.2996,
+      "qty": 4.282814,
+      "entry_price": 448.3758,
       "entry_date": "2026-08-31",
-      "cost": 1043.93,
-      "tranches": 1
+      "cost": 1920.31,
+      "tranches": 2
     },
     "DGX": {
       "qty": 4.318682,
       "entry_price": 241.7242,
       "entry_date": "2026-09-01",
       "cost": 1043.93,
+      "tranches": 1
+    },
+    "CSX": {
+      "qty": 11.0,
+      "entry_price": 48.79,
+      "entry_date": "2026-09-02",
+      "cost": 536.69,
       "tranches": 1
     }
   },
@@ -1501,6 +1508,24 @@
       "price": 440.65,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 438.19,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-02",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 11.0,
+      "price": 48.79,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

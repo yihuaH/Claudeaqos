@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-02",
   "generated_at": "2026-09-02T21:55:00Z",
-  "status": "awaiting_execution",
+  "status": "executed_partial_by_funding",
   "valid_until": "次一交易日 (2026-09-03 周四) 09:25 ET",
   "buying_power_at_generation": 3175.88,
   "cash_at_generation": 3175.88,
@@ -138,5 +138,104 @@
     "consequence": "按今晚实时资金 (BP $3,175.88 − 弹药保留 $1,111.56 = cap $2,064.32) 逐 seq 装箱:\n• seq1 AMAT $1,032.91 ✅ 装得下 (余 $1,031.41)\n• seq2 MMM $1,032.91 ⛔ 差 $1.50 装不下 → 整单跳过不缩量\n• seq3 UNP $1,032.91 ⛔ 跳过\n• seq4 BLK $1,032.91 ⛔ 跳过\n• seq5 CSX $562.25 ✅ 装得下 (余 $469.16)\n合计可执行 $1,595.16 / 5 单中的 2 单。",
     "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若用户放弃弹药保留, cap = $3,175.88 → seq1+seq2+seq5 = $2,628.07 可装, seq3/seq4 仍跳过。"
   },
-  "note": "候选中 RTX (rsi2 1.14) / CTAS (1.79) / NSC (1.86) / WAB (2.56) / GE (4.30) / NTAP (4.38) / EQIX (4.59) / XLI (5.25) / MDB (6.43) 未进清单, 由引擎防御层 (财报黑窗/异动闸) 与资金约束决定, 非会话筛选。URI 因 rsi2 5.36 且今日触发止损出场, 不在买单列。"
+  "note": "候选中 RTX (rsi2 1.14) / CTAS (1.79) / NSC (1.86) / WAB (2.56) / GE (4.30) / NTAP (4.38) / EQIX (4.59) / XLI (5.25) / MDB (6.43) 未进清单, 由引擎防御层 (财报黑窗/异动闸) 与资金约束决定, 非会话筛选。URI 因 rsi2 5.36 且今日触发止损出场, 不在买单列。",
+  "execution": {
+    "executed_at": "2026-09-03T02:25:00Z (2026-09-02 22:25 ET)",
+    "trigger": "用户在收盘战报窗口回复「执行」",
+    "mode": "盘外混合执行 (playbook 4C 盘外限价模式): ①整股即时限价 all_day_hours + ②余量分数市价 regular_hours 排开盘",
+    "funding_gate": {
+      "realtime_bp": 3175.88,
+      "realtime_cash": 3175.88,
+      "unleveraged_bp": 3175.88,
+      "option_alert_reserve_usd": 1111.56,
+      "cap": 2064.32,
+      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 防杠杆闸 + playbook 4B option_alert 保留)",
+      "user_kept_reserve": true
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "AMAT",
+        "dollar_amount": 1032.91,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 2,
+          "limit_price": 442.84,
+          "market_hours": "all_day_hours",
+          "order_id": "6a98da60-e2cf-4331-a1a1-dc1f18600591",
+          "state": "filled",
+          "fill_qty": 2.0,
+          "fill_price": 438.19,
+          "cost": 876.38,
+          "note": "限价 = 引擎 est 438.46 × 1.010; 成交价低于限价 $4.65"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 156.53,
+          "market_hours": "regular_hours",
+          "order_id": "6a98da7c-f9d1-4ee1-94c4-d78b00f0c80a",
+          "state": "queued",
+          "est_qty": 0.35721,
+          "note": "排 09-03 开盘按开盘价成交, 晨检回写"
+        },
+        "total_committed": 1032.91
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "dollar_amount": 1032.91,
+        "status": "skipped_funding",
+        "note": "累计 2065.82 超 cap 2064.32 **$1.50** → 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "UNP",
+        "dollar_amount": 1032.91,
+        "status": "skipped_funding"
+      },
+      {
+        "seq": 4,
+        "symbol": "BLK",
+        "dollar_amount": 1032.91,
+        "status": "skipped_funding"
+      },
+      {
+        "seq": 5,
+        "symbol": "CSX",
+        "dollar_amount": 562.25,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 11,
+          "limit_price": 49.14,
+          "market_hours": "all_day_hours",
+          "order_id": "6a98da69-40b6-4128-a735-7f63c51034a6",
+          "state": "filled",
+          "fill_qty": 11.0,
+          "fill_price": 48.79,
+          "cost": 536.69,
+          "note": "限价 = 引擎 est 48.65 × 1.010; 成交价低于限价 $0.35; CSX 24h 时段可交易 (新增白名单样本)"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 25.56,
+          "market_hours": "regular_hours",
+          "order_id": "6a98da83-8ca9-40a8-b4de-ee9fc86fcb7b",
+          "state": "queued",
+          "est_qty": 0.53018
+        },
+        "total_committed": 562.25
+      }
+    ],
+    "totals": {
+      "committed_usd": 1595.16,
+      "filled_tonight_usd": 1413.07,
+      "queued_to_open_usd": 182.09,
+      "orders_executed": 2,
+      "orders_skipped": 3,
+      "skipped_usd": 3098.73
+    },
+    "ledger_writeback": "①腿已写回 state/positions.json (AMAT → 4.282814 @ 448.3758 tranches=2; CSX 新仓 11.0 @ 48.79)。②腿待 09-03 10:45 ET 晨检回写。"
+  }
 }
