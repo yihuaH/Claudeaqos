@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-02",
   "generated_at": "2026-09-02T21:55:00Z",
-  "status": "executed_partial_by_funding",
+  "status": "executed_partial_by_funding_all_legs_filled",
   "valid_until": "次一交易日 (2026-09-03 周四) 09:25 ET",
   "buying_power_at_generation": 3175.88,
   "cash_at_generation": 3175.88,
@@ -175,9 +175,11 @@
           "dollar_amount": 156.53,
           "market_hours": "regular_hours",
           "order_id": "6a98da7c-f9d1-4ee1-94c4-d78b00f0c80a",
-          "state": "queued",
-          "est_qty": 0.35721,
-          "note": "排 09-03 开盘按开盘价成交, 晨检回写"
+          "state": "filled",
+          "fill_qty": 0.361001,
+          "fill_price": 433.5999,
+          "cost": 156.53,
+          "filled_at": "2026-09-03T13:30:02Z (09:30 ET 开盘)"
         },
         "total_committed": 1032.91
       },
@@ -222,8 +224,11 @@
           "dollar_amount": 25.56,
           "market_hours": "regular_hours",
           "order_id": "6a98da83-8ca9-40a8-b4de-ee9fc86fcb7b",
-          "state": "queued",
-          "est_qty": 0.53018
+          "state": "filled",
+          "fill_qty": 0.524307,
+          "fill_price": 48.75,
+          "cost": 25.56,
+          "filled_at": "2026-09-03T13:30:00Z (09:30 ET 开盘)"
         },
         "total_committed": 562.25
       }
@@ -231,11 +236,13 @@
     "totals": {
       "committed_usd": 1595.16,
       "filled_tonight_usd": 1413.07,
-      "queued_to_open_usd": 182.09,
+      "queued_to_open_usd": 0.0,
       "orders_executed": 2,
       "orders_skipped": 3,
-      "skipped_usd": 3098.73
+      "skipped_usd": 3098.73,
+      "filled_total_usd": 1595.16,
+      "all_legs_filled_at": "2026-09-03 09:30 ET"
     },
-    "ledger_writeback": "①腿已写回 state/positions.json (AMAT → 4.282814 @ 448.3758 tranches=2; CSX 新仓 11.0 @ 48.79)。②腿待 09-03 10:45 ET 晨检回写。"
+    "ledger_writeback": "①腿 2026-09-02 夜间回写; ②腿 2026-09-03 09:30 开盘成交, 同日 10:50 ET 晨检回写。最终: AMAT 4.643815 @ $447.2271 (cost $2,076.84, tranches=2); CSX 11.524307 @ $48.7882 (cost $562.25, tranches=1)。两单实付合计 $1,595.16 = 引擎金额。"
   }
 }

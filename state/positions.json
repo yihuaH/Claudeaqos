@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "URI": {
-      "qty": 1.092096,
-      "entry_price": 1058.6981,
-      "entry_date": "2026-08-26",
-      "cost": 1156.2,
-      "tranches": 2
-    },
     "LLY": {
       "qty": 0.831245,
       "entry_price": 1180.0,
@@ -30,13 +23,6 @@
       "cost": 330.74,
       "tranches": 1
     },
-    "CPAY": {
-      "qty": 0.308768,
-      "entry_price": 406.0,
-      "entry_date": "2026-08-28",
-      "cost": 125.36,
-      "tranches": 1
-    },
     "BKNG": {
       "qty": 0.61454,
       "entry_price": 203.9899,
@@ -44,25 +30,11 @@
       "cost": 125.36,
       "tranches": 1
     },
-    "WST": {
-      "qty": 0.485541,
-      "entry_price": 337.17,
-      "entry_date": "2026-08-31",
-      "cost": 163.71,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 0.938166,
       "entry_price": 174.5,
       "entry_date": "2026-08-31",
       "cost": 163.71,
-      "tranches": 1
-    },
-    "ROST": {
-      "qty": 0.684537,
-      "entry_price": 228.87,
-      "entry_date": "2026-08-31",
-      "cost": 156.67,
       "tranches": 1
     },
     "UNP": {
@@ -73,10 +45,10 @@
       "tranches": 1
     },
     "AMAT": {
-      "qty": 4.282814,
-      "entry_price": 448.3758,
+      "qty": 4.643815,
+      "entry_price": 447.2271,
       "entry_date": "2026-08-31",
-      "cost": 1920.31,
+      "cost": 2076.84,
       "tranches": 2
     },
     "DGX": {
@@ -87,10 +59,10 @@
       "tranches": 1
     },
     "CSX": {
-      "qty": 11.0,
-      "entry_price": 48.79,
+      "qty": 11.524307,
+      "entry_price": 48.7882,
       "entry_date": "2026-09-02",
-      "cost": 536.69,
+      "cost": 562.25,
       "tranches": 1
     }
   },
@@ -1526,6 +1498,60 @@
       "price": 48.79,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "URI",
+      "side": "sell",
+      "qty": 1.092096,
+      "price": 984.58,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "CPAY",
+      "side": "sell",
+      "qty": 0.308768,
+      "price": 420.44,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "WST",
+      "side": "sell",
+      "qty": 0.485541,
+      "price": 343.97,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "ROST",
+      "side": "sell",
+      "qty": 0.684537,
+      "price": 231.6,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 0.361001,
+      "price": 433.5999,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 0.524307,
+      "price": 48.75,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [
