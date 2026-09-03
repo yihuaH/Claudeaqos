@@ -62,6 +62,48 @@ def bs_put(S, K, T, sig, r=0.04):
     return K * math.exp(-r * T) * _ncdf(-d2) - S * _ncdf(-d1)
 
 
+def model_fair_value(pick, spot, iv, rf):
+    """按 pick 的形态算 Black-Scholes 公允价, 与 cmd_signal 写进订单的 model_price 同源。
+    返回 (fair_value, direction): direction='credit' 表示我们**收**这笔钱, 'debit' 表示**付**。"""
+    T = pick["dte"] / 365.0
+    st = pick.get("structure")
+    if st == "credit_put_spread":
+        return (bs_put(spot, pick["short"]["meta"]["strike"], T, iv, rf)
+                - bs_put(spot, pick["long"]["meta"]["strike"], T, iv, rf)), "credit"
+    if st == "vertical_spread":
+        return (bs_call(spot, pick["long"]["meta"]["strike"], T, iv, rf)
+                - bs_call(spot, pick["short"]["meta"]["strike"], T, iv, rf)), "debit"
+    return bs_call(spot, pick["meta"]["strike"], T, iv, rf), "debit"
+
+
+def model_edge_gate(pick, spot, iv, rf, cc):
+    """公允价边际闸 (B 案, 2026-08-13 形态下用户 2026-09-03 批准; 红线8 风控闸只能由用户开)。
+
+    起因: 09-01 的 XLF 单 —— 保守净贷记 $0.02 只有引擎自己公允价 $0.0621 的 32%,
+    风险收益比 249:1。行权价由 0.97/0.88×spot 的**固定几何**定, 宽度只跟股价走;
+    贷记由 IV 定 —— 低 IV 标的上分母不变分子塌陷, 比值必然爆炸。引擎的 BS 模型
+    是现成的判别器, 此前没有任何闸使用它。
+
+    口径 (按方向对称, 配置缺省 = 闸关闭, 向后兼容):
+      credit 形态: 收到的净贷记 est ≥ model × r   (收太少 → 拦)
+      debit  形态: 付出的净借记 est ≤ model ÷ r   (付太贵 → 拦)
+    返回 (model_price, skip_reason|None)。"""
+    model, direction = model_fair_value(pick, spot, iv, rf)
+    r_pct = cc.get("min_est_vs_model_pct")
+    if r_pct is None:
+        return model, None
+    r = float(r_pct) / 100.0
+    est = pick["net_credit"] if direction == "credit" else pick.get(
+        "net_debit", pick.get("mid"))
+    if model <= 0 or est is None:
+        return model, None
+    ratio = est / model if direction == "credit" else model / est
+    if ratio < r:
+        return model, (f"model_edge_too_thin({direction}:est={est:.4f},"
+                       f"model={model:.4f},ratio={ratio * 100:.1f}%,min={r_pct:.0f}%)")
+    return model, None
+
+
 def realized_vol(closes, window):
     if len(closes) < window + 1:
         return None
@@ -476,6 +518,15 @@ def cmd_signal(a):
             skips.append({"symbol": sym, "reason": skip or "no_chain",
                           "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
             continue
+        # 公允价边际闸 (B 案, 用户 2026-09-03 批准): 放在算张数**之前**, 坏合约不占预算/BP 记账
+        rv = ind[sym]["rv"]
+        iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
+        model, edge_skip = model_edge_gate(pick, spot, iv,
+                                           float(cfg["model"]["risk_free"]), cc)
+        if edge_skip:
+            skips.append({"symbol": sym, "reason": edge_skip,
+                          "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
+            continue
         # 张数: position_pct_of_portfolio (每信号≈净值×N%, 2026-08-05 D20 回测采纳全凯利档)
         # 优先; 缺省回落到固定 contracts_per_position (paper 摩擦实测用)。
         per_cost = pick["mid"] * 100.0
@@ -517,13 +568,8 @@ def cmd_signal(a):
                           "rsi2": round(rsi2v, 2)})
             continue
         spent += cost
-        rv = ind[sym]["rv"]
-        iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
         if pick.get("structure") == "credit_put_spread":
             sm_, lm_ = pick["short"]["meta"], pick["long"]["meta"]
-            rf = float(cfg["model"]["risk_free"])
-            model = (bs_put(spot, sm_["strike"], pick["dte"] / 365.0, iv, rf)
-                     - bs_put(spot, lm_["strike"], pick["dte"] / 365.0, iv, rf))
             out["buys"].append({
                 "structure": "credit_put_spread", "qty": qty, "bucket": BUCKET,
                 "reason": "rsi2_entry_put_credit",
@@ -551,8 +597,6 @@ def cmd_signal(a):
             continue
         if pick.get("structure") == "vertical_spread":
             lm, sm = pick["long"]["meta"], pick["short"]["meta"]
-            model = (bs_call(spot, lm["strike"], pick["dte"] / 365.0, iv, float(cfg["model"]["risk_free"]))
-                     - bs_call(spot, sm["strike"], pick["dte"] / 365.0, iv, float(cfg["model"]["risk_free"])))
             out["buys"].append({
                 "structure": "vertical_spread", "qty": qty, "bucket": BUCKET,
                 "reason": "rsi2_entry_spread",
@@ -573,8 +617,6 @@ def cmd_signal(a):
                 "max_gain_usd": round((pick["max_value"] - pick["net_debit"]) * 100 * qty, 2),
             })
             continue
-        model = bs_call(spot, pick["meta"]["strike"], pick["dte"] / 365.0, iv,
-                        float(cfg["model"]["risk_free"]))
         out["buys"].append({
             "symbol": pick["occ"], "qty": qty,
             "position_intent": "buy_to_open", "bucket": BUCKET,

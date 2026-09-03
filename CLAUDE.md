@@ -69,7 +69,7 @@
 | 备兑开仓 overlay | paper | 视 `options.json enabled` | `options.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
 | 周call 摩擦实测 (RSI-2×深ITM 买call) | paper | ✅ active (2026-08-04 起, 验证期) | `weekly_calls.json enabled` |
-| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget **不设上限** 与单张风险 **不设上限** (2026-08-18 用户「不设上限」, 由 50%/$5,000 取消); 仍生效: 实时 BP 双封顶 (红线3 防杠杆闸)·熔断 (累计已实现亏 ≥ 净值×50%, 独立配置未动)·注码=净值×20% 风险/信号·**贵档单仓亦不设上限** (2026-08-18 用户「取消掉」, 三闸全撤)·点差闸·DTE闸。⚠️ 期权规模唯一硬约束现为**实时 buying_power**, 单笔在险额可超净值一半 (实测 AVGO 一张 = 净值 60.2%), 用户知情接受; 白名单21只·股票类专属; 开仓/平仓均**手动通道** (2026-08-15 实测 agentic 暂不支持多腿 place, 引擎出单+对话发参数+用户 App 执行, 详 playbook 4D 注记; 08-17 首笔 $1.53 成交)) | `weekly_calls_live.json enabled` + `budget` |
+| 周度期权实盘实验仓 (**credit_put_spread** 卖0.97P/买0.88P, 2026-08-13 用户「直接实盘」换形态, 验证期重置) | 实盘 | ✅ active·机会主义 (「有合适就买, 没有就不买」; budget **不设上限** 与单张风险 **不设上限** (2026-08-18 用户「不设上限」, 由 50%/$5,000 取消); 仍生效: 实时 BP 双封顶 (红线3 防杠杆闸)·熔断 (累计已实现亏 ≥ 净值×50%, 独立配置未动)·注码=净值×20% 风险/信号·**贵档单仓亦不设上限** (2026-08-18 用户「取消掉」, 三闸全撤)·点差闸·DTE闸·**公允价边际闸** (`contract.min_est_vs_model_pct=90`, 2026-09-03 用户回「b」批准: credit 形态要求保守净贷记 ≥ 引擎 BS 公允价×90%, 起因 09-01 XLF 单 est 仅为 model 的 32%/风险收益比 249:1; 缺省关闭, paper 轨道未加故不受影响)。⚠️ 期权规模唯一硬约束现为**实时 buying_power**, 单笔在险额可超净值一半 (实测 AVGO 一张 = 净值 60.2%), 用户知情接受; 白名单21只·股票类专属; 开仓/平仓均**手动通道** (2026-08-15 实测 agentic 暂不支持多腿 place, 引擎出单+对话发参数+用户 App 执行, 详 playbook 4D 注记; 08-17 首笔 $1.53 成交)) | `weekly_calls_live.json enabled` + `budget` |
 
 ## 结构
 
@@ -95,7 +95,7 @@
 - `scripts/paper.py` — Alpaca 纸面账户执行器 (挑战者影子交易, 仅 paper 环境); `run --allow-queue --queued-out` 收盘后用 limit/day 挂至次开 (解收盘后主跑 paper 轨道拒单), `sync --queued --prune` 次日回收成交; 排队清单 `state/paper_queued_*.json`。**2026-08-21 修补 4 项** (起因: 08-18~21 挑战者 AVGO/STLD 被重复卖单卖成空头, 详 `journal/2026-08-21-paper-wash-trade-fix.md`): ① 下单被拒抛 `OrderRejected` 由调用方逐单捕获, **绝不 SystemExit 中断整批**; ② 排队清单 `try/finally` **无论如何落盘** (清单丢失=成交回不到账本=次日重复出单, 事故根因); ③ `_wash_conflicts` 同日同标的卖+买冲突**保留卖单跳过买单** (出场优先, 从源头不触发 Alpaca 403); ④ `_clamp_sell_qty` **防转空闸** — 正股卖量不得超券商实际持仓, 脱钩时以券商为准, 期权 OCC 与 `sell_to_open` 备兑豁免
 - `scripts/options_overlay.py` — 备兑开仓确定性引擎 (signal / apply, 仅 paper)
 - `scripts/momentum.py` — 周度动量轮动确定性引擎 (signal, 仅 paper); `state/momentum_positions.json` 账本
-- `scripts/weekly_calls.py` — 周度期权确定性引擎 (signal / apply / report; 2026-08-04 用户授权), RSI-2 同形信号 × 跟正股出场, 支持 single / vertical_spread / **credit_put_spread** (2026-08-13 用户「直接实盘」, 实盘现行形态: 卖0.97P/买0.88P 收贷记, 每张风险=宽度−贷记, 点差双档闸 pct|abs), 双轨共用:
+- `scripts/weekly_calls.py` — 周度期权确定性引擎 (signal / apply / report; 2026-08-04 用户授权), RSI-2 同形信号 × 跟正股出场, 支持 single / vertical_spread / **credit_put_spread** (2026-08-13 用户「直接实盘」, 实盘现行形态: 卖0.97P/买0.88P 收贷记, 每张风险=宽度−贷记, 点差双档闸 pct|abs; 另有**公允价边际闸** `model_edge_gate`, 按方向对称 — credit 要 est ≥ model×r、debit 要 est ≤ model÷r, 配置缺字段=关闭), 双轨共用:
   - paper 摩擦实测: `strategy/weekly_calls.json` + `state/weekly_call_positions.json` 账本 (round_trips/skip_log 摩擦数据) + `state/weekly_call_last_orders.json` (次日跨会话回收 context); 实测真实点差 vs 回测模型
   - 实盘实验仓: `strategy/weekly_calls_live.json` (budget+实时BP 双硬顶) + `state/weekly_call_live_positions.json` 账本 + `state/weekly_call_live_last_orders.json`; 买入 semi_auto 走 `state/pending_option_orders.json` (playbook 4D), 出场卖单全自动
 - `state/pending_orders.json` — semi_auto 待执行清单 (主流程按需生成, 逐字段来自引擎; 用户回复「执行」后按 playbook 4C 消费; 当日无买单则不生成)

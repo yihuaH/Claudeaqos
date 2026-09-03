@@ -47,7 +47,9 @@
     "max_far_leg_spread_pct": 24.0,
     "max_far_leg_spread_abs": 0.1,
     "min_bid": 0.05,
-    "max_premium_per_contract_usd": null
+    "max_premium_per_contract_usd": null,
+    "min_est_vs_model_pct": 90.0,
+    "_min_est_vs_model_note": "公允价边际闸 (\"B 案\", 用户 2026-09-03 回复「b」批准; 红线8 规定风控闸永不自学习, 只能由用户开关与定值)。口径按方向对称: credit 形态要求**收到的**保守净贷记 est ≥ 引擎 BS 公允价 model × 90%; debit 形态要求**付出的**净借记 est ≤ model ÷ 90%。缺省 (字段缺失/null) = 闸关闭, 向后兼容, paper 轨道 weekly_calls.json 未加此字段故不受影响。起因: 2026-09-01 XLF 单保守净贷记 $0.02 仅为 model $0.0621 的 32%, 风险收益比 249:1 (需 99.6% 胜率打平); 行权价由 0.97/0.88×spot 固定几何定 → 宽度只随股价走, 而贷记由 IV 定, 低 IV 标的上分母不变分子塌陷。引擎的 BS 模型是现成判别器, 此前无任何闸使用它。⚠️ 历史三样本回判: BAC 08-28 ratio 120.9% 过 / IWM 08-31 95.6% **过** / XLF 09-01 32.2% **拦**。即 90% 这一档只拦得住 XLF 那类重度负边际, 拦不住 IWM 那类轻度负边际 (99:1); 阈值未按样本拟合 (3 个点定不出阈值, 且 est 来自 indicative 链, 实测高估可成交贷记约 12%), 收紧须用户另行决定。"
   },
   "sizing": {
     "position_pct_of_portfolio": 20,
