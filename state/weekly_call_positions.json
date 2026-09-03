@@ -3,23 +3,6 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "XLI260828C00160000": {
-      "underlying": "XLI",
-      "strike": 160.0,
-      "expiry": "2026-08-28",
-      "contracts": 1,
-      "entry_premium": 24.9,
-      "entry_date": "2026-08-19",
-      "entry_underlying": 183.57,
-      "entry_rsi2": 7.54,
-      "entry_quote": {
-        "bid": 24,
-        "ask": 24.43,
-        "mid": 24.215,
-        "spread_pct": 1.776
-      },
-      "model_price": 23.7454
-    },
     "IWM260908C00263000": {
       "underlying": "IWM",
       "strike": 263.0,
@@ -110,6 +93,26 @@
       "price": 29.71,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-08-28",
+      "symbol": "XLI260828C00160000",
+      "side": "sell",
+      "qty": 1,
+      "price": 17.14,
+      "bucket": "weekly_calls",
+      "reason": "expiry_auto_exercise",
+      "_note": "到期深实值自动行权, 非盘口成交; price = 到期日内在价值 (XLI 177.14 − K160)"
+    },
+    {
+      "date": "2026-09-03",
+      "symbol": "XLI",
+      "side": "sell",
+      "qty": 100,
+      "price": 174.14,
+      "bucket": "weekly_calls",
+      "reason": "orphan_liquidation",
+      "_note": "行权交割所得 100 股孤儿持仓, 用户 2026-09-03「清掉」授权平仓"
     }
   ],
   "round_trips": [
@@ -169,6 +172,26 @@
       "entry_mid": 24.01,
       "exit_mid": 33.6045,
       "model_price": 24.2244
+    },
+    {
+      "occ": "XLI260828C00160000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "XLI",
+      "entry_date": "2026-08-19",
+      "exit_date": "2026-09-03",
+      "entry_premium": 24.9,
+      "exit_premium": 14.14,
+      "pnl_pct": -43.21,
+      "pnl_usd": -1076.0,
+      "reason": "expiry_assignment_then_liquidation",
+      "entry_spread_pct": 1.776,
+      "exit_spread_pct": null,
+      "entry_mid": 24.215,
+      "exit_mid": null,
+      "model_price": 23.7454,
+      "_note": "非正常出场: 08-26/27/28 连三日 expiry_close 排队限价卖单未成交, 到期日 Alpaca 拒单 (contract is expired), 深实值自动行权交割 100 股 XLI, 孤儿持仓至 2026-09-03 由用户「清掉」平仓。等效出场价 = (清仓回款 $17,414.00 − 行权成本 $16,000.00) ÷ 100 = $14.14/股。拆解: 到期日 (08-28 XLI 收 177.14) 内在价值 $17.14/股 → 轨道自身亏损 $-776; 孤儿期 08-28→09-03 正股漂移再亏 $-300。⚠️ 本笔为执行层事故, 摩擦实测统计引用时应单独标注 (exit_spread_pct 无意义, 未经期权盘口成交)。"
     }
   ],
   "skip_log": [
@@ -297,6 +320,25 @@
       "reason": "premium_too_large(8715)",
       "rsi2": 9.69,
       "spot": 761.78
+    }
+  ],
+  "assignments": [
+    {
+      "occ": "XLI260828C00160000",
+      "expiry": "2026-08-28",
+      "detected": "2026-09-03",
+      "exercised_shares": 100,
+      "exercise_cost_usd": 16000.0,
+      "premium_paid_usd": 2490.0,
+      "cost_basis_per_share": 184.9,
+      "liquidated": {
+        "date": "2026-09-03",
+        "price": 174.14,
+        "proceeds_usd": 17414.0,
+        "authorized_by": "用户 2026-09-03 回复「1 清掉」"
+      },
+      "realized_usd": -1076.0,
+      "journal": "journal/2026-09-03-paper-xli-assignment.md"
     }
   ]
 }
