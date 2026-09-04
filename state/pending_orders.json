@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-03",
   "generated_at": "2026-09-03T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed_partial_by_funding",
   "valid_until": "次一交易日 (2026-09-04 周五) 09:25 ET",
   "buying_power_at_generation": 3111.32,
   "cash_at_generation": 3111.32,
@@ -112,5 +112,96 @@
     "consequence": "cap = BP $3,111.32 − 弹药保留 $1,088.96 = $2,022.36, 逐 seq 装箱:\n• seq1 BKNG $1,030.26 ✅ (余 $992.10)\n• seq2 MMM $1,030.26 ⛔ 差 $38.16 → 整单跳过不缩量\n• seq3 UNP $1,030.26 ⛔ 跳过\n• seq4 NSC $343.95 ✅ (余 $648.15)\n合计可执行 $1,374.21 / 4 单中的 2 单。",
     "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $3,111.32 → seq1+2+4 = $2,404.47 可装, seq3 UNP 仍跳过。"
   },
-  "note": "候选中 AMAT (rsi2 0.83) 已满 2 档不再出加仓单; CSCO (6.98) / DASH (9.79) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。"
+  "note": "候选中 AMAT (rsi2 0.83) 已满 2 档不再出加仓单; CSCO (6.98) / DASH (9.79) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。",
+  "execution": {
+    "executed_at": "2026-09-04T04:36:00Z (2026-09-04 00:36 ET)",
+    "trigger": "用户 2026-09-03 收盘战报窗口回复「执行」",
+    "mode": "盘外混合执行 (playbook 4C 盘外限价模式)",
+    "funding_gate": {
+      "realtime_bp": 3111.32,
+      "realtime_cash": 3111.32,
+      "unleveraged_bp": 3111.32,
+      "option_alert_reserve_usd": 1088.96,
+      "cap": 2022.36,
+      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 + playbook 4B option_alert 保留)",
+      "user_kept_reserve": true
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "BKNG",
+        "dollar_amount": 1030.26,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 5,
+          "limit_price": 197.08,
+          "market_hours": "all_day_hours",
+          "order_id": "6a9a4a93-a28f-44a5-9966-208336be4ce5",
+          "state": "filled",
+          "fill_qty": 5.0,
+          "fill_price": 195.39,
+          "cost": 976.95,
+          "note": "限价 = 引擎 est 195.13 × 1.010; 成交价低于限价 $1.69"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 53.31,
+          "market_hours": "regular_hours",
+          "order_id": "6a9a4abb-4eb6-4ca3-b982-e14339c26595",
+          "state": "queued",
+          "est_qty": 0.27283,
+          "note": "排 09-04 开盘成交, 晨检回写"
+        },
+        "total_committed": 1030.26
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "dollar_amount": 1030.26,
+        "status": "skipped_funding",
+        "note": "累计 2060.52 超 cap 2022.36 **$38.16** → 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "UNP",
+        "dollar_amount": 1030.26,
+        "status": "skipped_funding"
+      },
+      {
+        "seq": 4,
+        "symbol": "NSC",
+        "dollar_amount": 343.95,
+        "status": "leg1_queued_leg2_deferred",
+        "leg1": {
+          "type": "limit",
+          "qty": 1,
+          "limit_price": 331.11,
+          "market_hours": "extended_hours",
+          "order_id": "6a9a4aaf-0991-47fa-a598-fab2a2596dce",
+          "state": "queued",
+          "degraded_from": "all_day_hours",
+          "degrade_reason": "review 返回 EQUITY_ALL_DAY_TRADING_ERROR: 'instrument is untradable for 24 hour trading' → 按 playbook 4C 降级 all_day_hours → extended_hours",
+          "note": "下单时刻 00:36 ET 盘前时段未开, 排 04:00 ET 盘前生效; 限价 = 引擎 est 327.83 × 1.010"
+        },
+        "leg2": {
+          "state": "deferred",
+          "reason": "①腿仍在挂单未成交 —— 此时下 ②腿有双重成交风险, 合计会超过引擎金额 $343.95。沿用 2026-09-01 DGX 同一分支的处置: 待 ①腿成交结果确定后, 09-04 10:45 ET 晨检按实际余量补下。"
+        },
+        "total_committed_so_far": 0.0
+      }
+    ],
+    "totals": {
+      "committed_usd": 1374.21,
+      "filled_tonight_usd": 976.95,
+      "queued_usd": 53.31,
+      "deferred_usd": 343.95,
+      "orders_executed": 1,
+      "orders_partial": 1,
+      "orders_skipped": 2,
+      "skipped_usd": 2060.52
+    },
+    "ledger_writeback": "BKNG ①腿已写回 state/positions.json (→ 5.61454 @ $196.3313, cost $1,102.31, tranches=2)。BKNG ②腿与 NSC 全部待 09-04 晨检回写。",
+    "new_tradability_finding": "**NSC 不支持 24h 时段** —— 加入经验黑名单 (已知 ⛔: TRV/USFD/EMR/XOM/SAP/DGX/NSC)。"
+  }
 }

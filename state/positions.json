@@ -24,11 +24,11 @@
       "tranches": 1
     },
     "BKNG": {
-      "qty": 0.61454,
-      "entry_price": 203.9899,
+      "qty": 5.61454,
+      "entry_price": 196.3313,
       "entry_date": "2026-08-28",
-      "cost": 125.36,
-      "tranches": 1
+      "cost": 1102.31,
+      "tranches": 2
     },
     "MMM": {
       "qty": 0.938166,
@@ -1552,6 +1552,15 @@
       "price": 48.75,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "BKNG",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 195.39,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [
