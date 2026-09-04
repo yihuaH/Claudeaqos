@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-03",
   "generated_at": "2026-09-03T21:52:00Z",
-  "status": "executed_partial_by_funding",
+  "status": "executed_partial_by_funding_all_legs_filled",
   "valid_until": "次一交易日 (2026-09-04 周五) 09:25 ET",
   "buying_power_at_generation": 3111.32,
   "cash_at_generation": 3111.32,
@@ -149,9 +149,11 @@
           "dollar_amount": 53.31,
           "market_hours": "regular_hours",
           "order_id": "6a9a4abb-4eb6-4ca3-b982-e14339c26595",
-          "state": "queued",
-          "est_qty": 0.27283,
-          "note": "排 09-04 开盘成交, 晨检回写"
+          "state": "filled",
+          "fill_qty": 0.274807,
+          "fill_price": 193.99,
+          "cost": 53.31,
+          "filled_at": "2026-09-04T13:30:00Z (09:30 ET 开盘)"
         },
         "total_committed": 1030.26
       },
@@ -172,36 +174,50 @@
         "seq": 4,
         "symbol": "NSC",
         "dollar_amount": 343.95,
-        "status": "leg1_queued_leg2_deferred",
+        "status": "executed",
         "leg1": {
           "type": "limit",
           "qty": 1,
           "limit_price": 331.11,
           "market_hours": "extended_hours",
           "order_id": "6a9a4aaf-0991-47fa-a598-fab2a2596dce",
-          "state": "queued",
+          "state": "filled",
           "degraded_from": "all_day_hours",
           "degrade_reason": "review 返回 EQUITY_ALL_DAY_TRADING_ERROR: 'instrument is untradable for 24 hour trading' → 按 playbook 4C 降级 all_day_hours → extended_hours",
-          "note": "下单时刻 00:36 ET 盘前时段未开, 排 04:00 ET 盘前生效; 限价 = 引擎 est 327.83 × 1.010"
+          "fill_qty": 1.0,
+          "fill_price": 329.47,
+          "cost": 329.47,
+          "filled_at": "2026-09-04T11:01:46Z (07:01 ET 盘前)"
         },
         "leg2": {
-          "state": "deferred",
-          "reason": "①腿仍在挂单未成交 —— 此时下 ②腿有双重成交风险, 合计会超过引擎金额 $343.95。沿用 2026-09-01 DGX 同一分支的处置: 待 ①腿成交结果确定后, 09-04 10:45 ET 晨检按实际余量补下。"
+          "type": "market",
+          "dollar_amount": 14.48,
+          "market_hours": "regular_hours",
+          "order_id": "6a9ad9d8-9488-40e8-bc9d-8d44077c1cd5",
+          "state": "filled",
+          "fill_qty": 0.04371,
+          "fill_price": 331.27,
+          "cost": 14.48,
+          "filled_at": "2026-09-04T14:46:48Z (10:46 ET 晨检时补下, 即时成交)",
+          "note": "①腿盘前成交后余量确定为 $343.95 − $329.47 = $14.48, 晨检按 09-01 DGX 先例补下"
         },
-        "total_committed_so_far": 0.0
+        "total_committed": 343.95
       }
     ],
     "totals": {
       "committed_usd": 1374.21,
       "filled_tonight_usd": 976.95,
-      "queued_usd": 53.31,
-      "deferred_usd": 343.95,
-      "orders_executed": 1,
-      "orders_partial": 1,
+      "queued_usd": 0.0,
+      "deferred_usd": 0.0,
+      "orders_executed": 2,
+      "orders_partial": 0,
       "orders_skipped": 2,
-      "skipped_usd": 2060.52
+      "skipped_usd": 2060.52,
+      "filled_total_usd": 1374.21,
+      "all_legs_filled_at": "2026-09-04 10:46 ET"
     },
-    "ledger_writeback": "BKNG ①腿已写回 state/positions.json (→ 5.61454 @ $196.3313, cost $1,102.31, tranches=2)。BKNG ②腿与 NSC 全部待 09-04 晨检回写。",
-    "new_tradability_finding": "**NSC 不支持 24h 时段** —— 加入经验黑名单 (已知 ⛔: TRV/USFD/EMR/XOM/SAP/DGX/NSC)。"
+    "ledger_writeback": "全部四腿已回写。最终: BKNG 5.889347 @ $196.2221 (cost $1,155.62, tranches=2); NSC 新仓 1.043710 @ $329.5456 (cost $343.95)。两单实付合计 $1,374.21 = 引擎金额。",
+    "new_tradability_finding": "**NSC 不支持 24h 时段** —— 加入经验黑名单 (已知 ⛔: TRV/USFD/EMR/XOM/SAP/DGX/NSC)。",
+    "execution_prices_note": "NSC ①腿盘前 $329.47 **优于** ②腿盘中 $331.27 (+$1.80) —— 本次 24h 降级到 extended_hours 反而拿到更好的价; 单一样本, 不构成规律。"
   }
 }

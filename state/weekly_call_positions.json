@@ -2,25 +2,7 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "IWM260908C00263000": {
-      "underlying": "IWM",
-      "strike": 263.0,
-      "expiry": "2026-09-08",
-      "contracts": 1,
-      "entry_premium": 29.71,
-      "entry_date": "2026-09-01",
-      "entry_underlying": 293.93,
-      "entry_rsi2": 7.89,
-      "entry_quote": {
-        "bid": 31.6,
-        "ask": 31.99,
-        "mid": 31.795,
-        "spread_pct": 1.227
-      },
-      "model_price": 31.1605
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -113,6 +95,15 @@
       "bucket": "weekly_calls",
       "reason": "orphan_liquidation",
       "_note": "行权交割所得 100 股孤儿持仓, 用户 2026-09-03「清掉」授权平仓"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "IWM260908C00263000",
+      "side": "sell",
+      "qty": 1,
+      "price": 31.4,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -192,6 +183,25 @@
       "exit_mid": null,
       "model_price": 23.7454,
       "_note": "非正常出场: 08-26/27/28 连三日 expiry_close 排队限价卖单未成交, 到期日 Alpaca 拒单 (contract is expired), 深实值自动行权交割 100 股 XLI, 孤儿持仓至 2026-09-03 由用户「清掉」平仓。等效出场价 = (清仓回款 $17,414.00 − 行权成本 $16,000.00) ÷ 100 = $14.14/股。拆解: 到期日 (08-28 XLI 收 177.14) 内在价值 $17.14/股 → 轨道自身亏损 $-776; 孤儿期 08-28→09-03 正股漂移再亏 $-300。⚠️ 本笔为执行层事故, 摩擦实测统计引用时应单独标注 (exit_spread_pct 无意义, 未经期权盘口成交)。"
+    },
+    {
+      "occ": "IWM260908C00263000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "IWM",
+      "entry_date": "2026-09-01",
+      "exit_date": "2026-09-04",
+      "entry_premium": 29.71,
+      "exit_premium": 31.4,
+      "pnl_pct": 5.69,
+      "pnl_usd": 169.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 1.227,
+      "exit_spread_pct": null,
+      "entry_mid": 31.795,
+      "exit_mid": null,
+      "model_price": 31.1605
     }
   ],
   "skip_log": [

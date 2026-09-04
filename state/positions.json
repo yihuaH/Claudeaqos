@@ -16,18 +16,11 @@
       "cost": 1027.86,
       "tranches": 1
     },
-    "KO": {
-      "qty": 3.697921,
-      "entry_price": 89.4394,
-      "entry_date": "2026-08-27",
-      "cost": 330.74,
-      "tranches": 1
-    },
     "BKNG": {
-      "qty": 5.61454,
-      "entry_price": 196.3313,
+      "qty": 5.889347,
+      "entry_price": 196.2221,
       "entry_date": "2026-08-28",
-      "cost": 1102.31,
+      "cost": 1155.62,
       "tranches": 2
     },
     "MMM": {
@@ -63,6 +56,13 @@
       "entry_price": 48.7882,
       "entry_date": "2026-09-02",
       "cost": 562.25,
+      "tranches": 1
+    },
+    "NSC": {
+      "qty": 1.04371,
+      "entry_price": 329.5456,
+      "entry_date": "2026-09-04",
+      "cost": 343.95,
       "tranches": 1
     }
   },
@@ -1561,6 +1561,42 @@
       "price": 195.39,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "KO",
+      "side": "sell",
+      "qty": 3.697921,
+      "price": 88.3,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "BKNG",
+      "side": "buy",
+      "qty": 0.274807,
+      "price": 193.99,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "NSC",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 329.47,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "NSC",
+      "side": "buy",
+      "qty": 0.04371,
+      "price": 331.27,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [

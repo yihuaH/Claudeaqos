@@ -17,32 +17,11 @@
       "cost": 9486.0,
       "tranches": 1
     },
-    "ABT": {
-      "qty": 87.0,
-      "entry_price": 112.26,
-      "entry_date": "2026-08-28",
-      "cost": 9766.62,
-      "tranches": 1
-    },
-    "KO": {
-      "qty": 34.0,
-      "entry_price": 89.13,
-      "entry_date": "2026-08-28",
-      "cost": 3030.42,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 56.0,
       "entry_price": 173.24,
       "entry_date": "2026-08-31",
       "cost": 9701.44,
-      "tranches": 1
-    },
-    "AMAT": {
-      "qty": 21.0,
-      "entry_price": 449.64,
-      "entry_date": "2026-09-01",
-      "cost": 9442.44,
       "tranches": 1
     },
     "CSX": {
@@ -1340,6 +1319,33 @@
       "price": 332.134828,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "ABT",
+      "side": "sell",
+      "qty": 87.0,
+      "price": 108.32,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "KO",
+      "side": "sell",
+      "qty": 34.0,
+      "price": 88.646765,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 21.0,
+      "price": 449.04,
+      "bucket": "strategy",
+      "reason": "stop_loss"
     }
   ],
   "excluded_from_edge": [

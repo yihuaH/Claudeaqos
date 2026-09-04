@@ -8,39 +8,5 @@
     "AMAT buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
   ],
   "failed": [],
-  "orders": [
-    {
-      "coid": "cq-2026-09-03-ABT-sell",
-      "order_id": "d3f27dae-dec0-4788-8577-047c88b976e2",
-      "symbol": "ABT",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "105.53",
-      "qty": "87",
-      "bucket": "strategy",
-      "reason": "stop_loss"
-    },
-    {
-      "coid": "cq-2026-09-03-KO-sell",
-      "order_id": "c044e69a-d508-4184-9019-753a04936c22",
-      "symbol": "KO",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "86.15",
-      "qty": "34",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-09-03-AMAT-sell",
-      "order_id": "1f2b3844-16e5-4de9-bb2d-3e45678266a4",
-      "symbol": "AMAT",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "422.83",
-      "qty": "21",
-      "bucket": "strategy",
-      "reason": "stop_loss"
-    }
-  ]
+  "orders": []
 }
