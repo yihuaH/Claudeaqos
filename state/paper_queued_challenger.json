@@ -1,12 +1,90 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-03",
+  "date": "2026-09-04",
   "coid_prefix": "cq",
-  "next_open": "2026-09-04T09:30:00-04:00",
+  "next_open": "2026-09-08T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过",
-    "AMAT buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
+    "LLY buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
   ],
   "failed": [],
-  "orders": []
+  "orders": [
+    {
+      "coid": "cq-2026-09-04-LLY-sell",
+      "order_id": "7484a3fc-12b7-4d3c-b6ab-72d7d7ea9e35",
+      "symbol": "LLY",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "1114.88",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-09-04-CSX-sell",
+      "order_id": "21e30371-ae2b-431d-91b5-05b76c20c5e1",
+      "symbol": "CSX",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "47.93",
+      "qty": "198",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-04-CTAS-sell",
+      "order_id": "867a52b9-7247-4ad6-ba89-fdf4ba2736f9",
+      "symbol": "CTAS",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "194.46",
+      "qty": "49",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-04-DASH-buy",
+      "order_id": "60d3ed53-bbe5-4094-8fbc-5d52b249d5dd",
+      "symbol": "DASH",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "218.08",
+      "qty": "46",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-04-DXCM-buy",
+      "order_id": "b7ca9c3d-a7bb-41b8-bd4f-c99ef95ee331",
+      "symbol": "DXCM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "90.54",
+      "qty": "110",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-04-PM-buy",
+      "order_id": "9a935803-121f-4889-a94f-7c232a0573cf",
+      "symbol": "PM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "188.01",
+      "qty": "53",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-04-SBUX-buy",
+      "order_id": "76e32c31-8b62-4234-8474-bcf0eef90238",
+      "symbol": "SBUX",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "107.6",
+      "qty": "93",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
 }

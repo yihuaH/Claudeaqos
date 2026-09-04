@@ -1,34 +1,27 @@
 {
-  "date": "2026-09-03",
+  "date": "2026-09-04",
   "halted": false,
-  "sells": [
-    {
-      "symbol": "IWM260908C00263000",
-      "qty": 1,
-      "position_intent": "sell_to_close",
-      "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "est_price": 32.37,
-      "exit_quote": {
-        "bid": 32.21,
-        "ask": 32.52,
-        "mid": 32.365,
-        "spread_pct": 0.958
-      }
-    }
-  ],
+  "sells": [],
   "buys": [],
   "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "AMD",
-      "rsi2_now": 12.77,
+      "symbol": "XLP",
+      "rsi2_now": 12.06,
       "scenario": "1d_-1%",
-      "spot": 456.16,
+      "spot": 84.58,
       "structure": "single",
-      "est_premium_usd": 4899
+      "est_premium_usd": 856
+    },
+    {
+      "symbol": "XLV",
+      "rsi2_now": 24.61,
+      "scenario": "2d_-1%x2",
+      "spot": 171.45,
+      "structure": "single",
+      "est_premium_usd": 1737
     }
   ],
-  "suggested_reserve_usd": 4899.0
+  "suggested_reserve_usd": 856.0
 }

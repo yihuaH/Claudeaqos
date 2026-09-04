@@ -1,42 +1,41 @@
 {
-  "trade_date": "2026-09-03",
-  "generated_at": "2026-09-03T21:52:00Z",
-  "status": "executed_partial_by_funding_all_legs_filled",
-  "valid_until": "次一交易日 (2026-09-04 周五) 09:25 ET",
-  "buying_power_at_generation": 3111.32,
-  "cash_at_generation": 3111.32,
-  "portfolio_value_at_generation": 10302.62,
+  "trade_date": "2026-09-04",
+  "generated_at": "2026-09-04T21:52:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-08 周二) 09:25 ET —— 09-07 劳动节休市, 本清单跨长周末",
+  "buying_power_at_generation": 2063.64,
+  "cash_at_generation": 2063.64,
+  "portfolio_value_at_generation": 10356.01,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "BKNG",
-      "dollar_amount": 1030.26,
+      "symbol": "ABT",
+      "dollar_amount": 1035.6,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 195.13,
-      "review_est_price": 195.12,
-      "rsi2": 25.26,
+      "est_price": 108.33,
+      "review_est_price": 108.31,
+      "rsi2": 19.95,
       "tranche": 2,
-      "avg_entry_price": 203.9899,
-      "drawdown_pct": -4.34,
+      "avg_entry_price": 111.8996,
+      "drawdown_pct": -3.19,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
-      "note": "加仓档不看 rsi2 阈值 (rsi2 25.26 > 入场线 10 属正常) —— 触发条件是收盘 ≤ 加权均价×(1−3%), 见 config.json scale_in"
+      "valid_until": "next_open_0925_et"
     },
     {
       "seq": 2,
       "action": "buy",
       "symbol": "MMM",
-      "dollar_amount": 1030.26,
+      "dollar_amount": 1035.6,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 168.31,
-      "review_est_price": 168.33,
-      "rsi2": 0.66,
+      "est_price": 168.56,
+      "review_est_price": 168.51,
+      "rsi2": 18.85,
       "tranche": 2,
       "avg_entry_price": 174.5,
-      "drawdown_pct": -3.55,
+      "drawdown_pct": -3.4,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
@@ -44,180 +43,94 @@
       "seq": 3,
       "action": "buy",
       "symbol": "UNP",
-      "dollar_amount": 1030.26,
+      "dollar_amount": 1035.6,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 289.15,
-      "review_est_price": 289.14,
-      "rsi2": 0.79,
+      "est_price": 289.62,
+      "review_est_price": 289.61,
+      "rsi2": 17.85,
       "tranche": 2,
       "avg_entry_price": 303.0379,
-      "drawdown_pct": -4.58,
+      "drawdown_pct": -4.43,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "NSC",
-      "dollar_amount": 343.95,
+      "symbol": "DASH",
+      "dollar_amount": 1035.6,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 327.83,
-      "review_est_price": 327.9,
-      "rsi2": 1.28,
+      "est_price": 211.73,
+      "review_est_price": 211.75,
+      "rsi2": 2.56,
+      "state_file": "state/positions.json",
+      "valid_until": "next_open_0925_et"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "DXCM",
+      "dollar_amount": 597.25,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 87.9,
+      "review_est_price": 87.895,
+      "rsi2": 3.78,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "note": "金额 $343.95 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
+      "note": "金额 $597.25 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
     }
   ],
   "review_precheck": {
     "all_clean": true,
-    "note": "4 单 review_equity_order 全部 order_checks 为空 — 无购买力/停牌/限制类告警。"
+    "note": "5 单 review_equity_order 全部 order_checks 为空 — 无购买力/停牌/限制类告警。"
   },
   "news_precheck": {
     "symbols": [
-      "BKNG",
+      "ABT",
       "MMM",
       "UNP",
-      "NSC"
+      "DASH",
+      "DXCM"
     ],
     "red_flagged": [],
     "with_news": 2,
-    "source": "integrations.py news 2026-08-27→2026-09-03",
+    "source": "integrations.py news 2026-08-28→2026-09-04",
     "assessment": "无红旗。"
   },
   "option_alert": {
     "names": [
-      "AMD"
+      "XLP",
+      "XLV"
     ],
     "scenarios": {
-      "AMD": {
-        "rsi2_now": 12.77,
+      "XLP": {
+        "rsi2_now": 12.06,
         "scenario": "1d_-1%",
-        "est_premium_usd": 3173
+        "est_premium_usd": 736
+      },
+      "XLV": {
+        "rsi2_now": 24.61,
+        "scenario": "2d_-1%x2",
+        "est_premium_usd": 1448
       }
     },
-    "reserve_usd": 1088.96,
+    "reserve_usd": 722.27,
     "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
   },
   "funding_note": {
     "detected": true,
-    "stock_buys_usd": 3434.73,
+    "stock_buys_usd": 4739.65,
     "option_orders_today": 0,
-    "option_alert_reserve_usd": 1088.96,
-    "realtime_bp_at_generation": 3111.32,
-    "cap_at_generation": 2022.36,
-    "timing_mismatch": "今日 KO 出场卖单排 09-04 09:30 开盘成交 (回款 ≈$328), 本清单 09:25 过期 —— 同样吃不到 (09-02 起连续第三天)。",
-    "consequence": "cap = BP $3,111.32 − 弹药保留 $1,088.96 = $2,022.36, 逐 seq 装箱:\n• seq1 BKNG $1,030.26 ✅ (余 $992.10)\n• seq2 MMM $1,030.26 ⛔ 差 $38.16 → 整单跳过不缩量\n• seq3 UNP $1,030.26 ⛔ 跳过\n• seq4 NSC $343.95 ✅ (余 $648.15)\n合计可执行 $1,374.21 / 4 单中的 2 单。",
-    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $3,111.32 → seq1+2+4 = $2,404.47 可装, seq3 UNP 仍跳过。"
+    "option_alert_reserve_usd": 722.27,
+    "realtime_bp_at_generation": 2063.64,
+    "cap_at_generation": 1341.37,
+    "timing_mismatch": "今日 AMAT+CSX 出场卖单排 09-08 开盘成交 (回款 ≈$2,681), 本清单同在 09-08 09:25 过期 —— 回款晚 5 分钟, 连续第四天同一错配。**但本次金额最大**: $2,681 的回款如果能用上, 5 单里能多装 2 单。",
+    "consequence": "cap = BP $2,063.64 − 弹药保留 $722.27 = $1,341.37, 逐 seq 装箱:\n• seq1 ABT $1,035.60 ✅ (余 $305.77)\n• seq2 MMM ⛔ · seq3 UNP ⛔ · seq4 DASH ⛔ (各 $1,035.60)\n• seq5 DXCM $597.25 ⛔ (累计会到 $1,632.85 > cap)\n合计可执行 **$1,035.60 / 5 单中的 1 单**。",
+    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $2,063.64 → seq1 + seq5 = $1,632.85 可装 (2 单), seq2/3/4 仍跳过。"
   },
-  "note": "候选中 AMAT (rsi2 0.83) 已满 2 档不再出加仓单; CSCO (6.98) / DASH (9.79) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。",
-  "execution": {
-    "executed_at": "2026-09-04T04:36:00Z (2026-09-04 00:36 ET)",
-    "trigger": "用户 2026-09-03 收盘战报窗口回复「执行」",
-    "mode": "盘外混合执行 (playbook 4C 盘外限价模式)",
-    "funding_gate": {
-      "realtime_bp": 3111.32,
-      "realtime_cash": 3111.32,
-      "unleveraged_bp": 3111.32,
-      "option_alert_reserve_usd": 1088.96,
-      "cap": 2022.36,
-      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 + playbook 4B option_alert 保留)",
-      "user_kept_reserve": true
-    },
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "BKNG",
-        "dollar_amount": 1030.26,
-        "status": "executed",
-        "leg1": {
-          "type": "limit",
-          "qty": 5,
-          "limit_price": 197.08,
-          "market_hours": "all_day_hours",
-          "order_id": "6a9a4a93-a28f-44a5-9966-208336be4ce5",
-          "state": "filled",
-          "fill_qty": 5.0,
-          "fill_price": 195.39,
-          "cost": 976.95,
-          "note": "限价 = 引擎 est 195.13 × 1.010; 成交价低于限价 $1.69"
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 53.31,
-          "market_hours": "regular_hours",
-          "order_id": "6a9a4abb-4eb6-4ca3-b982-e14339c26595",
-          "state": "filled",
-          "fill_qty": 0.274807,
-          "fill_price": 193.99,
-          "cost": 53.31,
-          "filled_at": "2026-09-04T13:30:00Z (09:30 ET 开盘)"
-        },
-        "total_committed": 1030.26
-      },
-      {
-        "seq": 2,
-        "symbol": "MMM",
-        "dollar_amount": 1030.26,
-        "status": "skipped_funding",
-        "note": "累计 2060.52 超 cap 2022.36 **$38.16** → 整单跳过不缩量"
-      },
-      {
-        "seq": 3,
-        "symbol": "UNP",
-        "dollar_amount": 1030.26,
-        "status": "skipped_funding"
-      },
-      {
-        "seq": 4,
-        "symbol": "NSC",
-        "dollar_amount": 343.95,
-        "status": "executed",
-        "leg1": {
-          "type": "limit",
-          "qty": 1,
-          "limit_price": 331.11,
-          "market_hours": "extended_hours",
-          "order_id": "6a9a4aaf-0991-47fa-a598-fab2a2596dce",
-          "state": "filled",
-          "degraded_from": "all_day_hours",
-          "degrade_reason": "review 返回 EQUITY_ALL_DAY_TRADING_ERROR: 'instrument is untradable for 24 hour trading' → 按 playbook 4C 降级 all_day_hours → extended_hours",
-          "fill_qty": 1.0,
-          "fill_price": 329.47,
-          "cost": 329.47,
-          "filled_at": "2026-09-04T11:01:46Z (07:01 ET 盘前)"
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 14.48,
-          "market_hours": "regular_hours",
-          "order_id": "6a9ad9d8-9488-40e8-bc9d-8d44077c1cd5",
-          "state": "filled",
-          "fill_qty": 0.04371,
-          "fill_price": 331.27,
-          "cost": 14.48,
-          "filled_at": "2026-09-04T14:46:48Z (10:46 ET 晨检时补下, 即时成交)",
-          "note": "①腿盘前成交后余量确定为 $343.95 − $329.47 = $14.48, 晨检按 09-01 DGX 先例补下"
-        },
-        "total_committed": 343.95
-      }
-    ],
-    "totals": {
-      "committed_usd": 1374.21,
-      "filled_tonight_usd": 976.95,
-      "queued_usd": 0.0,
-      "deferred_usd": 0.0,
-      "orders_executed": 2,
-      "orders_partial": 0,
-      "orders_skipped": 2,
-      "skipped_usd": 2060.52,
-      "filled_total_usd": 1374.21,
-      "all_legs_filled_at": "2026-09-04 10:46 ET"
-    },
-    "ledger_writeback": "全部四腿已回写。最终: BKNG 5.889347 @ $196.2221 (cost $1,155.62, tranches=2); NSC 新仓 1.043710 @ $329.5456 (cost $343.95)。两单实付合计 $1,374.21 = 引擎金额。",
-    "new_tradability_finding": "**NSC 不支持 24h 时段** —— 加入经验黑名单 (已知 ⛔: TRV/USFD/EMR/XOM/SAP/DGX/NSC)。",
-    "execution_prices_note": "NSC ①腿盘前 $329.47 **优于** ②腿盘中 $331.27 (+$1.80) —— 本次 24h 降级到 extended_hours 反而拿到更好的价; 单一样本, 不构成规律。"
-  }
+  "long_weekend_note": "⚠️ **09-07 (周一) 劳动节休市**, 下一交易日为 **09-08 周二**。本清单有效期因此跨 4 天; 盘外混合执行的 ①腿 24h 时段在周末不开, 若在周末触发「执行」, 整单会排到 09-08 盘前/开盘。",
+  "note": "候选中 LLY (rsi2 3.60) / PM (5.06) / PATH (5.25) / SBUX (8.76) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。PATH 昨日 (09-03) 盘后财报后今日暴跌 −16.5% ($18.22→$15.21), 近20日异动闸对**下跌**异动照拦 (财报跳空豁免只对上涨放行)。"
 }
