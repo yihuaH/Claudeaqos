@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-04",
   "generated_at": "2026-09-04T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed_partial_by_funding",
   "valid_until": "次一交易日 (2026-09-08 周二) 09:25 ET —— 09-07 劳动节休市, 本清单跨长周末",
   "buying_power_at_generation": 2063.64,
   "cash_at_generation": 2063.64,
@@ -132,5 +132,80 @@
     "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $2,063.64 → seq1 + seq5 = $1,632.85 可装 (2 单), seq2/3/4 仍跳过。"
   },
   "long_weekend_note": "⚠️ **09-07 (周一) 劳动节休市**, 下一交易日为 **09-08 周二**。本清单有效期因此跨 4 天; 盘外混合执行的 ①腿 24h 时段在周末不开, 若在周末触发「执行」, 整单会排到 09-08 盘前/开盘。",
-  "note": "候选中 LLY (rsi2 3.60) / PM (5.06) / PATH (5.25) / SBUX (8.76) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。PATH 昨日 (09-03) 盘后财报后今日暴跌 −16.5% ($18.22→$15.21), 近20日异动闸对**下跌**异动照拦 (财报跳空豁免只对上涨放行)。"
+  "note": "候选中 LLY (rsi2 3.60) / PM (5.06) / PATH (5.25) / SBUX (8.76) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。PATH 昨日 (09-03) 盘后财报后今日暴跌 −16.5% ($18.22→$15.21), 近20日异动闸对**下跌**异动照拦 (财报跳空豁免只对上涨放行)。",
+  "execution": {
+    "executed_at": "2026-09-05T06:28:39Z (2026-09-05 02:28 ET, 周六)",
+    "trigger": "用户 2026-09-04 收盘战报窗口回复「执行」",
+    "mode": "盘外限价模式 (playbook 4C); ⚠️ 触发时刻为**周六凌晨**, 三个时段 (24h/盘前盘后/常规) 均未开市",
+    "funding_gate": {
+      "realtime_bp": 2063.64,
+      "realtime_cash": 2063.64,
+      "unleveraged_bp": 2063.64,
+      "option_alert_reserve_usd": 722.27,
+      "cap": 1341.37,
+      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 + playbook 4B option_alert 保留)",
+      "user_kept_reserve": true
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "ABT",
+        "dollar_amount": 1035.6,
+        "status": "leg1_queued_leg2_deferred",
+        "leg1": {
+          "type": "limit",
+          "qty": 9,
+          "limit_price": 109.41,
+          "market_hours": "all_day_hours",
+          "order_id": "6a9bb697-f8c4-4844-b8f6-52034d1750cc",
+          "state": "queued",
+          "placed_at": "2026-09-05 02:28 ET (周六)",
+          "note": "限价 = 引擎 est 108.33 × 1.010 = 109.41, 高于周五收盘 ask $109.00 → 开市即可成交。ABT 支持 24h 时段 (review 无 EQUITY_ALL_DAY_TRADING_ERROR), 未降级。⚠️ 但 **24h 市场周末不开** (周日 20:00 ET 重开), 故本单挂到周日晚才有机会成交。"
+        },
+        "leg2": {
+          "state": "deferred",
+          "reason": "①腿仍未成交, 现下 ②腿有双重成交风险 (合计会超 $1,035.60, 放大属红线2 禁止)。沿用 2026-09-01 DGX / 2026-09-04 NSC 同一分支: 待 ①腿结果确定后, **09-08 (周二) 10:45 ET 晨检**按实际余量补下。"
+        }
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "dollar_amount": 1035.6,
+        "status": "skipped_funding",
+        "note": "累计 2071.20 超 cap 1341.37 → 整单跳过不缩量"
+      },
+      {
+        "seq": 3,
+        "symbol": "UNP",
+        "dollar_amount": 1035.6,
+        "status": "skipped_funding"
+      },
+      {
+        "seq": 4,
+        "symbol": "DASH",
+        "dollar_amount": 1035.6,
+        "status": "skipped_funding"
+      },
+      {
+        "seq": 5,
+        "symbol": "DXCM",
+        "dollar_amount": 597.25,
+        "status": "skipped_funding",
+        "note": "累计会到 1632.85 > cap 1341.37 → 跳过 (余额 $305.77 不够)"
+      }
+    ],
+    "totals": {
+      "committed_usd": 1035.6,
+      "filled_usd": 0.0,
+      "queued_usd": 1035.6,
+      "deferred_usd": 0.0,
+      "orders_executed": 0,
+      "orders_partial": 1,
+      "orders_skipped": 4,
+      "skipped_usd": 3704.05
+    },
+    "ledger_writeback": "**本次无回写** —— 无任何成交。ABT ①腿挂单中, ②腿待定, 均待 09-08 晨检处理。",
+    "weekend_note": "⚠️ **周六下单的时段现实**: 24h 市场运行时间为周日 20:00 ET → 周五 20:00 ET, 周末不开; 盘前/盘后与常规时段同样关闭。故本单三个时段都无法立即成交, 最早成交机会 = **周日 20:00 ET 24h 时段重开**, 其次 09-08 (周二) 盘前 04:00 ET / 开盘 09:30 ET。09-07 为劳动节休市。清单有效期至 09-08 09:25 ET, 窗口仍充裕。",
+    "verify_at_morning_check": "⚠️ `time_in_force=gfd` 于**周六**挂出, 跨周末 + 假日。券商已接受为 queued (未拒), 但**是否会在开市前被作废尚未验证** —— 09-08 晨检必须先确认该单仍在册/已成交, 而非默认它还活着。"
+  }
 }
