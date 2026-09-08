@@ -1,27 +1,72 @@
 {
-  "date": "2026-09-04",
+  "date": "2026-09-08",
   "halted": false,
   "sells": [],
-  "buys": [],
-  "skips": [],
+  "buys": [
+    {
+      "symbol": "XLP260918C00075000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 9.12,
+      "underlying": "XLP",
+      "strike": 75.0,
+      "expiry": "2026-09-18",
+      "dte": 10,
+      "spot": 84.02,
+      "rsi2": 5.65,
+      "model_price": 9.1022,
+      "entry_quote": {
+        "bid": 9.09,
+        "ask": 9.16,
+        "mid": 9.125,
+        "spread_pct": 0.767
+      }
+    }
+  ],
+  "skips": [
+    {
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=6.74%)",
+      "rsi2": 5.57,
+      "spot": 167.13
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLP",
-      "rsi2_now": 12.06,
-      "scenario": "1d_-1%",
-      "spot": 84.58,
+      "symbol": "XLF",
+      "rsi2_now": 21.04,
+      "scenario": "2d_-1%x2",
+      "spot": 57.3,
       "structure": "single",
-      "est_premium_usd": 856
+      "est_premium_usd": 580
     },
     {
-      "symbol": "XLV",
-      "rsi2_now": 24.61,
-      "scenario": "2d_-1%x2",
-      "spot": 171.45,
+      "symbol": "AAPL",
+      "rsi2_now": 15.23,
+      "scenario": "1d_-1%",
+      "spot": 316.22,
       "structure": "single",
-      "est_premium_usd": 1737
+      "est_premium_usd": 3207
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 22.76,
+      "scenario": "2d_-1%x2",
+      "spot": 493.95,
+      "structure": "single",
+      "est_premium_usd": 5020
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 19.94,
+      "scenario": "1d_-1%",
+      "spot": 528.03,
+      "structure": "single",
+      "est_premium_usd": 5345
     }
   ],
-  "suggested_reserve_usd": 856.0
+  "suggested_reserve_usd": 580.0
 }

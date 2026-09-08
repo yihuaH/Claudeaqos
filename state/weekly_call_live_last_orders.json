@@ -1,27 +1,56 @@
 {
-  "date": "2026-09-04",
+  "date": "2026-09-08",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [],
+  "skips": [
+    {
+      "symbol": "XLV",
+      "reason": "credit_leg_spread_too_wide(best=31.88%)",
+      "rsi2": 5.57,
+      "spot": 167.13
+    },
+    {
+      "symbol": "XLP",
+      "reason": "credit_leg_spread_too_wide(best=22.95%)",
+      "rsi2": 5.65,
+      "spot": 84.02
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLP",
-      "rsi2_now": 12.06,
-      "scenario": "1d_-1%",
-      "spot": 84.58,
+      "symbol": "XLF",
+      "rsi2_now": 21.04,
+      "scenario": "2d_-1%x2",
+      "spot": 57.3,
       "structure": "credit_put_spread",
-      "est_premium_usd": 736
+      "est_premium_usd": 504
     },
     {
-      "symbol": "XLV",
-      "rsi2_now": 24.61,
-      "scenario": "2d_-1%x2",
-      "spot": 171.45,
+      "symbol": "AAPL",
+      "rsi2_now": 15.23,
+      "scenario": "1d_-1%",
+      "spot": 316.22,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1448
+      "est_premium_usd": 2626
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 22.76,
+      "scenario": "2d_-1%x2",
+      "spot": 493.95,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4023
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 19.94,
+      "scenario": "1d_-1%",
+      "spot": 528.03,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4662
     }
   ],
-  "suggested_reserve_usd": 722.27
+  "suggested_reserve_usd": 504.0
 }

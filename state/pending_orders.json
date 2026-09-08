@@ -1,41 +1,42 @@
 {
-  "trade_date": "2026-09-04",
-  "generated_at": "2026-09-04T21:52:00Z",
-  "status": "executed_partial_by_funding_all_legs_filled",
-  "valid_until": "次一交易日 (2026-09-08 周二) 09:25 ET —— 09-07 劳动节休市, 本清单跨长周末",
-  "buying_power_at_generation": 2063.64,
-  "cash_at_generation": 2063.64,
-  "portfolio_value_at_generation": 10356.01,
+  "trade_date": "2026-09-08",
+  "generated_at": "2026-09-08T21:52:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-09 周三) 09:25 ET",
+  "buying_power_at_generation": 3749.73,
+  "cash_at_generation": 3749.73,
+  "portfolio_value_at_generation": 10237.53,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ABT",
-      "dollar_amount": 1035.6,
+      "symbol": "LLY",
+      "dollar_amount": 1023.75,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 108.33,
-      "review_est_price": 108.31,
-      "rsi2": 19.95,
+      "est_price": 1123.91,
+      "review_est_price": 1123.86,
+      "rsi2": 0.72,
       "tranche": 2,
-      "avg_entry_price": 111.8996,
-      "drawdown_pct": -3.19,
+      "avg_entry_price": 1180.0,
+      "drawdown_pct": -4.75,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
+      "valid_until": "next_open_0925_et",
+      "news_flag": "命中关键词 bankruptcy / fraud (2 条)。见 news_precheck.lly_detail —— 会话核查后认为**两条均为关键词碰撞, 非 LLY 自身红旗**, 但按红线2 标记照留, 一票否决权在用户。"
     },
     {
       "seq": 2,
       "action": "buy",
       "symbol": "MMM",
-      "dollar_amount": 1035.6,
+      "dollar_amount": 1023.75,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
       "est_price": 168.56,
-      "review_est_price": 168.51,
-      "rsi2": 18.85,
+      "review_est_price": 167.52,
+      "rsi2": 7.47,
       "tranche": 2,
       "avg_entry_price": 174.5,
-      "drawdown_pct": -3.4,
+      "drawdown_pct": -4.0,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
@@ -43,44 +44,44 @@
       "seq": 3,
       "action": "buy",
       "symbol": "UNP",
-      "dollar_amount": 1035.6,
+      "dollar_amount": 1023.75,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 289.62,
-      "review_est_price": 289.61,
-      "rsi2": 17.85,
+      "est_price": 288.45,
+      "review_est_price": 288.47,
+      "rsi2": 9.62,
       "tranche": 2,
       "avg_entry_price": 303.0379,
-      "drawdown_pct": -4.43,
+      "drawdown_pct": -4.81,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "DASH",
-      "dollar_amount": 1035.6,
+      "symbol": "DXCM",
+      "dollar_amount": 1023.75,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 211.73,
-      "review_est_price": 211.75,
-      "rsi2": 2.56,
+      "est_price": 84.53,
+      "review_est_price": 84.52,
+      "rsi2": 0.91,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et"
     },
     {
       "seq": 5,
       "action": "buy",
-      "symbol": "DXCM",
-      "dollar_amount": 597.25,
+      "symbol": "DASH",
+      "dollar_amount": 711.58,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 87.9,
-      "review_est_price": 87.895,
-      "rsi2": 3.78,
+      "est_price": 200.44,
+      "review_est_price": 200.39,
+      "rsi2": 0.97,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
-      "note": "金额 $597.25 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
+      "note": "金额 $711.58 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
     }
   ],
   "review_precheck": {
@@ -89,138 +90,75 @@
   },
   "news_precheck": {
     "symbols": [
-      "ABT",
+      "LLY",
       "MMM",
       "UNP",
-      "DASH",
-      "DXCM"
+      "DXCM",
+      "DASH"
     ],
-    "red_flagged": [],
-    "with_news": 2,
-    "source": "integrations.py news 2026-08-28→2026-09-04",
-    "assessment": "无红旗。"
+    "red_flagged": [
+      "LLY"
+    ],
+    "with_news": 4,
+    "source": "integrations.py news 2026-09-01→2026-09-08",
+    "lly_detail": [
+      {
+        "keyword": "bankruptcy",
+        "headline": "Deal Dispatch: Nvidia Buys Hugging Face for $12.9 Billion, Barilla Acquires Goodles, Park Place Partners Bankruptcy",
+        "created_at": "2026-09-04T18:46:27Z",
+        "session_read": "并购汇总稿, 破产主体是 **Park Place Partners**, 与 LLY 无关 —— 关键词碰撞"
+      },
+      {
+        "keyword": "fraud",
+        "headline": "Fraudulent Weight Loss Drugs: FDA Warns Against Mislabeled GLP-1 Medications",
+        "created_at": "2026-09-02T11:40:23Z",
+        "session_read": "FDA 警告市面**假冒/错标 GLP-1 药物**, 指向仿冒品而非 LLY 本身; 对原厂若有影响反而偏正面 —— 关键词碰撞"
+      }
+    ],
+    "assessment": "引擎判 LLY 红旗 (确定性 51 词分类)。**会话逐条核查后认为两条均为关键词碰撞, 非 LLY 自身红旗**; 但按红线2 不删旗不改单, 提示用户在 4C 自行决定。其余 4 只无红旗。"
   },
   "option_alert": {
     "names": [
-      "XLP",
-      "XLV"
+      "XLF",
+      "AAPL",
+      "MSFT",
+      "DIA"
     ],
     "scenarios": {
-      "XLP": {
-        "rsi2_now": 12.06,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 736
-      },
-      "XLV": {
-        "rsi2_now": 24.61,
+      "XLF": {
+        "rsi2_now": 21.04,
         "scenario": "2d_-1%x2",
-        "est_premium_usd": 1448
+        "est_premium_usd": 504
+      },
+      "AAPL": {
+        "rsi2_now": 15.23,
+        "scenario": "1d_-1%",
+        "est_premium_usd": 2626
+      },
+      "MSFT": {
+        "rsi2_now": 22.76,
+        "scenario": "2d_-1%x2",
+        "est_premium_usd": 4023
+      },
+      "DIA": {
+        "rsi2_now": 19.94,
+        "scenario": "2d_-1%x2",
+        "est_premium_usd": null
       }
     },
-    "reserve_usd": 722.27,
+    "reserve_usd": 504.0,
     "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
   },
   "funding_note": {
     "detected": true,
-    "stock_buys_usd": 4739.65,
+    "stock_buys_usd": 4806.58,
     "option_orders_today": 0,
-    "option_alert_reserve_usd": 722.27,
-    "realtime_bp_at_generation": 2063.64,
-    "cap_at_generation": 1341.37,
-    "timing_mismatch": "今日 AMAT+CSX 出场卖单排 09-08 开盘成交 (回款 ≈$2,681), 本清单同在 09-08 09:25 过期 —— 回款晚 5 分钟, 连续第四天同一错配。**但本次金额最大**: $2,681 的回款如果能用上, 5 单里能多装 2 单。",
-    "consequence": "cap = BP $2,063.64 − 弹药保留 $722.27 = $1,341.37, 逐 seq 装箱:\n• seq1 ABT $1,035.60 ✅ (余 $305.77)\n• seq2 MMM ⛔ · seq3 UNP ⛔ · seq4 DASH ⛔ (各 $1,035.60)\n• seq5 DXCM $597.25 ⛔ (累计会到 $1,632.85 > cap)\n合计可执行 **$1,035.60 / 5 单中的 1 单**。",
-    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $2,063.64 → seq1 + seq5 = $1,632.85 可装 (2 单), seq2/3/4 仍跳过。"
+    "option_alert_reserve_usd": 504.0,
+    "realtime_bp_at_generation": 3749.73,
+    "cap_at_generation": 3245.73,
+    "consequence": "cap = BP $3,749.73 − 弹药保留 $504.00 = $3,245.73, 逐 seq 装箱:\n• seq1 LLY $1,023.75 ✅ (余 $2,221.98)\n• seq2 MMM $1,023.75 ✅ (余 $1,198.23)\n• seq3 UNP $1,023.75 ✅ (余 $174.48)\n• seq4 DXCM $1,023.75 ⛔ 跳过\n• seq5 DASH $711.58 ⛔ 跳过\n合计可执行 **$3,071.25 / 5 单中的 3 单** —— 本轮以来装箱率最高的一天 (AMAT/CSX 回款已到账)。",
+    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $3,749.73 → seq1+2+3+5 = $3,782.83 仍略超, 实际仍是 3 单 + DASH 需 $33.10 差额 → 仍装不下。",
+    "timing_note": "今日 BKNG 止损卖单排 09-09 开盘, 回款 ≈$1,062 —— 清单同日 09:25 过期, 老错配 (第五天), 但本次影响较小 (3/5 单已能装下)。"
   },
-  "long_weekend_note": "⚠️ **09-07 (周一) 劳动节休市**, 下一交易日为 **09-08 周二**。本清单有效期因此跨 4 天; 盘外混合执行的 ①腿 24h 时段在周末不开, 若在周末触发「执行」, 整单会排到 09-08 盘前/开盘。",
-  "note": "候选中 LLY (rsi2 3.60) / PM (5.06) / PATH (5.25) / SBUX (8.76) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。PATH 昨日 (09-03) 盘后财报后今日暴跌 −16.5% ($18.22→$15.21), 近20日异动闸对**下跌**异动照拦 (财报跳空豁免只对上涨放行)。",
-  "execution": {
-    "executed_at": "2026-09-05T06:28:39Z (2026-09-05 02:28 ET, 周六)",
-    "trigger": "用户 2026-09-04 收盘战报窗口回复「执行」",
-    "mode": "盘外限价模式 (playbook 4C); ⚠️ 触发时刻为**周六凌晨**, 三个时段 (24h/盘前盘后/常规) 均未开市",
-    "funding_gate": {
-      "realtime_bp": 2063.64,
-      "realtime_cash": 2063.64,
-      "unleveraged_bp": 2063.64,
-      "option_alert_reserve_usd": 722.27,
-      "cap": 1341.37,
-      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 + playbook 4B option_alert 保留)",
-      "user_kept_reserve": true
-    },
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "ABT",
-        "dollar_amount": 1035.6,
-        "status": "executed",
-        "leg1": {
-          "type": "limit",
-          "qty": 9,
-          "limit_price": 109.41,
-          "market_hours": "all_day_hours",
-          "order_id": "6a9bb697-f8c4-4844-b8f6-52034d1750cc",
-          "state": "filled",
-          "placed_at": "2026-09-05 02:28 ET (周六)",
-          "note": "限价 = 引擎 est 108.33 × 1.010 = 109.41, 高于周五收盘 ask $109.00 → 开市即可成交。ABT 支持 24h 时段 (review 无 EQUITY_ALL_DAY_TRADING_ERROR), 未降级。⚠️ 但 **24h 市场周末不开** (周日 20:00 ET 重开), 故本单挂到周日晚才有机会成交。",
-          "fill_qty": 9.0,
-          "fill_price": 109.2,
-          "cost": 982.8,
-          "filled_at": "2026-09-08T00:00:00Z (09-07 20:00 ET, 24h 时段假日后重开即成交)"
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 52.8,
-          "market_hours": "regular_hours",
-          "order_id": "6aa01feb-e991-41be-b0b5-3efe7ec3fefb",
-          "state": "filled",
-          "fill_qty": 0.500426,
-          "fill_price": 105.51,
-          "cost": 52.8,
-          "filled_at": "2026-09-08T14:47:07Z (10:47 ET 晨检补下, 即时成交)",
-          "note": "①腿成交后余量确定为 $1,035.60 − $982.80 = $52.80"
-        },
-        "total_committed": 1035.6
-      },
-      {
-        "seq": 2,
-        "symbol": "MMM",
-        "dollar_amount": 1035.6,
-        "status": "skipped_funding",
-        "note": "累计 2071.20 超 cap 1341.37 → 整单跳过不缩量"
-      },
-      {
-        "seq": 3,
-        "symbol": "UNP",
-        "dollar_amount": 1035.6,
-        "status": "skipped_funding"
-      },
-      {
-        "seq": 4,
-        "symbol": "DASH",
-        "dollar_amount": 1035.6,
-        "status": "skipped_funding"
-      },
-      {
-        "seq": 5,
-        "symbol": "DXCM",
-        "dollar_amount": 597.25,
-        "status": "skipped_funding",
-        "note": "累计会到 1632.85 > cap 1341.37 → 跳过 (余额 $305.77 不够)"
-      }
-    ],
-    "totals": {
-      "committed_usd": 1035.6,
-      "filled_usd": 1035.6,
-      "queued_usd": 0.0,
-      "deferred_usd": 0.0,
-      "orders_executed": 1,
-      "orders_partial": 0,
-      "orders_skipped": 4,
-      "skipped_usd": 3704.05,
-      "all_legs_filled_at": "2026-09-08 10:47 ET"
-    },
-    "ledger_writeback": "ABT 两腿已回写: 18.685981 股 @ $110.4282, cost $2,063.46, tranches=2 (已满档)。",
-    "weekend_note": "⚠️ **周六下单的时段现实**: 24h 市场运行时间为周日 20:00 ET → 周五 20:00 ET, 周末不开; 盘前/盘后与常规时段同样关闭。故本单三个时段都无法立即成交, 最早成交机会 = **周日 20:00 ET 24h 时段重开**, 其次 09-08 (周二) 盘前 04:00 ET / 开盘 09:30 ET。09-07 为劳动节休市。清单有效期至 09-08 09:25 ET, 窗口仍充裕。",
-    "verify_at_morning_check": "⚠️ `time_in_force=gfd` 于**周六**挂出, 跨周末 + 假日。券商已接受为 queued (未拒), 但**是否会在开市前被作废尚未验证** —— 09-08 晨检必须先确认该单仍在册/已成交, 而非默认它还活着。",
-    "gfd_weekend_holiday_result": "✅ **周六挂的 gfd 单跨周末+劳动节共 3 天后仍然有效并成交** —— ABT ①腿于 2026-09-07 20:00 ET (24h 时段假日后重开的第一刻) 即成交, 成交价 $109.20 低于限价 $109.41。同批 09-04 盘后挂的 AMAT/CSX 市价卖单亦在 09-08 开盘正常成交。**结论: 该券商的 gfd + 排队单可跨越周末与假日, 此前的担心不成立** (首次实测, 单一样本)。"
-  }
+  "note": "候选中 SBUX (2.64) / AMGN (2.92) / MSI (3.64) / ABBV (4.52) / ADP (4.83) / XLV (5.57) / XLP (5.65) / MA (6.90) / LNG (6.93) / VRTX (6.98) / BMY (7.24) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。⚠️ AMGN 今日 −10.1% ($437.23→$393.23), 属近20日异动闸拦截范围。ABT/BKNG 已满 2 档不再出加仓单 (BKNG 今日已触发止损出场)。"
 }
