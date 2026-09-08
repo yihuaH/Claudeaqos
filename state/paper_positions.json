@@ -10,25 +10,11 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "LLY": {
-      "qty": 8.0,
-      "entry_price": 1185.75,
-      "entry_date": "2026-08-27",
-      "cost": 9486.0,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 56.0,
       "entry_price": 173.24,
       "entry_date": "2026-08-31",
       "cost": 9701.44,
-      "tranches": 1
-    },
-    "CSX": {
-      "qty": 198.0,
-      "entry_price": 48.563485,
-      "entry_date": "2026-09-02",
-      "cost": 9615.57,
       "tranches": 1
     },
     "BLK": {
@@ -52,18 +38,39 @@
       "cost": 9701.99,
       "tranches": 1
     },
-    "CTAS": {
-      "qty": 49.0,
-      "entry_price": 200.963265,
-      "entry_date": "2026-09-03",
-      "cost": 9847.2,
-      "tranches": 1
-    },
     "NSC": {
       "qty": 29.0,
       "entry_price": 332.134828,
       "entry_date": "2026-09-03",
       "cost": 9631.91,
+      "tranches": 1
+    },
+    "DASH": {
+      "qty": 46.0,
+      "entry_price": 206.99,
+      "entry_date": "2026-09-08",
+      "cost": 9521.54,
+      "tranches": 1
+    },
+    "DXCM": {
+      "qty": 110.0,
+      "entry_price": 85.652728,
+      "entry_date": "2026-09-08",
+      "cost": 9421.8,
+      "tranches": 1
+    },
+    "PM": {
+      "qty": 53.0,
+      "entry_price": 184.639812,
+      "entry_date": "2026-09-08",
+      "cost": 9785.91,
+      "tranches": 1
+    },
+    "SBUX": {
+      "qty": 93.0,
+      "entry_price": 104.61,
+      "entry_date": "2026-09-08",
+      "cost": 9728.73,
       "tranches": 1
     }
   },
@@ -1346,6 +1353,69 @@
       "price": 449.04,
       "bucket": "strategy",
       "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "LLY",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 1120.0225,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 198.0,
+      "price": 49.215808,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "CTAS",
+      "side": "sell",
+      "qty": 49.0,
+      "price": 197.54,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "DASH",
+      "side": "buy",
+      "qty": 46.0,
+      "price": 206.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "DXCM",
+      "side": "buy",
+      "qty": 110.0,
+      "price": 85.652728,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "PM",
+      "side": "buy",
+      "qty": 53.0,
+      "price": 184.639812,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "SBUX",
+      "side": "buy",
+      "qty": 93.0,
+      "price": 104.61,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "excluded_from_edge": [

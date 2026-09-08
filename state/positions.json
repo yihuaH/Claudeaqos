@@ -10,11 +10,11 @@
       "tranches": 1
     },
     "ABT": {
-      "qty": 9.185555,
-      "entry_price": 111.8996,
+      "qty": 18.685981,
+      "entry_price": 110.4282,
       "entry_date": "2026-08-27",
-      "cost": 1027.86,
-      "tranches": 1
+      "cost": 2063.46,
+      "tranches": 2
     },
     "BKNG": {
       "qty": 5.889347,
@@ -37,25 +37,11 @@
       "cost": 1043.93,
       "tranches": 1
     },
-    "AMAT": {
-      "qty": 4.643815,
-      "entry_price": 447.2271,
-      "entry_date": "2026-08-31",
-      "cost": 2076.84,
-      "tranches": 2
-    },
     "DGX": {
       "qty": 4.318682,
       "entry_price": 241.7242,
       "entry_date": "2026-09-01",
       "cost": 1043.93,
-      "tranches": 1
-    },
-    "CSX": {
-      "qty": 11.524307,
-      "entry_price": 48.7882,
-      "entry_date": "2026-09-02",
-      "cost": 562.25,
       "tranches": 1
     },
     "NSC": {
@@ -1597,6 +1583,42 @@
       "price": 331.27,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 4.643815,
+      "price": 464.35,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 11.524307,
+      "price": 49.06,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "ABT",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 109.2,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-08",
+      "symbol": "ABT",
+      "side": "buy",
+      "qty": 0.500426,
+      "price": 105.51,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
     }
   ],
   "corporate_actions": [
