@@ -24,18 +24,18 @@
       "tranches": 2
     },
     "MMM": {
-      "qty": 0.938166,
-      "entry_price": 174.5,
+      "qty": 6.938166,
+      "entry_price": 169.7351,
       "entry_date": "2026-08-31",
-      "cost": 163.71,
-      "tranches": 1
+      "cost": 1177.65,
+      "tranches": 2
     },
     "UNP": {
-      "qty": 3.444883,
-      "entry_price": 303.0379,
+      "qty": 6.444883,
+      "entry_price": 297.453,
       "entry_date": "2026-08-31",
-      "cost": 1043.93,
-      "tranches": 1
+      "cost": 1917.05,
+      "tranches": 2
     },
     "DGX": {
       "qty": 4.318682,
@@ -1619,6 +1619,24 @@
       "price": 105.51,
       "bucket": "strategy",
       "reason": "rsi2_scale_in_leg2"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 168.99,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 291.04,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [

@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-08",
   "generated_at": "2026-09-08T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed_partial_by_funding",
   "valid_until": "次一交易日 (2026-09-09 周三) 09:25 ET",
   "buying_power_at_generation": 3749.73,
   "cash_at_generation": 3749.73,
@@ -160,5 +160,120 @@
     "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $3,749.73 → seq1+2+3+5 = $3,782.83 仍略超, 实际仍是 3 单 + DASH 需 $33.10 差额 → 仍装不下。",
     "timing_note": "今日 BKNG 止损卖单排 09-09 开盘, 回款 ≈$1,062 —— 清单同日 09:25 过期, 老错配 (第五天), 但本次影响较小 (3/5 单已能装下)。"
   },
-  "note": "候选中 SBUX (2.64) / AMGN (2.92) / MSI (3.64) / ABBV (4.52) / ADP (4.83) / XLV (5.57) / XLP (5.65) / MA (6.90) / LNG (6.93) / VRTX (6.98) / BMY (7.24) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。⚠️ AMGN 今日 −10.1% ($437.23→$393.23), 属近20日异动闸拦截范围。ABT/BKNG 已满 2 档不再出加仓单 (BKNG 今日已触发止损出场)。"
+  "note": "候选中 SBUX (2.64) / AMGN (2.92) / MSI (3.64) / ABBV (4.52) / ADP (4.83) / XLV (5.57) / XLP (5.65) / MA (6.90) / LNG (6.93) / VRTX (6.98) / BMY (7.24) 未进清单, 由引擎防御层与资金约束决定, 非会话筛选。⚠️ AMGN 今日 −10.1% ($437.23→$393.23), 属近20日异动闸拦截范围。ABT/BKNG 已满 2 档不再出加仓单 (BKNG 今日已触发止损出场)。",
+  "execution": {
+    "executed_at": "2026-09-09T00:54:18Z (2026-09-08 20:54 ET)",
+    "trigger": "用户 2026-09-08 收盘战报窗口回复「执行」(未对 LLY 新闻旗行使否决权)",
+    "mode": "盘外混合执行 (playbook 4C); 24h 时段已于 20:00 ET 重开, ①腿即时成交",
+    "funding_gate": {
+      "realtime_bp": 3749.73,
+      "realtime_cash": 3749.73,
+      "unleveraged_bp": 3749.73,
+      "option_alert_reserve_usd": 504.0,
+      "cap": 3245.73,
+      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量 (红线3 + playbook 4B option_alert 保留)",
+      "user_kept_reserve": true
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "LLY",
+        "dollar_amount": 1023.75,
+        "status": "queued_to_open",
+        "leg1": {
+          "state": "n/a",
+          "reason": "whole = floor($1,023.75 ÷ 限价 $1,135.15) = **0** —— 买不起 1 整股, 按 playbook 4C 无①腿, 整单走②腿全额分数市价排开盘"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 1023.75,
+          "market_hours": "regular_hours",
+          "order_id": "6aa0ae0d-7bad-44ab-8785-e7c85a852f49",
+          "state": "queued",
+          "est_qty": 0.90886,
+          "note": "排 09-09 开盘按开盘价成交, 晨检回写"
+        },
+        "news_flag_disposition": "用户回「执行」时未对该单否决 → 按清单原样执行 (会话意见: 两条红旗均为关键词碰撞)",
+        "total_committed": 1023.75
+      },
+      {
+        "seq": 2,
+        "symbol": "MMM",
+        "dollar_amount": 1023.75,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 6,
+          "limit_price": 170.25,
+          "market_hours": "all_day_hours",
+          "order_id": "6aa0ae18-b34b-441d-b70c-db0230dbaac8",
+          "state": "filled",
+          "fill_qty": 6.0,
+          "fill_price": 168.99,
+          "cost": 1013.94,
+          "note": "限价 = 引擎 est 168.56 × 1.010; 成交价低于限价 $1.26"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 9.81,
+          "market_hours": "regular_hours",
+          "order_id": "6aa0ae33-1f4a-487f-a633-287f6a2e13dd",
+          "state": "queued",
+          "est_qty": 0.05805
+        },
+        "total_committed": 1023.75
+      },
+      {
+        "seq": 3,
+        "symbol": "UNP",
+        "dollar_amount": 1023.75,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 3,
+          "limit_price": 291.33,
+          "market_hours": "all_day_hours",
+          "order_id": "6aa0ae24-bc67-4d3f-8c71-83b3ceaeb519",
+          "state": "filled",
+          "fill_qty": 3.0,
+          "fill_price": 291.04,
+          "cost": 873.12,
+          "note": "限价 = 引擎 est 288.45 × 1.010; 成交价低于限价 $0.29"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 150.63,
+          "market_hours": "regular_hours",
+          "order_id": "6aa0ae3a-9fab-48e6-83ae-c6ae2eaff5ea",
+          "state": "queued",
+          "est_qty": 0.51755
+        },
+        "total_committed": 1023.75
+      },
+      {
+        "seq": 4,
+        "symbol": "DXCM",
+        "dollar_amount": 1023.75,
+        "status": "skipped_funding",
+        "note": "累计 4,095.00 超 cap 3,245.73 → 整单跳过不缩量"
+      },
+      {
+        "seq": 5,
+        "symbol": "DASH",
+        "dollar_amount": 711.58,
+        "status": "skipped_funding",
+        "note": "余额 $174.48 不够; 即使放弃弹药保留 (cap $3,749.73) 仍差 $33.10"
+      }
+    ],
+    "totals": {
+      "committed_usd": 3071.25,
+      "filled_tonight_usd": 1887.06,
+      "queued_to_open_usd": 1184.19,
+      "orders_executed": 3,
+      "orders_skipped": 2,
+      "skipped_usd": 1735.33
+    },
+    "ledger_writeback": "MMM/UNP ①腿已写回 (MMM → 6.938166 @ $169.7351 tranches=2; UNP → 6.444883 @ $297.4530 tranches=2)。LLY 全额与 MMM/UNP ②腿待 09-09 10:45 ET 晨检回写。",
+    "note_whole_zero": "⚠️ **本轮首次出现 whole == 0 分支** —— LLY 单价 $1,123.86 高于单笔额度 $1,023.75, 整张单没有①腿, 全部走②腿排开盘。代价: 失去盘外即时成交, 完全暴露于次日开盘价 (playbook 已覆盖此分支, 非异常)。"
+  }
 }
