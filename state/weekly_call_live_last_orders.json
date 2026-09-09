@@ -1,56 +1,79 @@
 {
-  "date": "2026-09-08",
+  "date": "2026-09-09",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "credit_leg_spread_too_wide(best=31.88%)",
-      "rsi2": 5.57,
-      "spot": 167.13
+      "reason": "credit_leg_spread_too_wide(best=57.63%)",
+      "rsi2": 4.66,
+      "spot": 166.58
     },
     {
-      "symbol": "XLP",
-      "reason": "credit_leg_spread_too_wide(best=22.95%)",
-      "rsi2": 5.65,
-      "spot": 84.02
+      "symbol": "AMZN",
+      "reason": "insufficient_buying_power(cost=2127,bp_left=1714)",
+      "rsi2": 9.15
     }
   ],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "XLF",
-      "rsi2_now": 21.04,
-      "scenario": "2d_-1%x2",
-      "spot": 57.3,
+      "rsi2_now": 15.57,
+      "scenario": "1d_-1%",
+      "spot": 57.06,
       "structure": "credit_put_spread",
-      "est_premium_usd": 504
+      "est_premium_usd": 502
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 10.53,
+      "scenario": "1d_-1%",
+      "spot": 290.64,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2559
     },
     {
       "symbol": "AAPL",
-      "rsi2_now": 15.23,
+      "rsi2_now": 12.84,
       "scenario": "1d_-1%",
-      "spot": 316.22,
+      "spot": 315.34,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2626
+      "est_premium_usd": 2628
     },
     {
       "symbol": "MSFT",
-      "rsi2_now": 22.76,
-      "scenario": "2d_-1%x2",
-      "spot": 493.95,
+      "rsi2_now": 17.58,
+      "scenario": "1d_-1%",
+      "spot": 491.65,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4023
+      "est_premium_usd": 4005
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 19.94,
+      "rsi2_now": 11.02,
       "scenario": "1d_-1%",
-      "spot": 528.03,
+      "spot": 524.07,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4662
+      "est_premium_usd": 4627
+    },
+    {
+      "symbol": "QQQ",
+      "rsi2_now": 36.31,
+      "scenario": "1d_-1%",
+      "spot": 716.31,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 6308
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 15.7,
+      "scenario": "1d_-1%",
+      "spot": 762.4,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 6731
     }
   ],
-  "suggested_reserve_usd": 504.0
+  "suggested_reserve_usd": 502.0
 }

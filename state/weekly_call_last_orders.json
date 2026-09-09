@@ -1,72 +1,96 @@
 {
-  "date": "2026-09-08",
+  "date": "2026-09-09",
   "halted": false,
   "sells": [],
   "buys": [
     {
-      "symbol": "XLP260918C00075000",
+      "symbol": "AMZN260918C00220000",
       "qty": 1,
       "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call",
-      "est_price": 9.12,
-      "underlying": "XLP",
-      "strike": 75.0,
+      "est_price": 33.05,
+      "underlying": "AMZN",
+      "strike": 220.0,
       "expiry": "2026-09-18",
-      "dte": 10,
-      "spot": 84.02,
-      "rsi2": 5.65,
-      "model_price": 9.1022,
+      "dte": 9,
+      "spot": 252.4,
+      "rsi2": 9.15,
+      "model_price": 32.6248,
       "entry_quote": {
-        "bid": 9.09,
-        "ask": 9.16,
-        "mid": 9.125,
-        "spread_pct": 0.767
+        "bid": 32.87,
+        "ask": 33.24,
+        "mid": 33.055,
+        "spread_pct": 1.119
       }
     }
   ],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "spread_too_wide(best=6.74%)",
-      "rsi2": 5.57,
-      "spot": 167.13
+      "reason": "spread_too_wide(best=3.48%)",
+      "rsi2": 4.66,
+      "spot": 166.58
     }
   ],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "XLF",
-      "rsi2_now": 21.04,
-      "scenario": "2d_-1%x2",
-      "spot": 57.3,
+      "rsi2_now": 15.57,
+      "scenario": "1d_-1%",
+      "spot": 57.06,
       "structure": "single",
-      "est_premium_usd": 580
+      "est_premium_usd": 578
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 10.53,
+      "scenario": "1d_-1%",
+      "spot": 290.64,
+      "structure": "single",
+      "est_premium_usd": 2942
     },
     {
       "symbol": "AAPL",
-      "rsi2_now": 15.23,
+      "rsi2_now": 12.84,
       "scenario": "1d_-1%",
-      "spot": 316.22,
+      "spot": 315.34,
       "structure": "single",
-      "est_premium_usd": 3207
+      "est_premium_usd": 3197
     },
     {
       "symbol": "MSFT",
-      "rsi2_now": 22.76,
-      "scenario": "2d_-1%x2",
-      "spot": 493.95,
+      "rsi2_now": 17.58,
+      "scenario": "1d_-1%",
+      "spot": 491.65,
       "structure": "single",
-      "est_premium_usd": 5020
+      "est_premium_usd": 4996
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 19.94,
+      "rsi2_now": 11.02,
       "scenario": "1d_-1%",
-      "spot": 528.03,
+      "spot": 524.07,
       "structure": "single",
-      "est_premium_usd": 5345
+      "est_premium_usd": 5305
+    },
+    {
+      "symbol": "QQQ",
+      "rsi2_now": 36.31,
+      "scenario": "1d_-1%",
+      "spot": 716.31,
+      "structure": "single",
+      "est_premium_usd": 7251
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 15.7,
+      "scenario": "1d_-1%",
+      "spot": 762.4,
+      "structure": "single",
+      "est_premium_usd": 7718
     }
   ],
-  "suggested_reserve_usd": 580.0
+  "suggested_reserve_usd": 578.0
 }

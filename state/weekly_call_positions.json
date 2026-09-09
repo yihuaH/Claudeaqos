@@ -10,10 +10,15 @@
       "contracts": 1,
       "entry_premium": 9.35,
       "entry_date": "2026-09-09",
-      "entry_underlying": null,
-      "entry_rsi2": null,
-      "entry_quote": null,
-      "model_price": null
+      "entry_underlying": 84.02,
+      "entry_rsi2": 5.65,
+      "entry_quote": {
+        "bid": 9.09,
+        "ask": 9.16,
+        "mid": 9.125,
+        "spread_pct": 0.767
+      },
+      "model_price": 9.1022
     }
   },
   "trades": [
@@ -378,6 +383,33 @@
       },
       "realized_usd": -1076.0,
       "journal": "journal/2026-09-03-paper-xli-assignment.md"
+    }
+  ],
+  "ledger_corrections": [
+    {
+      "date": "2026-09-09",
+      "occ": "XLP260918C00075000",
+      "kind": "missing_entry_snapshot",
+      "root_cause": "2026-09-09 晨检回写排队成交时, 会话调用 `weekly_calls.py apply` **漏传 `--context`** —— 该参数的作用正是从当日 signal 输出补 entry_underlying/entry_rsi2/entry_quote/model_price (L734)。缺参导致四个快照字段写成 null; 当日主跑 cmd_signal 的正股止损检查 (L363) 读到 float(None) 崩溃 rc=1。**会话操作失误, 非引擎缺陷。**",
+      "before": {
+        "entry_underlying": null,
+        "entry_rsi2": null,
+        "entry_quote": null,
+        "model_price": null
+      },
+      "after": {
+        "entry_underlying": 84.02,
+        "entry_rsi2": 5.65,
+        "entry_quote": {
+          "bid": 9.09,
+          "ask": 9.16,
+          "mid": 9.125,
+          "spread_pct": 0.767
+        },
+        "model_price": 9.1022
+      },
+      "source": "逐字段照抄引擎自身 09-08 signal 输出 (git cc4b9f5:state/weekly_call_last_orders.json 的 buys[XLP260918C00075000]); 无任何会话推断",
+      "scope": "仅 paper 摩擦实测轨道; 实盘未受影响 (当日实盘期权轨道正常运行, 2 条 skip)"
     }
   ]
 }
