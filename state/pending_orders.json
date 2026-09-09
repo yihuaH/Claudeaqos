@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-09",
   "generated_at": "2026-09-09T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed_partial_by_funding",
   "valid_until": "次一交易日 (2026-09-10 周四) 09:25 ET",
   "buying_power_at_generation": 1714.35,
   "cash_at_generation": 1714.35,
@@ -108,5 +108,65 @@
     "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $1,714.35 → seq1+seq2 = $1,709.35 **两单全装得下** (余 $5.00)。⚠️ **这是本轮首次出现「放弃保留 = 全部装下」的临界情形**, 差额仅 $5.00。",
     "timing_note": "今日无出场卖单, 无回款时序问题 (连续错配中断)。"
   },
-  "note": "候选中 SBUX (1.25) / MMM (1.62) / MSI (2.31) / UNP (2.45) / LLY (2.56) / AMGN (2.71) / ADP (3.46) / VRTX (4.30) / TGT (4.53) / MA (4.64) / XLV (4.66) / RTX (5.46) / BLK (5.64) 未进清单。⚠️ **MMM/UNP/LLY 虽在候选前列但已满 2 档**, 引擎不再出加仓单 —— 当前 6 只持仓中 4 只满档, 只剩 DGX/NSC 有加仓空间, 这是今日买单锐减 (5→2) 的主因。"
+  "note": "候选中 SBUX (1.25) / MMM (1.62) / MSI (2.31) / UNP (2.45) / LLY (2.56) / AMGN (2.71) / ADP (3.46) / VRTX (4.30) / TGT (4.53) / MA (4.64) / XLV (4.66) / RTX (5.46) / BLK (5.64) 未进清单。⚠️ **MMM/UNP/LLY 虽在候选前列但已满 2 档**, 引擎不再出加仓单 —— 当前 6 只持仓中 4 只满档, 只剩 DGX/NSC 有加仓空间, 这是今日买单锐减 (5→2) 的主因。",
+  "execution": {
+    "executed_at": "2026-09-09T21:56:44Z (17:56 ET)",
+    "trigger": "用户 2026-09-09 收盘战报窗口回复「执行」—— **未说「不留了」, 按缺省保留弹药**",
+    "mode": "盘外混合执行 (playbook 4C)",
+    "funding_gate": {
+      "realtime_bp": 1714.35,
+      "realtime_cash": 1714.35,
+      "unleveraged_bp": 1714.35,
+      "option_alert_reserve_usd": 502.0,
+      "cap": 1212.35,
+      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量",
+      "user_kept_reserve": true,
+      "note": "用户回「执行」而非「不留了」→ 保留 $502 弹药 → cap $1,212.35 → 只装 seq1。若当时选择不留, 两单 $1,709.35 本可全下 (余 $5.00)。**该选择由用户作出, 会话未代判。**"
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "DXCM",
+        "dollar_amount": 1012.71,
+        "status": "executed",
+        "leg1": {
+          "type": "limit",
+          "qty": 11,
+          "limit_price": 84.72,
+          "market_hours": "all_day_hours",
+          "order_id": "6aa1d611-7775-4485-bd3b-4b95d9f35969",
+          "state": "filled",
+          "fill_qty": 11.0,
+          "fill_price": 84.72,
+          "cost": 931.92,
+          "note": "限价 = 引擎 est 83.88 × 1.010 = 84.72。**成交价恰等于限价** (此前多数 ①腿成交价低于限价) —— 下单时 bid $83.88 / ask $85.05, 限价落在价差中间, 被卖方吃到限价。"
+        },
+        "leg2": {
+          "type": "market",
+          "dollar_amount": 80.79,
+          "market_hours": "regular_hours",
+          "order_id": "6aa1d61c-f320-4690-9afa-62b1231c5a0a",
+          "state": "queued",
+          "est_qty": 0.96316
+        },
+        "total_committed": 1012.71
+      },
+      {
+        "seq": 2,
+        "symbol": "DASH",
+        "dollar_amount": 696.64,
+        "status": "skipped_funding",
+        "note": "cap 余额 $199.64 不够。若放弃弹药保留本可执行 (两单合计 $1,709.35 ≤ BP $1,714.35)。"
+      }
+    ],
+    "totals": {
+      "committed_usd": 1012.71,
+      "filled_tonight_usd": 931.92,
+      "queued_to_open_usd": 80.79,
+      "orders_executed": 1,
+      "orders_skipped": 1,
+      "skipped_usd": 696.64
+    },
+    "ledger_writeback": "DXCM ①腿已写回: 新仓 11.0 股 @ $84.72, cost $931.92, tranches=1。②腿待 09-10 晨检回写。"
+  }
 }
