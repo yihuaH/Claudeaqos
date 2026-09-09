@@ -2,7 +2,20 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "XLP260918C00075000": {
+      "underlying": "XLP",
+      "strike": 75.0,
+      "expiry": "2026-09-18",
+      "contracts": 1,
+      "entry_premium": 9.35,
+      "entry_date": "2026-09-09",
+      "entry_underlying": null,
+      "entry_rsi2": null,
+      "entry_quote": null,
+      "model_price": null
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -104,6 +117,15 @@
       "price": 31.4,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "XLP260918C00075000",
+      "side": "buy",
+      "qty": 1,
+      "price": 9.35,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [

@@ -5,17 +5,5 @@
   "next_open": "2026-09-09T09:30:00-04:00",
   "skipped": [],
   "failed": [],
-  "orders": [
-    {
-      "coid": "cqw-2026-09-08-XLP260918C00075000-buy",
-      "order_id": "a1921c14-67bd-447f-a671-6f0fd20ffa48",
-      "symbol": "XLP260918C00075000",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "9.39",
-      "qty": "1",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call"
-    }
-  ]
+  "orders": []
 }

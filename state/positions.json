@@ -3,11 +3,11 @@
   "halted": false,
   "strategy_positions": {
     "LLY": {
-      "qty": 0.831245,
-      "entry_price": 1180.0,
+      "qty": 1.733975,
+      "entry_price": 1156.0836,
       "entry_date": "2026-08-27",
-      "cost": 980.87,
-      "tranches": 1
+      "cost": 2004.62,
+      "tranches": 2
     },
     "ABT": {
       "qty": 18.685981,
@@ -16,25 +16,18 @@
       "cost": 2063.46,
       "tranches": 2
     },
-    "BKNG": {
-      "qty": 5.889347,
-      "entry_price": 196.2221,
-      "entry_date": "2026-08-28",
-      "cost": 1155.62,
-      "tranches": 2
-    },
     "MMM": {
-      "qty": 6.938166,
-      "entry_price": 169.7351,
+      "qty": 6.997262,
+      "entry_price": 169.7035,
       "entry_date": "2026-08-31",
-      "cost": 1177.65,
+      "cost": 1187.46,
       "tranches": 2
     },
     "UNP": {
-      "qty": 6.444883,
-      "entry_price": 297.453,
+      "qty": 6.97022,
+      "entry_price": 296.6449,
       "entry_date": "2026-08-31",
-      "cost": 1917.05,
+      "cost": 2067.68,
       "tranches": 2
     },
     "DGX": {
@@ -1637,6 +1630,42 @@
       "price": 291.04,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "BKNG",
+      "side": "sell",
+      "qty": 5.889347,
+      "price": 175.8929,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "LLY",
+      "side": "buy",
+      "qty": 0.90273,
+      "price": 1134.06,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 0.059096,
+      "price": 166.0,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 0.525337,
+      "price": 286.73,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in_leg2"
     }
   ],
   "corporate_actions": [

@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-08",
   "generated_at": "2026-09-08T21:52:00Z",
-  "status": "executed_partial_by_funding",
+  "status": "executed_partial_by_funding_all_legs_filled",
   "valid_until": "次一交易日 (2026-09-09 周三) 09:25 ET",
   "buying_power_at_generation": 3749.73,
   "cash_at_generation": 3749.73,
@@ -179,7 +179,7 @@
         "seq": 1,
         "symbol": "LLY",
         "dollar_amount": 1023.75,
-        "status": "queued_to_open",
+        "status": "executed",
         "leg1": {
           "state": "n/a",
           "reason": "whole = floor($1,023.75 ÷ 限价 $1,135.15) = **0** —— 买不起 1 整股, 按 playbook 4C 无①腿, 整单走②腿全额分数市价排开盘"
@@ -189,12 +189,15 @@
           "dollar_amount": 1023.75,
           "market_hours": "regular_hours",
           "order_id": "6aa0ae0d-7bad-44ab-8785-e7c85a852f49",
-          "state": "queued",
-          "est_qty": 0.90886,
-          "note": "排 09-09 开盘按开盘价成交, 晨检回写"
+          "state": "filled",
+          "fill_qty": 0.90273,
+          "fill_price": 1134.06,
+          "cost": 1023.75,
+          "filled_at": "2026-09-09T13:30:01Z (09:30 ET 开盘)"
         },
         "news_flag_disposition": "用户回「执行」时未对该单否决 → 按清单原样执行 (会话意见: 两条红旗均为关键词碰撞)",
-        "total_committed": 1023.75
+        "total_committed": 1023.75,
+        "whole_zero_outcome": "引擎 est $1,123.91 → 开盘实成 **$1,134.06**, **高 +0.90%**。whole==0 分支意味着整单 100% 暴露于开盘价, 本次开盘高开 → 多付约 $9.24。单一样本, 方向可正可负; 记录以累计该分支的执行质量。"
       },
       {
         "seq": 2,
@@ -218,8 +221,11 @@
           "dollar_amount": 9.81,
           "market_hours": "regular_hours",
           "order_id": "6aa0ae33-1f4a-487f-a633-287f6a2e13dd",
-          "state": "queued",
-          "est_qty": 0.05805
+          "state": "filled",
+          "fill_qty": 0.059096,
+          "fill_price": 166.0,
+          "cost": 9.81,
+          "filled_at": "2026-09-09T13:30:01Z"
         },
         "total_committed": 1023.75
       },
@@ -245,8 +251,11 @@
           "dollar_amount": 150.63,
           "market_hours": "regular_hours",
           "order_id": "6aa0ae3a-9fab-48e6-83ae-c6ae2eaff5ea",
-          "state": "queued",
-          "est_qty": 0.51755
+          "state": "filled",
+          "fill_qty": 0.525337,
+          "fill_price": 286.73,
+          "cost": 150.63,
+          "filled_at": "2026-09-09T13:30:01Z"
         },
         "total_committed": 1023.75
       },
@@ -268,12 +277,15 @@
     "totals": {
       "committed_usd": 3071.25,
       "filled_tonight_usd": 1887.06,
-      "queued_to_open_usd": 1184.19,
+      "queued_to_open_usd": 0.0,
       "orders_executed": 3,
       "orders_skipped": 2,
-      "skipped_usd": 1735.33
+      "skipped_usd": 1735.33,
+      "filled_total_usd": 3071.25,
+      "all_legs_filled_at": "2026-09-09 09:30 ET"
     },
-    "ledger_writeback": "MMM/UNP ①腿已写回 (MMM → 6.938166 @ $169.7351 tranches=2; UNP → 6.444883 @ $297.4530 tranches=2)。LLY 全额与 MMM/UNP ②腿待 09-09 10:45 ET 晨检回写。",
-    "note_whole_zero": "⚠️ **本轮首次出现 whole == 0 分支** —— LLY 单价 $1,123.86 高于单笔额度 $1,023.75, 整张单没有①腿, 全部走②腿排开盘。代价: 失去盘外即时成交, 完全暴露于次日开盘价 (playbook 已覆盖此分支, 非异常)。"
+    "ledger_writeback": "全部已回写。最终: LLY 1.733975 @ $1,156.0836 (tranches=2); MMM 6.997262 @ $169.7035 (tranches=2); UNP 6.970220 @ $296.6449 (tranches=2)。三单实付合计 $3,071.25 = 引擎金额。",
+    "note_whole_zero": "⚠️ **本轮首次出现 whole == 0 分支** —— LLY 单价 $1,123.86 高于单笔额度 $1,023.75, 整张单没有①腿, 全部走②腿排开盘。代价: 失去盘外即时成交, 完全暴露于次日开盘价 (playbook 已覆盖此分支, 非异常)。",
+    "leg2_vs_leg1": "两条 ②腿都比 ①腿便宜 (MMM $166.00 vs $168.99 −$2.99; UNP $286.73 vs $291.04 −$4.31) —— 今日普遍低开。与 09-04 NSC (②腿更贵) 方向相反, 印证两腿分离的价格暴露方向随机。"
   }
 }
