@@ -13,7 +13,7 @@
 6. 遇到预期外的告警、报错、数据异常: 停止交易 → 写日志 → 通知用户。不要即兴发挥。
 7. Alpaca 只允许纸面环境 (`paper-api.alpaca.markets`, 已硬编码在 `scripts/paper.py`), 绝不调用 Alpaca 实盘交易接口。paper 账户内股票与期权均可交易、全部持仓均可处置 (用户 2026-07-15 授权, 期权权限 Level 3); 纸面盈亏只用于挑战者/实验验证, 不得直接驱动实盘订单。
 8. 参数自学习边界: 学习器 (`scripts/learn.py` / `scripts/learn_overnight.py`) 只能修改各自 learning 配置列出的 entry/exit 形状参数且必须在边界内; sizing/熔断/宏观/legacy 等风控**永不自学习**。晋级必须先通过 paper 验证期且 evaluate 判 pass; 每次晋级/否决写 journal 并通知用户。
-9. 半自动买入 (execution.mode=semi_auto, 用户 2026-07-20 设立, 取代原 confirm 闸门): 实盘新买入与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation) 在无人值守会话**可 review、不得 place** (平台分类器只拦截无人值守 place, review 不受限; 不要反复尝试下单) — 只能由主流程写入 `state/pending_orders.json` (逐字段来自引擎输出), 待用户在有人值守会话明确说"执行"后按 playbook 4C 原样执行 (当日窗口市价; 盘外买单混合执行=整股即时限价①腿 + 余量分数市价排次开②腿, 2026-07-27 用户改进; 有效至次一交易日 09:25 ET; 隔夜轨道买单仅当日)。出场/止损/兜底卖出与纸面轨道不受限, 照常全自动 (可直接 place)。
+9. 半自动买入 (execution.mode=semi_auto, 用户 2026-07-20 设立, 取代原 confirm 闸门): 实盘新买入与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation) 在无人值守会话**可 review、不得 place** (平台分类器只拦截无人值守 place, review 不受限; 不要反复尝试下单) — 只能由主流程写入 `state/pending_orders.json` (逐字段来自引擎输出), 待用户在有人值守会话明确说"执行"后按 playbook 4C 原样执行 (**2026-09-10 用户批准换协议**: 次一交易日 **09:45–15:55 ET 盘中单笔 market+regular_hours+dollar_amount**, 推荐锚 10:45 晨检; **必须在 09:30 开盘之后** —— 出场回款 09:30 到账而原清单 09:25 过期, 使引擎算进去的回款结构性拿不到, 实测占出单额 32%/日均 $1,277; 单笔市价原生支持分数股, 故原「整股即时限价①腿 + 余量分数市价排次开②腿」混合执行、whole==0 分支、24h→extended 降级阶梯**一并作废**; 不设价格闸; 隔夜轨道买单仍仅当日)。出场/止损/兜底卖出与纸面轨道不受限, 照常全自动 (可直接 place)。
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
    - **跨轨道资金优先级 = 期权优先 (常规规则, 2026-08-27 用户定, 此前三次逐次决定同向)**: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单仍走 semi_auto 手动通道 (playbook 4C-2D)。用户可单日一票推翻, 但**不再逐日询问**。
@@ -74,9 +74,10 @@
 ## 结构
 
 - `strategy/config.json` — 策略与风控参数 (用户可改)
-- `strategy/playbook.md` — **每日必读的执行契约** (前置检查/§4 下单协议 4A-4D/回写/次日预览/异常原则; 2026-08-06 拆分后 258 行)
+- `strategy/playbook.md` — **每日必读的执行契约** (前置检查/§4 下单协议 4A-4D/回写/次日预览/异常原则; 2026-08-06 拆分, 2026-09-10 4C 换代后 417 行)
 - `strategy/tracks.md` — 驱动器已接管的轨道规范与**手工回退**步骤 (取数/信号完整命令、挑战者、动量、周call双轨、期权池月度复核、参数搜索)
 - `strategy/archive/paused-tracks.md` — 已停用轨道存档 (隔夜实盘、隔夜A/B学习、个股防御; 恢复时移回 tracks.md)
+- `strategy/archive/retired-offhours-two-leg.md` — 已退役的 4C 盘外两腿混合执行协议全文 (2026-07-20→2026-09-10) + 退役依据 + 回退步骤
 - `strategy/learning.json` — 自学习策略: 可学参数边界、搜索网格、晋级标准 (用户可改)
 - `strategy/options.json` — 备兑开仓实验参数 (仅 paper, 用户可改)
 - `strategy/momentum.json` — 周度动量轮动实验参数: universe、混合动量回看期、调仓节奏 (仅 paper, 用户可改)

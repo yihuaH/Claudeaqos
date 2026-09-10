@@ -57,15 +57,30 @@ def detect_window(t):
     m = t.hour * 60 + t.minute
     if t.weekday() >= 5:
         return "off_weekend"
-    if 10 * 60 + 15 <= m < 12 * 60:
+    if 9 * 60 + 45 <= m < 12 * 60:      # 09:45 = 4C 执行窗开启 (2026-09-10); 推荐锚 10:45
         return "morning"
     if 16 * 60 <= m < 18 * 60 + 30:
         return "main_run"
     if 18 * 60 + 30 <= m < 23 * 60 + 59:
         return "report"
-    if 0 <= m < 9 * 60 + 25:
-        return "report"            # 盘前也归战报窗口 (只读 + 可执行 4C)
+    if 0 <= m < 9 * 60 + 30:
+        return "report"            # 盘前归战报窗口: **只读**, 4C 执行须等 09:45 开窗 (2026-09-10)
     return "off_hours"
+
+
+def exec_window(t):
+    """4C 股票买单执行窗 (2026-09-10 用户批准): 交易日 09:45-15:55 ET, 推荐锚 10:45 晨检。
+    必须在 09:30 开盘之后 —— 出场回款 09:30 才到账 (原 09:25 截止使其结构性拿不到)。
+    与 detect_window 正交: 12:00-15:55 不属任何作业窗口, 但用户说「执行」时仍合法。"""
+    m = t.hour * 60 + t.minute
+    if t.weekday() >= 5:
+        return {"open": False, "reason": "周末"}
+    if m < 9 * 60 + 45:
+        return {"open": False, "reason": f"未到 09:45 开窗 (现 {t:%H:%M} ET); "
+                                         f"开盘前执行会吃不到当日出场回款"}
+    if m >= 15 * 60 + 55:
+        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 清单当日过期, 引擎当晚重算"}
+    return {"open": True, "reason": f"09:45-15:55 ET 执行窗开放中 (现 {t:%H:%M} ET)"}
 
 
 def journal_state(date):
@@ -130,7 +145,8 @@ CHECKLIST = {
         ("执行 (playbook §4)", [
             "place_now.equity_sells → 4A: review_equity_order → place (market+regular_hours), 无需用户确认",
             "place_now.option_sells → 4D: limit = 引擎 est_price×0.97, gfd; 成交后 weekly_calls.py apply 回写",
-            "to_pending.equity_buys (+rotation_sells) → 写 state/pending_orders.json (valid_until 次日 09:25 ET); "
+            "to_pending.equity_buys (+rotation_sells) → 写 state/pending_orders.json "
+            "(valid_until 次日 15:55 ET, 执行窗 09:45-15:55 = 开盘后, 推荐锚 10:45 晨检); "
             "买单标的跑 integrations.py news 红旗预检; near_signals 非空则加 option_alert "
             "(reserve_usd 直接照抄引擎 suggested_reserve_usd, 不得自算)",
             "to_pending.option_buys → 写 state/pending_option_orders.json (valid_until 次日 10:30 ET)",
@@ -140,7 +156,8 @@ CHECKLIST = {
             "用 plan.json 的 journal_facts 写 journal/<今天>.md (status: completed)",
             "实际成交的 4A 卖单 → signals.py apply 回写 state (未成交的不写)",
             "git add -A && commit && push origin Main",
-            "PushNotification 通知用户 (附待执行逐笔明细)",
+            "PushNotification 通知用户 (附待执行逐笔明细; 提示执行窗为**明日 09:45-15:55 ET**, "
+            "推荐 10:45 晨检窗口 — **不要提示开盘前执行**, 出场回款 09:30 才到账)",
         ]),
     ],
     "morning": [
@@ -156,6 +173,13 @@ CHECKLIST = {
             "status=cancelled_unfilled + outcome。**绝不改限价追单** (红线2)",
             "pending_option_orders 仍 awaiting_execution 且已过 10:30 ET → status=expired, commit",
         ]),
+        ("待执行清单 (本窗口 = 推荐执行锚点, 2026-09-10 起)", [
+            "pending_orders.json status=awaiting_execution 且 trade_date=上一交易日 → 本窗口正是 "
+            "playbook 4C 的推荐执行时刻 (09:45-15:55 ET 窗口内, 出场回款已于 09:30 到账)",
+            "**但仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
+            "同日若有 pending_option_orders → 按 playbook 4D-2D 期权优先 (其窗口 09:45-10:30 更窄, 先做)",
+            "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit (引擎当晚重算)",
+        ]),
         ("收尾", ["有动作则 commit+push 并推送; 休市或无动作无异常 → 静默结束不打扰用户"]),
     ],
     "report": [
@@ -165,8 +189,9 @@ CHECKLIST = {
         ]),
         ("战报内容", [
             "组合净值/回撤/信号摘要/成交/告警异常",
-            "pending_orders (次日 09:25 ET 前有效) 与 pending_option_orders (次日 10:30 ET 前有效, "
-            "推荐执行窗 09:45-10:30 ET) 状态; 待执行则附逐笔明细提醒用户可回复「执行」",
+            "pending_orders (次日 15:55 ET 前有效, **执行窗 09:45-15:55 = 开盘后**, 推荐 10:45 晨检) 与 "
+            "pending_option_orders (次日 10:30 ET 前有效, 推荐执行窗 09:45-10:30 ET) 状态; "
+            "待执行则附逐笔明细提醒用户可回复「执行」",
             "带 option_alert 时显著提示预警标的与保留额",
             "周call 双轨小节 (实盘持仓盯市/skip 原因/near_signals; paper round_trips/中位点差/verdict)",
             "price_check 结果 (引擎价 vs 券商官方收盘)",
@@ -178,6 +203,8 @@ CHECKLIST = {
         ]),
         ("例外: 用户说「执行」", [
             "按 playbook §4C 消费 pending_orders.json / §4D 消费 pending_option_orders.json",
+            "⚠️ **股票买单必须在 09:30 开盘之后执行** (2026-09-10 起): 本窗口若在盘前/盘后, "
+            "告知用户改到次日 09:45-15:55 ET 执行, 不要下单 — 出场回款 09:30 才到账",
             "必须先回显逐笔明细获确认 (4C-1B); 逐字段照抄引擎输出, 绝不放大/加单/改标的",
             "带 option_alert 时: 股票买单累计 ≤ 实时BP − reserve_usd; 装不下的整单跳过不缩量",
             "用户说「不留了」= 撤销弹药保留, 照常全执行",
@@ -217,6 +244,7 @@ def main():
         "pending": [pending_state("pending_orders.json", "股票待执行"),
                     pending_state("pending_option_orders.json", "期权待执行")],
         "scale_in": scale_in_watch(),
+        "exec_window": exec_window(t),
     }
 
     blockers = []
@@ -227,7 +255,10 @@ def main():
     if win == "main_run" and jr["completed"]:
         blockers.append(f"journal/{date}.md 已 status:completed → 幂等, 静默结束")
     if win in ("off_weekend", "off_hours"):
-        blockers.append(f"当前不在任何作业窗口 ({win}) → 只读; 如确需执行请用 --window 指定")
+        msg = f"当前不在任何作业窗口 ({win}) → 只读; 如确需执行请用 --window 指定"
+        if info["exec_window"]["open"]:
+            msg += " (注: 4C 股票买单执行窗仍开放, 用户说「执行」照常按 playbook 4C 处理)"
+        blockers.append(msg)
     if ck and ck.get("market_is_open") is False and win == "main_run":
         pass   # 主跑本就在收盘后, 不算 blocker
     info["blockers"] = blockers
@@ -252,6 +283,8 @@ def main():
           f"策略仓 {info['positions']} 只  存量仓 {info['legacy_positions']} 只  "
           f"HWM ${info['high_water_mark']}")
     print(f"日志: journal/{date}.md  存在={jr['exists']}  completed={jr['completed']}")
+    ew = info["exec_window"]
+    print(f"4C 执行窗: {'🟢 开放' if ew['open'] else '🔴 关闭'}  {ew['reason']}")
     print()
     for p in info["pending"]:
         if not p["exists"]:

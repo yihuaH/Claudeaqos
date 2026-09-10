@@ -98,7 +98,7 @@
   "execution": {
     "mode": "semi_auto",
     "since": "2026-07-20 (用户指示: 买入半自动 — 无人值守买单被平台分类器拦截, 属平台安全边界)",
-    "rule": "出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation/accelerated_liquidation 换仓/加速清理卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行。时效: 买单与换仓卖单至次一交易日 09:25 ET (当日窗口内市价; 盘外转 all_day_hours 整股限价 +1.0% 容差 [2026-07-21 回测调优], 盘后/隔夜/盘前即时生效、能成交就成交, 跳空不追; 换仓/加速清理卖单盘外跳过), 隔夜轨道买单仅当日 15:55 ET。approval.json 闸门已退役。"
+    "rule": "出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation/accelerated_liquidation 换仓/加速清理卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行。时效 (2026-09-10 用户批准, 取代原 09:25 盘外两腿方案): 买单与换仓卖单有效至次一交易日 15:55 ET, 执行窗口 09:45-15:55 ET (必须在 09:30 开盘之后 —— 出场回款 09:30 才到账, 原 09:25 截止使引擎算进去的回款结构性拿不到, 实测占出单额 32%), 推荐锚在 10:45 ET 晨检窗口; 形态为单笔 market + regular_hours + dollar_amount (原生支持分数股, 故两腿混合执行/whole==0/24h降级阶梯一并作废); 不设价格闸; 换仓/加速清理卖单同窗口照常执行。隔夜轨道买单仅当日 15:55 ET。approval.json 闸门已退役。"
   },
   "etf_universe_note": "2026-07-22: SPLG 剔除 (Robinhood 查无 symbol + Alpaca 历史K线自 2025-10-30 断供, 双源异常无法交易)。标普广谱暴露由 universe.json 100 只大盘股覆盖; 若需 S&P500 ETF, SPY 可交易但每股~$630 仅当日市价窗口可买 (盘外整股限价不足一股)。池现为 8 ETF + 100 股。"
 }
