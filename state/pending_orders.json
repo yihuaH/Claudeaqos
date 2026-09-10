@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-09",
   "generated_at": "2026-09-09T21:52:00Z",
-  "status": "executed_partial_by_funding",
+  "status": "executed_partial_by_funding_all_legs_filled",
   "valid_until": "次一交易日 (2026-09-10 周四) 09:25 ET",
   "buying_power_at_generation": 1714.35,
   "cash_at_generation": 1714.35,
@@ -146,8 +146,11 @@
           "dollar_amount": 80.79,
           "market_hours": "regular_hours",
           "order_id": "6aa1d61c-f320-4690-9afa-62b1231c5a0a",
-          "state": "queued",
-          "est_qty": 0.96316
+          "state": "filled",
+          "fill_qty": 0.963244,
+          "fill_price": 83.8728,
+          "cost": 80.79,
+          "filled_at": "2026-09-10T13:30:01Z (09:30 ET 开盘)"
         },
         "total_committed": 1012.71
       },
@@ -162,11 +165,14 @@
     "totals": {
       "committed_usd": 1012.71,
       "filled_tonight_usd": 931.92,
-      "queued_to_open_usd": 80.79,
+      "queued_to_open_usd": 0.0,
       "orders_executed": 1,
       "orders_skipped": 1,
-      "skipped_usd": 696.64
+      "skipped_usd": 696.64,
+      "filled_total_usd": 1012.71,
+      "all_legs_filled_at": "2026-09-10 09:30 ET"
     },
-    "ledger_writeback": "DXCM ①腿已写回: 新仓 11.0 股 @ $84.72, cost $931.92, tranches=1。②腿待 09-10 晨检回写。"
+    "ledger_writeback": "全部已回写: DXCM 11.963244 股 @ $84.6518, cost $1,012.71 = 引擎金额, tranches=1。",
+    "leg2_vs_leg1": "②腿 $83.8728 比 ①腿 $84.72 便宜 $0.85 (−1.0%)。"
   }
 }

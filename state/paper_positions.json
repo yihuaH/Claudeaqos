@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "BLK": {
-      "qty": 8.0,
-      "entry_price": 1124.295,
-      "entry_date": "2026-09-03",
-      "cost": 8994.36,
-      "tranches": 1
-    },
     "UNP": {
       "qty": 33.0,
       "entry_price": 290.896364,
@@ -45,20 +38,6 @@
       "cost": 9421.8,
       "tranches": 1
     },
-    "PM": {
-      "qty": 53.0,
-      "entry_price": 184.639812,
-      "entry_date": "2026-09-08",
-      "cost": 9785.91,
-      "tranches": 1
-    },
-    "SBUX": {
-      "qty": 93.0,
-      "entry_price": 104.61,
-      "entry_date": "2026-09-08",
-      "cost": 9728.73,
-      "tranches": 1
-    },
     "LLY": {
       "qty": 8.0,
       "entry_price": 1132.50625,
@@ -78,6 +57,27 @@
       "entry_price": 247.9225,
       "entry_date": "2026-09-09",
       "cost": 2975.07,
+      "tranches": 1
+    },
+    "DASH": {
+      "qty": 48.0,
+      "entry_price": 194.53125,
+      "entry_date": "2026-09-10",
+      "cost": 9337.5,
+      "tranches": 1
+    },
+    "MMM": {
+      "qty": 57.0,
+      "entry_price": 163.21,
+      "entry_date": "2026-09-10",
+      "cost": 9302.97,
+      "tranches": 1
+    },
+    "ADP": {
+      "qty": 35.0,
+      "entry_price": 268.031429,
+      "entry_date": "2026-09-10",
+      "cost": 9381.1,
       "tranches": 1
     }
   },
@@ -1466,6 +1466,60 @@
       "side": "buy",
       "qty": 12.0,
       "price": 247.9225,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "BLK",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 1064.74375,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "PM",
+      "side": "sell",
+      "qty": 53.0,
+      "price": 189.050755,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "SBUX",
+      "side": "sell",
+      "qty": 93.0,
+      "price": 100.257527,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "DASH",
+      "side": "buy",
+      "qty": 48.0,
+      "price": 194.53125,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 57.0,
+      "price": 163.21,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "ADP",
+      "side": "buy",
+      "qty": 35.0,
+      "price": 268.031429,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

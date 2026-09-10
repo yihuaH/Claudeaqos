@@ -45,10 +45,10 @@
       "tranches": 1
     },
     "DXCM": {
-      "qty": 11.0,
-      "entry_price": 84.72,
+      "qty": 11.963244,
+      "entry_price": 84.6518,
       "entry_date": "2026-09-09",
-      "cost": 931.92,
+      "cost": 1012.71,
       "tranches": 1
     }
   },
@@ -1682,6 +1682,15 @@
       "price": 84.72,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "DXCM",
+      "side": "buy",
+      "qty": 0.963244,
+      "price": 83.8728,
+      "bucket": "strategy",
+      "reason": "rsi2_entry_leg2"
     }
   ],
   "corporate_actions": [
