@@ -2,7 +2,7 @@
   "trade_date": "2026-09-10",
   "generated_at": "2026-09-10T21:52:00Z",
   "status": "awaiting_execution",
-  "valid_until": "次一交易日 (2026-09-11 周五) 09:25 ET",
+  "valid_until": "次一交易日 (2026-09-11 周五) 15:55 ET, 执行窗 09:45–15:55 ET (推荐锚 10:45 晨检)",
   "buying_power_at_generation": 701.64,
   "cash_at_generation": 701.64,
   "portfolio_value_at_generation": 10051.74,
@@ -21,7 +21,7 @@
       "avg_entry_price": 241.7242,
       "drawdown_pct": -4.38,
       "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et",
+      "valid_until": "next_session_1555_et",
       "note": "金额 $696.64 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
     }
   ],
@@ -64,7 +64,8 @@
     "realtime_bp_at_generation": 701.64,
     "cap_at_generation": 456.07,
     "consequence": "cap = BP $701.64 − 弹药保留 $245.57 = **$456.07** < 唯一一单 $696.64 → **0/1 单可执行**。若放弃弹药保留, cap = $701.64 ≥ $696.64 → **该单可执行 (余 $4.99)**。",
-    "note": "⚠️ **连续第二天出现「保留与否直接决定能否成交」的临界情形**, 且本次更极端: 保留 = 一单都下不了。执行时以实时 min(buying_power, cash) 重算为准 (红线3)。"
+    "note": "⚠️ **连续第二天出现「保留与否直接决定能否成交」的临界情形**, 且本次更极端: 保留 = 一单都下不了。执行时以实时 min(buying_power, cash) 重算为准 (红线3)。",
+    "execution_basis_note": "⚠️ 新协议明确: 执行时**在开盘后取实时 min(buying_power, cash)**, 不得用 `buying_power_at_generation` 推算 (playbook 4C-2 资金约束)。**本日特殊**: 今日 4A 出场 0 单, 无回款入账, 故明日实时 BP 预计仍约 $701.64 —— 下面的装箱推算结论不变, 但执行时仍须以实时值为准。"
   },
   "reserve_retrospective": {
     "title": "📌 昨日 (09-09) 保留 $502 的实际结果 —— 已可判定",
@@ -76,5 +77,21 @@
     "proposal_NOT_APPLIED": "建议: 当 `BP×35%` < 最便宜预警标的的**实际单张成本**时, 保留额应直接归零 (保不起就别保), 而非保一个买不到任何东西的零头。**属 playbook 4B 保留额口径, 需用户批准 (红线3), 本次未改。**",
     "caveat": "单日单样本。该口径 2026-08-06 经实测校准并有回测支撑, 不应因一天的结果推翻; 但本次暴露的是**账户规模与期权单价错配**下的边界失效, 值得用户知悉。"
   },
-  "note": "候选中 SBUX (0.87) / MMM (0.91) / AMGN (1.63) / LLY (2.23) / XLB (2.49) / VRTX (2.61) / TGT (2.91) / XLV (3.00) / MRK (3.27) / MA (3.28) / BMY (3.50) / BLK (3.88) / CRL (4.13) / IWM (5.06) 未进清单。⚠️ **MMM (rsi2 0.91) / LLY (2.23) 排在最前但已满 2 档**; 全部 7 只持仓中 5 只满档 (ABT/LLY/MMM/UNP + 今日 DGX 若成交), 仅 NSC/DXCM 尚有空间。"
+  "note": "候选中 SBUX (0.87) / MMM (0.91) / AMGN (1.63) / LLY (2.23) / XLB (2.49) / VRTX (2.61) / TGT (2.91) / XLV (3.00) / MRK (3.27) / MA (3.28) / BMY (3.50) / BLK (3.88) / CRL (4.13) / IWM (5.06) 未进清单。⚠️ **MMM (rsi2 0.91) / LLY (2.23) 排在最前但已满 2 档**; 全部 7 只持仓中 5 只满档 (ABT/LLY/MMM/UNP + 今日 DGX 若成交), 仅 NSC/DXCM 尚有空间。",
+  "protocol_correction": {
+    "detected_at": "2026-09-10 18:5x ET (收盘战报窗口)",
+    "what": "本文件 17:52 生成时误用**已退役**的 4C 盘外两腿协议时效 (09:25 ET 截止)。",
+    "why": "4C 执行协议已于今日 17:35 ET 由另一会话按用户批准换代 (commit c07917e) —— 改为**次一交易日 09:45–15:55 ET 盘中单笔市价**。本会话 17:46 主跑虽 fetch 到该提交, 但未重读变更后的契约, 沿用了旧口径。**会话疏忽, 非引擎问题。**",
+    "corrected": {
+      "valid_until_top": {
+        "before": "次一交易日 (2026-09-11 周五) 09:25 ET",
+        "after": "次一交易日 (2026-09-11 周五) 15:55 ET, 执行窗 09:45–15:55 ET (推荐锚 10:45 晨检)"
+      },
+      "valid_until_per_order": {
+        "before": "next_open_0925_et",
+        "after": "next_session_1555_et"
+      }
+    },
+    "unchanged": "订单内容 (标的/金额/reason/est_price) 逐字段来自引擎, **一字未动** (红线2)。"
+  }
 }
