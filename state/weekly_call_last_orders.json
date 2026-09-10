@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-09",
+  "date": "2026-09-10",
   "halted": false,
   "sells": [],
   "buys": [
@@ -9,88 +9,93 @@
       "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call",
-      "est_price": 33.05,
+      "est_price": 32.48,
       "underlying": "AMZN",
       "strike": 220.0,
       "expiry": "2026-09-18",
-      "dte": 9,
-      "spot": 252.4,
-      "rsi2": 9.15,
-      "model_price": 32.6248,
+      "dte": 8,
+      "spot": 251.89,
+      "rsi2": 7.87,
+      "model_price": 32.0865,
       "entry_quote": {
-        "bid": 32.87,
-        "ask": 33.24,
-        "mid": 33.055,
-        "spread_pct": 1.119
+        "bid": 32.479,
+        "ask": 32.49,
+        "mid": 32.4845,
+        "spread_pct": 0.034
+      }
+    },
+    {
+      "symbol": "NVDA260925C00195000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 24.39,
+      "underlying": "NVDA",
+      "strike": 195.0,
+      "expiry": "2026-09-25",
+      "dte": 15,
+      "spot": 218.36,
+      "rsi2": 9.23,
+      "model_price": 25.3333,
+      "entry_quote": {
+        "bid": 24.31,
+        "ask": 24.48,
+        "mid": 24.395,
+        "spread_pct": 0.697
       }
     }
   ],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "spread_too_wide(best=3.48%)",
-      "rsi2": 4.66,
-      "spot": 166.58
+      "reason": "spread_too_wide(best=5.68%)",
+      "rsi2": 3.0,
+      "spot": 165.66
+    },
+    {
+      "symbol": "IWM",
+      "reason": "spread_too_wide(best=7.89%)",
+      "rsi2": 5.06,
+      "spot": 287.7
+    },
+    {
+      "symbol": "DIA",
+      "reason": "premium_too_large(5619)",
+      "rsi2": 6.3,
+      "spot": 520.75
+    },
+    {
+      "symbol": "SPY",
+      "reason": "premium_too_large(8754)",
+      "rsi2": 7.26,
+      "spot": 757.83
+    },
+    {
+      "symbol": "QQQ",
+      "reason": "premium_too_large(10428)",
+      "rsi2": 7.85,
+      "spot": 708.69
     }
   ],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "XLF",
-      "rsi2_now": 15.57,
-      "scenario": "1d_-1%",
-      "spot": 57.06,
-      "structure": "single",
-      "est_premium_usd": 578
-    },
-    {
-      "symbol": "IWM",
-      "rsi2_now": 10.53,
-      "scenario": "1d_-1%",
-      "spot": 290.64,
-      "structure": "single",
-      "est_premium_usd": 2942
-    },
-    {
-      "symbol": "AAPL",
-      "rsi2_now": 12.84,
-      "scenario": "1d_-1%",
-      "spot": 315.34,
-      "structure": "single",
-      "est_premium_usd": 3197
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 17.58,
-      "scenario": "1d_-1%",
-      "spot": 491.65,
-      "structure": "single",
-      "est_premium_usd": 4996
-    },
-    {
-      "symbol": "DIA",
       "rsi2_now": 11.02,
       "scenario": "1d_-1%",
-      "spot": 524.07,
+      "spot": 56.87,
       "structure": "single",
-      "est_premium_usd": 5305
+      "est_premium_usd": 576
     },
     {
-      "symbol": "QQQ",
-      "rsi2_now": 36.31,
-      "scenario": "1d_-1%",
-      "spot": 716.31,
+      "symbol": "SMH",
+      "rsi2_now": 22.42,
+      "scenario": "2d_-1%x2",
+      "spot": 560.28,
       "structure": "single",
-      "est_premium_usd": 7251
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 15.7,
-      "scenario": "1d_-1%",
-      "spot": 762.4,
-      "structure": "single",
-      "est_premium_usd": 7718
+      "est_premium_usd": 5771
     }
   ],
-  "suggested_reserve_usd": 578.0
+  "suggested_reserve_usd": 576.0
 }

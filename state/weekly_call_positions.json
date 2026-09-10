@@ -364,6 +364,48 @@
       "reason": "spread_too_wide(best=6.74%)",
       "rsi2": 5.57,
       "spot": 167.13
+    },
+    {
+      "date": "2026-09-09",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=3.48%)",
+      "rsi2": 4.66,
+      "spot": 166.58
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=5.68%)",
+      "rsi2": 3.0,
+      "spot": 165.66
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "IWM",
+      "reason": "spread_too_wide(best=7.89%)",
+      "rsi2": 5.06,
+      "spot": 287.7
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "DIA",
+      "reason": "premium_too_large(5619)",
+      "rsi2": 6.3,
+      "spot": 520.75
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "SPY",
+      "reason": "premium_too_large(8754)",
+      "rsi2": 7.26,
+      "spot": 757.83
+    },
+    {
+      "date": "2026-09-10",
+      "symbol": "QQQ",
+      "reason": "premium_too_large(10428)",
+      "rsi2": 7.85,
+      "spot": 708.69
     }
   ],
   "assignments": [

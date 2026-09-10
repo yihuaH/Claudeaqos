@@ -1,12 +1,45 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-09",
+  "date": "2026-09-10",
   "coid_prefix": "cq",
-  "next_open": "2026-09-10T09:30:00-04:00",
+  "next_open": "2026-09-11T09:30:00-04:00",
   "skipped": [
-    "DIA sell: 排队限价下买不起 1 整股, 跳过",
-    "SBUX buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
+    "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
-  "orders": []
+  "orders": [
+    {
+      "coid": "cq-2026-09-10-ABBV-sell",
+      "order_id": "3102e267-a5c7-4106-8a2a-4c0239405c7e",
+      "symbol": "ABBV",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "247.35",
+      "qty": "12",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-10-SBUX-buy",
+      "order_id": "5f755596-8b50-444e-bd23-d71b5d71479a",
+      "symbol": "SBUX",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "102.2",
+      "qty": "96",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-10-VRTX-buy",
+      "order_id": "ebaec54b-99b1-4407-b674-b9913b90e268",
+      "symbol": "VRTX",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "530.0",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
 }

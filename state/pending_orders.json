@@ -1,35 +1,25 @@
 {
-  "trade_date": "2026-09-09",
-  "generated_at": "2026-09-09T21:52:00Z",
-  "status": "executed_partial_by_funding_all_legs_filled",
-  "valid_until": "次一交易日 (2026-09-10 周四) 09:25 ET",
-  "buying_power_at_generation": 1714.35,
-  "cash_at_generation": 1714.35,
-  "portfolio_value_at_generation": 10127.06,
+  "trade_date": "2026-09-10",
+  "generated_at": "2026-09-10T21:52:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "次一交易日 (2026-09-11 周五) 09:25 ET",
+  "buying_power_at_generation": 701.64,
+  "cash_at_generation": 701.64,
+  "portfolio_value_at_generation": 10051.74,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "DXCM",
-      "dollar_amount": 1012.71,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 83.88,
-      "review_est_price": 83.91,
-      "rsi2": 0.7,
-      "state_file": "state/positions.json",
-      "valid_until": "next_open_0925_et"
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "DASH",
+      "symbol": "DGX",
       "dollar_amount": 696.64,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 197.245,
-      "review_est_price": 197.27,
-      "rsi2": 0.72,
+      "reason": "rsi2_scale_in",
+      "est_price": 231.14,
+      "review_est_price": 231.13,
+      "rsi2": 2.7,
+      "tranche": 2,
+      "avg_entry_price": 241.7242,
+      "drawdown_pct": -4.38,
       "state_file": "state/positions.json",
       "valid_until": "next_open_0925_et",
       "note": "金额 $696.64 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
@@ -37,142 +27,54 @@
   ],
   "review_precheck": {
     "all_clean": true,
-    "note": "2 单 review_equity_order 全部 order_checks 为空 — 无购买力/停牌/限制类告警。"
+    "note": "order_checks 为空, 无告警。"
   },
   "news_precheck": {
     "symbols": [
-      "DXCM",
-      "DASH"
+      "DGX"
     ],
     "red_flagged": [],
-    "with_news": 1,
-    "source": "integrations.py news 2026-09-02→2026-09-09",
-    "assessment": "无红旗。"
+    "with_news": 0,
+    "source": "integrations.py news 2026-09-03→2026-09-10",
+    "assessment": "无红旗 (该标的近一周无新闻)。"
   },
   "option_alert": {
     "names": [
       "XLF",
-      "IWM",
-      "AAPL",
-      "MSFT",
-      "DIA",
-      "QQQ",
-      "SPY"
+      "SMH"
     ],
     "scenarios": {
       "XLF": {
-        "rsi2_now": 15.57,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 502
-      },
-      "IWM": {
-        "rsi2_now": 10.53,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 2559
-      },
-      "AAPL": {
-        "rsi2_now": 12.84,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 2628
-      },
-      "MSFT": {
-        "rsi2_now": 17.58,
-        "scenario": "1d_-1%",
-        "est_premium_usd": 4005
-      },
-      "DIA": {
         "rsi2_now": 11.02,
         "scenario": "1d_-1%"
       },
-      "QQQ": {
-        "rsi2_now": 36.31,
-        "scenario": "1d_-1%"
-      },
-      "SPY": {
-        "rsi2_now": 15.7,
-        "scenario": "1d_-1%"
+      "SMH": {
+        "rsi2_now": 22.42,
+        "scenario": "2d_-1%x2"
       }
     },
-    "reserve_usd": 502.0,
-    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)",
-    "note": "⚡ **7 只全部落在 1 日档** —— 本轮预警面最广的一天, 全市场普跌所致。"
+    "reserve_usd": 245.57,
+    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
   },
   "funding_note": {
     "detected": true,
-    "stock_buys_usd": 1709.35,
+    "stock_buys_usd": 696.64,
     "option_orders_today": 0,
-    "option_alert_reserve_usd": 502.0,
-    "realtime_bp_at_generation": 1714.35,
-    "cap_at_generation": 1212.35,
-    "consequence": "cap = BP $1,714.35 − 弹药保留 $502.00 = $1,212.35, 逐 seq 装箱:\n• seq1 DXCM $1,012.71 ✅ (余 $199.64)\n• seq2 DASH $696.64 ⛔ 跳过\n合计可执行 **$1,012.71 / 2 单中的 1 单**。",
-    "note": "机械推算, 执行时以实时 min(buying_power, cash) 重算为准 (红线3 防杠杆闸)。若放弃弹药保留, cap = $1,714.35 → seq1+seq2 = $1,709.35 **两单全装得下** (余 $5.00)。⚠️ **这是本轮首次出现「放弃保留 = 全部装下」的临界情形**, 差额仅 $5.00。",
-    "timing_note": "今日无出场卖单, 无回款时序问题 (连续错配中断)。"
+    "option_alert_reserve_usd": 245.57,
+    "realtime_bp_at_generation": 701.64,
+    "cap_at_generation": 456.07,
+    "consequence": "cap = BP $701.64 − 弹药保留 $245.57 = **$456.07** < 唯一一单 $696.64 → **0/1 单可执行**。若放弃弹药保留, cap = $701.64 ≥ $696.64 → **该单可执行 (余 $4.99)**。",
+    "note": "⚠️ **连续第二天出现「保留与否直接决定能否成交」的临界情形**, 且本次更极端: 保留 = 一单都下不了。执行时以实时 min(buying_power, cash) 重算为准 (红线3)。"
   },
-  "note": "候选中 SBUX (1.25) / MMM (1.62) / MSI (2.31) / UNP (2.45) / LLY (2.56) / AMGN (2.71) / ADP (3.46) / VRTX (4.30) / TGT (4.53) / MA (4.64) / XLV (4.66) / RTX (5.46) / BLK (5.64) 未进清单。⚠️ **MMM/UNP/LLY 虽在候选前列但已满 2 档**, 引擎不再出加仓单 —— 当前 6 只持仓中 4 只满档, 只剩 DGX/NSC 有加仓空间, 这是今日买单锐减 (5→2) 的主因。",
-  "execution": {
-    "executed_at": "2026-09-09T21:56:44Z (17:56 ET)",
-    "trigger": "用户 2026-09-09 收盘战报窗口回复「执行」—— **未说「不留了」, 按缺省保留弹药**",
-    "mode": "盘外混合执行 (playbook 4C)",
-    "funding_gate": {
-      "realtime_bp": 1714.35,
-      "realtime_cash": 1714.35,
-      "unleveraged_bp": 1714.35,
-      "option_alert_reserve_usd": 502.0,
-      "cap": 1212.35,
-      "rule": "按 seq 累计 ≤ cap; 超出整单跳过不缩量",
-      "user_kept_reserve": true,
-      "note": "用户回「执行」而非「不留了」→ 保留 $502 弹药 → cap $1,212.35 → 只装 seq1。若当时选择不留, 两单 $1,709.35 本可全下 (余 $5.00)。**该选择由用户作出, 会话未代判。**"
-    },
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "DXCM",
-        "dollar_amount": 1012.71,
-        "status": "executed",
-        "leg1": {
-          "type": "limit",
-          "qty": 11,
-          "limit_price": 84.72,
-          "market_hours": "all_day_hours",
-          "order_id": "6aa1d611-7775-4485-bd3b-4b95d9f35969",
-          "state": "filled",
-          "fill_qty": 11.0,
-          "fill_price": 84.72,
-          "cost": 931.92,
-          "note": "限价 = 引擎 est 83.88 × 1.010 = 84.72。**成交价恰等于限价** (此前多数 ①腿成交价低于限价) —— 下单时 bid $83.88 / ask $85.05, 限价落在价差中间, 被卖方吃到限价。"
-        },
-        "leg2": {
-          "type": "market",
-          "dollar_amount": 80.79,
-          "market_hours": "regular_hours",
-          "order_id": "6aa1d61c-f320-4690-9afa-62b1231c5a0a",
-          "state": "filled",
-          "fill_qty": 0.963244,
-          "fill_price": 83.8728,
-          "cost": 80.79,
-          "filled_at": "2026-09-10T13:30:01Z (09:30 ET 开盘)"
-        },
-        "total_committed": 1012.71
-      },
-      {
-        "seq": 2,
-        "symbol": "DASH",
-        "dollar_amount": 696.64,
-        "status": "skipped_funding",
-        "note": "cap 余额 $199.64 不够。若放弃弹药保留本可执行 (两单合计 $1,709.35 ≤ BP $1,714.35)。"
-      }
-    ],
-    "totals": {
-      "committed_usd": 1012.71,
-      "filled_tonight_usd": 931.92,
-      "queued_to_open_usd": 0.0,
-      "orders_executed": 1,
-      "orders_skipped": 1,
-      "skipped_usd": 696.64,
-      "filled_total_usd": 1012.71,
-      "all_legs_filled_at": "2026-09-10 09:30 ET"
-    },
-    "ledger_writeback": "全部已回写: DXCM 11.963244 股 @ $84.6518, cost $1,012.71 = 引擎金额, tranches=1。",
-    "leg2_vs_leg1": "②腿 $83.8728 比 ①腿 $84.72 便宜 $0.85 (−1.0%)。"
-  }
+  "reserve_retrospective": {
+    "title": "📌 昨日 (09-09) 保留 $502 的实际结果 —— 已可判定",
+    "yesterday": "保留 $502 → 跳过 DASH $696.64; 预警 7 只全在 1 日档。",
+    "today_conversion": "**7 只中 4 只今日真的出了期权信号** (IWM/DIA/QQQ/SPY), 另 AMZN/NVDA 亦出信号 (不在昨日预警名单)。预警转化本身**是准的**。",
+    "but": "⚠️ **但全部因资金不足被引擎自身 BP 闸拦下** —— 最便宜的 AMZN 需 $2,029, 而全部可用资金只有 $702。",
+    "verdict": "**保留的 $502 一张也买不起。** 结论: 该笔保留既没转化成期权仓, 又让 DASH 少建了一仓 —— **净负贡献**。",
+    "root_cause": "`suggested_reserve_usd` 的口径是「最便宜预警标的的单张成本, 且 ≤ 实时 BP×35%」。昨日被 BP×35% 的上限压到 $502, 而真实最低单张成本是 $2,029 —— **上限压出来的保留额, 根本不足以买下任何一张**, 保留因此失去意义。",
+    "proposal_NOT_APPLIED": "建议: 当 `BP×35%` < 最便宜预警标的的**实际单张成本**时, 保留额应直接归零 (保不起就别保), 而非保一个买不到任何东西的零头。**属 playbook 4B 保留额口径, 需用户批准 (红线3), 本次未改。**",
+    "caveat": "单日单样本。该口径 2026-08-06 经实测校准并有回测支撑, 不应因一天的结果推翻; 但本次暴露的是**账户规模与期权单价错配**下的边界失效, 值得用户知悉。"
+  },
+  "note": "候选中 SBUX (0.87) / MMM (0.91) / AMGN (1.63) / LLY (2.23) / XLB (2.49) / VRTX (2.61) / TGT (2.91) / XLV (3.00) / MRK (3.27) / MA (3.28) / BMY (3.50) / BLK (3.88) / CRL (4.13) / IWM (5.06) 未进清单。⚠️ **MMM (rsi2 0.91) / LLY (2.23) 排在最前但已满 2 档**; 全部 7 只持仓中 5 只满档 (ABT/LLY/MMM/UNP + 今日 DGX 若成交), 仅 NSC/DXCM 尚有空间。"
 }
