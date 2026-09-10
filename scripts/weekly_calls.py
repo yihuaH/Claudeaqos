@@ -719,6 +719,27 @@ def cmd_apply(a):
     positions = ledger.setdefault("positions", {})
     today = a.date
 
+    # --- context 闸 (2026-09-09 事故: 会话漏传 --context) ---------------------
+    # 缺 context 时开仓记录的 entry_underlying / entry_rsi2 / entry_quote / model_price
+    # 会静默写成 null, 次日正股止损检查 float(None) 崩溃, 当日入场单因此未能下达。
+    # 开仓成交**必须**有对应 context; 平仓成交不需要 (出场快照缺失只少记摘要, 不致崩)。
+    _open_occ = [f["symbol"] for f in fills["fills"] if f.get("side") == "buy"]
+    if _open_occ:
+        if not a.context:
+            raise SystemExit(
+                "apply 含开仓成交但未传 --context: " + ", ".join(_open_occ) +
+                "\n开仓快照 (entry_underlying/entry_rsi2/entry_quote/model_price) 会写成 null, "
+                "次日出场检查将崩溃 (2026-09-09 事故)。\n"
+                "请补 --context 指向当日 signal 输出 (state/weekly_call_last_orders.json "
+                "或 state/weekly_call_live_last_orders.json)。")
+        _missing = [o for o in _open_occ if o not in ctx_buys]
+        if _missing:
+            raise SystemExit(
+                "开仓成交在 --context 里找不到对应买单: " + ", ".join(_missing) +
+                f"\ncontext={a.context} 提供的买单主键: " +
+                (", ".join(sorted(ctx_buys)) or "(空)") +
+                "\n多半是 context 传成了别的交易日/别的轨道的文件。人工核对后重跑。")
+
     for f in fills["fills"]:
         occ, side = f["symbol"], f["side"]
         qty, price = int(float(f["qty"])), float(f["price"])

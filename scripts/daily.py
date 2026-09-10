@@ -23,6 +23,7 @@ Claudeaqos 每日主跑驱动器 — 把 playbook 中所有"可脚本化"的步�
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import date as _date, timedelta
@@ -138,7 +139,11 @@ def phase_preflight(a, R, plan):
             raise RuntimeError("数据源不可用, 按红线6 停止 (--force 可强制继续)")
     plan["macro_vix"] = (st.get("fred") or {}).get("vix")
     jr = f"{REPO}/journal/{a.date}.md"
-    if os.path.exists(jr) and "status: completed" in open(jr).read() and not a.force:
+    # 幂等标记必须**锚定行首** (2026-09-03 假阳性: 晨检段误写了主跑标记, 整文件子串匹配
+    # 把当晚主跑判成"已跑过"而停机)。只认独立成行的 `status: completed`。
+    _completed = os.path.exists(jr) and re.search(
+        r"^\s*status:\s*completed\s*$", open(jr).read(), re.M) is not None
+    if _completed and not a.force:
         plan["idempotent_skip"] = True
         raise SystemExit(json.dumps({"idempotent_skip": True,
                                      "note": f"journal/{a.date}.md 已 completed, 幂等结束"},
