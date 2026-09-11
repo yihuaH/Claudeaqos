@@ -2,20 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "LLY": {
-      "qty": 1.733975,
-      "entry_price": 1156.0836,
-      "entry_date": "2026-08-27",
-      "cost": 2004.62,
-      "tranches": 2
-    },
-    "ABT": {
-      "qty": 18.685981,
-      "entry_price": 110.4282,
-      "entry_date": "2026-08-27",
-      "cost": 2063.46,
-      "tranches": 2
-    },
     "MMM": {
       "qty": 6.997262,
       "entry_price": 169.7035,
@@ -1700,6 +1686,24 @@
       "price": 231.3599,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "LLY",
+      "side": "sell",
+      "qty": 1.733975,
+      "price": 1117.8201,
+      "bucket": "strategy",
+      "reason": "time_stop"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "ABT",
+      "side": "sell",
+      "qty": 18.685981,
+      "price": 102.0771,
+      "bucket": "strategy",
+      "reason": "stop_loss"
     }
   ],
   "corporate_actions": [

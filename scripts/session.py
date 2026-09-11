@@ -83,7 +83,12 @@ def exec_window(t):
         return {"open": False, "reason": f"未到 09:45 开窗 (现 {t:%H:%M} ET); "
                                          f"开盘前执行会吃不到当日出场回款"}
     if m >= 15 * 60 + 55:
-        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 清单当日过期, 引擎当晚重算"}
+        # 2026-09-11 修正: 原文写死「清单当日过期, 引擎当晚重算」, 那是顺延协议 (用户选项2) 之前
+        # 的行为。现在是否过期取决于清单**自带的 exec_day** —— same_day_then_next_session 的收盘前
+        # 清单关窗后仍 awaiting_execution, 顺延到次一交易日 09:45-15:55, 不重算。本函数看不到清单,
+        # 故只说"本窗口关闭", 过期判定交给下面 pending_exec_state 那行 (它读清单自己的模板)。
+        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 本窗口不再执行 — "
+                                         f"清单是否过期以其自带 exec_day 为准 (见下方「待执行清单自带执行窗」)"}
     return {"open": True, "reason": f"09:45-15:55 ET 执行窗开放中 (现 {t:%H:%M} ET)"}
 
 
@@ -232,7 +237,8 @@ CHECKLIST = {
             "place_now.equity_sells → 4A: review → place (market+regular_hours), **盘中即时成交**",
             "place_now.option_sells → 4D: limit = 引擎 est×0.97, gfd",
             "to_pending.equity_buys → 写 state/pending_orders.json, 时效字段**逐字段照抄** "
-            "plan.json 的 to_pending.pending_template (exec_day=same_day, 执行窗 15:30-15:55 ET)",
+            "plan.json 的 to_pending.pending_template (顺延协议后 exec_day=same_day_then_next_session: "
+            "首选窗当日 15:30-15:55, 未执行顺延次日 09:45-15:55, 次日 15:55 才 expired)",
             "to_pending.option_buys → 写 state/pending_option_orders.json, 时效字段**逐字段照抄** "
             "plan.json 的 to_pending.option_pending_template (2026-09-11 起当日执行: "
             "执行窗 **15:30-15:45 ET**, 比股票早 10 分钟收口 — 15:45 后是 4D 明令避开的收盘前极端点差区)",
@@ -260,17 +266,21 @@ CHECKLIST = {
             "status=cancelled_unfilled + outcome。**绝不改限价追单** (红线2)",
             "pending_option_orders 仍 awaiting_execution 且已过 10:30 ET → status=expired, commit",
         ]),
-        ("待执行清单 —— **条件式**, 多数日子本段无事 (2026-09-11 改写)", [
-            "先看 pending 的 `pending_template.exec_day`: **`same_day` → 本段跳过** —— 那是昨天"
-            "收盘前主跑产出的当日清单, 昨天 15:55 就已消费或过期, 与今晨无关",
-            "只有 `exec_day=next_session` 才轮到本窗口 —— 那意味着**昨天走了 fail-safe** "
-            "(收盘前主跑没跑成, 17:45 wrapup 退化为完整主跑)。此时本窗口是 4C 的推荐执行锚点 "
-            "(09:45-15:55 ET, 出场回款已于 09:30 到账)",
+        ("待执行清单 —— **条件式** (2026-09-11 改写, 同日按顺延协议再修)", [
+            "**判据用「清单日 + status」, 不要判 exec_day 的字面值** —— 顺延协议 (2026-09-11 用户选项2) "
+            "把 exec_day 从 `same_day` 改成了 `same_day_then_next_session`, 判字面值会漏掉顺延清单",
+            "① `trade_date` = 今天 → 不可能 (收盘前主跑 15:20 才产出), 本段跳过",
+            "② `trade_date` < 今天 且 `status=awaiting_execution` → **本窗口就是它的执行窗** "
+            "(09:45-15:55 ET, 出场回款已于 09:30 到账)。两种来路今天窗口相同、处置相同:",
+            "   · `same_day_then_next_session` = 昨天收盘前清单**没在 25 分钟窗内执行**, 今天是顺延窗",
+            "   · `next_session` = 昨天走了 fail-safe (收盘前没跑成, wrapup 退化为完整主跑)",
+            "③ `status` 已是 executed / expired / vetoed → 本段无事",
             "**任何情况下仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
-            "同日若有 next_session 形态的 pending_option_orders → 按 4D-2D 期权优先 (窗口 09:45-10:30 更窄)",
-            "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit (引擎当晚重算)",
-            "⚠️ 正常日 (收盘前主跑跑成了) 本段应当**什么都不做** —— 若发现有 next_session 清单, "
-            "说明昨天出过问题, 顺手核对昨日 journal 与 state/preclose_status.json",
+            "逐单看 status: 标了 `vetoed_by_user` 的**不要再提**, 用户已一票否决过",
+            "同日若有待执行的 pending_option_orders → 按 4D-2D 期权优先 (窗口 09:45-10:30 更窄)",
+            "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit",
+            "⚠️ 若命中 ② 且来路是 `next_session`, 说明昨天出过问题 —— 顺手核对昨日 journal 与 "
+            "state/preclose_status.json (顺延来路则属正常, 不必追查)",
         ]),
         ("收尾", ["有动作则 commit+push 并推送; 休市或无动作无异常 → 静默结束不打扰用户"]),
     ],
