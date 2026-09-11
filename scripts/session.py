@@ -83,7 +83,12 @@ def exec_window(t):
         return {"open": False, "reason": f"未到 09:45 开窗 (现 {t:%H:%M} ET); "
                                          f"开盘前执行会吃不到当日出场回款"}
     if m >= 15 * 60 + 55:
-        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 清单当日过期, 引擎当晚重算"}
+        # 2026-09-11 修正: 原文写死「清单当日过期, 引擎当晚重算」, 那是顺延协议 (用户选项2) 之前
+        # 的行为。现在是否过期取决于清单**自带的 exec_day** —— same_day_then_next_session 的盘前
+        # 清单关窗后仍 awaiting_execution, 顺延到次一交易日 09:45-15:55, 不重算。本函数看不到清单,
+        # 故只说"本窗口关闭", 过期判定交给下面 pending_exec_state 那行 (它读清单自己的模板)。
+        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 本窗口不再执行 — "
+                                         f"清单是否过期以其自带 exec_day 为准 (见下方「待执行清单自带执行窗」)"}
     return {"open": True, "reason": f"09:45-15:55 ET 执行窗开放中 (现 {t:%H:%M} ET)"}
 
 
