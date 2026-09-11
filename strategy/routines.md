@@ -18,7 +18,7 @@
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
-| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | **待用户在界面创建** | 🆕 2026-09-10 拆分式盘前主跑, 见下 ④ |
+| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 经 API 创建 → 常驻对话。⚠️ **`mcp_connections` 为空**, 见下 ④ 的连接器注记 |
 | 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
 | 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
@@ -131,7 +131,7 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
 
 ---
 
-## ④ 盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-10 新增, 唤醒词待部署
+## ④ 盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-11 已创建 `trig_01PqeuvMEsyXbTKJQ7njyVcR`
 
 **背景**: 4C 执行协议 2026-09-10 换代后, 实测收益全在「不跨夜进场」这一项 (+0.42 pp/笔,
 研究见 `journal/2026-09-10-preclose-research.md`)。故把**时间敏感的关键路径**移到收盘前,
@@ -153,5 +153,13 @@ mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户�
 按 `state/preclose_status.json` 提示该跑 `--phase wrapup`, 且 `daily.py` 自己会在当日
 preclose 未完成时 **fail-safe 退化为完整主跑**。**部署盘前 Routine 后无需改 17:45 的唤醒词。**
 
-⚠️ 同样受「经 API 建的触发器带不上 Robinhood 连接器」限制 (见上) —— 用户需在 claude.ai
-Routines 界面为这条新 Routine 手工添加 Robinhood 工具, 否则会话按红线6 不交易只通知。
+⚠️ **连接器仍需用户手工挂 (2026-09-11 复验, 老限制未解)**: `create_trigger` 虽已有
+`connectors` 参数, 但本组织**不可用** (实测返回 "the connectors parameter is not available
+for this organization")。故本 Routine 建成时 `mcp_connections: []`, 创建工具亦明确告警。
+**用户需在 claude.ai Routines 界面为它添加 "cash printer" 工具** (与另四条同一连接器,
+uuid `30bad367-f2b5-4d4f-bdda-d19719ecc17a`, 那四条是 2026-08-14 手工挂上的)。
+挂之前触发会按红线6 不交易、只写日志通知, 不会造成损害。
+
+**实际部署记录**: 唤醒词在创建时已按 2026-09-11 的最新契约写全 (含 `--emit-symbols` 取清单、
+券商实时报价两道硬闸、两个执行窗 15:30-15:45 / 15:30-15:55、`preclose: completed` 标记键、
+首日观察项)。与本文下方的存档文本若有出入, **以触发器内实际文本为准**。
