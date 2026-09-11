@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-09-10",
   "generated_at": "2026-09-10T21:52:00Z",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "次一交易日 (2026-09-11 周五) 15:55 ET, 执行窗 09:45–15:55 ET (推荐锚 10:45 晨检)",
   "buying_power_at_generation": 701.64,
   "cash_at_generation": 701.64,
@@ -124,5 +124,55 @@
       "review_equity_order 无预期外告警",
       "若实时可用 < $696.64 → 整单跳过不缩量, 记 journal"
     ]
+  },
+  "execution": {
+    "executed_at": "2026-09-11T13:54:28Z (09:54 ET 周五)",
+    "trigger": "用户 2026-09-10 20:1x ET 回「执行」+「不留了」; 因新协议禁止 09:30 前执行, 顺延至次日窗口",
+    "mode": "**盘中单笔市价模式** (playbook 4C-2, 2026-09-10 换代后首次实战)",
+    "window_check": "执行时刻 09:54 ET, 落在执行窗 09:45–15:55 ET 内 ✅",
+    "funding_gate": {
+      "realtime_bp": 701.64,
+      "realtime_cash": 701.64,
+      "unleveraged_bp": 701.64,
+      "option_alert_reserve_usd": 245.57,
+      "reserve_revoked_by_user": true,
+      "cap": 701.64,
+      "note": "用户「不留了」撤销保留 → cap = 实时 min(BP, cash) 全额 $701.64 ≥ $696.64 ✅ (余 $4.99)。按新协议在**开盘后**取实时值 (今日无 4A 出场回款, 与生成时同值)。"
+    },
+    "orders": [
+      {
+        "seq": 1,
+        "symbol": "DGX",
+        "dollar_amount": 696.64,
+        "status": "executed",
+        "order": {
+          "type": "market",
+          "market_hours": "regular_hours",
+          "dollar_amount": 696.64,
+          "order_id": "6aa40813-d7dd-466e-9785-37f9c11307c4",
+          "state": "filled",
+          "fill_qty": 3.011066,
+          "fill_price": 231.3599,
+          "cost": 696.64,
+          "filled_at": "2026-09-11T13:54:28Z",
+          "fill_latency_ms": 162
+        },
+        "note": "**一单一腿, 无拆腿** —— 美元额市价单原生支持分数股 (3.011066 股), 旧协议的整股①腿/余量②腿已作废。"
+      }
+    ],
+    "totals": {
+      "committed_usd": 696.64,
+      "filled_usd": 696.64,
+      "orders_executed": 1,
+      "orders_skipped": 0
+    },
+    "ledger_writeback": "DGX → 7.329748 股 @ $237.4666, cost $1,740.57, tranches=2 (已满档)。",
+    "new_protocol_first_run": {
+      "title": "📌 盘中单笔市价模式首次实战",
+      "vs_engine_est": "引擎 est $231.14 → 实成 **$231.3599**, **高 +0.10%** (+$0.22/股, 全单多付约 $0.66)。",
+      "vs_old_protocol_baseline": "对照旧①腿盘外限价实测均值 **+0.55%** (中位 +0.59%, n=10) —— 本次 +0.10% 明显更优, 但**单样本, 不构成验证**; 换代依据本就是 953 样本的统计而非单笔结果。",
+      "mechanics": "下单到成交 **162 毫秒**, 当场取回实际 qty/price 回写 —— 旧协议「今夜记①腿、明晨补②腿」的跨会话拖尾消失。",
+      "timing_value": "本次无 4A 出场回款, 故未验证到「开盘后执行拿到当日回款」这一换代主收益 (32% 结构性资金)。待有出场的日子再看。"
+    }
   }
 }

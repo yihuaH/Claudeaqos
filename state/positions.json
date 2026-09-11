@@ -31,11 +31,11 @@
       "tranches": 2
     },
     "DGX": {
-      "qty": 4.318682,
-      "entry_price": 241.7242,
+      "qty": 7.329748,
+      "entry_price": 237.4666,
       "entry_date": "2026-09-01",
-      "cost": 1043.93,
-      "tranches": 1
+      "cost": 1740.57,
+      "tranches": 2
     },
     "NSC": {
       "qty": 1.04371,
@@ -1691,6 +1691,15 @@
       "price": 83.8728,
       "bucket": "strategy",
       "reason": "rsi2_entry_leg2"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "DGX",
+      "side": "buy",
+      "qty": 3.011066,
+      "price": 231.3599,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [
