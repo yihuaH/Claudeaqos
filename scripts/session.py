@@ -180,6 +180,16 @@ CHECKLIST = {
             "to_pending.option_buys → 写 state/pending_option_orders.json (valid_until 次日 10:30 ET)",
             "⚠️ 买单一律绝不 place (无人值守会被平台分类器拦)",
         ]),
+        ("战报 (2026-09-11 由 18:45 独立窗口并入本窗口)", [
+            "组合净值/回撤/信号摘要/成交/告警异常",
+            "周call 双轨小节 (实盘持仓盯市/skip 原因/near_signals; paper round_trips/中位点差/verdict)",
+            "price_check 结果 (引擎价 vs 券商官方收盘)",
+            "带 option_alert 时显著提示预警标的与保留额",
+            "⚠️ **pending 提示按当日实际形态写**: 收盘前主跑正常 → 当日清单 15:55 已过期, 战报只做"
+            "事后陈述, **不要提示用户「回复执行」** (窗口早关了); 本次若是 fail-safe 退化的完整主跑 "
+            "→ 才提示次日 09:45-15:55 执行窗 (推荐锚 10:45 晨检)。看 plan.json 的 effective_phase 判断",
+            "次日预览: 加仓线、期权 near_signals、次日是否周一 (股票池 13:00 刷新)",
+        ]),
         ("收尾", [
             "用 plan.json 的 journal_facts 写 journal/<今天>.md (status: completed)",
             "实际成交的 4A 卖单 → signals.py apply 回写 state (未成交的不写)",
@@ -189,6 +199,13 @@ CHECKLIST = {
         ]),
     ],
     "preclose": [
+        ("① 昨日 wrapup 看门狗 (2026-09-11 由 18:45 战报迁入)", [
+            "查上一交易日的 journal 有没有 `status: completed` 行 —— 没有 = 昨晚 17:45 wrapup 失败 "
+            "(已知失败模式: worker 重启)。后果: 昨日纸面轨道未跑、行情未核对、账本可能未回写",
+            "**在交易动作之前**查这一条 (这正是从战报窗迁到这里的理由: 原来是事后一小时才发现)",
+            "发现失败 → 先通知用户并在今日 journal 注明; 账本若确未回写, 按 playbook §1 步骤3 "
+            "的 position_check 结果处置后再决定是否继续今日交易 (红线6)",
+        ]),
         ("⏱ 时段自检 (本窗口唯一硬约束)", [
             "现在必须 < 15:55 ET 且开市中。已过 15:40 → **不要开跑**, 直接等 17:45 wrapup "
             "(fail-safe 会退化成完整主跑, 出场照下), 跑一半更危险",
@@ -243,16 +260,28 @@ CHECKLIST = {
             "status=cancelled_unfilled + outcome。**绝不改限价追单** (红线2)",
             "pending_option_orders 仍 awaiting_execution 且已过 10:30 ET → status=expired, commit",
         ]),
-        ("待执行清单 (本窗口 = 推荐执行锚点, 2026-09-10 起)", [
-            "pending_orders.json status=awaiting_execution 且 trade_date=上一交易日 → 本窗口正是 "
-            "playbook 4C 的推荐执行时刻 (09:45-15:55 ET 窗口内, 出场回款已于 09:30 到账)",
-            "**但仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
-            "同日若有 pending_option_orders → 按 playbook 4D-2D 期权优先 (其窗口 09:45-10:30 更窄, 先做)",
+        ("待执行清单 —— **条件式**, 多数日子本段无事 (2026-09-11 改写)", [
+            "先看 pending 的 `pending_template.exec_day`: **`same_day` → 本段跳过** —— 那是昨天"
+            "收盘前主跑产出的当日清单, 昨天 15:55 就已消费或过期, 与今晨无关",
+            "只有 `exec_day=next_session` 才轮到本窗口 —— 那意味着**昨天走了 fail-safe** "
+            "(收盘前主跑没跑成, 17:45 wrapup 退化为完整主跑)。此时本窗口是 4C 的推荐执行锚点 "
+            "(09:45-15:55 ET, 出场回款已于 09:30 到账)",
+            "**任何情况下仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
+            "同日若有 next_session 形态的 pending_option_orders → 按 4D-2D 期权优先 (窗口 09:45-10:30 更窄)",
             "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit (引擎当晚重算)",
+            "⚠️ 正常日 (收盘前主跑跑成了) 本段应当**什么都不做** —— 若发现有 next_session 清单, "
+            "说明昨天出过问题, 顺手核对昨日 journal 与 state/preclose_status.json",
         ]),
         ("收尾", ["有动作则 commit+push 并推送; 休市或无动作无异常 → 静默结束不打扰用户"]),
     ],
+    # 2026-09-11: 18:45 独立战报窗口已并入 17:45 wrapup (拆分后战报的 pending 提示与「执行」入口
+    # 都随当日清单 15:55 过期而失效, 只剩看门狗, 而看门狗已迁到次日 preclose 的交易动作之前)。
+    # 本窗口保留给**手动**调用与盘前/盘后时段的只读核查; 对应 Routine 已 disabled 可回退。
     "report": [
+        ("⚠️ 本窗口已并入 17:45 (2026-09-11)", [
+            "18:45 独立战报 Routine 已停用 —— 战报现由 17:45 wrapup 一并发出",
+            "本窗口只在**手动**调用时有意义: 只读核查, 绝不代跑下单",
+        ]),
         ("只读核查", [
             "读当日 journal (status: completed = 主跑成功)",
             "get_equity_orders + get_option_orders 与 journal 核对 (cash_printer 不可用则注明未核对)",
