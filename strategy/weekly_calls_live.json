@@ -49,6 +49,8 @@
     "min_bid": 0.05,
     "max_premium_per_contract_usd": null,
     "min_est_vs_model_pct": 90.0,
+    "model_edge_reference": "flat",
+    "_model_edge_reference_note": "公允价闸的参考价 (2026-09-11 用户「b」批准): \"flat\"=引擎原口径 (RV×iv_rv_mult, 两腿同 IV), \"surface\"=model.surface 实测曲面。**缺省 flat = 行为与 09-03 上线以来完全一致**; 两个参考价无论如何都并行计算并写进 skips/buys 的 model_edge 字段 (影子模式), 攒够样本后由用户决定是否切 surface。 起因: 同一个 min_est_vs_model_pct=90 常数对上「公平比值」54%(TSLA)~297%(SPY) 的区间 —— 9/21 只即使报价公允也被拦, 8/21 只几乎永不触发; 而补测四中表现最好的 META/AMD/TSM 恰在被拦的一批里, 表现最差的 BAC/XLF 反而几乎从不设防。详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五。",
     "_min_est_vs_model_note": "公允价边际闸 (\"B 案\", 用户 2026-09-03 回复「b」批准; 红线8 规定风控闸永不自学习, 只能由用户开关与定值)。口径按方向对称: credit 形态要求**收到的**保守净贷记 est ≥ 引擎 BS 公允价 model × 90%; debit 形态要求**付出的**净借记 est ≤ model ÷ 90%。缺省 (字段缺失/null) = 闸关闭, 向后兼容, paper 轨道 weekly_calls.json 未加此字段故不受影响。起因: 2026-09-01 XLF 单保守净贷记 $0.02 仅为 model $0.0621 的 32%, 风险收益比 249:1 (需 99.6% 胜率打平); 行权价由 0.97/0.88×spot 固定几何定 → 宽度只随股价走, 而贷记由 IV 定, 低 IV 标的上分母不变分子塌陷。引擎的 BS 模型是现成判别器, 此前无任何闸使用它。⚠️ 历史三样本回判: BAC 08-28 ratio 120.9% 过 / IWM 08-31 95.6% **过** / XLF 09-01 32.2% **拦**。即 90% 这一档只拦得住 XLF 那类重度负边际, 拦不住 IWM 那类轻度负边际 (99:1); 阈值未按样本拟合 (3 个点定不出阈值, 且 est 来自 indicative 链, 实测高估可成交贷记约 12%), 收紧须用户另行决定。"
   },
   "sizing": {
@@ -82,7 +84,14 @@
   "model": {
     "iv_rv_mult": 1.25,
     "rv_window_days": 20,
-    "risk_free": 0.04
+    "risk_free": 0.04,
+    "surface": {
+      "atm_coef": 0.55,
+      "atm_exp": -0.453,
+      "skew_coef": 1.54,
+      "skew_exp": -0.929,
+      "_note": "实测 IV 曲面 (2026-09-11 用户「b」批准, 影子模式上线)。ATM_IV = RV20 × atm_coef×RV^atm_exp; IV(m) = ATM_IV × (1 + skew_coef×RV^skew_exp × max(0,1−m)), m=K/spot, skew 只作用于 put 翼。 标定: 2026-09-10 收盘后 Robinhood 真实 NBBO, 8 只标的 (SPY/QQQ/XLF/BAC/AAPL/AVGO/NVDA/TSLA) ×2 档行权价 (0.97/0.88) 反解, 对 L 与 k 各做 log-log 回归 (R² 0.82 / 0.79)。 实测区间 RV 8.3%~50.6%: L 从 1.81 降到 0.75, k 从 13.5 降到 3.05 —— 引擎原来的 L=1.25 常数 + 无 skew 对低波动指数低估、对高波动个股高估。 ⚠️ 单日单次标定, 逐只残差 ±20-30%; 切 reference=surface 前应累积多日快照重标。 ⚠️ call 翼 (m>1) 按 ATM 平坦处理 —— 实测线性外推失败 (AAPL 1.03 档实测 27.86% vs 外推 18.28%), 样本不足以定形; 恢复 vertical_spread 等 call 端形态前需补测。 依据: journal/2026-09-10-research-ema-vwap-rsi.md 补测四/补测五。"
+    }
   },
   "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。",
   "_contract_note": "**牛市看跌信用价差 credit_put_spread (2026-08-13 用户「直接实盘」授权, 沿 08-07 直上先例跳过 paper)**。回测依据 journal/2026-08-13-pcs-bt.md: 同 RSI-2 信号下卖 0.97P/买 0.88P 全 8 假设格正收益、6/6 子窗口胜原买方价差且回撤减半; 机制 = 过点差资金少 3 倍 + 超卖日 IV 抬价从逆风(买贵)变顺风(卖贵)。卖腿 = ≤0.97×spot 最高档 put 过 8% gate; 保护腿 = 同到期 ≤0.88×spot 最高档过 16% gate; 净贷记 = 卖腿bid − 买腿ask (最保守)。**每张风险 = 宽度 − 贷记 = 占用抵押**; 注码/预算/BP 全按风险计。⚠️ **五条未验证风险 (模型局限, 首批实盘重点观察记 journal)**: ① 无 put skew — 真实贷记应更高但止损买回也更贵; ② 日线回测低估跳空尾部; ③ 回测样本无 2008 式崩盘, 连续崩盘下信用形态会高频打到单笔最大亏损 (每笔已被 20%NV 风险归一封顶); ④ 短腿跌进实值有**提前被行权**风险 (美式 put), force_exit_dte_lte=2 与 -5% 正股止损 (卖腿 -3% 处, 止损先于深度实值) 是两道护栏, 绝不留到到期; ⑤ **平仓方向反转为 debit 买回组合单** — 若平台分类器把无人值守 buy_to_close 当买入拦截 (首个出场实测), 立即 PushNotification 用户人工触发并记 journal (红线6), 不得反复重试。原 vertical_spread (08-07–08-13, 0 成交 1 skip) 注记见 git 历史。"
