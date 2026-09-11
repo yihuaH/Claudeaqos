@@ -54,7 +54,12 @@
       }
     },
     "reserve_usd": 245.57,
-    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)"
+    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)",
+    "revoked_by_user": {
+      "at": "2026-09-10 20:1x ET",
+      "statement": "不留了",
+      "note": "保留额 $245.57 作废, 仅对本 pending 有效期内适用 (4C-2C)。引擎输出的 reserve_usd 字段保留原值不改 (红线2), 仅标记用户撤销。"
+    }
   },
   "funding_note": {
     "detected": true,
@@ -65,7 +70,8 @@
     "cap_at_generation": 456.07,
     "consequence": "cap = BP $701.64 − 弹药保留 $245.57 = **$456.07** < 唯一一单 $696.64 → **0/1 单可执行**。若放弃弹药保留, cap = $701.64 ≥ $696.64 → **该单可执行 (余 $4.99)**。",
     "note": "⚠️ **连续第二天出现「保留与否直接决定能否成交」的临界情形**, 且本次更极端: 保留 = 一单都下不了。执行时以实时 min(buying_power, cash) 重算为准 (红线3)。",
-    "execution_basis_note": "⚠️ 新协议明确: 执行时**在开盘后取实时 min(buying_power, cash)**, 不得用 `buying_power_at_generation` 推算 (playbook 4C-2 资金约束)。**本日特殊**: 今日 4A 出场 0 单, 无回款入账, 故明日实时 BP 预计仍约 $701.64 —— 下面的装箱推算结论不变, 但执行时仍须以实时值为准。"
+    "execution_basis_note": "⚠️ 新协议明确: 执行时**在开盘后取实时 min(buying_power, cash)**, 不得用 `buying_power_at_generation` 推算 (playbook 4C-2 资金约束)。**本日特殊**: 今日 4A 出场 0 单, 无回款入账, 故明日实时 BP 预计仍约 $701.64 —— 下面的装箱推算结论不变, 但执行时仍须以实时值为准。",
+    "post_revocation": "用户撤销保留后: cap = 实时 min(BP, cash) 全额。生成时 $701.64 → DGX $696.64 可装 (余 $4.99)。⚠️ 执行时仍须按 4C-2 取**开盘后实时值**重算 —— 今日 4A 出场 0 单无回款, 预计实时 BP 仍约 $701.64, 但若实际低于 $696.64 则整单跳过不缩量。"
   },
   "reserve_retrospective": {
     "title": "📌 昨日 (09-09) 保留 $502 的实际结果 —— 已可判定",
@@ -93,5 +99,30 @@
       }
     },
     "unchanged": "订单内容 (标的/金额/reason/est_price) 逐字段来自引擎, **一字未动** (红线2)。"
+  },
+  "user_decisions": [
+    {
+      "at": "2026-09-10 20:1x ET",
+      "said": "执行",
+      "read": "批次确认成立 (用户已见逐笔明细: DGX $696.64)。但协议禁止 09:30 前执行, 未下单。"
+    },
+    {
+      "at": "2026-09-10 20:1x ET (追问后)",
+      "said": "不留了",
+      "read": "**一票撤销 option_alert 弹药保留** (playbook 4C-2C: 「用户明确说『不留了/全买股票』= 一票撤销保留, 照常执行全部买单」)。",
+      "effect": "cap = 实时 min(buying_power, cash), 不再扣 reserve_usd $245.57。按生成时数字 $701.64 ≥ DGX $696.64 → 可执行 (余 $4.99)。"
+    }
+  ],
+  "execution_plan": {
+    "status": "confirmed_awaiting_window",
+    "batch_confirmed_at": "2026-09-10 20:1x ET (用户「执行」+「不留了」)",
+    "blocked_reason": "新 4C 协议: 执行窗 09:45–15:55 ET, **09:30 开盘前一律不执行** (commit c07917e)。下达时刻 ET 20:10 周四, 窗口未开。",
+    "scheduled_for": "2026-09-11 (周五) 10:45 ET 晨检窗口 (协议推荐锚点), 窗口内任意时刻均可",
+    "to_execute": "seq1 DGX $696.64 — 单笔 market + regular_hours + dollar_amount, 一单一腿",
+    "preconditions_at_execution": [
+      "重新 get_portfolio 取实时 min(buying_power, cash)",
+      "review_equity_order 无预期外告警",
+      "若实时可用 < $696.64 → 整单跳过不缩量, 记 journal"
+    ]
   }
 }
