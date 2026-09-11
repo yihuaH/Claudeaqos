@@ -216,13 +216,17 @@ CHECKLIST = {
             "place_now.option_sells → 4D: limit = 引擎 est×0.97, gfd",
             "to_pending.equity_buys → 写 state/pending_orders.json, 时效字段**逐字段照抄** "
             "plan.json 的 to_pending.pending_template (exec_day=same_day, 执行窗 15:30-15:55 ET)",
-            "to_pending.option_buys → 写 state/pending_option_orders.json (期权窗口未前移, 仍次日 10:30; "
-            "其最大在险额按 2D 期权优先从股票 cap 扣减, 该笔现金今日不得被股票占用)",
+            "to_pending.option_buys → 写 state/pending_option_orders.json, 时效字段**逐字段照抄** "
+            "plan.json 的 to_pending.option_pending_template (2026-09-11 起当日执行: "
+            "执行窗 **15:30-15:45 ET**, 比股票早 10 分钟收口 — 15:45 后是 4D 明令避开的收盘前极端点差区)",
+            "⚠️ **先发期权参数, 再发股票清单** — 期权窗口只有 15 分钟且开仓走手动通道 (App 组合单); "
+            "两轨对同一时刻实时 BP 算, 按 2D 期权优先 (playbook 4C-2D-0)",
             "⚠️ 买单一律绝不 place (红线9)",
         ]),
         ("通知用户 (本窗口的关键动作)", [
-            "commit+push, 然后 PushNotification 附逐笔明细, 明确写 **今日 15:30-15:55 ET "
-            "(12:30-12:55 PT) 回复「执行」**, 过点作废",
+            "commit+push, 然后 PushNotification 附逐笔明细, 明确写两个窗口 (别写混): "
+            "**期权 今日 15:30-15:45 ET (12:30-12:45 PT)** · **股票 今日 15:30-15:55 ET "
+            "(12:30-12:55 PT)**, 过点作废。期权在前 (窗口更窄且走手动 App 通道)",
             "时间紧 → 先推通知再补 journal (journal 可由 17:45 wrapup 补全)",
         ]),
     ],

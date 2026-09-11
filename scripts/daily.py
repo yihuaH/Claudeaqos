@@ -27,6 +27,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from datetime import date as _date, datetime, timedelta, timezone
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -55,11 +56,20 @@ class Runner:
     def __init__(self):
         self.log = []
         self.anomalies = []
+        self.t0 = time.monotonic()
+
+    def elapsed(self):
+        return round(time.monotonic() - self.t0, 1)
 
     def run(self, args, label, critical=True, timeout=900):
         cmd = [PY] + args if args[0].endswith(".py") else args
+        _t = time.monotonic()
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO, timeout=timeout)
-        entry = {"label": label, "cmd": " ".join(args), "rc": r.returncode}
+        # 逐步耗时 (2026-09-11 加): 盘前关键路径的真实用时是当初退役的核心未知数,
+        # 也是用户跳过影子验证后唯一没有数据的一项 —— 让它首日自动产出, 不靠人掐表。
+        entry = {"label": label, "cmd": " ".join(args), "rc": r.returncode,
+                 "seconds": round(time.monotonic() - _t, 1),
+                 "at_seconds": round(_t - self.t0, 1)}
         if r.returncode != 0:
             entry["stderr"] = (r.stderr or "")[-800:]
             self.log.append(entry)
@@ -170,6 +180,46 @@ PENDING_TEMPLATES = {
 }
 
 
+# 期权待执行清单的时效 —— 与股票分开, 因为期权有自己的点差纪律 (playbook 4D:
+# 避开开盘头 15 分钟与**收盘前 15 分钟**的极端点差), 且开仓走手动通道 (agentic 不支持多腿 place)。
+OPTION_PENDING_TEMPLATES = {
+    # 盘前产出 (2026-09-11 用户「期权也可以当日马上执行」): 当日执行, 但窗口比股票**更早收口** ——
+    # 15:45 后是 4D 明令避开的收盘前极端点差区, 不因为求快就破这条纪律。
+    "preclose": {
+        "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 盘前主跑产出)",
+        "order_valid_until": "same_session_1545_et",
+        "exec_window_et": "15:30-15:45",
+        "exec_day": "same_day",
+        "channel_note": "开仓仍走**手动通道** (agentic 暂不支持多腿 place, playbook 4D 注记): "
+                        "会话在对话给出 App 参数, 用户手动下单。窗口仅 15 分钟, 会话须"
+                        "**先发期权参数再发股票清单** (期权窗口更窄)",
+        "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。"
+                       "窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
+    },
+    # 收盘后产出 (含 wrapup 回退): 沿用 2026-08-04 用户批准的次日 10:30 窗口
+    "full": {
+        "valid_until": "次一交易日 10:30 ET (推荐执行窗 09:45-10:30, 等开盘点差收窄)",
+        "order_valid_until": "next_session_1030_et",
+        "exec_window_et": "09:45-10:30",
+        "exec_day": "next_session",
+        "channel_note": "开仓走手动通道 (同上)",
+        "spread_note": "避开开盘头 15 分钟的极端点差; 未成交按 4D 处置 (撤单, 绝不改限价追单)",
+    },
+}
+
+
+def option_pending_template(eff_phase):
+    """会话写 pending_option_orders.json 时逐字段照抄 (playbook 4D)。"""
+    if eff_phase == "wrapup":
+        return {"applicable": False,
+                "valid_until": "不适用 — 本阶段不产出期权 pending",
+                "exec_window_et": "不适用", "exec_day": "不适用",
+                "_note": "当日期权清单由 --phase preclose 产出"}
+    t = dict(OPTION_PENDING_TEMPLATES["preclose" if eff_phase == "preclose" else "full"])
+    t["_note"] = "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
+    return t
+
+
 def pending_template(eff_phase):
     """会话写 pending_orders.json 时必须逐字段照抄本模板 (playbook 4B)。"""
     if eff_phase == "wrapup":
@@ -268,7 +318,9 @@ def phase_data(a, R, plan, allsyms):
         plan["quotes_source"] = {"mode": "override", "file": a.quotes, "symbols": len(qall),
                                  "note": "券商实时报价 (get_equity_quotes.last_trade_price), "
                                          "未调用 integrations.py quotes"}
-        R.log.append({"step": "quotes[override]", "file": a.quotes, "symbols": len(qall)})
+        R.log.append({"label": "quotes[override]", "cmd": f"(read {a.quotes})", "rc": 0,
+                      "seconds": 0.0, "at_seconds": R.elapsed(),
+                      "stdout_tail": f"{len(qall)} symbols from broker quotes"})
     else:
         if a.phase == "preclose":
             R.anomalies.append(
@@ -374,11 +426,19 @@ def phase_options(a, R, plan):
         return
     dte_max = max(int(c.get("contract", {}).get("max_dte_calendar", 17))
                   for c in (live_cfg, paper_cfg) if c.get("enabled"))
+    # 盘前阶段期权窗只有 15 分钟 (15:30-15:45), 链拉取在关键路径上 —— 原 900s 超时比整个窗口还长,
+    # 拖到 15:45 后期权单等于作废, 还顺带挤掉股票的时间。盘前收紧到 240s, 超时就当日跳过期权轨道
+    # (phase_options 在 preclose 下被调用方捕获为 anomaly, 正股不受影响)。
+    chains_timeout = 240 if a.phase == "preclose" else 900
     R.run(["scripts/integrations.py", "chains", "--underlyings", ",".join(unis),
            "--date", a.date, "--dte-max", str(dte_max), "--out", f"{W}/chains.json"],
-          "option.chains", critical=False, timeout=900)
+          "option.chains", critical=False, timeout=chains_timeout)
     if not os.path.exists(f"{W}/chains.json"):
-        plan["options"] = {"error": "期权链拉取失败, 本日期权轨道跳过"}
+        plan["options"] = {"error": f"期权链拉取失败或超时 ({chains_timeout}s), 本日期权轨道跳过"}
+        if a.phase == "preclose":
+            R.anomalies.append(
+                f"盘前期权链 {chains_timeout}s 内未取回 → 今日期权轨道跳过 (正股不受影响); "
+                f"不要为等链而拖过 15:45 期权窗")
         return
     plan["options"] = {}
     # --plan-only: 只算信号, 不碰账本/不排纸面单 (输出改写 workdir)
@@ -664,9 +724,22 @@ def main():
         plan["fatal"] = str(e)
 
     plan["to_pending"]["pending_template"] = pending_template(eff)
+    plan["to_pending"]["option_pending_template"] = option_pending_template(eff)
 
     plan["anomalies"] = R.anomalies
     plan["command_log"] = R.log
+    _slow = sorted((e for e in R.log if e.get("seconds")),
+                   key=lambda e: -e["seconds"])[:5]
+    plan["timing"] = {
+        "total_seconds": R.elapsed(),
+        "slowest": [{"label": e["label"], "seconds": e["seconds"]} for e in _slow],
+        "_note": "关键路径耗时。盘前窗 15:20 起跑、期权 15:45 收口 → "
+                 "total_seconds 逼近 900s 就要考虑提前开跑或缩减盘前阶段",
+    }
+    if eff == "preclose" and R.elapsed() > 600:
+        R.anomalies.append(
+            f"盘前关键路径耗时 {R.elapsed()}s (>10 分钟) —— 15:20 起跑已吃掉期权窗 (15:45 收口), "
+            f"下次需提前开跑或缩减盘前阶段; 本次结果仍有效, 但执行窗可能已所剩无几")
     plan["journal_facts"] = {
         "vix": plan.get("macro_vix"),
         "candidates": (plan.get("stock") or {}).get("candidates"),
@@ -699,6 +772,9 @@ def main():
         "wrapup_fallback": plan.get("wrapup_fallback"),
         "pending_valid_until": plan["to_pending"]["pending_template"]["valid_until"],
         "pending_exec_window_et": plan["to_pending"]["pending_template"]["exec_window_et"],
+        "option_pending_valid_until": plan["to_pending"]["option_pending_template"]["valid_until"],
+        "option_pending_exec_window_et":
+            plan["to_pending"]["option_pending_template"]["exec_window_et"],
         "fatal": plan.get("fatal"),
         "anomalies": len(R.anomalies),
         "equity_sells_to_place": len(plan["place_now"].get("equity_sells", [])),
