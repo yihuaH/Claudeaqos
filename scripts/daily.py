@@ -65,7 +65,7 @@ class Runner:
         cmd = [PY] + args if args[0].endswith(".py") else args
         _t = time.monotonic()
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO, timeout=timeout)
-        # 逐步耗时 (2026-09-11 加): 盘前关键路径的真实用时是当初退役的核心未知数,
+        # 逐步耗时 (2026-09-11 加): 收盘前关键路径的真实用时是当初退役的核心未知数,
         # 也是用户跳过影子验证后唯一没有数据的一项 —— 让它首日自动产出, 不靠人掐表。
         entry = {"label": label, "cmd": " ".join(args), "rc": r.returncode,
                  "seconds": round(time.monotonic() - _t, 1),
@@ -159,8 +159,8 @@ PRECLOSE_MARKER = "state/preclose_status.json"
 # 4C 换代当晚主跑会话 fetch 到新代码但沿用对话记忆里的旧口径, 把 valid_until 写成已退役的
 # 09:25 ET (commit 79a49ad 事后修正)。散文契约靠会话自觉, 机器可抄的字段才靠得住。
 PENDING_TEMPLATES = {
-    # 盘前阶段: 清单当日 15:30-15:55 为**首选窗**; 未执行则**顺延**至次一交易日 09:45-15:55
-    # (2026-09-11 用户选「顺延」)。起因: 盘前窗仅 25 分钟, 当日用户回复落在窗外导致 4 单全部
+    # 收盘前阶段: 清单当日 15:30-15:55 为**首选窗**; 未执行则**顺延**至次一交易日 09:45-15:55
+    # (2026-09-11 用户选「顺延」)。起因: 收盘前窗仅 25 分钟, 当日用户回复落在窗外导致 4 单全部
     # 过期 0 成交 (journal/2026-09-11-preclose.md §7)。顺延不缩短任何东西, 只给漏掉的清单一条
     # 退路, 且次日窗口本就是 2026-09-10 已验证的协议。
     "preclose": {
@@ -174,7 +174,7 @@ PENDING_TEMPLATES = {
                         "⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 "
                         "buying_power_at_generation",
         "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。"
-                          "**次一交易日盘前主跑产出新清单时自动取代本清单** (会话覆写 "
+                          "**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 "
                           "pending_orders.json), 故不存在两份清单并存/重复买入的风险。"
                           "次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。"
                           "⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), "
@@ -195,10 +195,10 @@ PENDING_TEMPLATES = {
 # 期权待执行清单的时效 —— 与股票分开, 因为期权有自己的点差纪律 (playbook 4D:
 # 避开开盘头 15 分钟与**收盘前 15 分钟**的极端点差), 且开仓走手动通道 (agentic 不支持多腿 place)。
 OPTION_PENDING_TEMPLATES = {
-    # 盘前产出 (2026-09-11 用户「期权也可以当日马上执行」): 当日执行, 但窗口比股票**更早收口** ——
+    # 收盘前产出 (2026-09-11 用户「期权也可以当日马上执行」): 当日执行, 但窗口比股票**更早收口** ——
     # 15:45 后是 4D 明令避开的收盘前极端点差区, 不因为求快就破这条纪律。
     "preclose": {
-        "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 盘前主跑产出)",
+        "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
         "order_valid_until": "same_session_1545_et",
         "exec_window_et": "15:30-15:45",
         "exec_day": "same_day",
@@ -266,7 +266,7 @@ def phase_preflight(a, R, plan):
     #      固定文件名的闸门**完全看不到**, 等于主跑幂等一直是失效的 (Routine 重复触发会跑两遍)
     #      → 改为扫当日**全部** `journal/<date>*.md`。
     # 晨检用的是另一个键 `morning_check: completed`, 与本闸互不干扰 (键不同正是为此)。
-    # 每个阶段守自己的标记 —— 否则盘前写完 `status: completed`, 同日 17:45 的 wrapup 会被自己挡住。
+    # 每个阶段守自己的标记 —— 否则收盘前写完 `status: completed`, 同日 17:45 的 wrapup 会被自己挡住。
     #   --phase preclose      → 认 `preclose: completed`
     #   --phase wrapup / full → 认 `status: completed` (= 当日收尾完成)
     # 晨检的 `morning_check: completed` 与两者都不冲突。
@@ -324,7 +324,7 @@ def phase_data(a, R, plan, allsyms):
     if nres < len(allsyms) * 0.9:
         R.anomalies.append(f"bars 覆盖不足: {nres}/{len(allsyms)}")
     # 当日报价。--quotes 给了就**完全取代** integrations.py quotes —— 绝不混用, 否则会悄悄
-    # 掺进延迟 15 分钟的价 (盘前阶段的信号就错了)。缺的标的宁可让 signals.py warn 出来。
+    # 掺进延迟 15 分钟的价 (收盘前阶段的信号就错了)。缺的标的宁可让 signals.py warn 出来。
     if a.quotes:
         qall = normalize_quotes(a.quotes)
         plan["quotes_source"] = {"mode": "override", "file": a.quotes, "symbols": len(qall),
@@ -336,9 +336,9 @@ def phase_data(a, R, plan, allsyms):
     else:
         if a.phase == "preclose":
             R.anomalies.append(
-                "盘前阶段未传 --quotes: 会退回 integrations.py quotes (delayed_sip 延迟 15 分钟), "
+                "收盘前阶段未传 --quotes: 会退回 integrations.py quotes (delayed_sip 延迟 15 分钟), "
                 "当日价失真 → 按红线6 停跑, 补券商实时报价后重跑")
-            raise RuntimeError("盘前阶段必须传 --quotes (券商实时报价)")
+            raise RuntimeError("收盘前阶段必须传 --quotes (券商实时报价)")
         qall = {}
         for i in range(0, len(allsyms), 100):
             chunk = allsyms[i:i + 100]
@@ -353,13 +353,13 @@ def phase_data(a, R, plan, allsyms):
     missing = [s for s in allsyms if s not in qall]
     if missing:
         R.anomalies.append(f"无报价标的 {len(missing)}: {missing[:10]}")
-    # 盘前阶段的覆盖率闸: 缺口 >10% 说明报价没取全, 大面积用昨收算信号 = 信号失真 (红线6)
+    # 收盘前阶段的覆盖率闸: 缺口 >10% 说明报价没取全, 大面积用昨收算信号 = 信号失真 (红线6)
     if a.quotes and len(qall) < len(allsyms) * 0.9:
         R.anomalies.append(
             f"实时报价覆盖不足: {len(qall)}/{len(allsyms)} (<90%) —— 缺的标的会用昨日收盘价算信号, "
             f"当日信号失真, 按红线6 停跑")
         if a.phase == "preclose":
-            raise RuntimeError(f"盘前实时报价覆盖不足 {len(qall)}/{len(allsyms)}")
+            raise RuntimeError(f"收盘前实时报价覆盖不足 {len(qall)}/{len(allsyms)}")
 
     # 行情管道交叉核对 (2026-08-08 用户批准): 引擎用的 Alpaca SIP 收盘 vs 券商官方收盘。
     # 两者同源 (Robinhood close.source = sip-list-exchange-close), 应完全一致;
@@ -367,7 +367,7 @@ def phase_data(a, R, plan, allsyms):
     # --broker-closes 由会话经 MCP 取回后落盘; 未提供则跳过 (不阻断主跑)。
     if a.phase == "preclose":
         plan["price_check"] = {"verdict": "skipped",
-                               "note": "盘前阶段无券商官方收盘, 交叉核对留到 wrapup 阶段"}
+                               "note": "收盘前阶段无券商官方收盘, 交叉核对留到 wrapup 阶段"}
     elif a.broker_closes:
         out = R.run(["scripts/price_check.py", "--bars", f"{W}/bars.json",
                      "--quotes", f"{W}/quotes.json", "--broker", a.broker_closes,
@@ -438,8 +438,8 @@ def phase_options(a, R, plan):
         return
     dte_max = max(int(c.get("contract", {}).get("max_dte_calendar", 17))
                   for c in (live_cfg, paper_cfg) if c.get("enabled"))
-    # 盘前阶段期权窗只有 15 分钟 (15:30-15:45), 链拉取在关键路径上 —— 原 900s 超时比整个窗口还长,
-    # 拖到 15:45 后期权单等于作废, 还顺带挤掉股票的时间。盘前收紧到 240s, 超时就当日跳过期权轨道
+    # 收盘前阶段期权窗只有 15 分钟 (15:30-15:45), 链拉取在关键路径上 —— 原 900s 超时比整个窗口还长,
+    # 拖到 15:45 后期权单等于作废, 还顺带挤掉股票的时间。收盘前收紧到 240s, 超时就当日跳过期权轨道
     # (phase_options 在 preclose 下被调用方捕获为 anomaly, 正股不受影响)。
     chains_timeout = 240 if a.phase == "preclose" else 900
     R.run(["scripts/integrations.py", "chains", "--underlyings", ",".join(unis),
@@ -449,7 +449,7 @@ def phase_options(a, R, plan):
         plan["options"] = {"error": f"期权链拉取失败或超时 ({chains_timeout}s), 本日期权轨道跳过"}
         if a.phase == "preclose":
             R.anomalies.append(
-                f"盘前期权链 {chains_timeout}s 内未取回 → 今日期权轨道跳过 (正股不受影响); "
+                f"收盘前期权链 {chains_timeout}s 内未取回 → 今日期权轨道跳过 (正股不受影响); "
                 f"不要为等链而拖过 15:45 期权窗")
         return
     plan["options"] = {}
@@ -642,10 +642,10 @@ def main():
                         '提供则做行情管道交叉核对, 偏差超阈值记 anomaly')
     p.add_argument("--emit-symbols", metavar="PATH",
                    help="只解析并输出驱动器需要报价的全部标的 (纯读本地文件, 无网络), 写 PATH 后立即退出。"
-                        "盘前流程第一步用它拿清单, 再据此调 get_equity_quotes —— 清单含期权白名单与"
+                        "收盘前流程第一步用它拿清单, 再据此调 get_equity_quotes —— 清单含期权白名单与"
                         "各账本持仓, 比「ETF+股池」多出一截, 少取会触发覆盖率闸")
     p.add_argument("--quotes",
-                   help='当日实时报价覆盖 (盘前阶段**必传**): 接受 mcp__cash_printer__get_equity_quotes '
+                   help='当日实时报价覆盖 (收盘前阶段**必传**): 接受 mcp__cash_printer__get_equity_quotes '
                         '的原始输出, 或简单映射 {"SYM": price}。给了就**完全取代** integrations.py quotes '
                         '(后者走 EQUITY_RT_FEED=delayed_sip 延迟 15 分钟, 盘中决策不可用)。'
                         '归一化后写 <workdir>/quotes.json, 下游引擎无需改动')
@@ -657,12 +657,12 @@ def main():
     p.add_argument("--plan-only", action="store_true",
                    help="只算信号不写账本/不排纸面单 (干预览与测试; 输出改写 workdir)")
     p.add_argument("--phase", choices=["full", "preclose", "wrapup"], default="full",
-                   help="拆分式盘前主跑 (2026-09-10 用户「直接实现」批准): "
+                   help="拆分式收盘前主跑 (2026-09-10 用户「直接实现」批准): "
                         "preclose = 收盘前关键路径 (preflight→取数→正股信号→期权信号), "
                         "产出当日出场卖单与**当日** pending; "
                         "wrapup = 收盘后收尾 (纸面轨道 + 行情核对); 若当日 preclose 未成功完成, "
                         "wrapup **自动回退跑完整主跑** (fail-safe, 次日 pending); "
-                        "full = 原收盘后单跑 (缺省, 未启用盘前时的行为)")
+                        "full = 原收盘后单跑 (缺省, 未启用收盘前时的行为)")
     a = p.parse_args()
 
     os.makedirs(a.workdir, exist_ok=True)
@@ -674,7 +674,7 @@ def main():
         allsyms, _ = collect_symbols(cfg, uni, _p)
         save(a.emit_symbols, {"symbols": allsyms, "count": len(allsyms),
                               "groups": _p.get("symbol_groups"),
-                              "_note": "由 daily.py --emit-symbols 产出; 盘前阶段据此调 "
+                              "_note": "由 daily.py --emit-symbols 产出; 收盘前阶段据此调 "
                                        "get_equity_quotes, 原始输出经 --quotes 传回"})
         print(json.dumps({"symbols_file": a.emit_symbols, "count": len(allsyms),
                           "groups": _p.get("symbol_groups")}, ensure_ascii=False, indent=2))
@@ -697,7 +697,7 @@ def main():
             plan["wrapup_fallback"] = (
                 f"当日 preclose 未完成 (marker={pc.get('status') or 'missing'}/"
                 f"{pc.get('date') or 'n/a'}) → 本次退化为完整主跑: 出场卖单照下, "
-                f"pending 按次日窗口 (fail-safe, 盘前跑挂不致当日无出场)")
+                f"pending 按次日窗口 (fail-safe, 收盘前跑挂不致当日无出场)")
             R.anomalies.append(plan["wrapup_fallback"])
     plan["phase"] = a.phase
     plan["effective_phase"] = eff
@@ -719,14 +719,14 @@ def main():
             if o.get("halted") or o.get("circuit_breaker_triggered"):
                 plan["stopped"] = "halted/熔断触发 — 只读结束, 通知用户"
             else:
-                # 盘前阶段: 期权信号非关键 —— 失败不得拖垮正股关键路径 (红线6 记 anomaly 即可),
+                # 收盘前阶段: 期权信号非关键 —— 失败不得拖垮正股关键路径 (红线6 记 anomaly 即可),
                 # 但它的最大在险额是股票 cap 的扣减项 (2D 期权优先), 故仍在本阶段跑。
                 try:
                     phase_options(a, R, plan)
                 except Exception as e:
                     if eff != "preclose":
                         raise
-                    R.anomalies.append(f"盘前期权信号失败 (正股不受影响, 期权今日不出单): {e}")
+                    R.anomalies.append(f"收盘前期权信号失败 (正股不受影响, 期权今日不出单): {e}")
                 if eff == "full" and not a.skip_paper:
                     phase_paper(a, R, plan)
                 # preclose 的纸面轨道留到 wrapup (最慢且完全不敏感)
@@ -745,13 +745,13 @@ def main():
     plan["timing"] = {
         "total_seconds": R.elapsed(),
         "slowest": [{"label": e["label"], "seconds": e["seconds"]} for e in _slow],
-        "_note": "关键路径耗时。盘前窗 15:20 起跑、期权 15:45 收口 → "
-                 "total_seconds 逼近 900s 就要考虑提前开跑或缩减盘前阶段",
+        "_note": "关键路径耗时。收盘前窗 15:20 起跑、期权 15:45 收口 → "
+                 "total_seconds 逼近 900s 就要考虑提前开跑或缩减收盘前阶段",
     }
     if eff == "preclose" and R.elapsed() > 600:
         R.anomalies.append(
-            f"盘前关键路径耗时 {R.elapsed()}s (>10 分钟) —— 15:20 起跑已吃掉期权窗 (15:45 收口), "
-            f"下次需提前开跑或缩减盘前阶段; 本次结果仍有效, 但执行窗可能已所剩无几")
+            f"收盘前关键路径耗时 {R.elapsed()}s (>10 分钟) —— 15:20 起跑已吃掉期权窗 (15:45 收口), "
+            f"下次需提前开跑或缩减收盘前阶段; 本次结果仍有效, 但执行窗可能已所剩无几")
     plan["journal_facts"] = {
         "vix": plan.get("macro_vix"),
         "candidates": (plan.get("stock") or {}).get("candidates"),

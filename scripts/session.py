@@ -61,7 +61,7 @@ def detect_window(t):
         return "off_weekend"
     if 9 * 60 + 45 <= m < 12 * 60:      # 09:45 = 4C 执行窗开启 (2026-09-10); 推荐锚 10:45
         return "morning"
-    if 15 * 60 + 5 <= m < 15 * 60 + 58:  # 盘前主跑 (2026-09-10 用户「直接实现」): 跑 15:20, 执行 15:40-15:55
+    if 15 * 60 + 5 <= m < 15 * 60 + 58:  # 收盘前主跑 (2026-09-10 用户「直接实现」): 跑 15:20, 执行 15:40-15:55
         return "preclose"
     if 16 * 60 <= m < 18 * 60 + 30:
         return "main_run"
@@ -84,7 +84,7 @@ def exec_window(t):
                                          f"开盘前执行会吃不到当日出场回款"}
     if m >= 15 * 60 + 55:
         # 2026-09-11 修正: 原文写死「清单当日过期, 引擎当晚重算」, 那是顺延协议 (用户选项2) 之前
-        # 的行为。现在是否过期取决于清单**自带的 exec_day** —— same_day_then_next_session 的盘前
+        # 的行为。现在是否过期取决于清单**自带的 exec_day** —— same_day_then_next_session 的收盘前
         # 清单关窗后仍 awaiting_execution, 顺延到次一交易日 09:45-15:55, 不重算。本函数看不到清单,
         # 故只说"本窗口关闭", 过期判定交给下面 pending_exec_state 那行 (它读清单自己的模板)。
         return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 本窗口不再执行 — "
@@ -93,7 +93,7 @@ def exec_window(t):
 
 
 def preclose_state(date):
-    """当日盘前主跑是否完成 —— 决定 17:45 窗口跑 --phase wrapup 还是 fail-safe 的 full。"""
+    """当日收盘前主跑是否完成 —— 决定 17:45 窗口跑 --phase wrapup 还是 fail-safe 的 full。"""
     d = load("state/preclose_status.json") or {}
     return {"exists": bool(d), "date": d.get("date"), "status": d.get("status"),
             "today": d.get("date") == date and d.get("status") == "completed",
@@ -102,7 +102,7 @@ def preclose_state(date):
 
 
 def pending_exec_state(t):
-    """当前生效的 pending 清单自带的执行窗 (盘前产出=当日 15:30-15:55, 收盘后产出=次日 09:45-15:55)。"""
+    """当前生效的 pending 清单自带的执行窗 (收盘前产出=当日 15:30-15:55, 收盘后产出=次日 09:45-15:55)。"""
     d = load("state/pending_orders.json") or {}
     tpl = d.get("pending_template") or {}
     win = tpl.get("exec_window_et") or d.get("exec_window_et")
@@ -185,6 +185,16 @@ CHECKLIST = {
             "to_pending.option_buys → 写 state/pending_option_orders.json (valid_until 次日 10:30 ET)",
             "⚠️ 买单一律绝不 place (无人值守会被平台分类器拦)",
         ]),
+        ("战报 (2026-09-11 由 18:45 独立窗口并入本窗口)", [
+            "组合净值/回撤/信号摘要/成交/告警异常",
+            "周call 双轨小节 (实盘持仓盯市/skip 原因/near_signals; paper round_trips/中位点差/verdict)",
+            "price_check 结果 (引擎价 vs 券商官方收盘)",
+            "带 option_alert 时显著提示预警标的与保留额",
+            "⚠️ **pending 提示按当日实际形态写**: 收盘前主跑正常 → 当日清单 15:55 已过期, 战报只做"
+            "事后陈述, **不要提示用户「回复执行」** (窗口早关了); 本次若是 fail-safe 退化的完整主跑 "
+            "→ 才提示次日 09:45-15:55 执行窗 (推荐锚 10:45 晨检)。看 plan.json 的 effective_phase 判断",
+            "次日预览: 加仓线、期权 near_signals、次日是否周一 (股票池 13:00 刷新)",
+        ]),
         ("收尾", [
             "用 plan.json 的 journal_facts 写 journal/<今天>.md (status: completed)",
             "实际成交的 4A 卖单 → signals.py apply 回写 state (未成交的不写)",
@@ -194,12 +204,19 @@ CHECKLIST = {
         ]),
     ],
     "preclose": [
+        ("① 昨日 wrapup 看门狗 (2026-09-11 由 18:45 战报迁入)", [
+            "查上一交易日的 journal 有没有 `status: completed` 行 —— 没有 = 昨晚 17:45 wrapup 失败 "
+            "(已知失败模式: worker 重启)。后果: 昨日纸面轨道未跑、行情未核对、账本可能未回写",
+            "**在交易动作之前**查这一条 (这正是从战报窗迁到这里的理由: 原来是事后一小时才发现)",
+            "发现失败 → 先通知用户并在今日 journal 注明; 账本若确未回写, 按 playbook §1 步骤3 "
+            "的 position_check 结果处置后再决定是否继续今日交易 (红线6)",
+        ]),
         ("⏱ 时段自检 (本窗口唯一硬约束)", [
             "现在必须 < 15:55 ET 且开市中。已过 15:40 → **不要开跑**, 直接等 17:45 wrapup "
             "(fail-safe 会退化成完整主跑, 出场照下), 跑一半更危险",
             "Alpaca 时钟 market_is_open=false → 休市, 写日志结束",
         ]),
-        ("MCP 取数 (盘前专属口径)", [
+        ("MCP 取数 (收盘前专属口径)", [
             "get_portfolio(802095265) → total_value, buying_power",
             "get_equity_positions(802095265) → 存 <wd>/positions.json (原始输出)",
             "① 先拿清单: daily.py --emit-symbols <wd>/allsyms.json (纯读本地无网络, 秒出; "
@@ -220,7 +237,8 @@ CHECKLIST = {
             "place_now.equity_sells → 4A: review → place (market+regular_hours), **盘中即时成交**",
             "place_now.option_sells → 4D: limit = 引擎 est×0.97, gfd",
             "to_pending.equity_buys → 写 state/pending_orders.json, 时效字段**逐字段照抄** "
-            "plan.json 的 to_pending.pending_template (exec_day=same_day, 执行窗 15:30-15:55 ET)",
+            "plan.json 的 to_pending.pending_template (顺延协议后 exec_day=same_day_then_next_session: "
+            "首选窗当日 15:30-15:55, 未执行顺延次日 09:45-15:55, 次日 15:55 才 expired)",
             "to_pending.option_buys → 写 state/pending_option_orders.json, 时效字段**逐字段照抄** "
             "plan.json 的 to_pending.option_pending_template (2026-09-11 起当日执行: "
             "执行窗 **15:30-15:45 ET**, 比股票早 10 分钟收口 — 15:45 后是 4D 明令避开的收盘前极端点差区)",
@@ -248,16 +266,32 @@ CHECKLIST = {
             "status=cancelled_unfilled + outcome。**绝不改限价追单** (红线2)",
             "pending_option_orders 仍 awaiting_execution 且已过 10:30 ET → status=expired, commit",
         ]),
-        ("待执行清单 (本窗口 = 推荐执行锚点, 2026-09-10 起)", [
-            "pending_orders.json status=awaiting_execution 且 trade_date=上一交易日 → 本窗口正是 "
-            "playbook 4C 的推荐执行时刻 (09:45-15:55 ET 窗口内, 出场回款已于 09:30 到账)",
-            "**但仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
-            "同日若有 pending_option_orders → 按 playbook 4D-2D 期权优先 (其窗口 09:45-10:30 更窄, 先做)",
-            "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit (引擎当晚重算)",
+        ("待执行清单 —— **条件式** (2026-09-11 改写, 同日按顺延协议再修)", [
+            "**判据用「清单日 + status」, 不要判 exec_day 的字面值** —— 顺延协议 (2026-09-11 用户选项2) "
+            "把 exec_day 从 `same_day` 改成了 `same_day_then_next_session`, 判字面值会漏掉顺延清单",
+            "① `trade_date` = 今天 → 不可能 (收盘前主跑 15:20 才产出), 本段跳过",
+            "② `trade_date` < 今天 且 `status=awaiting_execution` → **本窗口就是它的执行窗** "
+            "(09:45-15:55 ET, 出场回款已于 09:30 到账)。两种来路今天窗口相同、处置相同:",
+            "   · `same_day_then_next_session` = 昨天收盘前清单**没在 25 分钟窗内执行**, 今天是顺延窗",
+            "   · `next_session` = 昨天走了 fail-safe (收盘前没跑成, wrapup 退化为完整主跑)",
+            "③ `status` 已是 executed / expired / vetoed → 本段无事",
+            "**任何情况下仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
+            "逐单看 status: 标了 `vetoed_by_user` 的**不要再提**, 用户已一票否决过",
+            "同日若有待执行的 pending_option_orders → 按 4D-2D 期权优先 (窗口 09:45-10:30 更窄)",
+            "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit",
+            "⚠️ 若命中 ② 且来路是 `next_session`, 说明昨天出过问题 —— 顺手核对昨日 journal 与 "
+            "state/preclose_status.json (顺延来路则属正常, 不必追查)",
         ]),
         ("收尾", ["有动作则 commit+push 并推送; 休市或无动作无异常 → 静默结束不打扰用户"]),
     ],
+    # 2026-09-11: 18:45 独立战报窗口已并入 17:45 wrapup (拆分后战报的 pending 提示与「执行」入口
+    # 都随当日清单 15:55 过期而失效, 只剩看门狗, 而看门狗已迁到次日 preclose 的交易动作之前)。
+    # 本窗口保留给**手动**调用与盘前/盘后时段的只读核查; 对应 Routine 已 disabled 可回退。
     "report": [
+        ("⚠️ 本窗口已并入 17:45 (2026-09-11)", [
+            "18:45 独立战报 Routine 已停用 —— 战报现由 17:45 wrapup 一并发出",
+            "本窗口只在**手动**调用时有意义: 只读核查, 绝不代跑下单",
+        ]),
         ("只读核查", [
             "读当日 journal (status: completed = 主跑成功)",
             "get_equity_orders + get_option_orders 与 journal 核对 (cash_printer 不可用则注明未核对)",
@@ -345,7 +379,7 @@ def main():
         print(json.dumps(info, ensure_ascii=False, indent=2))
         return 0
 
-    W = {"preclose": "盘前主跑 (15:20 ET)", "main_run": "收盘后收尾 (wrapup)",
+    W = {"preclose": "收盘前主跑 (15:20 ET)", "main_run": "收盘后收尾 (wrapup)",
          "morning": "晨间核查", "report": "收盘战报",
          "off_weekend": "周末 (非作业窗口)", "off_hours": "非作业时段"}[win]
     print("=" * 78)
@@ -368,7 +402,7 @@ def main():
     pcs = info["preclose"]
     if pcs["exists"]:
         mark = "✅ 今日已完成" if pcs["today"] else f"⚠️ 非今日/未完成 ({pcs['date']}/{pcs['status']})"
-        print(f"盘前主跑: {mark}"
+        print(f"收盘前主跑: {mark}"
               + (f"  出场 {pcs['sells']} 单 · 买单入 pending {pcs['buys']} 单" if pcs["today"] else ""))
     pe = info["pending_exec"]
     if pe["exec_window_et"]:
@@ -414,10 +448,10 @@ def main():
         if win == "main_run":
             pcs = info["preclose"]
             if pcs["today"]:
-                print("⚠️ 当日盘前主跑**已完成** → 本次用 `--phase wrapup` "
+                print("⚠️ 当日收盘前主跑**已完成** → 本次用 `--phase wrapup` "
                       "(只跑纸面轨道 + 行情核对; 正股/期权信号绝不重算, 否则会看到新持仓重复出单)")
             else:
-                print("当日无盘前主跑完成标记 → 用 `--phase wrapup`; daily.py 会自动 fail-safe "
+                print("当日无收盘前主跑完成标记 → 用 `--phase wrapup`; daily.py 会自动 fail-safe "
                       "退化为完整主跑 (出场照下, pending 按次日窗口)。不要手动改成 --phase full")
         print(f"""python3 scripts/daily.py --date {date} \\
   --portfolio-value <total_value> --buying-power <BP> \\
