@@ -1,178 +1,97 @@
 {
-  "trade_date": "2026-09-10",
-  "generated_at": "2026-09-10T21:52:00Z",
-  "status": "executed",
-  "valid_until": "次一交易日 (2026-09-11 周五) 15:55 ET, 执行窗 09:45–15:55 ET (推荐锚 10:45 晨检)",
-  "buying_power_at_generation": 701.64,
-  "cash_at_generation": 701.64,
-  "portfolio_value_at_generation": 10051.74,
+  "trade_date": "2026-09-11",
+  "generated_at": "2026-09-11T19:25:00Z",
+  "status": "awaiting_execution",
+  "valid_until": "当日 15:55 ET (执行窗 15:30-15:55, 盘前主跑产出)",
+  "exec_window_et": "15:30-15:55",
+  "exec_day": "same_day",
+  "buying_power_at_generation": 3850.6,
+  "cash_at_generation": 3850.6,
+  "portfolio_value_at_generation": 10027.61,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "DGX",
-      "dollar_amount": 696.64,
+      "symbol": "SBUX",
+      "dollar_amount": 999.47,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 231.14,
-      "review_est_price": 231.13,
-      "rsi2": 2.7,
-      "tranche": 2,
-      "avg_entry_price": 241.7242,
-      "drawdown_pct": -4.38,
+      "reason": "rsi2_entry",
+      "est_price": 98.5351,
+      "rsi2": 0.57,
       "state_file": "state/positions.json",
-      "valid_until": "next_session_1555_et",
-      "note": "金额 $696.64 是**引擎自己**按剩余可用资金算出的零头 (非会话缩量)"
+      "valid_until": "same_session_1555_et"
+    },
+    {
+      "seq": 2,
+      "action": "buy",
+      "symbol": "LLY",
+      "dollar_amount": 999.47,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 1118.21,
+      "rsi2": 1.1,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et",
+      "note": "⚠️ 今日已 time_stop 出场同一标的, 引擎同日再出入场单 — 逐字段照抄, 未合并",
+      "news_flag": "[{'keywords': ['bankruptcy'], 'headline': 'Deal Dispatch: Bending Spoons Acquires Miro For $1.35B, Kinetik Up For Sale, LIV Golf Bankruptcy', 'created_at': '2026-09-11T17:10:10Z', 'url': 'https://www."
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "CVS",
+      "dollar_amount": 999.47,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 94.31,
+      "rsi2": 2.46,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "BMY",
+      "dollar_amount": 850.06,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 63.475,
+      "rsi2": 2.58,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et"
     }
   ],
   "review_precheck": {
-    "all_clean": true,
-    "note": "order_checks 为空, 无告警。"
+    "all_clean": null,
+    "note": "⚠️ 盘前窗口时间极紧 (15:30-15:55), 本批**未逐单 review 预检** —— 4B 的 review 是可选信息性步骤 (playbook: review 调用失败/跳过不阻断清单生成), 执行时 4C 仍会逐单 review。"
   },
   "news_precheck": {
     "symbols": [
-      "DGX"
+      "SBUX",
+      "LLY",
+      "CVS",
+      "BMY"
     ],
-    "red_flagged": [],
-    "with_news": 0,
-    "source": "integrations.py news 2026-09-03→2026-09-10",
-    "assessment": "无红旗 (该标的近一周无新闻)。"
+    "red_flagged": [
+      "LLY"
+    ],
+    "source": "integrations.py news 2026-09-04→2026-09-11"
   },
   "option_alert": {
     "names": [
-      "XLF",
-      "SMH"
+      "NVDA"
     ],
-    "scenarios": {
-      "XLF": {
-        "rsi2_now": 11.02,
-        "scenario": "1d_-1%"
-      },
-      "SMH": {
-        "rsi2_now": 22.42,
-        "scenario": "2d_-1%x2"
-      }
-    },
-    "reserve_usd": 245.57,
-    "reserve_source": "照抄引擎 wc_live_last_orders.json suggested_reserve_usd, 未自算 (playbook 4B)",
-    "revoked_by_user": {
-      "at": "2026-09-10 20:1x ET",
-      "statement": "不留了",
-      "note": "保留额 $245.57 作废, 仅对本 pending 有效期内适用 (4C-2C)。引擎输出的 reserve_usd 字段保留原值不改 (红线2), 仅标记用户撤销。"
-    }
+    "reserve_usd": 1.75,
+    "reserve_source": "照抄引擎 suggested_reserve_usd, 未自算 (playbook 4B)",
+    "note": "保留额仅 $1.75 —— 引擎按 BP×35% 与最便宜预警标的单张成本取小, 实际不构成约束。"
   },
   "funding_note": {
-    "detected": true,
-    "stock_buys_usd": 696.64,
-    "option_orders_today": 0,
-    "option_alert_reserve_usd": 245.57,
-    "realtime_bp_at_generation": 701.64,
-    "cap_at_generation": 456.07,
-    "consequence": "cap = BP $701.64 − 弹药保留 $245.57 = **$456.07** < 唯一一单 $696.64 → **0/1 单可执行**。若放弃弹药保留, cap = $701.64 ≥ $696.64 → **该单可执行 (余 $4.99)**。",
-    "note": "⚠️ **连续第二天出现「保留与否直接决定能否成交」的临界情形**, 且本次更极端: 保留 = 一单都下不了。执行时以实时 min(buying_power, cash) 重算为准 (红线3)。",
-    "execution_basis_note": "⚠️ 新协议明确: 执行时**在开盘后取实时 min(buying_power, cash)**, 不得用 `buying_power_at_generation` 推算 (playbook 4C-2 资金约束)。**本日特殊**: 今日 4A 出场 0 单, 无回款入账, 故明日实时 BP 预计仍约 $701.64 —— 下面的装箱推算结论不变, 但执行时仍须以实时值为准。",
-    "post_revocation": "用户撤销保留后: cap = 实时 min(BP, cash) 全额。生成时 $701.64 → DGX $696.64 可装 (余 $4.99)。⚠️ 执行时仍须按 4C-2 取**开盘后实时值**重算 —— 今日 4A 出场 0 单无回款, 预计实时 BP 仍约 $701.64, 但若实际低于 $696.64 则整单跳过不缩量。"
+    "template_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量",
+    "realtime_bp_after_exits": 3850.6,
+    "option_alert_reserve_usd": 1.75,
+    "cap": 3848.85,
+    "stock_buys_usd": 3848.47,
+    "consequence": "cap $3,848.85 ≥ 四单合计 $3,848.47 → **4/4 单全部装得下** (余 $0.38)。",
+    "milestone": "🎯 **换代主收益首次兑现**: 今日两张出场卖单 15:24 ET 盘中即时成交, 回款使 cash 从 **$5.00 → $3,850.60**, 同一窗口内即可用于买入。旧协议下这笔钱要等次日 09:30 到账而清单 09:25 已过期 —— 结构性拿不到。"
   },
-  "reserve_retrospective": {
-    "title": "📌 昨日 (09-09) 保留 $502 的实际结果 —— 已可判定",
-    "yesterday": "保留 $502 → 跳过 DASH $696.64; 预警 7 只全在 1 日档。",
-    "today_conversion": "**7 只中 4 只今日真的出了期权信号** (IWM/DIA/QQQ/SPY), 另 AMZN/NVDA 亦出信号 (不在昨日预警名单)。预警转化本身**是准的**。",
-    "but": "⚠️ **但全部因资金不足被引擎自身 BP 闸拦下** —— 最便宜的 AMZN 需 $2,029, 而全部可用资金只有 $702。",
-    "verdict": "**保留的 $502 一张也买不起。** 结论: 该笔保留既没转化成期权仓, 又让 DASH 少建了一仓 —— **净负贡献**。",
-    "root_cause": "`suggested_reserve_usd` 的口径是「最便宜预警标的的单张成本, 且 ≤ 实时 BP×35%」。昨日被 BP×35% 的上限压到 $502, 而真实最低单张成本是 $2,029 —— **上限压出来的保留额, 根本不足以买下任何一张**, 保留因此失去意义。",
-    "proposal_NOT_APPLIED": "建议: 当 `BP×35%` < 最便宜预警标的的**实际单张成本**时, 保留额应直接归零 (保不起就别保), 而非保一个买不到任何东西的零头。**属 playbook 4B 保留额口径, 需用户批准 (红线3), 本次未改。**",
-    "caveat": "单日单样本。该口径 2026-08-06 经实测校准并有回测支撑, 不应因一天的结果推翻; 但本次暴露的是**账户规模与期权单价错配**下的边界失效, 值得用户知悉。"
-  },
-  "note": "候选中 SBUX (0.87) / MMM (0.91) / AMGN (1.63) / LLY (2.23) / XLB (2.49) / VRTX (2.61) / TGT (2.91) / XLV (3.00) / MRK (3.27) / MA (3.28) / BMY (3.50) / BLK (3.88) / CRL (4.13) / IWM (5.06) 未进清单。⚠️ **MMM (rsi2 0.91) / LLY (2.23) 排在最前但已满 2 档**; 全部 7 只持仓中 5 只满档 (ABT/LLY/MMM/UNP + 今日 DGX 若成交), 仅 NSC/DXCM 尚有空间。",
-  "protocol_correction": {
-    "detected_at": "2026-09-10 18:5x ET (收盘战报窗口)",
-    "what": "本文件 17:52 生成时误用**已退役**的 4C 盘外两腿协议时效 (09:25 ET 截止)。",
-    "why": "4C 执行协议已于今日 17:35 ET 由另一会话按用户批准换代 (commit c07917e) —— 改为**次一交易日 09:45–15:55 ET 盘中单笔市价**。本会话 17:46 主跑虽 fetch 到该提交, 但未重读变更后的契约, 沿用了旧口径。**会话疏忽, 非引擎问题。**",
-    "corrected": {
-      "valid_until_top": {
-        "before": "次一交易日 (2026-09-11 周五) 09:25 ET",
-        "after": "次一交易日 (2026-09-11 周五) 15:55 ET, 执行窗 09:45–15:55 ET (推荐锚 10:45 晨检)"
-      },
-      "valid_until_per_order": {
-        "before": "next_open_0925_et",
-        "after": "next_session_1555_et"
-      }
-    },
-    "unchanged": "订单内容 (标的/金额/reason/est_price) 逐字段来自引擎, **一字未动** (红线2)。"
-  },
-  "user_decisions": [
-    {
-      "at": "2026-09-10 20:1x ET",
-      "said": "执行",
-      "read": "批次确认成立 (用户已见逐笔明细: DGX $696.64)。但协议禁止 09:30 前执行, 未下单。"
-    },
-    {
-      "at": "2026-09-10 20:1x ET (追问后)",
-      "said": "不留了",
-      "read": "**一票撤销 option_alert 弹药保留** (playbook 4C-2C: 「用户明确说『不留了/全买股票』= 一票撤销保留, 照常执行全部买单」)。",
-      "effect": "cap = 实时 min(buying_power, cash), 不再扣 reserve_usd $245.57。按生成时数字 $701.64 ≥ DGX $696.64 → 可执行 (余 $4.99)。"
-    }
-  ],
-  "execution_plan": {
-    "status": "confirmed_awaiting_window",
-    "batch_confirmed_at": "2026-09-10 20:1x ET (用户「执行」+「不留了」)",
-    "blocked_reason": "新 4C 协议: 执行窗 09:45–15:55 ET, **09:30 开盘前一律不执行** (commit c07917e)。下达时刻 ET 20:10 周四, 窗口未开。",
-    "scheduled_for": "2026-09-11 (周五) 10:45 ET 晨检窗口 (协议推荐锚点), 窗口内任意时刻均可",
-    "to_execute": "seq1 DGX $696.64 — 单笔 market + regular_hours + dollar_amount, 一单一腿",
-    "preconditions_at_execution": [
-      "重新 get_portfolio 取实时 min(buying_power, cash)",
-      "review_equity_order 无预期外告警",
-      "若实时可用 < $696.64 → 整单跳过不缩量, 记 journal"
-    ]
-  },
-  "execution": {
-    "executed_at": "2026-09-11T13:54:28Z (09:54 ET 周五)",
-    "trigger": "用户 2026-09-10 20:1x ET 回「执行」+「不留了」; 因新协议禁止 09:30 前执行, 顺延至次日窗口",
-    "mode": "**盘中单笔市价模式** (playbook 4C-2, 2026-09-10 换代后首次实战)",
-    "window_check": "执行时刻 09:54 ET, 落在执行窗 09:45–15:55 ET 内 ✅",
-    "funding_gate": {
-      "realtime_bp": 701.64,
-      "realtime_cash": 701.64,
-      "unleveraged_bp": 701.64,
-      "option_alert_reserve_usd": 245.57,
-      "reserve_revoked_by_user": true,
-      "cap": 701.64,
-      "note": "用户「不留了」撤销保留 → cap = 实时 min(BP, cash) 全额 $701.64 ≥ $696.64 ✅ (余 $4.99)。按新协议在**开盘后**取实时值 (今日无 4A 出场回款, 与生成时同值)。"
-    },
-    "orders": [
-      {
-        "seq": 1,
-        "symbol": "DGX",
-        "dollar_amount": 696.64,
-        "status": "executed",
-        "order": {
-          "type": "market",
-          "market_hours": "regular_hours",
-          "dollar_amount": 696.64,
-          "order_id": "6aa40813-d7dd-466e-9785-37f9c11307c4",
-          "state": "filled",
-          "fill_qty": 3.011066,
-          "fill_price": 231.3599,
-          "cost": 696.64,
-          "filled_at": "2026-09-11T13:54:28Z",
-          "fill_latency_ms": 162
-        },
-        "note": "**一单一腿, 无拆腿** —— 美元额市价单原生支持分数股 (3.011066 股), 旧协议的整股①腿/余量②腿已作废。"
-      }
-    ],
-    "totals": {
-      "committed_usd": 696.64,
-      "filled_usd": 696.64,
-      "orders_executed": 1,
-      "orders_skipped": 0
-    },
-    "ledger_writeback": "DGX → 7.329748 股 @ $237.4666, cost $1,740.57, tranches=2 (已满档)。",
-    "new_protocol_first_run": {
-      "title": "📌 盘中单笔市价模式首次实战",
-      "vs_engine_est": "引擎 est $231.14 → 实成 **$231.3599**, **高 +0.10%** (+$0.22/股, 全单多付约 $0.66)。",
-      "vs_old_protocol_baseline": "对照旧①腿盘外限价实测均值 **+0.55%** (中位 +0.59%, n=10) —— 本次 +0.10% 明显更优, 但**单样本, 不构成验证**; 换代依据本就是 953 样本的统计而非单笔结果。",
-      "mechanics": "下单到成交 **162 毫秒**, 当场取回实际 qty/price 回写 —— 旧协议「今夜记①腿、明晨补②腿」的跨会话拖尾消失。",
-      "timing_value": "本次无 4A 出场回款, 故未验证到「开盘后执行拿到当日回款」这一换代主收益 (32% 结构性资金)。待有出场的日子再看。"
-    }
-  }
+  "note": "⚠️ **LLY 同日既卖又买**: 引擎先出 time_stop 出场 (已成交 @$1,117.8201), 又出 rsi2_entry 入场 (rsi2 1.10)。两者均为引擎确定性输出, 会话不合并不抵消 (红线2)。用户可对该单一票否决。"
 }

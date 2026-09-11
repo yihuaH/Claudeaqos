@@ -1,101 +1,26 @@
 {
-  "date": "2026-09-10",
+  "date": "2026-09-11",
   "halted": false,
   "sells": [],
-  "buys": [
-    {
-      "symbol": "AMZN260918C00220000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 32.48,
-      "underlying": "AMZN",
-      "strike": 220.0,
-      "expiry": "2026-09-18",
-      "dte": 8,
-      "spot": 251.89,
-      "rsi2": 7.87,
-      "model_price": 32.0865,
-      "entry_quote": {
-        "bid": 32.479,
-        "ask": 32.49,
-        "mid": 32.4845,
-        "spread_pct": 0.034
-      }
-    },
-    {
-      "symbol": "NVDA260925C00195000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 24.39,
-      "underlying": "NVDA",
-      "strike": 195.0,
-      "expiry": "2026-09-25",
-      "dte": 15,
-      "spot": 218.36,
-      "rsi2": 9.23,
-      "model_price": 25.3333,
-      "entry_quote": {
-        "bid": 24.31,
-        "ask": 24.48,
-        "mid": 24.395,
-        "spread_pct": 0.697
-      }
-    }
-  ],
+  "buys": [],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "spread_too_wide(best=5.68%)",
-      "rsi2": 3.0,
-      "spot": 165.66
-    },
-    {
-      "symbol": "IWM",
-      "reason": "spread_too_wide(best=7.89%)",
-      "rsi2": 5.06,
-      "spot": 287.7
-    },
-    {
-      "symbol": "DIA",
-      "reason": "premium_too_large(5619)",
-      "rsi2": 6.3,
-      "spot": 520.75
-    },
-    {
-      "symbol": "SPY",
-      "reason": "premium_too_large(8754)",
-      "rsi2": 7.26,
-      "spot": 757.83
-    },
-    {
-      "symbol": "QQQ",
-      "reason": "premium_too_large(10428)",
-      "rsi2": 7.85,
-      "spot": 708.69
+      "reason": "spread_too_wide(best=9.34%)",
+      "rsi2": 2.67,
+      "spot": 165.5
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLF",
-      "rsi2_now": 11.02,
-      "scenario": "1d_-1%",
-      "spot": 56.87,
-      "structure": "single",
-      "est_premium_usd": 576
-    },
-    {
-      "symbol": "SMH",
-      "rsi2_now": 22.42,
+      "symbol": "NVDA",
+      "rsi2_now": 20.94,
       "scenario": "2d_-1%x2",
-      "spot": 560.28,
+      "spot": 218.98,
       "structure": "single",
-      "est_premium_usd": 5771
+      "est_premium_usd": 2363
     }
   ],
-  "suggested_reserve_usd": 576.0
+  "suggested_reserve_usd": 2363.0
 }

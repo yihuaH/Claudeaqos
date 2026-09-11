@@ -406,6 +406,13 @@
       "reason": "premium_too_large(10428)",
       "rsi2": 7.85,
       "spot": 708.69
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=9.34%)",
+      "rsi2": 2.67,
+      "spot": 165.5
     }
   ],
   "assignments": [
