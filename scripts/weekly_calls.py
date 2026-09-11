@@ -153,6 +153,7 @@ def model_edge_gate(pick, spot, rv, rf, cc, mcfg):
         return est / mv if direction == "credit" else mv / est
 
     info = {"reference": ref, "direction": direction,
+            "est": round(est, 4) if est is not None else None,
             "model_flat": round(model_flat, 4),
             "model_surface": round(model_surf, 4) if model_surf is not None else None,
             "ratio_flat_pct": (round(_ratio(model_flat) * 100, 1)
@@ -765,7 +766,50 @@ def cmd_signal(a):
         reserve = round(min(cheapest, cap), 2)
     out["near_signals"] = near
     out["suggested_reserve_usd"] = reserve
+    # 影子样本落盘 (只追加, 不参与任何判定; 见 _shadow_append 注释里的丢失根因)
+    _shadow_append(a.ledger, today,
+                   [{"date": today, "symbol": r.get("symbol") or r.get("underlying"),
+                     "outcome": "skip" if "reason" in r else "order",
+                     "reason": r.get("reason"), "est_price": r.get("est_price"),
+                     "spot": r.get("spot"), "rsi2": r.get("rsi2"),
+                     **{k: v for k, v in (r.get("model_edge") or {}).items()}}
+                    for r in (skips + out["buys"]) if r.get("model_edge")])
     _emit(out, a.out)
+
+
+def _shadow_append(ledger_path, date, records, keep=400):
+    """影子样本落盘 (2026-09-11 B 方案配套)。
+
+    **为什么需要单独一个文件**: 实盘轨道的 `apply` 在 daily.py 里并不每日运行 (只有 paper 轨道跑),
+    所以 skips 只写进每天被覆盖的 `*_last_orders.json` —— 实测实盘 skip_log 只覆盖了 4 个交易日,
+    而轨道已跑 27 天。影子模式要攒 flat vs surface 的并行样本, 不能依赖那条链路。
+
+    路径由账本路径派生 (`..._positions.json` → `..._model_edge.json`), 故无需改 daily.py 或加 CLI 参数。
+    只追加、不读写任何账本、不参与任何判定; 写失败一律吞掉 (绝不让审计数据拖垮主跑, 见 paper.py 08-21 教训)。
+    """
+    if not records:
+        return
+    try:
+        path = ledger_path.replace("_positions.json", "_model_edge.json")
+        if path == ledger_path:
+            path = ledger_path.rsplit(".", 1)[0] + "_model_edge.json"
+        try:
+            with open(path) as f:
+                hist = json.load(f)
+        except (OSError, ValueError):
+            hist = {"_purpose": "公允价闸影子样本 (flat vs surface 并行比值); 只追加, 不参与判定",
+                    "records": []}
+        seen = {(r.get("date"), r.get("symbol")) for r in hist.get("records", [])}
+        for r in records:
+            if (r.get("date"), r.get("symbol")) not in seen:
+                hist.setdefault("records", []).append(r)
+                seen.add((r.get("date"), r.get("symbol")))
+        hist["records"] = hist["records"][-keep:]
+        with open(path, "w") as f:
+            json.dump(hist, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    except Exception:
+        pass
 
 
 def _emit(out, path):
