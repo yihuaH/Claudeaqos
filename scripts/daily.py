@@ -159,14 +159,26 @@ PRECLOSE_MARKER = "state/preclose_status.json"
 # 4C 换代当晚主跑会话 fetch 到新代码但沿用对话记忆里的旧口径, 把 valid_until 写成已退役的
 # 09:25 ET (commit 79a49ad 事后修正)。散文契约靠会话自觉, 机器可抄的字段才靠得住。
 PENDING_TEMPLATES = {
-    # 盘前阶段: 清单当日有效, 用户在本次跑完后到收盘前执行 (出场卖单已即时成交, 回款已到账)
+    # 盘前阶段: 清单当日 15:30-15:55 为**首选窗**; 未执行则**顺延**至次一交易日 09:45-15:55
+    # (2026-09-11 用户选「顺延」)。起因: 盘前窗仅 25 分钟, 当日用户回复落在窗外导致 4 单全部
+    # 过期 0 成交 (journal/2026-09-11-preclose.md §7)。顺延不缩短任何东西, 只给漏掉的清单一条
+    # 退路, 且次日窗口本就是 2026-09-10 已验证的协议。
     "preclose": {
-        "valid_until": "当日 15:55 ET (执行窗 15:30-15:55, 盘前主跑产出)",
-        "order_valid_until": "same_session_1555_et",
-        "exec_window_et": "15:30-15:55",
-        "exec_day": "same_day",
+        "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET "
+                       "(执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+        "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
+        "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+        "exec_day": "same_day_then_next_session",
         "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); "
-                        "执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量",
+                        "执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。"
+                        "⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 "
+                        "buying_power_at_generation",
+        "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。"
+                          "**次一交易日盘前主跑产出新清单时自动取代本清单** (会话覆写 "
+                          "pending_orders.json), 故不存在两份清单并存/重复买入的风险。"
+                          "次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。"
+                          "⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), "
+                          "标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     },
     # 收盘后阶段 (含 wrapup 回退): 清单次日有效, 必须在 09:30 开盘之后执行
     "full": {

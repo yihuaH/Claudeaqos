@@ -59,7 +59,7 @@
 
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
-| RSI-2 均值回归 (主策略, ETF+个股) — **拆分式双段跑** (2026-09-10 用户「直接实现」: ① 15:20 ET 盘前关键路径 `--phase preclose` 出信号+出场即时成交+当日 pending(执行窗 15:30-15:55); ② 17:45 ET 收尾 `--phase wrapup` 纸面轨道+行情核对+journal。依据: 收益全在「不跨夜进场」+0.42 pp/笔≈相对+26~31%, 见 `journal/2026-09-10-preclose-research.md`。**fail-safe**: 当日无 `state/preclose_status.json` completed 标记 → wrapup 自动退化为完整主跑, 出场照下、pending 按次日窗口, 故盘前挂掉最坏退回改动前行为) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项已在最优位; 同日启用**加仓机制** 再跌3%补一档·每票≤2档) | `config.json enabled` + `config.json scale_in.enabled` |
+| RSI-2 均值回归 (主策略, ETF+个股) — **拆分式双段跑** (2026-09-10 用户「直接实现」: ① 15:20 ET 盘前关键路径 `--phase preclose` 出信号+出场即时成交+pending(首选窗当日 15:30-15:55, **未执行则顺延次一交易日 09:45-15:55**, 2026-09-11 用户选「顺延」—— 起因盘前窗仅 25 分钟致当日 4 单全过期 0 成交; 次日盘前产出新清单时自动覆写, 无重复买入风险); ② 17:45 ET 收尾 `--phase wrapup` 纸面轨道+行情核对+journal。依据: 收益全在「不跨夜进场」+0.42 pp/笔≈相对+26~31%, 见 `journal/2026-09-10-preclose-research.md`。**fail-safe**: 当日无 `state/preclose_status.json` completed 标记 → wrapup 自动退化为完整主跑, 出场照下、pending 按次日窗口, 故盘前挂掉最坏退回改动前行为) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项已在最优位; 同日启用**加仓机制** 再跌3%补一档·每票≤2档) | `config.json enabled` + `config.json scale_in.enabled` |
 | └ (已复活·拆分版) 15:20 盘前关键路径 | 实盘 | ✅ 2026-09-10 重启 (2026-07-24 曾因整个主跑塞进 35 分钟频繁挂起而退役; 本次只放**时间敏感的一小段** 估 3-5 分钟, 且有 wrapup fail-safe 兜底) | 新 Routine 待用户在界面创建, 见 `strategy/routines.md` ④ |
 | 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |

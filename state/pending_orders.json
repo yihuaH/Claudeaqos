@@ -1,10 +1,10 @@
 {
   "trade_date": "2026-09-11",
   "generated_at": "2026-09-11T19:25:00Z",
-  "status": "expired_window_closed",
-  "valid_until": "当日 15:55 ET (执行窗 15:30-15:55, 盘前主跑产出)",
-  "exec_window_et": "15:30-15:55",
-  "exec_day": "same_day",
+  "status": "awaiting_execution",
+  "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+  "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+  "exec_day": "same_day_then_next_session",
   "buying_power_at_generation": 3850.6,
   "cash_at_generation": 3850.6,
   "portfolio_value_at_generation": 10027.61,
@@ -19,7 +19,8 @@
       "est_price": 98.5351,
       "rsi2": 0.57,
       "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et"
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "status": "awaiting_execution"
     },
     {
       "seq": 2,
@@ -31,9 +32,11 @@
       "est_price": 1118.21,
       "rsi2": 1.1,
       "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "note": "⚠️ 今日已 time_stop 出场同一标的, 引擎同日再出入场单 — 逐字段照抄, 未合并",
-      "news_flag": "[{'keywords': ['bankruptcy'], 'headline': 'Deal Dispatch: Bending Spoons Acquires Miro For $1.35B, Kinetik Up For Sale, LIV Golf Bankruptcy', 'created_at': '2026-09-11T17:10:10Z', 'url': 'https://www."
+      "news_flag": "[{'keywords': ['bankruptcy'], 'headline': 'Deal Dispatch: Bending Spoons Acquires Miro For $1.35B, Kinetik Up For Sale, LIV Golf Bankruptcy', 'created_at': '2026-09-11T17:10:10Z', 'url': 'https://www.",
+      "status": "vetoed_by_user",
+      "veto_note": "用户 2026-09-11 回复「跳过LLY」明确否决。顺延时保持否决, 不执行。"
     },
     {
       "seq": 3,
@@ -45,7 +48,8 @@
       "est_price": 94.31,
       "rsi2": 2.46,
       "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et"
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "status": "awaiting_execution"
     },
     {
       "seq": 4,
@@ -57,7 +61,8 @@
       "est_price": 63.475,
       "rsi2": 2.58,
       "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et"
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "status": "awaiting_execution"
     }
   ],
   "review_precheck": {
@@ -91,10 +96,11 @@
     "cap": 3848.85,
     "stock_buys_usd": 3848.47,
     "consequence": "cap $3,848.85 ≥ 四单合计 $3,848.47 → **4/4 单全部装得下** (余 $0.38)。",
-    "milestone": "🎯 **换代主收益首次兑现**: 今日两张出场卖单 15:24 ET 盘中即时成交, 回款使 cash 从 **$5.00 → $3,850.60**, 同一窗口内即可用于买入。旧协议下这笔钱要等次日 09:30 到账而清单 09:25 已过期 —— 结构性拿不到。"
+    "milestone": "🎯 **换代主收益首次兑现**: 今日两张出场卖单 15:24 ET 盘中即时成交, 回款使 cash 从 **$5.00 → $3,850.60**, 同一窗口内即可用于买入。旧协议下这笔钱要等次日 09:30 到账而清单 09:25 已过期 —— 结构性拿不到。",
+    "carryover_recalc": "⚠️ 顺延后资金须**重取**: 生成时 BP $3,850.60 是今日出场回款到账后的值, 周一执行时须重新 get_portfolio 取实时 min(buying_power, cash) (4C-2)。待执行 3 单合计 $2,849.00 (LLY $999.47 已否决不计)。"
   },
   "note": "⚠️ **LLY 同日既卖又买**: 引擎先出 time_stop 出场 (已成交 @$1,117.8201), 又出 rsi2_entry 入场 (rsi2 1.10)。两者均为引擎确定性输出, 会话不合并不抵消 (红线2)。用户可对该单一票否决。",
-  "expiry": {
+  "expiry_superseded": {
     "expired_at": "2026-09-11 15:55 ET (执行窗 15:30–15:55 收口)",
     "detected_at": "2026-09-11 16:34 ET",
     "orders_placed": 0,
@@ -128,6 +134,15 @@
       },
       "summary": "三只被错过的标的收盘均**略高于**引擎 est (+0.22%~+0.38%), 即当时买入会比收盘价便宜一点点; 实质损失不是价差 (幅度极小), 而是**三笔入场未建立**, 且今日出场回款 $3,845.60 将闲置到下一批。"
     },
-    "structural_note": "⚠️ **盘前窗口的新风险**: 旧协议给用户 09:45–15:55 共 6 小时 10 分钟决策; 新盘前窗口只有 **25 分钟** (15:30–15:55)。今天是换代后第一次撞上这个边界。是否需要延长盘前执行窗、或允许盘前清单顺延到次日 09:45–15:55 —— **属协议参数, 需用户决定**, 本次未改。"
+    "structural_note": "⚠️ **盘前窗口的新风险**: 旧协议给用户 09:45–15:55 共 6 小时 10 分钟决策; 新盘前窗口只有 **25 分钟** (15:30–15:55)。今天是换代后第一次撞上这个边界。是否需要延长盘前执行窗、或允许盘前清单顺延到次日 09:45–15:55 —— **属协议参数, 需用户决定**, 本次未改。",
+    "superseded_by": "2026-09-11 用户选「顺延」(选项2) 后, 本清单按新协议复活 —— 顺延窗为次一交易日 (2026-09-14 周一) 09:45–15:55 ET。原 expired_window_closed 记录保留作审计。"
+  },
+  "carryover": {
+    "revived_at": "2026-09-11 16:3x ET",
+    "basis": "用户回「2」= 允许盘前清单顺延到次日 09:45–15:55 (协议已同步落地: daily.py PENDING_TEMPLATES / playbook 4B+4C / CLAUDE.md 红线9)",
+    "carry_window": "2026-09-14 (周一) 09:45–15:55 ET",
+    "expires": "2026-09-14 15:55 ET; 或被 09-14 盘前主跑产出的新清单覆写 (以先到者为准)",
+    "weekend_note": "⚠️ 本次顺延**跨周末** (09-11 周五 → 09-14 周一), 信号距执行 2.5 天。旧 4C 协议本就有同样性质 (周五 17:45 出单、周一执行), 非新增风险, 但幅度更大 —— 执行前会回显逐笔明细。",
+    "user_veto_carried": "用户「跳过LLY」的否决**一并顺延**, seq2 已标记, 不会执行。"
   }
 }
