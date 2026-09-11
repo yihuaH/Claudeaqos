@@ -18,7 +18,7 @@
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
-| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 经 API 创建 → 常驻对话。⚠️ **`mcp_connections` 为空**, 见下 ④ 的连接器注记 |
+| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 创建并挂好连接器 → 常驻对话; 首跑 2026-09-11 15:20 ET |
 | 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
 | 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
@@ -156,8 +156,9 @@ preclose 未完成时 **fail-safe 退化为完整主跑**。**部署盘前 Routi
 ⚠️ **连接器仍需用户手工挂 (2026-09-11 复验, 老限制未解)**: `create_trigger` 虽已有
 `connectors` 参数, 但本组织**不可用** (实测返回 "the connectors parameter is not available
 for this organization")。故本 Routine 建成时 `mcp_connections: []`, 创建工具亦明确告警。
-**用户需在 claude.ai Routines 界面为它添加 "cash printer" 工具** (与另四条同一连接器,
-uuid `30bad367-f2b5-4d4f-bdda-d19719ecc17a`, 那四条是 2026-08-14 手工挂上的)。
+**已由用户于 2026-09-11 16:27 UTC 在 claude.ai Routines 界面手工挂上 "cash printer"**
+(uuid `30bad367-f2b5-4d4f-bdda-d19719ecc17a`, 与另四条同一连接器; 界面编辑同时补全了
+`allowed_tools`)。**今后经 API 新建任何 Routine 仍须重复这一步**, 别忘。
 挂之前触发会按红线6 不交易、只写日志通知, 不会造成损害。
 
 **实际部署记录**: 唤醒词在创建时已按 2026-09-11 的最新契约写全 (含 `--emit-symbols` 取清单、
