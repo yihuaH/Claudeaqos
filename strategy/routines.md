@@ -18,6 +18,7 @@
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
+| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | **待用户在界面创建** | 🆕 2026-09-10 拆分式盘前主跑, 见下 ④ |
 | 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
 | 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
@@ -126,3 +127,31 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
   (CLAUDE.md「分支约定」已有同款声明)。
 - `session.py` 输出的清单是**摘要**, 细则 (4A/4C/4D 的逐步协议) 仍在 `playbook.md`;
   两者冲突以 playbook 为准。
+
+
+---
+
+## ④ 盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-10 新增, 唤醒词待部署
+
+**背景**: 4C 执行协议 2026-09-10 换代后, 实测收益全在「不跨夜进场」这一项 (+0.42 pp/笔,
+研究见 `journal/2026-09-10-preclose-research.md`)。故把**时间敏感的关键路径**移到收盘前,
+纸面轨道/行情核对/journal 留在 17:45 的 `--phase wrapup`。
+
+```
+Claudeaqos 盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos && git fetch origin Main
+&& git checkout -B Main origin/Main && python3 scripts/session.py brief --window preclose
+--workdir <sp> (<sp>=本会话的 scratchpad 临时目录)。照输出的清单逐步执行; 规则以 CLAUDE.md
+硬性红线 + strategy/playbook.md 为准。⚠️ 本窗口时间敏感: 若现在已过 15:40 ET 就**不要开跑**,
+写日志说明并结束 (17:45 的 wrapup 会 fail-safe 退化为完整主跑, 出场照下)。⚠️ 当日实时价必须用
+mcp__cash_printer__get_equity_quotes 的原始输出传 --quotes, 绝不可用 integrations.py quotes
+(延迟 15 分钟)。买单只写 pending 绝不 place (红线9); 通知用户务必写明执行窗 = 今日
+15:30-15:55 ET。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
+mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户。
+```
+
+**与 17:45 窗口的关系**: 17:45 的唤醒词不变 (仍 `--window main_run`), 但 `session.py` 现在会
+按 `state/preclose_status.json` 提示该跑 `--phase wrapup`, 且 `daily.py` 自己会在当日
+preclose 未完成时 **fail-safe 退化为完整主跑**。**部署盘前 Routine 后无需改 17:45 的唤醒词。**
+
+⚠️ 同样受「经 API 建的触发器带不上 Robinhood 连接器」限制 (见上) —— 用户需在 claude.ai
+Routines 界面为这条新 Routine 手工添加 Robinhood 工具, 否则会话按红线6 不交易只通知。
