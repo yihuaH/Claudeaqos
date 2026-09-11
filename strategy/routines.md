@@ -144,8 +144,8 @@ Claudeaqos 盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos && 
 硬性红线 + strategy/playbook.md 为准。⚠️ 本窗口时间敏感: 若现在已过 15:40 ET 就**不要开跑**,
 写日志说明并结束 (17:45 的 wrapup 会 fail-safe 退化为完整主跑, 出场照下)。⚠️ 当日实时价必须用
 mcp__cash_printer__get_equity_quotes 的原始输出传 --quotes, 绝不可用 integrations.py quotes
-(延迟 15 分钟)。买单只写 pending 绝不 place (红线9); 通知用户务必写明执行窗 = 今日
-15:30-15:55 ET。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
+(延迟 15 分钟)。买单只写 pending 绝不 place (红线9); 通知用户务必写明**两个执行窗**:
+期权 今日 15:30-15:45 ET (窗口更窄, 先发), 股票 今日 15:30-15:55 ET。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
 mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户。
 ```
 
