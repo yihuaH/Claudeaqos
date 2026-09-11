@@ -18,10 +18,11 @@
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
-| 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
+| **收盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 创建并挂好连接器 → 常驻对话; 首跑 2026-09-11 15:20 ET |
+| 收盘后收尾 wrapup **+ 战报** (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 (2026-09-11 吞并 18:45 战报) |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
-| 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
-| 周度股票池刷新 (周一 15:00 ET) | `0 19 * * 1` | `trig_01PvM5Mj89pokXgPwkMECZrd` | ✅ → 常驻对话 |
+| ~~收盘战报 (18:45 ET)~~ | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ⏸ **2026-09-11 停用, 已并入 17:45** (保留可回退) |
+| 周度股票池刷新 (周一 **13:00** ET) | `0 17 * * 1` | `trig_01PvM5Mj89pokXgPwkMECZrd` | ✅ → 常驻对话 (2026-09-11 由 15:00 提前, 避开与 15:20 收盘前主跑只差 20 分钟的相撞) |
 | (旧) 主跑 · 每次新窗口 | `45 21 * * 1-5` | `trig_01Y566pgrN57xjs2RXZN3Mad` | ⏸ 2026-08-14 停用 (保留可回退) |
 | (旧) 晨间核查 · 每次新窗口 | `45 14 * * 1-5` | `trig_019cdJ9TLSZfZhQDN77bEGrX` | ⏸ 2026-08-14 停用 (保留可回退) |
 | (旧) 收盘战报 · 每次新窗口 | `45 22 * * 1-5` | `trig_01LSG22K25Jgqc9SR19YNVef` | ⏸ 2026-08-14 停用 (保留可回退) |
@@ -126,3 +127,66 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
   (CLAUDE.md「分支约定」已有同款声明)。
 - `session.py` 输出的清单是**摘要**, 细则 (4A/4C/4D 的逐步协议) 仍在 `playbook.md`;
   两者冲突以 playbook 为准。
+
+
+---
+
+## ④ 收盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-11 已创建 `trig_01PqeuvMEsyXbTKJQ7njyVcR`
+
+**背景**: 4C 执行协议 2026-09-10 换代后, 实测收益全在「不跨夜进场」这一项 (+0.42 pp/笔,
+研究见 `journal/2026-09-10-preclose-research.md`)。故把**时间敏感的关键路径**移到收盘前,
+纸面轨道/行情核对/journal 留在 17:45 的 `--phase wrapup`。
+
+```
+Claudeaqos 收盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos && git fetch origin Main
+&& git checkout -B Main origin/Main && python3 scripts/session.py brief --window preclose
+--workdir <sp> (<sp>=本会话的 scratchpad 临时目录)。照输出的清单逐步执行; 规则以 CLAUDE.md
+硬性红线 + strategy/playbook.md 为准。⚠️ 本窗口时间敏感: 若现在已过 15:40 ET 就**不要开跑**,
+写日志说明并结束 (17:45 的 wrapup 会 fail-safe 退化为完整主跑, 出场照下)。⚠️ 当日实时价必须用
+mcp__cash_printer__get_equity_quotes 的原始输出传 --quotes, 绝不可用 integrations.py quotes
+(延迟 15 分钟)。买单只写 pending 绝不 place (红线9); 通知用户务必写明**两个执行窗**:
+期权 今日 15:30-15:45 ET (窗口更窄, 先发), 股票 今日 15:30-15:55 ET。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
+mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户。
+```
+
+**与 17:45 窗口的关系**: 17:45 的唤醒词不变 (仍 `--window main_run`), 但 `session.py` 现在会
+按 `state/preclose_status.json` 提示该跑 `--phase wrapup`, 且 `daily.py` 自己会在当日
+preclose 未完成时 **fail-safe 退化为完整主跑**。**部署收盘前 Routine 后无需改 17:45 的唤醒词。**
+
+⚠️ **连接器仍需用户手工挂 (2026-09-11 复验, 老限制未解)**: `create_trigger` 虽已有
+`connectors` 参数, 但本组织**不可用** (实测返回 "the connectors parameter is not available
+for this organization")。故本 Routine 建成时 `mcp_connections: []`, 创建工具亦明确告警。
+**已由用户于 2026-09-11 16:27 UTC 在 claude.ai Routines 界面手工挂上 "cash printer"**
+(uuid `30bad367-f2b5-4d4f-bdda-d19719ecc17a`, 与另四条同一连接器; 界面编辑同时补全了
+`allowed_tools`)。**今后经 API 新建任何 Routine 仍须重复这一步**, 别忘。
+挂之前触发会按红线6 不交易、只写日志通知, 不会造成损害。
+
+**实际部署记录**: 唤醒词在创建时已按 2026-09-11 的最新契约写全 (含 `--emit-symbols` 取清单、
+券商实时报价两道硬闸、两个执行窗 15:30-15:45 / 15:30-15:55、`preclose: completed` 标记键、
+首日观察项)。与本文下方的存档文本若有出入, **以触发器内实际文本为准**。
+
+
+---
+
+## ⚠️ 平台限制: 经本工具**改不了别的会话的唤醒词** (2026-09-11 实测)
+
+`mcp__Claude_Code_Remote__update_trigger` 对唤醒到**常驻对话** (非本会话) 的 Routine:
+
+| 字段 | 能否经 API 改 |
+|---|---|
+| `name` / `cron_expression` / `enabled` | ✅ 可以 (本次已用) |
+| **`prompt` (唤醒词正文)** | ❌ **拒绝** — "editing the prompt of a routine whose fires deliver into a session that is not your own is not available via this tool" |
+
+(创建时带 prompt 是可以的 —— 收盘前主跑那条就是这么建的; 只有**事后编辑**被拦。)
+
+**因此流程变更一律走 `scripts/session.py` 的 `CHECKLIST`**, 不碰唤醒词 —— 这本来就是本仓库既定的
+维护约定 (见上「维护约定」段), 现在它从"最佳实践"变成了"唯一可行路径"。唤醒词只说
+「照 `session.py brief` 输出的清单执行」, 所以改清单等于改流程。
+
+**唤醒词正文确实需要改时, 只能由用户在 claude.ai Routines 界面手工改。** 当前已知两处待改
+(都只是措辞, 不影响行为, 不急):
+1. **收盘前主跑** (`trig_01PqeuvMEsyXbTKJQ7njyVcR`): 正文里仍写「盘前」, 应为「收盘前」
+   (2026-09-11 改名, 见 `journal/2026-09-10-preclose-impl.md` 的改名段)。
+2. **周度股票池刷新** (`trig_01PvM5Mj89pokXgPwkMECZrd`): 正文仍写「须在当天 17:45 ET 收盘后主跑
+   之前跑完」, 真实死线已是 **15:20**。**缓解措施已就位**: 该唤醒词自带「读 CLAUDE.md」, 而
+   CLAUDE.md 的「每日节奏」段已写明周一硬约束与 15:10 停手护栏。

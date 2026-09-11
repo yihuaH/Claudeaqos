@@ -52,13 +52,6 @@
       "cost": 9330.6,
       "tranches": 1
     },
-    "ABBV": {
-      "qty": 12.0,
-      "entry_price": 247.9225,
-      "entry_date": "2026-09-09",
-      "cost": 2975.07,
-      "tranches": 1
-    },
     "DASH": {
       "qty": 48.0,
       "entry_price": 194.53125,
@@ -78,6 +71,20 @@
       "entry_price": 268.031429,
       "entry_date": "2026-09-10",
       "cost": 9381.1,
+      "tranches": 1
+    },
+    "SBUX": {
+      "qty": 96.0,
+      "entry_price": 100.37,
+      "entry_date": "2026-09-11",
+      "cost": 9635.52,
+      "tranches": 1
+    },
+    "VRTX": {
+      "qty": 8.0,
+      "entry_price": 519.28,
+      "entry_date": "2026-09-11",
+      "cost": 4154.24,
       "tranches": 1
     }
   },
@@ -1520,6 +1527,33 @@
       "side": "buy",
       "qty": 35.0,
       "price": 268.031429,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "ABBV",
+      "side": "sell",
+      "qty": 12.0,
+      "price": 255.601666,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "SBUX",
+      "side": "buy",
+      "qty": 96.0,
+      "price": 100.37,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-11",
+      "symbol": "VRTX",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 519.28,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

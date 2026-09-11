@@ -17,7 +17,7 @@
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
    - **跨轨道资金优先级 = 期权优先 (常规规则, 2026-08-27 用户定, 此前三次逐次决定同向)**: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单仍走 semi_auto 手动通道 (playbook 4C-2D)。用户可单日一票推翻, 但**不再逐日询问**。
-   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) 同受 semi_auto 约束 — 无人值守只写 `state/pending_option_orders.json`, 用户「执行」后按 playbook 4D 下限价单 (有效至次一交易日 10:30 ET, 推荐执行窗 09:45–10:30 ET 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。预算硬顶 = **账户净值 × 50%** (`weekly_calls_live.json budget`, 用户 2026-08-04 定百分比制、2026-08-14「都改到50%和5000」上调, 随净值自动伸缩) 与实时 buying_power 双封顶 (红线3), 百分比只能由用户改。
+   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) 同受 semi_auto 约束 — 无人值守只写 `state/pending_option_orders.json`, 用户「执行」后按 playbook 4D 下限价单 (时效**照抄 plan.json 的 `option_pending_template`**, 两形态: **收盘前产出 = 当日 15:30–15:45 ET** [2026-09-11 用户「期权也可以当日马上执行」; 比股票的 15:55 早 10 分钟收口, 因 15:45 后是 4D 明令避开的收盘前极端点差区]; 收盘后产出 = 次一交易日 10:30 ET, 推荐 09:45–10:30 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。预算硬顶 = **账户净值 × 50%** (`weekly_calls_live.json budget`, 用户 2026-08-04 定百分比制、2026-08-14「都改到50%和5000」上调, 随净值自动伸缩) 与实时 buying_power 双封顶 (红线3), 百分比只能由用户改。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
 
@@ -53,14 +53,30 @@
 - 用 `SendUserFile` 发的报告文件不受此约束 (文件本身有标题); 但对话里配发的说明仍照此加分界线。
 - 纯粹的一句话确认 (如「已 push」「已撤单」) 不算报告, 不必加。
 
+## 每日节奏 (2026-09-11 重排; 全部唤醒到常驻对话 `session_01NYPNGq5j25cGqpoLrWiA7t`)
+
+| 时刻 (ET) | 窗口 | 干什么 | Routine |
+|---|---|---|---|
+| 10:45 | 晨间核查 | **条件式**: 只有昨天走了 fail-safe (有 `exec_day=next_session` 的 pending) 才是执行锚点; 正常日无事静默 | `trig_01CtgM6KvCBKywWzEtAEkNia` |
+| **13:00 周一** | 周度股票池刷新 | 刷 `universe.json` 100 只 | `trig_01PvM5Mj89pokXgPwkMECZrd` |
+| **15:20** | **收盘前主跑** | 关键路径: 信号 + 出场即时成交 + 当日 pending | `trig_01PqeuvMEsyXbTKJQ7njyVcR` |
+| 15:30–15:45 / 15:30–15:55 | (用户执行窗) | 期权 / 股票, 用户回「执行」 | — |
+| 17:45 | 收盘后收尾 wrapup **+ 战报** | 纸面轨道 + 行情核对 + journal + 账本回写, **并发当日战报** | `trig_01W1rzTiiZBaRc2taYzV6tKX` |
+| ~~18:45~~ | ~~独立战报~~ | **2026-09-11 并入 17:45** (拆分后战报的 pending 提示与「执行」入口随当日清单 15:55 过期而失效, 只剩看门狗; 看门狗已迁到次日 15:20 的**交易动作之前**) | `trig_01DHhgMt8zbcyfwR9AfwTn85` ⏸ disabled 可回退 |
+
+⚠️ **周一硬约束 (2026-09-11 设立, 股票池刷新器必读)**: 股票池刷新 **13:00 起跑, 必须在 15:20 ET
+收盘前主跑之前 finalize** —— 主跑要读 `universe.json`。原设计余量 4h45m (旧主跑 17:45), 现只剩 **2h20m**。
+**跑到 15:10 仍未 finalize 就停手, 不要提交半成品** (主跑会读到写坏的池), 写 journal 通知用户、次日补跑;
+旧池继续有效, 迟一天远好过池被写坏。
+
 ## 轨道状态总览
 
 (暂停/启用以各 config 的开关为准; 本表为速览, 恢复时同步更新)
 
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
-| RSI-2 均值回归 (主策略, ETF+个股) — **每日收盘后单跑** (~17:45 ET, 全异步) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项已在最优位; 同日启用**加仓机制** 再跌3%补一档·每票≤2档) | `config.json enabled` + `config.json scale_in.enabled` |
-| └ (已退役) 15:30 盘前主跑 | 实盘 | ⛔ 停用 (2026-07-24, 平台窗口内频繁挂起, 改收盘后单跑) | Routine disabled |
+| RSI-2 均值回归 (主策略, ETF+个股) — **拆分式双段跑** (2026-09-10 用户「直接实现」: ① 15:20 ET 收盘前关键路径 `--phase preclose` 出信号+出场即时成交+pending(首选窗当日 15:30-15:55, **未执行则顺延次一交易日 09:45-15:55**, 2026-09-11 用户选「顺延」—— 起因收盘前窗仅 25 分钟致当日 4 单全过期 0 成交; 次日收盘前产出新清单时自动覆写, 无重复买入风险); ② 17:45 ET 收尾 `--phase wrapup` 纸面轨道+行情核对+journal。依据: 收益全在「不跨夜进场」+0.42 pp/笔≈相对+26~31%, 见 `journal/2026-09-10-preclose-research.md`。**fail-safe**: 当日无 `state/preclose_status.json` completed 标记 → wrapup 自动退化为完整主跑, 出场照下、pending 按次日窗口, 故收盘前挂掉最坏退回改动前行为) | 实盘 | ✅ active (2026-08-07 参数首扫: 止损 5→7%, 其余四项已在最优位; 同日启用**加仓机制** 再跌3%补一档·每票≤2档) | `config.json enabled` + `config.json scale_in.enabled` |
+| └ (已复活·拆分版) 15:20 收盘前关键路径 | 实盘 | ✅ 2026-09-10 重启 (2026-07-24 曾因整个主跑塞进 35 分钟频繁挂起而退役; 本次只放**时间敏感的一小段** 估 3-5 分钟, 且有 wrapup fail-safe 兜底) | Routine `trig_01PqeuvMEsyXbTKJQ7njyVcR` (2026-09-11 建, `20 19 * * 1-5` → 常驻对话); 连接器已由用户 2026-09-11 在界面手工挂上 "cash printer" (API 建的触发器带不上, 本组织 `connectors` 参数不可用 —— **今后经 API 新建 Routine 仍须重复这一步**)。首跑 2026-09-11 15:20 ET。详 `strategy/routines.md` ④ |
 | 隔夜均值回归 — 入场 | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (照常) | 同上 (暂停只停入场) |
 | 挑战者影子验证 | paper | 视 `learning.json` 有无 validating 挑战者 | `learning.json enabled` |
@@ -86,7 +102,7 @@
 - `scripts/session.py` — **会话调度器** (2026-08-08 用户「不用每天一大段 prompt 吧」): `brief` 自动判断时间窗口 (主跑/晨检/战报)、检查幂等与市场状态、读所有账本与待执行文件, 打印本次的精确清单 (含要调的 MCP 与可直接复制的 daily.py 命令行) 与加仓线监控; **只调度不做交易决策** (红线2)。Routine 唤醒词因此缩到两行, 见 `strategy/routines.md`
 - `scripts/position_check.py` — **持仓一致性闸** (2026-08-11 用户「做」批准, 起因 MNST 2:1 拆股): 券商持仓份额 vs `state/positions.json` 逐只比对, 不一致即 anomaly 并在 preflight **停跑** (早于取 bars)。分类 `split_suspected` (简单整数比 + 成本基守恒, 附 `suggested_fix`) / `unapplied_fill` (差额=券商 intraday_quantity) / `qty_mismatch` / `broker_only` / `ledger_only`。**只报告绝不改账本**; 由 `daily.py --positions` 调用 (复用主跑既有输入, 不额外调 MCP)。存在意义: 引擎日线是拆股调整后的而账本 `entry_price` 不是, 两者脱钩会算出假回撤触发止损, 而**出场卖单全自动**会无人干预成交
 - `scripts/price_check.py` — 行情管道每日交叉核对: 引擎用的 Alpaca SIP 收盘 vs 券商官方收盘 (应 100% 一致); 双闸 — 单只偏差 >25bp 记 anomaly (红线6), 完全一致率 <80% 记 warn (口径可能退回 iex); 由 `daily.py --broker-closes` 调用
-- `scripts/daily.py` — **每日主跑驱动器** (2026-08-06 用户「建」): 一条命令跑完 playbook 中所有可脚本化步骤 (取数→RSI-2信号→期权双轨→纸面轨道), 产出 `plan.json` (place_now 待会话下单 / to_pending 待用户执行 / journal_facts / command_log 审计); **只调用各引擎绝不含决策逻辑** (红线2); `--plan-only` 干预览不写账本。会话仍负责 MCP 取数、下单、写 journal
+- `scripts/daily.py` — **每日主跑驱动器** (2026-08-06 用户「建」; 2026-09-10 加 `--phase preclose|wrapup|full` 拆分式双段跑 + `pending_template` 协议常量输出 + 分阶段幂等闸): 一条命令跑完 playbook 中所有可脚本化步骤 (取数→RSI-2信号→期权双轨→纸面轨道), 产出 `plan.json` (place_now 待会话下单 / to_pending 待用户执行 / journal_facts / command_log 审计); **只调用各引擎绝不含决策逻辑** (红线2); `--plan-only` 干预览不写账本。会话仍负责 MCP 取数、下单、写 journal
 - `scripts/screen.py` — 个股池确定性筛选器 (pool / rank / finalize); 筛选只决定"能买什么", 买卖时机仍由引擎决定
 - `scripts/signals.py` — 确定性信号引擎 (signal / apply); 含**加仓机制** (`config.json scale_in`, 2026-08-07 用户「做加仓」启用): 已持策略仓收盘 ≤ 加权均价×(1−3%) 且未触发出场 → 补一档 (净值×10%), 每票最多 2 档 = 单票敞口上限 20%; 加仓单 `reason=rsi2_scale_in`, 同受 semi_auto (红线9)/VIX/财报黑窗约束, 排在新开仓单前吃现金 (回测口径, 执行时不得重排); 含**财报上涨跳空豁免** (`config.json defense.earnings_gap_up_exempt`, 2026-08-17 用户「直接上实盘」授权): 近20日异动闸对**财报日上涨跳空**放行、对下跌异动与非财报异动照拦 (依据 `journal/2026-08-14-research-defense-move-filter.md`: 上涨跳空后均值+1.01%/胜率66.7% 不输基准, 下跌跳空后 −0.44%/53.3% 明确负期望), 需 earnings 传新格式带 `past` 历史财报日, 缺则静默失效
 - `scripts/overnight.py` — 隔夜均值回归引擎 (IBS 收盘买/次日收盘卖); **实盘入场暂停中** (live_entries_paused, 2026-07-21 用户指示, 出场/兜底与纸面学习照常); `strategy/overnight.json` 参数; `state/overnight_positions.json` 账本
