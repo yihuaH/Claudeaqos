@@ -18,7 +18,7 @@
 
 | Routine | cron (UTC) | trigger ID | 状态 |
 |---|---|---|---|
-| **盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 创建并挂好连接器 → 常驻对话; 首跑 2026-09-11 15:20 ET |
+| **收盘前主跑 (15:20 ET)** | `20 19 * * 1-5` | `trig_01PqeuvMEsyXbTKJQ7njyVcR` | ✅ 2026-09-11 创建并挂好连接器 → 常驻对话; 首跑 2026-09-11 15:20 ET |
 | 每日收盘后主跑 (17:45 ET) | `45 21 * * 1-5` | `trig_01W1rzTiiZBaRc2taYzV6tKX` | ✅ → 常驻对话 |
 | 晨间核查 (10:45 ET) | `45 14 * * 1-5` | `trig_01CtgM6KvCBKywWzEtAEkNia` | ✅ → 常驻对话 |
 | 收盘战报 (18:45 ET) | `45 22 * * 1-5` | `trig_01DHhgMt8zbcyfwR9AfwTn85` | ✅ → 常驻对话 |
@@ -131,14 +131,14 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
 
 ---
 
-## ④ 盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-11 已创建 `trig_01PqeuvMEsyXbTKJQ7njyVcR`
+## ④ 收盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-11 已创建 `trig_01PqeuvMEsyXbTKJQ7njyVcR`
 
 **背景**: 4C 执行协议 2026-09-10 换代后, 实测收益全在「不跨夜进场」这一项 (+0.42 pp/笔,
 研究见 `journal/2026-09-10-preclose-research.md`)。故把**时间敏感的关键路径**移到收盘前,
 纸面轨道/行情核对/journal 留在 17:45 的 `--phase wrapup`。
 
 ```
-Claudeaqos 盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos && git fetch origin Main
+Claudeaqos 收盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos && git fetch origin Main
 && git checkout -B Main origin/Main && python3 scripts/session.py brief --window preclose
 --workdir <sp> (<sp>=本会话的 scratchpad 临时目录)。照输出的清单逐步执行; 规则以 CLAUDE.md
 硬性红线 + strategy/playbook.md 为准。⚠️ 本窗口时间敏感: 若现在已过 15:40 ET 就**不要开跑**,
@@ -151,7 +151,7 @@ mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户�
 
 **与 17:45 窗口的关系**: 17:45 的唤醒词不变 (仍 `--window main_run`), 但 `session.py` 现在会
 按 `state/preclose_status.json` 提示该跑 `--phase wrapup`, 且 `daily.py` 自己会在当日
-preclose 未完成时 **fail-safe 退化为完整主跑**。**部署盘前 Routine 后无需改 17:45 的唤醒词。**
+preclose 未完成时 **fail-safe 退化为完整主跑**。**部署收盘前 Routine 后无需改 17:45 的唤醒词。**
 
 ⚠️ **连接器仍需用户手工挂 (2026-09-11 复验, 老限制未解)**: `create_trigger` 虽已有
 `connectors` 参数, 但本组织**不可用** (实测返回 "the connectors parameter is not available

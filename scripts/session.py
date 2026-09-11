@@ -61,7 +61,7 @@ def detect_window(t):
         return "off_weekend"
     if 9 * 60 + 45 <= m < 12 * 60:      # 09:45 = 4C 执行窗开启 (2026-09-10); 推荐锚 10:45
         return "morning"
-    if 15 * 60 + 5 <= m < 15 * 60 + 58:  # 盘前主跑 (2026-09-10 用户「直接实现」): 跑 15:20, 执行 15:40-15:55
+    if 15 * 60 + 5 <= m < 15 * 60 + 58:  # 收盘前主跑 (2026-09-10 用户「直接实现」): 跑 15:20, 执行 15:40-15:55
         return "preclose"
     if 16 * 60 <= m < 18 * 60 + 30:
         return "main_run"
@@ -88,7 +88,7 @@ def exec_window(t):
 
 
 def preclose_state(date):
-    """当日盘前主跑是否完成 —— 决定 17:45 窗口跑 --phase wrapup 还是 fail-safe 的 full。"""
+    """当日收盘前主跑是否完成 —— 决定 17:45 窗口跑 --phase wrapup 还是 fail-safe 的 full。"""
     d = load("state/preclose_status.json") or {}
     return {"exists": bool(d), "date": d.get("date"), "status": d.get("status"),
             "today": d.get("date") == date and d.get("status") == "completed",
@@ -97,7 +97,7 @@ def preclose_state(date):
 
 
 def pending_exec_state(t):
-    """当前生效的 pending 清单自带的执行窗 (盘前产出=当日 15:30-15:55, 收盘后产出=次日 09:45-15:55)。"""
+    """当前生效的 pending 清单自带的执行窗 (收盘前产出=当日 15:30-15:55, 收盘后产出=次日 09:45-15:55)。"""
     d = load("state/pending_orders.json") or {}
     tpl = d.get("pending_template") or {}
     win = tpl.get("exec_window_et") or d.get("exec_window_et")
@@ -194,7 +194,7 @@ CHECKLIST = {
             "(fail-safe 会退化成完整主跑, 出场照下), 跑一半更危险",
             "Alpaca 时钟 market_is_open=false → 休市, 写日志结束",
         ]),
-        ("MCP 取数 (盘前专属口径)", [
+        ("MCP 取数 (收盘前专属口径)", [
             "get_portfolio(802095265) → total_value, buying_power",
             "get_equity_positions(802095265) → 存 <wd>/positions.json (原始输出)",
             "① 先拿清单: daily.py --emit-symbols <wd>/allsyms.json (纯读本地无网络, 秒出; "
@@ -340,7 +340,7 @@ def main():
         print(json.dumps(info, ensure_ascii=False, indent=2))
         return 0
 
-    W = {"preclose": "盘前主跑 (15:20 ET)", "main_run": "收盘后收尾 (wrapup)",
+    W = {"preclose": "收盘前主跑 (15:20 ET)", "main_run": "收盘后收尾 (wrapup)",
          "morning": "晨间核查", "report": "收盘战报",
          "off_weekend": "周末 (非作业窗口)", "off_hours": "非作业时段"}[win]
     print("=" * 78)
@@ -363,7 +363,7 @@ def main():
     pcs = info["preclose"]
     if pcs["exists"]:
         mark = "✅ 今日已完成" if pcs["today"] else f"⚠️ 非今日/未完成 ({pcs['date']}/{pcs['status']})"
-        print(f"盘前主跑: {mark}"
+        print(f"收盘前主跑: {mark}"
               + (f"  出场 {pcs['sells']} 单 · 买单入 pending {pcs['buys']} 单" if pcs["today"] else ""))
     pe = info["pending_exec"]
     if pe["exec_window_et"]:
@@ -409,10 +409,10 @@ def main():
         if win == "main_run":
             pcs = info["preclose"]
             if pcs["today"]:
-                print("⚠️ 当日盘前主跑**已完成** → 本次用 `--phase wrapup` "
+                print("⚠️ 当日收盘前主跑**已完成** → 本次用 `--phase wrapup` "
                       "(只跑纸面轨道 + 行情核对; 正股/期权信号绝不重算, 否则会看到新持仓重复出单)")
             else:
-                print("当日无盘前主跑完成标记 → 用 `--phase wrapup`; daily.py 会自动 fail-safe "
+                print("当日无收盘前主跑完成标记 → 用 `--phase wrapup`; daily.py 会自动 fail-safe "
                       "退化为完整主跑 (出场照下, pending 按次日窗口)。不要手动改成 --phase full")
         print(f"""python3 scripts/daily.py --date {date} \\
   --portfolio-value <total_value> --buying-power <BP> \\
