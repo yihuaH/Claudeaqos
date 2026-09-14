@@ -62,21 +62,62 @@ def bs_put(S, K, T, sig, r=0.04):
     return K * math.exp(-r * T) * _ncdf(-d2) - S * _ncdf(-d1)
 
 
-def model_fair_value(pick, spot, iv, rf):
+def clamp_iv(x):
+    """引擎既有的 IV 钳位 (15%-150%)。低 RV 标的被地板抬到 15% —— 这是既有行为, 不改。"""
+    return max(0.15, min(1.5, x))
+
+
+def iv_at(K, spot, rv, mcfg):
+    """单腿 IV。
+
+    **无 `model.surface` 配置 = 旧口径** (两条腿同一个 flat IV = RV×iv_rv_mult), 完全向后兼容。
+
+    有 surface 时改用实测曲面 (2026-09-10 实测 8 只标的的 Robinhood 真实 NBBO 反解,
+    详 journal/2026-09-10-research-ema-vwap-rsi.md 补测四):
+
+        ATM_IV = RV20 × L(RV),  L(RV) = atm_coef × RV^atm_exp
+        IV(m)  = ATM_IV × (1 + k(RV)·max(0, 1−m)),  k(RV) = skew_coef × RV^skew_exp,  m = K/spot
+
+    两点设计取舍:
+    ① L 与 k **都随 RV 单调下降** (实测: SPY RV8.3%→L1.81/k13.5, TSLA RV50.6%→L0.75/k3.05)。
+       引擎原来的 L=1.25 常数 + k=0 对低波动指数低估、对高波动个股高估, 两个方向都错。
+    ② **skew 只作用于 m ≤ 1 的 put 翼**; m > 1 按 ATM 平坦处理 —— 实测 call 翼线性外推失败
+       (AAPL m=1.03 实测 IV 27.86% vs 外推 18.28%, 是微笑上翘不是偏度延续), 两只样本不足以
+       定形, 故取保守中间值。若将来恢复 call 端形态 (vertical_spread), 需先补测 call 翼。
+    """
+    rv = rv if rv is not None else 0.30
+    mcfg = mcfg or {}
+    sf = mcfg.get("surface")
+    if not sf:
+        return clamp_iv(rv * float(mcfg.get("iv_rv_mult", 1.25)))
+    rvp = max(rv, 0.01)
+    atm = rvp * float(sf["atm_coef"]) * rvp ** float(sf["atm_exp"])
+    k = float(sf["skew_coef"]) * rvp ** float(sf["skew_exp"])
+    m = (K / spot) if spot else 1.0
+    return clamp_iv(atm * (1.0 + k * max(0.0, 1.0 - m)))
+
+
+def model_fair_value(pick, spot, rv, rf, mcfg):
     """按 pick 的形态算 Black-Scholes 公允价, 与 cmd_signal 写进订单的 model_price 同源。
+    每条腿按自己的行权价取 IV (见 iv_at); 无 surface 配置时退化为原来的全腿同 IV。
     返回 (fair_value, direction): direction='credit' 表示我们**收**这笔钱, 'debit' 表示**付**。"""
     T = pick["dte"] / 365.0
     st = pick.get("structure")
     if st == "credit_put_spread":
-        return (bs_put(spot, pick["short"]["meta"]["strike"], T, iv, rf)
-                - bs_put(spot, pick["long"]["meta"]["strike"], T, iv, rf)), "credit"
+        ks = pick["short"]["meta"]["strike"]
+        kl = pick["long"]["meta"]["strike"]
+        return (bs_put(spot, ks, T, iv_at(ks, spot, rv, mcfg), rf)
+                - bs_put(spot, kl, T, iv_at(kl, spot, rv, mcfg), rf)), "credit"
     if st == "vertical_spread":
-        return (bs_call(spot, pick["long"]["meta"]["strike"], T, iv, rf)
-                - bs_call(spot, pick["short"]["meta"]["strike"], T, iv, rf)), "debit"
-    return bs_call(spot, pick["meta"]["strike"], T, iv, rf), "debit"
+        kl = pick["long"]["meta"]["strike"]
+        ks = pick["short"]["meta"]["strike"]
+        return (bs_call(spot, kl, T, iv_at(kl, spot, rv, mcfg), rf)
+                - bs_call(spot, ks, T, iv_at(ks, spot, rv, mcfg), rf)), "debit"
+    k1 = pick["meta"]["strike"]
+    return bs_call(spot, k1, T, iv_at(k1, spot, rv, mcfg), rf), "debit"
 
 
-def model_edge_gate(pick, spot, iv, rf, cc):
+def model_edge_gate(pick, spot, rv, rf, cc, mcfg):
     """公允价边际闸 (B 案, 2026-08-13 形态下用户 2026-09-03 批准; 红线8 风控闸只能由用户开)。
 
     起因: 09-01 的 XLF 单 —— 保守净贷记 $0.02 只有引擎自己公允价 $0.0621 的 32%,
@@ -87,21 +128,49 @@ def model_edge_gate(pick, spot, iv, rf, cc):
     口径 (按方向对称, 配置缺省 = 闸关闭, 向后兼容):
       credit 形态: 收到的净贷记 est ≥ model × r   (收太少 → 拦)
       debit  形态: 付出的净借记 est ≤ model ÷ r   (付太贵 → 拦)
-    返回 (model_price, skip_reason|None)。"""
-    model, direction = model_fair_value(pick, spot, iv, rf)
-    r_pct = cc.get("min_est_vs_model_pct")
-    if r_pct is None:
-        return model, None
-    r = float(r_pct) / 100.0
+
+    **2026-09-11 影子模式 (用户「b」批准)**: flat 与 surface 两个参考价**同时计算并记录**,
+    实际判定用哪个由 `contract.model_edge_reference` 决定 —— 缺省 "flat" = 与上线以来完全一致,
+    行为零变化; 攒够并行样本、用户批准后改为 "surface" 才切换。
+    起因: 同一个 90% 常数对上「公平比值」54%(TSLA)~297%(SPY) 的区间, 9/21 只即使报价公允也被拦,
+    8/21 只几乎永不触发 (详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五)。
+
+    返回 (model_price, skip_reason|None, info)。info 含两个参考价与两个比值, 供审计与切换决策。"""
+    flat_cfg = {kk: vv for kk, vv in (mcfg or {}).items() if kk != "surface"}
+    model_flat, direction = model_fair_value(pick, spot, rv, rf, flat_cfg)
+    model_surf = None
+    if (mcfg or {}).get("surface"):
+        model_surf = model_fair_value(pick, spot, rv, rf, mcfg)[0]
+    ref = str(cc.get("model_edge_reference") or "flat").lower()
+    model = model_surf if (ref == "surface" and model_surf is not None) else model_flat
+
     est = pick["net_credit"] if direction == "credit" else pick.get(
         "net_debit", pick.get("mid"))
-    if model <= 0 or est is None:
-        return model, None
-    ratio = est / model if direction == "credit" else model / est
-    if ratio < r:
+
+    def _ratio(mv):
+        if mv is None or mv <= 0 or est is None or (direction == "debit" and est <= 0):
+            return None
+        return est / mv if direction == "credit" else mv / est
+
+    info = {"reference": ref, "direction": direction,
+            "est": round(est, 4) if est is not None else None,
+            "model_flat": round(model_flat, 4),
+            "model_surface": round(model_surf, 4) if model_surf is not None else None,
+            "ratio_flat_pct": (round(_ratio(model_flat) * 100, 1)
+                               if _ratio(model_flat) is not None else None),
+            "ratio_surface_pct": (round(_ratio(model_surf) * 100, 1)
+                                  if _ratio(model_surf) is not None else None)}
+    r_pct = cc.get("min_est_vs_model_pct")
+    if r_pct is None:
+        return model, None, info
+    ratio = _ratio(model)
+    if ratio is None:
+        return model, None, info
+    if ratio < float(r_pct) / 100.0:
         return model, (f"model_edge_too_thin({direction}:est={est:.4f},"
-                       f"model={model:.4f},ratio={ratio * 100:.1f}%,min={r_pct:.0f}%)")
-    return model, None
+                       f"model={model:.4f},ratio={ratio * 100:.1f}%,"
+                       f"min={float(r_pct):.0f}%,ref={ref})"), info
+    return model, None, info
 
 
 def realized_vol(closes, window):
@@ -520,12 +589,12 @@ def cmd_signal(a):
             continue
         # 公允价边际闸 (B 案, 用户 2026-09-03 批准): 放在算张数**之前**, 坏合约不占预算/BP 记账
         rv = ind[sym]["rv"]
-        iv = max(0.15, min(1.5, (rv or 0.30) * float(cfg["model"]["iv_rv_mult"])))
-        model, edge_skip = model_edge_gate(pick, spot, iv,
-                                           float(cfg["model"]["risk_free"]), cc)
+        model, edge_skip, edge_info = model_edge_gate(
+            pick, spot, rv, float(cfg["model"]["risk_free"]), cc, cfg["model"])
         if edge_skip:
             skips.append({"symbol": sym, "reason": edge_skip,
-                          "rsi2": round(rsi2v, 2), "spot": round(spot, 2)})
+                          "rsi2": round(rsi2v, 2), "spot": round(spot, 2),
+                          "model_edge": edge_info})
             continue
         # 张数: position_pct_of_portfolio (每信号≈净值×N%, 2026-08-05 D20 回测采纳全凯利档)
         # 优先; 缺省回落到固定 contracts_per_position (paper 摩擦实测用)。
@@ -552,7 +621,7 @@ def cmd_signal(a):
                 else:
                     skips.append({"symbol": sym, "reason": f"premium_exceeds_position_cap"
                                   f"(per={per_cost:.0f},target={target:.0f})",
-                                  "rsi2": round(rsi2v, 2)})
+                                  "rsi2": round(rsi2v, 2), "model_edge": edge_info})
                     continue
         else:
             qty = int(cfg["sizing"]["contracts_per_position"])
@@ -560,12 +629,12 @@ def cmd_signal(a):
         if bud_cap is not None and open_prem + spent + cost > float(bud_cap):
             skips.append({"symbol": sym, "reason": f"budget_exceeded(cost={cost:.0f},"
                           f"cap={float(bud_cap):.0f},open={open_prem + spent:.0f})",
-                          "rsi2": round(rsi2v, 2)})
+                          "rsi2": round(rsi2v, 2), "model_edge": edge_info})
             continue
         if bp_left is not None and spent + cost > bp_left:
             skips.append({"symbol": sym, "reason": f"insufficient_buying_power"
                           f"(cost={cost:.0f},bp_left={bp_left - spent:.0f})",
-                          "rsi2": round(rsi2v, 2)})
+                          "rsi2": round(rsi2v, 2), "model_edge": edge_info})
             continue
         spent += cost
         if pick.get("structure") == "credit_put_spread":
@@ -584,7 +653,7 @@ def cmd_signal(a):
                 "est_price": pick["net_credit"], "direction": "credit",
                 "underlying": sym, "expiry": pick["expiry"], "dte": pick["dte"],
                 "spot": round(spot, 4), "rsi2": round(rsi2v, 2),
-                "model_price": round(model, 4),
+                "model_price": round(model, 4), "model_edge": edge_info,
                 "entry_quote": {"mid": round(pick["short"]["mid"] - pick["long"]["mid"], 4),
                                 "spread_pct": pick["short"]["spread_pct"],
                                 "long_spread_pct": pick["long"]["spread_pct"],
@@ -611,7 +680,7 @@ def cmd_signal(a):
                 "est_price": pick["net_debit"], "direction": "debit",
                 "underlying": sym, "expiry": pick["expiry"], "dte": pick["dte"],
                 "spot": round(spot, 4), "rsi2": round(rsi2v, 2),
-                "model_price": round(model, 4),
+                "model_price": round(model, 4), "model_edge": edge_info,
                 "max_value_per_contract": pick["max_value"],
                 "max_loss_usd": round(pick["net_debit"] * 100 * qty, 2),
                 "max_gain_usd": round((pick["max_value"] - pick["net_debit"]) * 100 * qty, 2),
@@ -624,7 +693,7 @@ def cmd_signal(a):
             "underlying": sym, "strike": pick["meta"]["strike"],
             "expiry": pick["meta"]["expiry"], "dte": pick["dte"],
             "spot": round(spot, 4), "rsi2": round(rsi2v, 2),
-            "model_price": round(model, 4),
+            "model_price": round(model, 4), "model_edge": edge_info,
             "entry_quote": {"bid": pick["quote"]["bid"], "ask": pick["quote"]["ask"],
                             "mid": round(pick["mid"], 4),
                             "spread_pct": pick["spread_pct"]},
@@ -665,18 +734,23 @@ def cmd_signal(a):
             # (2026-08-07 修正: 原为固定 10.5%×现价的单腿口径, 切价差后会超额扣弹药 —
             #  价差净借记约为深ITM单腿的一半)。仅用于建议保留额, 不参与下单。
             rvn = i.get("rv")
-            ivn = max(0.15, min(1.5, (rvn or 0.30) * float(cfg["model"]["iv_rv_mult"])))
+            # 保留额估算跟随同一个 reference 开关 (缺省 flat = 与既有行为一致)
+            mref = cfg["model"] if str(cc.get("model_edge_reference") or "flat").lower() == \
+                "surface" else {kk: vv for kk, vv in cfg["model"].items() if kk != "surface"}
             tn = (int(cc["min_dte_calendar"]) + int(cc["max_dte_calendar"])) / 2.0 / 365.0
             rf = float(cfg["model"]["risk_free"])
             if cc.get("structure") == "credit_put_spread":
                 # credit 形态需要预留的是抵押 = 宽度 − 模型净贷记 (每股风险)
-                mc = (bs_put(px, cc["short_put_moneyness"] * px, tn, ivn, rf)
-                      - bs_put(px, cc["long_put_moneyness"] * px, tn, ivn, rf))
+                ksn, kln = cc["short_put_moneyness"] * px, cc["long_put_moneyness"] * px
+                mc = (bs_put(px, ksn, tn, iv_at(ksn, px, rvn, mref), rf)
+                      - bs_put(px, kln, tn, iv_at(kln, px, rvn, mref), rf))
                 est = (cc["short_put_moneyness"] - cc["long_put_moneyness"]) * px - mc
             else:
-                est = bs_call(px, cc["moneyness"] * px, tn, ivn, rf)
+                kcn = cc["moneyness"] * px
+                est = bs_call(px, kcn, tn, iv_at(kcn, px, rvn, mref), rf)
                 if cc.get("structure") == "vertical_spread":
-                    est -= bs_call(px, cc["short_moneyness"] * px, tn, ivn, rf)
+                    ksn2 = cc["short_moneyness"] * px
+                    est -= bs_call(px, ksn2, tn, iv_at(ksn2, px, rvn, mref), rf)
             near.append({"symbol": sym, "rsi2_now": round(i["rsi2"], 2),
                          "scenario": scenario, "spot": round(px, 2),
                          "structure": cc.get("structure", "single"),
@@ -692,7 +766,50 @@ def cmd_signal(a):
         reserve = round(min(cheapest, cap), 2)
     out["near_signals"] = near
     out["suggested_reserve_usd"] = reserve
+    # 影子样本落盘 (只追加, 不参与任何判定; 见 _shadow_append 注释里的丢失根因)
+    _shadow_append(a.ledger, today,
+                   [{"date": today, "symbol": r.get("symbol") or r.get("underlying"),
+                     "outcome": "skip" if "reason" in r else "order",
+                     "reason": r.get("reason"), "est_price": r.get("est_price"),
+                     "spot": r.get("spot"), "rsi2": r.get("rsi2"),
+                     **{k: v for k, v in (r.get("model_edge") or {}).items()}}
+                    for r in (skips + out["buys"]) if r.get("model_edge")])
     _emit(out, a.out)
+
+
+def _shadow_append(ledger_path, date, records, keep=400):
+    """影子样本落盘 (2026-09-11 B 方案配套)。
+
+    **为什么需要单独一个文件**: 实盘轨道的 `apply` 在 daily.py 里并不每日运行 (只有 paper 轨道跑),
+    所以 skips 只写进每天被覆盖的 `*_last_orders.json` —— 实测实盘 skip_log 只覆盖了 4 个交易日,
+    而轨道已跑 27 天。影子模式要攒 flat vs surface 的并行样本, 不能依赖那条链路。
+
+    路径由账本路径派生 (`..._positions.json` → `..._model_edge.json`), 故无需改 daily.py 或加 CLI 参数。
+    只追加、不读写任何账本、不参与任何判定; 写失败一律吞掉 (绝不让审计数据拖垮主跑, 见 paper.py 08-21 教训)。
+    """
+    if not records:
+        return
+    try:
+        path = ledger_path.replace("_positions.json", "_model_edge.json")
+        if path == ledger_path:
+            path = ledger_path.rsplit(".", 1)[0] + "_model_edge.json"
+        try:
+            with open(path) as f:
+                hist = json.load(f)
+        except (OSError, ValueError):
+            hist = {"_purpose": "公允价闸影子样本 (flat vs surface 并行比值); 只追加, 不参与判定",
+                    "records": []}
+        seen = {(r.get("date"), r.get("symbol")) for r in hist.get("records", [])}
+        for r in records:
+            if (r.get("date"), r.get("symbol")) not in seen:
+                hist.setdefault("records", []).append(r)
+                seen.add((r.get("date"), r.get("symbol")))
+        hist["records"] = hist["records"][-keep:]
+        with open(path, "w") as f:
+            json.dump(hist, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    except Exception:
+        pass
 
 
 def _emit(out, path):
