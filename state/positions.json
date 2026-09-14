@@ -22,6 +22,20 @@
       "entry_date": "2026-09-04",
       "cost": 343.95,
       "tranches": 1
+    },
+    "BNY": {
+      "qty": 6.40961,
+      "entry_price": 157.2108,
+      "entry_date": "2026-09-14",
+      "cost": 1007.66,
+      "tranches": 1
+    },
+    "BAC": {
+      "qty": 17.055885,
+      "entry_price": 59.0799,
+      "entry_date": "2026-09-14",
+      "cost": 1007.66,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1708,6 +1722,24 @@
       "price": 84.72,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "BNY",
+      "side": "buy",
+      "qty": 6.40961,
+      "price": 157.2108,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "BAC",
+      "side": "buy",
+      "qty": 17.055885,
+      "price": 59.0799,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

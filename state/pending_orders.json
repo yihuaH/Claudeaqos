@@ -2,7 +2,7 @@
   "trade_date": "2026-09-14",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-14 15:23 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -30,7 +30,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 6.40961,
+      "filled_price": 157.2108,
+      "slippage_vs_est_pct": -0.088
     },
     {
       "seq": 2,
@@ -44,7 +47,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 17.055885,
+      "filled_price": 59.0799,
+      "slippage_vs_est_pct": -0.042
     }
   ],
   "news_precheck": {
@@ -81,5 +87,14 @@
       }
     ],
     "basis": "顺延协议: 次一交易日收盘前主跑产出新清单时自动取代旧清单 (pending_template.carryover_note), 不存在两份并存/重复买入"
+  },
+  "executed_at_et": "2026-09-14 15:31 ET",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount (2026-09-10 换代协议)",
+    "buying_power_at_execution": 6617.02,
+    "cash_at_execution": 6617.02,
+    "unleveraged_buying_power": 6617.02,
+    "cap_note": "cap=min(BP,cash)=$6617.02 ≥ 出单额 $2015.32, 两单全额执行, 无跳过",
+    "window": "今日 15:30-15:55 ET 内 (15:31 执行)"
   }
 }
