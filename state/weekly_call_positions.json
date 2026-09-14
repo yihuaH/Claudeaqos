@@ -3,22 +3,39 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "XLP260918C00075000": {
-      "underlying": "XLP",
-      "strike": 75.0,
-      "expiry": "2026-09-18",
+    "NVDA260923C00185000": {
+      "underlying": "NVDA",
+      "strike": 185.0,
+      "expiry": "2026-09-23",
       "contracts": 1,
-      "entry_premium": 9.35,
-      "entry_date": "2026-09-09",
-      "entry_underlying": 84.02,
-      "entry_rsi2": 5.65,
+      "entry_premium": 27.85,
+      "entry_date": "2026-09-14",
+      "entry_underlying": 212.25,
+      "entry_rsi2": 2.36,
       "entry_quote": {
-        "bid": 9.09,
-        "ask": 9.16,
-        "mid": 9.125,
-        "spread_pct": 0.767
+        "bid": 27.64,
+        "ask": 27.68,
+        "mid": 27.66,
+        "spread_pct": 0.145
       },
-      "model_price": 9.1022
+      "model_price": 27.811
+    },
+    "BAC260925C00051000": {
+      "underlying": "BAC",
+      "strike": 51.0,
+      "expiry": "2026-09-25",
+      "contracts": 1,
+      "entry_premium": 8.35,
+      "entry_date": "2026-09-14",
+      "entry_underlying": 59.105,
+      "entry_rsi2": 3.01,
+      "entry_quote": {
+        "bid": 8.16,
+        "ask": 8.27,
+        "mid": 8.215,
+        "spread_pct": 1.339
+      },
+      "model_price": 8.1692
     }
   },
   "trades": [
@@ -131,6 +148,33 @@
       "price": 9.35,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "XLP260918C00075000",
+      "side": "sell",
+      "qty": 1,
+      "price": 9.45,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "NVDA260923C00185000",
+      "side": "buy",
+      "qty": 1,
+      "price": 27.85,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "BAC260925C00051000",
+      "side": "buy",
+      "qty": 1,
+      "price": 8.35,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -229,6 +273,25 @@
       "entry_mid": 31.795,
       "exit_mid": null,
       "model_price": 31.1605
+    },
+    {
+      "occ": "XLP260918C00075000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "XLP",
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-09-14",
+      "entry_premium": 9.35,
+      "exit_premium": 9.45,
+      "pnl_pct": 1.07,
+      "pnl_usd": 10.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 0.767,
+      "exit_spread_pct": 4.964,
+      "entry_mid": 9.125,
+      "exit_mid": 9.67,
+      "model_price": 9.1022
     }
   ],
   "skip_log": [

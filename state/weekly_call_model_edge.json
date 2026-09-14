@@ -1,0 +1,37 @@
+{
+  "_purpose": "公允价闸影子样本 (flat vs surface 并行比值); 只追加, 不参与判定",
+  "records": [
+    {
+      "date": "2026-09-14",
+      "symbol": "NVDA260923C00185000",
+      "outcome": "skip",
+      "reason": "rsi2_entry_call",
+      "est_price": 27.66,
+      "spot": 212.25,
+      "rsi2": 2.36,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 27.66,
+      "model_flat": 27.811,
+      "model_surface": 27.6724,
+      "ratio_flat_pct": 100.5,
+      "ratio_surface_pct": 100.0
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "BAC260925C00051000",
+      "outcome": "skip",
+      "reason": "rsi2_entry_call",
+      "est_price": 8.21,
+      "spot": 59.105,
+      "rsi2": 3.01,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 8.215,
+      "model_flat": 8.1692,
+      "model_surface": 8.2164,
+      "ratio_flat_pct": 99.4,
+      "ratio_surface_pct": 100.0
+    }
+  ]
+}

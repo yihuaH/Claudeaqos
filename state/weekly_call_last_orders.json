@@ -1,26 +1,119 @@
 {
-  "date": "2026-09-11",
+  "date": "2026-09-14",
   "halted": false,
-  "sells": [],
-  "buys": [],
-  "skips": [
+  "sells": [
     {
-      "symbol": "XLV",
-      "reason": "spread_too_wide(best=9.34%)",
-      "rsi2": 2.67,
-      "spot": 165.5
+      "symbol": "XLP260918C00075000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength",
+      "est_price": 9.67,
+      "exit_quote": {
+        "bid": 9.43,
+        "ask": 9.91,
+        "mid": 9.67,
+        "spread_pct": 4.964
+      }
     }
   ],
+  "buys": [
+    {
+      "symbol": "NVDA260923C00185000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 27.66,
+      "underlying": "NVDA",
+      "strike": 185.0,
+      "expiry": "2026-09-23",
+      "dte": 9,
+      "spot": 212.25,
+      "rsi2": 2.36,
+      "model_price": 27.811,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 27.66,
+        "model_flat": 27.811,
+        "model_surface": 27.6724,
+        "ratio_flat_pct": 100.5,
+        "ratio_surface_pct": 100.0
+      },
+      "entry_quote": {
+        "bid": 27.64,
+        "ask": 27.68,
+        "mid": 27.66,
+        "spread_pct": 0.145
+      }
+    },
+    {
+      "symbol": "BAC260925C00051000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 8.21,
+      "underlying": "BAC",
+      "strike": 51.0,
+      "expiry": "2026-09-25",
+      "dte": 11,
+      "spot": 59.105,
+      "rsi2": 3.01,
+      "model_price": 8.1692,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 8.215,
+        "model_flat": 8.1692,
+        "model_surface": 8.2164,
+        "ratio_flat_pct": 99.4,
+        "ratio_surface_pct": 100.0
+      },
+      "entry_quote": {
+        "bid": 8.16,
+        "ask": 8.27,
+        "mid": 8.215,
+        "spread_pct": 1.339
+      }
+    }
+  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "NVDA",
-      "rsi2_now": 20.94,
-      "scenario": "2d_-1%x2",
-      "spot": 218.98,
+      "symbol": "XLE",
+      "rsi2_now": 20.68,
+      "scenario": "1d_-1%",
+      "spot": 64.39,
       "structure": "single",
-      "est_premium_usd": 2363
+      "est_premium_usd": 652
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 28.01,
+      "scenario": "1d_-1%",
+      "spot": 288.52,
+      "structure": "single",
+      "est_premium_usd": 2921
+    },
+    {
+      "symbol": "TSM",
+      "rsi2_now": 21.76,
+      "scenario": "2d_-1%x2",
+      "spot": 422.43,
+      "structure": "single",
+      "est_premium_usd": 4333
+    },
+    {
+      "symbol": "SMH",
+      "rsi2_now": 15.78,
+      "scenario": "2d_-1%x2",
+      "spot": 544.58,
+      "structure": "single",
+      "est_premium_usd": 5668
     }
   ],
-  "suggested_reserve_usd": 2363.0
+  "suggested_reserve_usd": 652.0
 }

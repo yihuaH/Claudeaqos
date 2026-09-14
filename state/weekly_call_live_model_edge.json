@@ -1,0 +1,37 @@
+{
+  "_purpose": "公允价闸影子样本 (flat vs surface 并行比值); 只追加, 不参与判定",
+  "records": [
+    {
+      "date": "2026-09-14",
+      "symbol": "NVDA",
+      "outcome": "skip",
+      "reason": "model_edge_too_thin(credit:est=1.4300,model=3.6259,ratio=39.4%,min=90%,ref=flat)",
+      "est_price": null,
+      "spot": 212.25,
+      "rsi2": 2.36,
+      "reference": "flat",
+      "direction": "credit",
+      "est": 1.43,
+      "model_flat": 3.6259,
+      "model_surface": 1.9606,
+      "ratio_flat_pct": 39.4,
+      "ratio_surface_pct": 72.9
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "BAC",
+      "outcome": "skip",
+      "reason": "model_edge_too_thin(credit:est=0.2300,model=0.4474,ratio=51.4%,min=90%,ref=flat)",
+      "est_price": null,
+      "spot": 59.1,
+      "rsi2": 3.01,
+      "reference": "flat",
+      "direction": "credit",
+      "est": 0.23,
+      "model_flat": 0.4474,
+      "model_surface": 0.3746,
+      "ratio_flat_pct": 51.4,
+      "ratio_surface_pct": 61.4
+    }
+  ]
+}

@@ -16,25 +16,11 @@
       "cost": 2067.68,
       "tranches": 2
     },
-    "DGX": {
-      "qty": 7.329748,
-      "entry_price": 237.4666,
-      "entry_date": "2026-09-01",
-      "cost": 1740.57,
-      "tranches": 2
-    },
     "NSC": {
       "qty": 1.04371,
       "entry_price": 329.5456,
       "entry_date": "2026-09-04",
       "cost": 343.95,
-      "tranches": 1
-    },
-    "DXCM": {
-      "qty": 11.963244,
-      "entry_price": 84.6518,
-      "entry_date": "2026-09-09",
-      "cost": 1012.71,
       "tranches": 1
     }
   },
@@ -1704,6 +1690,24 @@
       "price": 102.0771,
       "bucket": "strategy",
       "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "DGX",
+      "side": "sell",
+      "qty": 7.329748,
+      "price": 239.1571,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-14",
+      "symbol": "DXCM",
+      "side": "sell",
+      "qty": 11.963244,
+      "price": 84.72,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
