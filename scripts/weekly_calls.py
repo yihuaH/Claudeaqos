@@ -820,6 +820,53 @@ def _emit(out, path):
     print(s)
 
 
+def _pending_ctx_path(ledger_path):
+    """开仓 context 暂存区路径, 由账本路径派生 (与 _shadow_append 同套路, 免改 daily.py / CLI)。"""
+    p = ledger_path.replace("_positions.json", "_pending_entry_ctx.json")
+    return p if p != ledger_path else ledger_path.rsplit(".", 1)[0] + "_pending_entry_ctx.json"
+
+
+def _pending_ctx_load(ledger_path):
+    """跨日开仓 context 暂存区 (2026-09-14 用户「两个都修」批准)。
+
+    **为什么需要它**: `*_last_orders.json` 是**每日整体覆写**的单文件, 收盘后排队的买单若在
+    次日或更晚才成交, 其开仓 context 早被当日的新版本冲掉 → apply 匹配不上 → 成交回不到账本 →
+    **孤儿仓** (对引擎不可见, 永不出场, 一路持到到期行权)。2026-09-14 的
+    NVDA260925C00195000 就是这么来的: 09-10 排队 → 09-11 15:28 成交 (晚于当日 15:22 主跑
+    6 分钟) → 同日主跑已把 context 覆写为空 → 09-14 才发现, 浮亏 -$1,250。
+
+    与 2026-09-09 修的「会话漏传 --context」是**两条不同的洞**: 那条是调用方忘了传参,
+    这条是文件本身留不住跨日的单。
+
+    结构 {"entries": {OCC: <引擎买单原样>}}: 只按 OCC 增量累积, 成交后按 OCC 删除,
+    过期的自动淘汰。绝不参与任何交易判定, 只做 context 补位。
+    """
+    try:
+        with open(_pending_ctx_path(ledger_path)) as f:
+            d = json.load(f)
+            d.setdefault("entries", {})
+            return d
+    except (OSError, ValueError):
+        return {"_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, "
+                            "成交或过期即删; 不参与任何交易判定",
+                "entries": {}}
+
+
+def _pending_ctx_save(ledger_path, store, today):
+    """落盘并淘汰已过期的残留 (永不成交的排队单), 防文件无限增长。写失败吞掉不拖垮主跑。"""
+    try:
+        for occ in list(store.get("entries", {})):
+            meta = parse_occ(occ)
+            if meta and meta["expiry"] < today:
+                store["entries"].pop(occ, None)
+        store["updated"] = today
+        with open(_pending_ctx_path(ledger_path), "w") as f:
+            json.dump(store, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    except OSError:
+        pass
+
+
 # ---------- apply ----------
 
 def cmd_apply(a):
@@ -833,6 +880,9 @@ def cmd_apply(a):
         return o["symbol"]
     ctx_buys = {_key(o): o for o in ctx.get("buys", [])}
     ctx_sells = {_key(o): o for o in ctx.get("sells", [])}
+    # 跨日排队单补位: 暂存区垫底, **当日 context 优先覆盖** (同一 OCC 以最新一次出单为准)。
+    pend = _pending_ctx_load(a.ledger)
+    ctx_buys = {**pend["entries"], **ctx_buys}
     positions = ledger.setdefault("positions", {})
     today = a.date
 
@@ -853,9 +903,12 @@ def cmd_apply(a):
         if _missing:
             raise SystemExit(
                 "开仓成交在 --context 里找不到对应买单: " + ", ".join(_missing) +
-                f"\ncontext={a.context} 提供的买单主键: " +
+                f"\ncontext={a.context} + 暂存区 {_pending_ctx_path(a.ledger)} "
+                "合并后提供的买单主键: " +
                 (", ".join(sorted(ctx_buys)) or "(空)") +
-                "\n多半是 context 传成了别的交易日/别的轨道的文件。人工核对后重跑。")
+                "\n多半是 context 传成了别的交易日/别的轨道的文件; 若该单是更早日期排队的, "
+                "检查暂存区是否被误删 (正常情况下跨日排队单的 context 会留在暂存区)。"
+                "\n人工核对后重跑。")
 
     for f in fills["fills"]:
         occ, side = f["symbol"], f["side"]
@@ -945,8 +998,19 @@ def cmd_apply(a):
             seen.add(key)
 
     save_json(a.ledger, ledger)
+
+    # 暂存区维护 (2026-09-14): ① 已成交开仓 → 按 OCC 删除 (它已进 positions, 不再需要补位);
+    # ② 当日 context 的买单**全部入库** —— 当日没成交的多半是收盘后排队至次开的单, 正是要
+    # 留到次日/更晚成交时补位的那些。放在 save_json 之后: 暂存区是辅助数据, 绝不能拖垮账本落盘。
+    for occ in {f["symbol"] for f in fills["fills"] if f.get("side") == "buy"}:
+        pend["entries"].pop(occ, None)
+    for k, o in {_key(o): o for o in ctx.get("buys", [])}.items():
+        pend["entries"][k] = o
+    _pending_ctx_save(a.ledger, pend, today)
+
     print(f"weekly_calls 账本已更新: {len(fills['fills'])} 笔成交, "
-          f"{len(ctx.get('skips', []))} 条 skip")
+          f"{len(ctx.get('skips', []))} 条 skip, "
+          f"跨日 context 暂存 {len(pend['entries'])} 条")
 
 
 # ---------- report ----------
