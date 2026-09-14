@@ -48,7 +48,7 @@
     "min_bid": 0.05,
     "max_premium_per_contract_usd": 5000,
     "model_edge_reference": "flat",
-    "_model_edge_reference_note": "公允价闸的参考价 (2026-09-11 用户「b」批准): \"flat\"=引擎原口径 (RV×iv_rv_mult, 两腿同 IV), \"surface\"=model.surface 实测曲面。**缺省 flat = 行为与 09-03 上线以来完全一致**; 两个参考价无论如何都并行计算并写进 skips/buys 的 model_edge 字段 (影子模式), 攒够样本后由用户决定是否切 surface。 起因: 同一个 min_est_vs_model_pct=90 常数对上「公平比值」54%(TSLA)~297%(SPY) 的区间 —— 9/21 只即使报价公允也被拦, 8/21 只几乎永不触发; 而补测四中表现最好的 META/AMD/TSM 恰在被拦的一批里, 表现最差的 BAC/XLF 反而几乎从不设防。详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五。"
+    "_model_edge_reference_note": "公允价闸的参考价 (2026-09-11 用户「b」批准): \"flat\"=引擎原口径 (RV×iv_rv_mult, 两腿同 IV), \"surface\"=model.surface 实测曲面。**缺省 flat = 行为与 09-03 上线以来完全一致**; 两个参考价无论如何都并行计算并写进 skips/buys 的 model_edge 字段 (影子模式), 攒够样本后由用户决定是否切 surface。 起因: 同一个 min_est_vs_model_pct=90 常数对上「公平比值」54%(TSLA)~252%(XLI) 的区间 —— 9/21 只即使报价公允也被拦, 8/21 只几乎永不触发; 而补测四中表现最好的 META/AMD/TSM 恰在被拦的一批里, 表现最差的 BAC/XLF 反而几乎从不设防。详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五。"
   },
   "_contract_note": "深ITM: 行权价 = ≤0.90×现价 的最高档 (delta≈0.8, 近乎免疫IV/crush); 到期 8-17 日历日内最近周五。spread gate ≤2% 既是入场闸也是实测数据: 被 gate 跳过的机会全部记 skip_log, 跳过率本身是 go/no-go 输入。",
   "sizing": {

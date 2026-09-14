@@ -132,7 +132,7 @@ def model_edge_gate(pick, spot, rv, rf, cc, mcfg):
     **2026-09-11 影子模式 (用户「b」批准)**: flat 与 surface 两个参考价**同时计算并记录**,
     实际判定用哪个由 `contract.model_edge_reference` 决定 —— 缺省 "flat" = 与上线以来完全一致,
     行为零变化; 攒够并行样本、用户批准后改为 "surface" 才切换。
-    起因: 同一个 90% 常数对上「公平比值」54%(TSLA)~297%(SPY) 的区间, 9/21 只即使报价公允也被拦,
+    起因: 同一个 90% 常数对上「公平比值」54%(TSLA)~252%(XLI) 的区间, 9/21 只即使报价公允也被拦,
     8/21 只几乎永不触发 (详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五)。
 
     返回 (model_price, skip_reason|None, info)。info 含两个参考价与两个比值, 供审计与切换决策。"""
@@ -767,13 +767,16 @@ def cmd_signal(a):
     out["near_signals"] = near
     out["suggested_reserve_usd"] = reserve
     # 影子样本落盘 (只追加, 不参与任何判定; 见 _shadow_append 注释里的丢失根因)
+    # outcome 必须按**来源列表**判定 —— 订单记录也带 reason 字段 (rsi2_entry_call 等),
+    # 用 "reason" in r 会把成交单误标成 skip (2026-09-14 首批真实样本暴露)。
     _shadow_append(a.ledger, today,
-                   [{"date": today, "symbol": r.get("symbol") or r.get("underlying"),
-                     "outcome": "skip" if "reason" in r else "order",
-                     "reason": r.get("reason"), "est_price": r.get("est_price"),
-                     "spot": r.get("spot"), "rsi2": r.get("rsi2"),
+                   [{"date": today, "symbol": r.get("underlying") or r.get("symbol"),
+                     "outcome": outcome, "reason": r.get("reason"),
+                     "est_price": r.get("est_price"), "spot": r.get("spot"),
+                     "rsi2": r.get("rsi2"),
                      **{k: v for k, v in (r.get("model_edge") or {}).items()}}
-                    for r in (skips + out["buys"]) if r.get("model_edge")])
+                    for outcome, lst in (("skip", skips), ("order", out["buys"]))
+                    for r in lst if r.get("model_edge")])
     _emit(out, a.out)
 
 
