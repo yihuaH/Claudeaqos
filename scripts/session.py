@@ -45,7 +45,9 @@ def now_et():
 
 
 def clock():
-    """Alpaca 市场时钟 (经 integrations.py status)。失败返回 None, 不阻断。"""
+    """Alpaca 市场时钟 (经 integrations.py status)。返回 status 的 alpaca 段; 失败返回 None。
+    注意: 自诊断失败时这里返回的是 {"ok": false, "reason": ...} —— **是真值但没有
+    market_is_open**, 调用方必须判 market_is_open 在不在, 不能只判真假 (见下方打印处)。"""
     try:
         r = subprocess.run([sys.executable, os.path.join(REPO, "scripts/integrations.py"),
                             "status"], capture_output=True, text=True, timeout=60, cwd=REPO)
@@ -386,11 +388,17 @@ def main():
     print(f"  Claudeaqos 会话调度  ·  {info['now_et']} ET  ·  窗口 = {W}"
           + ("  [强制指定]" if info["forced_window"] else ""))
     print("=" * 78)
-    if ck:
+    # 2026-09-14 修正: 原条件是 `if ck:`, 但 Alpaca 自诊断失败时 ck = {"ok": false, "reason": …}
+    # 也是真值 —— market_is_open 缺失被 .get() 读成 None, 于是**把数据源故障打印成「休市」**。
+    # 实测 09-14 10:45 ET 券商报价 state=active (开市中) 而 brief 显示「休市 下次开盘 None」,
+    # 这会让会话误判成休市日而跳过作业。现在只有真拿到 market_is_open 才认时钟可用。
+    if ck and "market_is_open" in ck:
         print(f"市场: {'开市中' if ck.get('market_is_open') else '休市'}"
               f"   下次开盘 {ck.get('next_open')}")
     else:
-        print("市场: ⚠️ Alpaca 时钟不可用 (integrations.py status 失败) — 按红线6 先查数据源")
+        why = (ck or {}).get("reason") or "integrations.py status 失败"
+        print(f"市场: ⚠️ Alpaca 时钟不可用 ({why}) — 按红线6 先查数据源; "
+              f"**不等于休市**, 要判开市请用券商报价 (get_equity_quotes 的 state/时间戳)")
     print(f"账本: enabled={info['enabled']}  halted={info['halted']}  "
           f"策略仓 {info['positions']} 只  存量仓 {info['legacy_positions']} 只  "
           f"HWM ${info['high_water_mark']}")
