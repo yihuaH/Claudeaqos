@@ -921,7 +921,10 @@ def cmd_apply(a):
             rec = {
                 "underlying": meta["underlying"], "strike": meta["strike"],
                 "expiry": meta["expiry"], "contracts": qty,
-                "entry_premium": price, "entry_date": today,
+                # entry_date 用**券商实际成交日** (paper.py 附的 fill_date), 缺则回退 --date。
+                # 排队单跨日成交时二者可差几天, 直接用 today 会让 max_holding_days 起算点偏后
+                # (2026-09-14 用户批准修)。
+                "entry_premium": price, "entry_date": f.get("fill_date") or today,
                 "entry_underlying": c.get("spot"), "entry_rsi2": c.get("rsi2"),
                 "entry_quote": c.get("entry_quote"), "model_price": c.get("model_price"),
             }
@@ -971,7 +974,7 @@ def cmd_apply(a):
                 "occ": occ, "structure": pos.get("structure", "single"),
                 "short_occ": pos.get("short_occ"), "long_occ": pos.get("long_occ"),
                 "underlying": meta["underlying"],
-                "entry_date": pos["entry_date"], "exit_date": today,
+                "entry_date": pos["entry_date"], "exit_date": f.get("fill_date") or today,
                 "entry_premium": ep, "exit_premium": price,
                 "pnl_pct": pnl_pct,
                 "pnl_usd": pnl_usd,
@@ -982,7 +985,7 @@ def cmd_apply(a):
                 "model_price": pos.get("model_price"),
             })
         ledger.setdefault("trades", []).append({
-            "date": today, "symbol": occ, "side": side, "qty": qty,
+            "date": f.get("fill_date") or today, "symbol": occ, "side": side, "qty": qty,
             "price": price, "bucket": BUCKET, "reason": f.get("reason", ""),
         })
 

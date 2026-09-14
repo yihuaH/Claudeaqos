@@ -26,6 +26,8 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals import load_json, parse_quotes  # noqa: E402
@@ -50,6 +52,29 @@ def _req(method, path, body=None, timeout=20):
 
 def _get_by_coid(coid):
     return _req("GET", f"/v2/orders:by_client_order_id?client_order_id={coid}")
+
+
+def _fill_date(o):
+    """券商成交时刻 → **交易日 (ET)**。用于账本 entry_date / exit_date。
+
+    2026-09-14 用户批准。起因: 收盘后排队的单次日或更晚才成交, 而两个 apply 都把
+    `entry_date` 记成**自己运行那天** (signals.py:541 / weekly_calls.py:924 的 `today`),
+    与实际成交日差出整个排队时长 → `max_holding_days` / `trading_days_since` 起算点偏后,
+    持仓被多拿几天才触发时间止损。跨日成交此前会直接崩 (context 丢失), 修法1 让它能静默
+    成功后, 这个偏差才浮出来, 故一并修。
+
+    必须按 ET 换算: 成交 2026-09-11T19:28:04Z 是 09-11 15:28 ET (同日), 而 00:30Z 则是
+    前一日 20:30 ET —— 直接取 UTC 日期会把盘后成交记到次日。
+    取不到时间戳返回 None, 由调用方回退到 `--date` (保持旧行为, 绝不猜)。
+    """
+    ts = o.get("filled_at") or o.get("updated_at")
+    if not ts:
+        return None
+    try:
+        dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        return dt.astimezone(ZoneInfo("America/New_York")).date().isoformat()
+    except (ValueError, TypeError):
+        return None
 
 
 class OrderRejected(Exception):
@@ -240,6 +265,7 @@ def cmd_run(a):
         if fq > 0:
             fills.append({"symbol": sym, "side": side, "qty": fq,
                           "price": float(done["filled_avg_price"]),
+                          "fill_date": _fill_date(done),
                           "bucket": o.get("bucket", "strategy"),
                           "reason": o.get("reason", "")})
         else:
@@ -411,6 +437,7 @@ def cmd_sync(a):
             if fq > 0 and st == "filled":
                 fills.append({"symbol": rec["symbol"], "side": rec["side"], "qty": fq,
                               "price": float(o["filled_avg_price"]),
+                              "fill_date": _fill_date(o),
                               "bucket": rec.get("bucket", "strategy"),
                               "reason": rec.get("reason", "")})
             elif st in ("canceled", "rejected", "expired"):
@@ -429,6 +456,7 @@ def cmd_sync(a):
                 if ofq > 0 and oo.get("filled_avg_price"):
                     fills.append({"symbol": rec["symbol"], "side": "sell", "qty": ofq,
                                   "price": float(oo["filled_avg_price"]),
+                                  "fill_date": _fill_date(oo),
                                   "bucket": rec.get("bucket", "strategy"),
                                   "reason": rec.get("reason", "")})
                     escalated.append({"symbol": rec["symbol"], "qty": ofq,
