@@ -462,7 +462,7 @@ def phase_options(a, R, plan):
     if paper_cfg.get("enabled") and not po:
         q = f"{REPO}/state/paper_queued_weekly_calls.json"
         if os.path.exists(q):
-            R.run(["scripts/paper.py", "sync", "--queued", q,
+            R.run(["scripts/paper.py", "sync", "--queued", q, "--escalate-unfilled-sells",
                    "--fills-out", f"{W}/wc_sync_fills.json", "--prune"],
                   "wc.paper.sync", critical=False)
             if os.path.exists(f"{W}/wc_sync_fills.json"):
@@ -538,7 +538,7 @@ def phase_paper(a, R, plan):
         try:
             q = f"{REPO}/state/paper_queued_challenger.json"
             if os.path.exists(q):
-                R.run(["scripts/paper.py", "sync", "--queued", q,
+                R.run(["scripts/paper.py", "sync", "--queued", q, "--escalate-unfilled-sells",
                        "--fills-out", f"{W}/ch_sync.json", "--prune"], "ch.sync", critical=False)
                 if os.path.exists(f"{W}/ch_sync.json"):
                     R.run(["scripts/signals.py", "apply", "--state", "state/paper_positions.json",
@@ -601,7 +601,7 @@ def phase_paper(a, R, plan):
                                          "days_since": gap}
             q = f"{REPO}/state/paper_queued_momentum.json"
             if os.path.exists(q):
-                R.run(["scripts/paper.py", "sync", "--queued", q,
+                R.run(["scripts/paper.py", "sync", "--queued", q, "--escalate-unfilled-sells",
                        "--fills-out", f"{W}/mom_sync.json", "--prune"], "mom.sync", critical=False)
                 if os.path.exists(f"{W}/mom_sync.json"):
                     R.run(["scripts/signals.py", "apply", "--state", "state/momentum_positions.json",

@@ -26,6 +26,8 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals import load_json, parse_quotes  # noqa: E402
@@ -50,6 +52,29 @@ def _req(method, path, body=None, timeout=20):
 
 def _get_by_coid(coid):
     return _req("GET", f"/v2/orders:by_client_order_id?client_order_id={coid}")
+
+
+def _fill_date(o):
+    """券商成交时刻 → **交易日 (ET)**。用于账本 entry_date / exit_date。
+
+    2026-09-14 用户批准。起因: 收盘后排队的单次日或更晚才成交, 而两个 apply 都把
+    `entry_date` 记成**自己运行那天** (signals.py:541 / weekly_calls.py:924 的 `today`),
+    与实际成交日差出整个排队时长 → `max_holding_days` / `trading_days_since` 起算点偏后,
+    持仓被多拿几天才触发时间止损。跨日成交此前会直接崩 (context 丢失), 修法1 让它能静默
+    成功后, 这个偏差才浮出来, 故一并修。
+
+    必须按 ET 换算: 成交 2026-09-11T19:28:04Z 是 09-11 15:28 ET (同日), 而 00:30Z 则是
+    前一日 20:30 ET —— 直接取 UTC 日期会把盘后成交记到次日。
+    取不到时间戳返回 None, 由调用方回退到 `--date` (保持旧行为, 绝不猜)。
+    """
+    ts = o.get("filled_at") or o.get("updated_at")
+    if not ts:
+        return None
+    try:
+        dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        return dt.astimezone(ZoneInfo("America/New_York")).date().isoformat()
+    except (ValueError, TypeError):
+        return None
 
 
 class OrderRejected(Exception):
@@ -240,6 +265,7 @@ def cmd_run(a):
         if fq > 0:
             fills.append({"symbol": sym, "side": side, "qty": fq,
                           "price": float(done["filled_avg_price"]),
+                          "fill_date": _fill_date(done),
                           "bucket": o.get("bucket", "strategy"),
                           "reason": o.get("reason", "")})
         else:
@@ -330,36 +356,133 @@ def _run_queued(a, plan, clk):
                      indent=2, ensure_ascii=False))
 
 
+def _escalate_sell(rec, notes):
+    """排队**卖单**未成交 → 撤限价单改市价单 (2026-09-14 用户「两个都修」批准, 即待办「修法2」)。
+
+    **起因**: XLI260828C00160000 的 expiry_close 卖单连挂三天 (08-26/27/28) 都是
+    est×0.97 的限价, 一直没成交, 到期日下单被拒 `HTTP 422 contract is expired`, 最终 ITM
+    自动行权成 100 股孤儿正股, 亏 -$1,076。**限价出场单没有兜底, 就等于没有出场。**
+
+    只升级卖单, 绝不升级买单: 漏掉一笔入场无害 (次日引擎会重新判定), 而追着市价买入既违背
+    确定性引擎的本意, 又可能在跳空日吃到极差的价; 出场则相反 —— 没卖掉的风险远大于滑点。
+
+    安全顺序 (**不可调换**): 先撤单 → 确认终态 → 再下市价。反过来会同时挂着限价与市价两张卖单,
+    双双成交即卖穿零变空头 —— 正是 2026-08-18~21 那次事故的杀伤面。撤单未确认终态一律放弃升级。
+    """
+    sym, coid = rec["symbol"], rec["coid"]
+    oid = rec.get("order_id")
+    try:
+        _req("DELETE", f"/v2/orders/{oid}") if oid else _req("DELETE", f"/v2/orders:by_client_order_id?client_order_id={coid}")
+    except urllib.error.HTTPError as e:
+        if e.code not in (404, 422):  # 404/422 = 已终态, 撤单本就无事可做
+            notes.append(f"{sym} sell: 撤限价单失败 (HTTP {e.code}), 放弃升级市价")
+            return None
+    o = _wait_fill_by_id(oid, 30) if oid else _wait_fill(coid, 30)
+    st = o.get("status")
+    if st not in ("canceled", "filled", "rejected", "expired"):
+        notes.append(f"{sym} sell: 撤单后状态仍为 {st} (未达终态), 放弃升级市价 (防双单转空)")
+        return None
+    if st == "filled":                      # 撤单竞态: 撤之前刚好成交了, 按成交处理
+        return {"_filled": o}
+    already = float(o.get("filled_qty") or 0)   # 部分成交的残量才需要补市价
+    want = float(rec.get("qty") or 0) - already
+    if want <= 0:
+        notes.append(f"{sym} sell: 撤单时已全部成交, 无需升级")
+        return None
+    if not OCC_RE.match(sym):               # 正股走防转空闸; 期权整张不适用
+        want, why = _clamp_sell_qty(sym, want)
+        if why:
+            notes.append(f"{sym} sell: {why}")
+        if want <= 0:
+            return None
+    body = {"symbol": sym, "side": "sell", "type": "market", "time_in_force": "day",
+            "qty": str(int(want) if OCC_RE.match(sym) else want)}
+    if rec.get("position_intent"):
+        body["position_intent"] = rec["position_intent"]
+    new_coid = f"{coid}-mkt"
+    try:
+        sub = _submit(body, new_coid)
+    except OrderRejected as e:              # 逐单捕获, 绝不中断整批 (08-21 教训①)
+        notes.append(f"{sym} sell: 升级市价被拒 ({e.detail[:120]})")
+        return None
+    return {"_escalated": _wait_fill_by_id(sub.get("id"), 60), "coid": new_coid,
+            "partial_already": already}
+
+
 def cmd_sync(a):
     """次日回收排队单: 按 coid 查各单当前状态; 已成交 → 汇成 fills (供 signals.py apply
     回写账本); 终态未成交 (canceled/rejected/expired) → 记 terminal_no_fill; 仍挂 → 保留。
-    幂等可反复跑; --prune 会把已终态单从排队清单剔除, 只留仍挂的。"""
+    幂等可反复跑; --prune 会把已终态单从排队清单剔除, 只留仍挂的。
+
+    --escalate-unfilled-sells (2026-09-14): 市场开盘时, 把仍挂着的**卖单**撤掉改市价单,
+    给限价出场单一个兜底 (见 _escalate_sell 的 XLI 事故说明)。买单不升级。
+    """
     q = load_json(a.queued)
-    fills, still, dead = [], [], []
-    for rec in q.get("orders", []):
-        o = _get_by_coid(rec["coid"])
-        st = o.get("status")
-        fq = float(o.get("filled_qty") or 0)
-        if fq > 0 and st == "filled":
-            fills.append({"symbol": rec["symbol"], "side": rec["side"], "qty": fq,
-                          "price": float(o["filled_avg_price"]),
-                          "bucket": rec.get("bucket", "strategy"),
-                          "reason": rec.get("reason", "")})
-        elif st in ("canceled", "rejected", "expired"):
-            dead.append({"coid": rec["coid"], "symbol": rec["symbol"], "status": st})
-        else:
-            still.append(rec)
-    if a.fills_out:
-        with open(a.fills_out, "w") as f:
-            json.dump({"fills": fills}, f, indent=2, ensure_ascii=False)
-            f.write("\n")
-    if a.prune:
-        q["orders"] = still
-        with open(a.queued, "w") as f:
-            json.dump(q, f, indent=2, ensure_ascii=False)
-            f.write("\n")
+    fills, still, dead, escalated = [], [], [], []
+    notes = []
+    market_open = False
+    if getattr(a, "escalate_unfilled_sells", False):
+        try:
+            market_open = bool(_req("GET", "/v2/clock")["is_open"])
+        except Exception as e:                      # 时钟拿不到 → 不升级, 按原逻辑走
+            notes.append(f"时钟不可用 ({e}), 本次不升级未成交卖单")
+        if not market_open and not notes:
+            notes.append("市场未开盘, 本次不升级未成交卖单 (市价单盘后会被拒); "
+                         "排队单保留, 下一次开盘时段的 sync 再升级")
+    try:
+        for rec in q.get("orders", []):
+            o = _get_by_coid(rec["coid"])
+            st = o.get("status")
+            fq = float(o.get("filled_qty") or 0)
+            if fq > 0 and st == "filled":
+                fills.append({"symbol": rec["symbol"], "side": rec["side"], "qty": fq,
+                              "price": float(o["filled_avg_price"]),
+                              "fill_date": _fill_date(o),
+                              "bucket": rec.get("bucket", "strategy"),
+                              "reason": rec.get("reason", "")})
+            elif st in ("canceled", "rejected", "expired"):
+                dead.append({"coid": rec["coid"], "symbol": rec["symbol"], "status": st})
+            elif market_open and rec.get("side") == "sell":
+                r = None
+                try:
+                    r = _escalate_sell(rec, notes)
+                except Exception as e:              # 单笔升级失败不得影响其它单与清单落盘
+                    notes.append(f"{rec['symbol']} sell: 升级市价异常 ({e}), 保留原排队单")
+                if r is None:
+                    still.append(rec)
+                    continue
+                oo = r.get("_filled") or r.get("_escalated") or {}
+                ofq = float(oo.get("filled_qty") or 0) + float(r.get("partial_already") or 0)
+                if ofq > 0 and oo.get("filled_avg_price"):
+                    fills.append({"symbol": rec["symbol"], "side": "sell", "qty": ofq,
+                                  "price": float(oo["filled_avg_price"]),
+                                  "fill_date": _fill_date(oo),
+                                  "bucket": rec.get("bucket", "strategy"),
+                                  "reason": rec.get("reason", "")})
+                    escalated.append({"symbol": rec["symbol"], "qty": ofq,
+                                      "price": float(oo["filled_avg_price"]),
+                                      "was": "queued_limit", "now": "market",
+                                      "note": "限价出场单未成交, 已撤单改市价成交 (修法2)"})
+                else:
+                    still.append(rec)
+                    notes.append(f"{rec['symbol']} sell: 升级市价后仍未成交 "
+                                 f"(status={oo.get('status')}), 保留排队单待下次 sync")
+            else:
+                still.append(rec)
+    finally:
+        # 无论如何落盘 (2026-08-21 教训②: 清单丢失 = 成交回不到账本 = 次日重复出单)
+        if a.fills_out:
+            with open(a.fills_out, "w") as f:
+                json.dump({"fills": fills}, f, indent=2, ensure_ascii=False)
+                f.write("\n")
+        if a.prune:
+            q["orders"] = still
+            with open(a.queued, "w") as f:
+                json.dump(q, f, indent=2, ensure_ascii=False)
+                f.write("\n")
     print(json.dumps({"filled": fills, "still_pending": len(still),
-                      "terminal_no_fill": dead}, indent=2, ensure_ascii=False))
+                      "terminal_no_fill": dead, "escalated_to_market": escalated,
+                      "notes": notes}, indent=2, ensure_ascii=False))
 
 
 def cmd_equity(a):
@@ -465,6 +588,9 @@ def main():
     sy.add_argument("--fills-out", help="已成交汇总输出 (供 signals.py apply 回写账本)")
     sy.add_argument("--prune", action="store_true",
                     help="从排队清单剔除已终态 (成交/取消/拒绝/过期) 单, 只留仍挂的")
+    sy.add_argument("--escalate-unfilled-sells", action="store_true",
+                    help="市场开盘时, 把仍挂着的**卖单**撤掉改市价单 (限价出场单的兜底, "
+                         "修法2 / XLI 事故)。买单不升级; 市场未开盘时自动跳过")
     sy.set_defaults(func=cmd_sync)
 
     e = sub.add_parser("equity")

@@ -36,6 +36,29 @@
         "spread_pct": 1.339
       },
       "model_price": 8.1692
+    },
+    "NVDA260925C00195000": {
+      "underlying": "NVDA",
+      "strike": 195.0,
+      "expiry": "2026-09-25",
+      "contracts": 1,
+      "entry_premium": 25.1,
+      "entry_date": "2026-09-11",
+      "entry_underlying": 218.36,
+      "entry_rsi2": 9.23,
+      "entry_quote": {
+        "bid": 24.31,
+        "ask": 24.48,
+        "mid": 24.395,
+        "spread_pct": 0.697
+      },
+      "model_price": 25.3333,
+      "_recovered": {
+        "why": "孤儿仓补录 (用户 2026-09-14 回「1」批准)。收盘后排队单跨日成交, 而 weekly_call_last_orders.json 每日整体覆写, 开仓 context 在 09-11 被冲掉, 09-14 apply_sync 匹配不上 → 成交一直回不到账本。",
+        "entry_context_source": "git 570e608 : state/weekly_call_last_orders.json (2026-09-10 引擎输出)",
+        "fill_source": "Alpaca paper /v2/orders — filled qty=1 @ 25.10, filled_at 2026-09-11T19:28:04Z",
+        "note": "entry_premium 用券商实际成交价 25.10; 09-10 引擎 est 为 24.39, 二者差 +2.9% 属排队限价至次开的滑点"
+      }
     }
   },
   "trades": [
@@ -522,6 +545,15 @@
       },
       "source": "逐字段照抄引擎自身 09-08 signal 输出 (git cc4b9f5:state/weekly_call_last_orders.json 的 buys[XLP260918C00075000]); 无任何会话推断",
       "scope": "仅 paper 摩擦实测轨道; 实盘未受影响 (当日实盘期权轨道正常运行, 2 条 skip)"
+    },
+    {
+      "date": "2026-09-14",
+      "kind": "orphan_position_recovered",
+      "occ": "NVDA260925C00195000",
+      "detail": "券商有仓账本无 (Alpaca paper qty=1 @ $25.10, 发现时未实现 -$1,250)。事实链: 09-10 收盘后排队 → 09-11 15:28 ET 成交 (晚于当日 15:22 盘前主跑 6 分钟) → 同日主跑把 context 覆写为空 → 09-11 17:45 wrapup 因 Alpaca 401 停跑, 失去当日回收窗口 → 09-14 apply_sync 报 '开仓成交在 --context 里找不到对应买单'。",
+      "action": "按一手来源补录持仓 (context 取自 git 570e608 的 09-10 引擎输出, 成交价取自券商), 使引擎重新接管该仓的出场判定。未改动任何其它字段, 未交易。",
+      "approved_by": "用户 2026-09-14 回「1」(补录账本)",
+      "root_cause": "weekly_call_last_orders.json 为每日整体覆写的单文件 context, 跨日成交的排队单其开仓 context 必被冲掉。与 09-09 修的'会话漏传 --context'是不同的两条。根因修法待批。"
     }
   ]
 }

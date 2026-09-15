@@ -1,11 +1,122 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-10",
+  "date": "2026-09-14",
   "coid_prefix": "cq",
-  "next_open": "2026-09-11T09:30:00-04:00",
+  "next_open": "2026-09-15T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
-  "orders": []
+  "orders": [
+    {
+      "coid": "cq-2026-09-14-RTX-sell",
+      "order_id": "801f77b8-6816-420a-89dc-75ab390b516f",
+      "symbol": "RTX",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "189.48",
+      "qty": "48",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-09-14-NSC-sell",
+      "order_id": "2f15b197-4a6c-4d1f-945d-3642531cf2e1",
+      "symbol": "NSC",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "310.45",
+      "qty": "29",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-09-14-DXCM-sell",
+      "order_id": "d15ac5f8-8eea-43e1-816b-6155ef4394e6",
+      "symbol": "DXCM",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "82.14",
+      "qty": "110",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-14-LLY-sell",
+      "order_id": "14a9b026-6da5-4235-ad5a-718dcda40324",
+      "symbol": "LLY",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "1104.13",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-14-MSI-sell",
+      "order_id": "c886dea5-d18d-4b6b-ad4a-cdc676727e5f",
+      "symbol": "MSI",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "459.91",
+      "qty": "20",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-14-DASH-sell",
+      "order_id": "6abeb7be-7c5c-4b9f-a50c-2c105e95ac3f",
+      "symbol": "DASH",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "197.43",
+      "qty": "48",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-14-ADP-sell",
+      "order_id": "5da7dc14-c5c6-4fd0-aec7-cddca2d811db",
+      "symbol": "ADP",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "268.33",
+      "qty": "35",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-14-BNY-buy",
+      "order_id": "93453e2a-d7fc-47d5-8e7e-44ad77446ebf",
+      "symbol": "BNY",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "162.39",
+      "qty": "60",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-14-BAC-buy",
+      "order_id": "6b21bcd3-eb38-48b9-9506-012e93beb0bb",
+      "symbol": "BAC",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "61.25",
+      "qty": "161",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-14-WELL-buy",
+      "order_id": "a94c120e-0e09-4b2c-9d15-7c0e8e5a80d1",
+      "symbol": "WELL",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "241.24",
+      "qty": "40",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
 }

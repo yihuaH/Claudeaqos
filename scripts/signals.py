@@ -537,8 +537,13 @@ def cmd_apply(a):
                                 + (1 if f.get("reason") == "rsi2_scale_in" else 0),
                 }
             else:
+                # entry_date 用**券商实际成交日** (paper.py 附的 fill_date), 缺则回退 --date。
+                # 挑战者排队单次日才成交时二者可差几天, 直接用 today 会让 max_holding_days /
+                # trading_days_since 起算点偏后, 持仓被多拿几天 (2026-09-14 用户批准修)。
+                # 实盘 4A/4C 当日成交, fill_date == today, 行为不变。
                 book[sym] = {
-                    "qty": qty, "entry_price": price, "entry_date": today,
+                    "qty": qty, "entry_price": price,
+                    "entry_date": f.get("fill_date") or today,
                     "cost": round(qty * price, 2), "tranches": 1,
                 }
         else:
@@ -550,7 +555,7 @@ def cmd_apply(a):
                 else:
                     book[sym]["qty"] = round(remaining, 6)
         state.setdefault("trades", []).append({
-            "date": today, "symbol": sym, "side": side, "qty": qty,
+            "date": f.get("fill_date") or today, "symbol": sym, "side": side, "qty": qty,
             "price": price, "bucket": bucket, "reason": f.get("reason", ""),
         })
     if a.portfolio_value:
