@@ -59,6 +59,23 @@
         "fill_source": "Alpaca paper /v2/orders — filled qty=1 @ 25.10, filled_at 2026-09-11T19:28:04Z",
         "note": "entry_premium 用券商实际成交价 25.10; 09-10 引擎 est 为 24.39, 二者差 +2.9% 属排队限价至次开的滑点"
       }
+    },
+    "IWM260923C00255000": {
+      "underlying": "IWM",
+      "strike": 255.0,
+      "expiry": "2026-09-23",
+      "contracts": 1,
+      "entry_premium": 30.65,
+      "entry_date": "2026-09-15",
+      "entry_underlying": 285.09,
+      "entry_rsi2": 7.72,
+      "entry_quote": {
+        "bid": 30.72,
+        "ask": 30.73,
+        "mid": 30.725,
+        "spread_pct": 0.033
+      },
+      "model_price": 30.3135
     }
   },
   "trades": [
@@ -196,6 +213,15 @@
       "side": "buy",
       "qty": 1,
       "price": 8.35,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "IWM260923C00255000",
+      "side": "buy",
+      "qty": 1,
+      "price": 30.65,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
     }

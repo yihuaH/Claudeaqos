@@ -2,20 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "MMM": {
-      "qty": 6.997262,
-      "entry_price": 169.7035,
-      "entry_date": "2026-08-31",
-      "cost": 1187.46,
-      "tranches": 2
-    },
-    "UNP": {
-      "qty": 6.97022,
-      "entry_price": 296.6449,
-      "entry_date": "2026-08-31",
-      "cost": 2067.68,
-      "tranches": 2
-    },
     "NSC": {
       "qty": 1.04371,
       "entry_price": 329.5456,
@@ -1740,6 +1726,24 @@
       "price": 59.0799,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "MMM",
+      "side": "sell",
+      "qty": 6.997262,
+      "price": 164.3801,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 6.97022,
+      "price": 284.4501,
+      "bucket": "strategy",
+      "reason": "time_stop"
     }
   ],
   "corporate_actions": [
