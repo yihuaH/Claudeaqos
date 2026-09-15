@@ -17,60 +17,11 @@
       "cost": 9599.58,
       "tranches": 1
     },
-    "RTX": {
-      "qty": 48.0,
-      "entry_price": 202.124792,
-      "entry_date": "2026-09-03",
-      "cost": 9701.99,
-      "tranches": 1
-    },
-    "NSC": {
-      "qty": 29.0,
-      "entry_price": 332.134828,
-      "entry_date": "2026-09-03",
-      "cost": 9631.91,
-      "tranches": 1
-    },
-    "DXCM": {
-      "qty": 110.0,
-      "entry_price": 85.652728,
-      "entry_date": "2026-09-08",
-      "cost": 9421.8,
-      "tranches": 1
-    },
-    "LLY": {
-      "qty": 8.0,
-      "entry_price": 1132.50625,
-      "entry_date": "2026-09-09",
-      "cost": 9060.05,
-      "tranches": 1
-    },
-    "MSI": {
-      "qty": 20.0,
-      "entry_price": 466.53,
-      "entry_date": "2026-09-09",
-      "cost": 9330.6,
-      "tranches": 1
-    },
-    "DASH": {
-      "qty": 48.0,
-      "entry_price": 194.53125,
-      "entry_date": "2026-09-10",
-      "cost": 9337.5,
-      "tranches": 1
-    },
     "MMM": {
       "qty": 57.0,
       "entry_price": 163.21,
       "entry_date": "2026-09-10",
       "cost": 9302.97,
-      "tranches": 1
-    },
-    "ADP": {
-      "qty": 35.0,
-      "entry_price": 268.031429,
-      "entry_date": "2026-09-10",
-      "cost": 9381.1,
       "tranches": 1
     },
     "SBUX": {
@@ -85,6 +36,27 @@
       "entry_price": 519.28,
       "entry_date": "2026-09-11",
       "cost": 4154.24,
+      "tranches": 1
+    },
+    "BNY": {
+      "qty": 60.0,
+      "entry_price": 156.674333,
+      "entry_date": "2026-09-15",
+      "cost": 9400.46,
+      "tranches": 1
+    },
+    "BAC": {
+      "qty": 161.0,
+      "entry_price": 59.388075,
+      "entry_date": "2026-09-15",
+      "cost": 9561.48,
+      "tranches": 1
+    },
+    "WELL": {
+      "qty": 40.0,
+      "entry_price": 233.94525,
+      "entry_date": "2026-09-15",
+      "cost": 9357.81,
       "tranches": 1
     }
   },
@@ -1554,6 +1526,96 @@
       "side": "buy",
       "qty": 8.0,
       "price": 519.28,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "RTX",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 195.459167,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "NSC",
+      "side": "sell",
+      "qty": 29.0,
+      "price": 319.461034,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "DXCM",
+      "side": "sell",
+      "qty": 110.0,
+      "price": 83.491455,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "LLY",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 1152.53,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "MSI",
+      "side": "sell",
+      "qty": 20.0,
+      "price": 473.6015,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "DASH",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 200.021042,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "ADP",
+      "side": "sell",
+      "qty": 35.0,
+      "price": 273.807429,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "BNY",
+      "side": "buy",
+      "qty": 60.0,
+      "price": 156.674333,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "BAC",
+      "side": "buy",
+      "qty": 161.0,
+      "price": 59.388075,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 40.0,
+      "price": 233.94525,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

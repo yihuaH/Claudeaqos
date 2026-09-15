@@ -8,21 +8,7 @@
     },
     "since": "2026-07-15"
   },
-  "challenger": {
-    "params": {
-      "entry.rsi2_max": 10.0,
-      "exit.rsi2_min": 65.0,
-      "exit.stop_loss_pct": 3.0,
-      "exit.max_holding_days": 10
-    },
-    "started": "2026-07-16",
-    "status": "validating",
-    "sim": {
-      "score": 2.8595,
-      "champion_score": 2.7676,
-      "trades": 97
-    }
-  },
+  "challenger": null,
   "equity_history": [
     {
       "date": "2026-07-15",
@@ -225,7 +211,24 @@
       "date": "2026-09-14",
       "live": 10081.66,
       "paper": 98742.14
+    },
+    {
+      "date": "2026-09-15",
+      "live": 10090.9,
+      "paper": 98125.69
     }
   ],
-  "history": []
+  "history": [
+    {
+      "event": "rejected",
+      "date": "2026-09-15",
+      "params": {
+        "entry.rsi2_max": 10.0,
+        "exit.rsi2_min": 65.0,
+        "exit.stop_loss_pct": 3.0,
+        "exit.max_holding_days": 10
+      },
+      "reason": "验证期满 (40/40 天, max_paper_days 上限) 仍未同时满足交易数与超额收益标准: edge -86.151% (需 >= 0.0%); live +83.423% vs paper -2.728%, 173 笔, 最大回撤 8.546%。evaluate verdict=fail"
+    }
+  ]
 }
