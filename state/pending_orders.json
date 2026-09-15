@@ -2,7 +2,7 @@
   "trade_date": "2026-09-15",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-15 15:21 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -30,7 +30,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 4.324745,
+      "filled_price": 233.2299,
+      "slippage_vs_est_pct": 0.444
     },
     {
       "seq": 2,
@@ -44,7 +47,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 3.722042,
+      "filled_price": 270.9964,
+      "slippage_vs_est_pct": 0.006
     },
     {
       "seq": 3,
@@ -58,7 +64,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 36.652022,
+      "filled_price": 27.5199,
+      "slippage_vs_est_pct": 0.018
     },
     {
       "seq": 4,
@@ -72,7 +81,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 3.540795,
+      "filled_price": 284.8682,
+      "slippage_vs_est_pct": -0.078
     }
   ],
   "news_precheck": {
@@ -99,5 +111,14 @@
     "trade_date": "2026-09-14",
     "status_was": "executed",
     "note": "09-14 清单已 executed, 本清单为新一日产出"
+  },
+  "executed_at_et": "2026-09-15 15:31 ET",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "buying_power_at_execution": 5229.41,
+    "cash_at_execution": 7829.41,
+    "unleveraged_buying_power": 5229.41,
+    "cap_note": "期权已先行成交, 券商抵押 $2,600 已从 BP 扣除 (cash 7829.41 − BP 5229.41 = 2600)。故股票 cap 直接取实时 BP $5,229.41, **不再二次扣减**抵押; 出单额 $4,034.64 ≤ cap → 四单全额",
+    "window": "今日 15:30-15:55 ET 内 (15:31 执行)"
   }
 }

@@ -2,7 +2,54 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "IWM260923P00276000": {
+      "underlying": "IWM",
+      "strike": 276.0,
+      "expiry": "2026-09-23",
+      "contracts": 1,
+      "entry_premium": 0.95,
+      "entry_date": "2026-09-15",
+      "entry_underlying": 285.09,
+      "entry_rsi2": 7.72,
+      "entry_quote": {
+        "mid": 0.945,
+        "spread_pct": 1.869,
+        "long_spread_pct": 40.0,
+        "net_credit_conservative": 0.91
+      },
+      "model_price": 0.2213,
+      "structure": "credit_put_spread",
+      "long_occ": "IWM260923P00250000",
+      "long_strike": 250.0,
+      "risk_per_contract": 25.09,
+      "max_value_per_contract": 26.0,
+      "entry_legs": [
+        {
+          "symbol": "IWM260923P00276000",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 276.0,
+          "quote": {
+            "bid": 1.06,
+            "ask": 1.08
+          },
+          "spread_pct": 1.869
+        },
+        {
+          "symbol": "IWM260923P00250000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 250.0,
+          "quote": {
+            "bid": 0.1,
+            "ask": 0.15
+          },
+          "spread_pct": 40.0
+        }
+      ]
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -84,6 +131,15 @@
       "price": 0.13,
       "bucket": "weekly_calls",
       "reason": ""
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "IWM260923P00276000",
+      "side": "buy",
+      "qty": 1,
+      "price": 0.95,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit"
     }
   ],
   "round_trips": [

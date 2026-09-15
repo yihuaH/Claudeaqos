@@ -2,7 +2,7 @@
   "trade_date": "2026-09-15",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-15 15:21 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -75,11 +75,33 @@
       "max_gain_usd": 91.0,
       "state_file": "state/weekly_call_live_positions.json",
       "valid_until": "same_session_1545_et",
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_net_credit": 0.95
     }
   ],
   "funding": {
     "collateral_usd": 2600.0,
     "priority": "期权优先, 已在股票 cap 中扣除"
+  },
+  "executed_at_et": "2026-09-15 15:29 ET (用户 App 手动)",
+  "execution": {
+    "channel": "手动 App 通道 (agentic 不支持多腿 place)",
+    "net_credit_filled": 0.95,
+    "engine_floor": 0.91,
+    "mid_at_signal": 0.945,
+    "legs_filled": {
+      "IWM260923P00276000": {
+        "side": "sell",
+        "price": 1.07
+      },
+      "IWM260923P00250000": {
+        "side": "buy",
+        "price": 0.12
+      }
+    },
+    "premium_usd": 95.0,
+    "collateral_usd": 2600.0,
+    "note": "用户先挂 $0.94 未成交撤单, 改 $0.95 成交 —— 高于引擎保守底线 $0.91 与 mid $0.945",
+    "order_id": "6aa99ca2-7b3e-44e0-ad2f-3b09fb44b127"
   }
 }

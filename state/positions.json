@@ -22,6 +22,34 @@
       "entry_date": "2026-09-14",
       "cost": 1007.66,
       "tranches": 1
+    },
+    "WELL": {
+      "qty": 4.324745,
+      "entry_price": 233.2299,
+      "entry_date": "2026-09-15",
+      "cost": 1008.66,
+      "tranches": 1
+    },
+    "LNG": {
+      "qty": 3.722042,
+      "entry_price": 270.9964,
+      "entry_date": "2026-09-15",
+      "cost": 1008.66,
+      "tranches": 1
+    },
+    "PFE": {
+      "qty": 36.652022,
+      "entry_price": 27.5199,
+      "entry_date": "2026-09-15",
+      "cost": 1008.66,
+      "tranches": 1
+    },
+    "IWM": {
+      "qty": 3.540795,
+      "entry_price": 284.8682,
+      "entry_date": "2026-09-15",
+      "cost": 1008.66,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1744,6 +1772,42 @@
       "price": 284.4501,
       "bucket": "strategy",
       "reason": "time_stop"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 4.324745,
+      "price": 233.2299,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "LNG",
+      "side": "buy",
+      "qty": 3.722042,
+      "price": 270.9964,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "PFE",
+      "side": "buy",
+      "qty": 36.652022,
+      "price": 27.5199,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-15",
+      "symbol": "IWM",
+      "side": "buy",
+      "qty": 3.540795,
+      "price": 284.8682,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
