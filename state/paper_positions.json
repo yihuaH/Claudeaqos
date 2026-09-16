@@ -17,20 +17,6 @@
       "cost": 9599.58,
       "tranches": 1
     },
-    "MMM": {
-      "qty": 57.0,
-      "entry_price": 163.21,
-      "entry_date": "2026-09-10",
-      "cost": 9302.97,
-      "tranches": 1
-    },
-    "SBUX": {
-      "qty": 96.0,
-      "entry_price": 100.37,
-      "entry_date": "2026-09-11",
-      "cost": 9635.52,
-      "tranches": 1
-    },
     "VRTX": {
       "qty": 8.0,
       "entry_price": 519.28,
@@ -57,6 +43,27 @@
       "entry_price": 233.94525,
       "entry_date": "2026-09-15",
       "cost": 9357.81,
+      "tranches": 1
+    },
+    "LNG": {
+      "qty": 35.0,
+      "entry_price": 269.769714,
+      "entry_date": "2026-09-16",
+      "cost": 9441.94,
+      "tranches": 1
+    },
+    "IWM": {
+      "qty": 33.0,
+      "entry_price": 286.084545,
+      "entry_date": "2026-09-16",
+      "cost": 9440.79,
+      "tranches": 1
+    },
+    "PFE": {
+      "qty": 345.0,
+      "entry_price": 27.644435,
+      "entry_date": "2026-09-16",
+      "cost": 9537.33,
       "tranches": 1
     }
   },
@@ -1616,6 +1623,51 @@
       "side": "buy",
       "qty": 40.0,
       "price": 233.94525,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "MMM",
+      "side": "sell",
+      "qty": 57.0,
+      "price": 165.548421,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "SBUX",
+      "side": "sell",
+      "qty": 96.0,
+      "price": 97.544792,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "LNG",
+      "side": "buy",
+      "qty": 35.0,
+      "price": 269.769714,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "IWM",
+      "side": "buy",
+      "qty": 33.0,
+      "price": 286.084545,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "PFE",
+      "side": "buy",
+      "qty": 345.0,
+      "price": 27.644435,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
