@@ -76,6 +76,23 @@
         "spread_pct": 0.033
       },
       "model_price": 30.3135
+    },
+    "AMZN261002C00220000": {
+      "underlying": "AMZN",
+      "strike": 220.0,
+      "expiry": "2026-10-02",
+      "contracts": 1,
+      "entry_premium": 25.9,
+      "entry_date": "2026-09-16",
+      "entry_underlying": 244.78,
+      "entry_rsi2": 8.02,
+      "entry_quote": {
+        "bid": 26.06,
+        "ask": 26.22,
+        "mid": 26.14,
+        "spread_pct": 0.612
+      },
+      "model_price": 25.5835
     }
   },
   "trades": [
@@ -222,6 +239,15 @@
       "side": "buy",
       "qty": 1,
       "price": 30.65,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "AMZN261002C00220000",
+      "side": "buy",
+      "qty": 1,
+      "price": 25.9,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
     }
@@ -525,6 +551,27 @@
       "reason": "spread_too_wide(best=9.34%)",
       "rsi2": 2.67,
       "spot": 165.5
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "XLF",
+      "reason": "spread_too_wide(best=2.14%)",
+      "rsi2": 3.35,
+      "spot": 55.53
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "DIA",
+      "reason": "premium_too_large(5241)",
+      "rsi2": 5.96,
+      "spot": 513.21
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "SPY",
+      "reason": "premium_too_large(9556)",
+      "rsi2": 7.8,
+      "spot": 750.48
     }
   ],
   "assignments": [

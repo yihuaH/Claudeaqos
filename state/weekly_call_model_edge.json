@@ -48,6 +48,22 @@
       "model_surface": 30.4307,
       "ratio_flat_pct": 98.7,
       "ratio_surface_pct": 99.0
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "AMZN",
+      "outcome": "order",
+      "reason": "rsi2_entry_call",
+      "est_price": 26.14,
+      "spot": 244.78,
+      "rsi2": 8.02,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 26.14,
+      "model_flat": 25.5835,
+      "model_surface": 26.1341,
+      "ratio_flat_pct": 97.9,
+      "ratio_surface_pct": 100.0
     }
   ]
 }

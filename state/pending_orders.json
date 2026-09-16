@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-15",
+  "trade_date": "2026-09-16",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-15 15:21 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-16 15:21 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,110 +15,57 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10086.61,
-  "buying_power_at_generation": 7734.51,
+  "portfolio_value_at_generation": 9948.76,
+  "buying_power_at_generation": 1194.77,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "WELL",
-      "dollar_amount": 1008.66,
+      "symbol": "NSC",
+      "dollar_amount": 994.88,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 232.2,
-      "rsi2": 2.07,
+      "reason": "rsi2_scale_in",
+      "est_price": 317.04,
+      "rsi2": 2.51,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "filled_qty": 4.324745,
-      "filled_price": 233.2299,
-      "slippage_vs_est_pct": 0.444
+      "status": "awaiting_execution",
+      "tranche": 2,
+      "avg_entry_price": 329.5456,
+      "drawdown_pct": -3.79
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "LNG",
-      "dollar_amount": 1008.66,
+      "symbol": "XLF",
+      "dollar_amount": 194.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 270.98,
-      "rsi2": 6.43,
+      "est_price": 55.53,
+      "rsi2": 3.35,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "filled_qty": 3.722042,
-      "filled_price": 270.9964,
-      "slippage_vs_est_pct": 0.006
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "PFE",
-      "dollar_amount": 1008.66,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 27.515,
-      "rsi2": 7.43,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "filled",
-      "filled_qty": 36.652022,
-      "filled_price": 27.5199,
-      "slippage_vs_est_pct": 0.018
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "IWM",
-      "dollar_amount": 1008.66,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 285.09,
-      "rsi2": 7.72,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "filled",
-      "filled_qty": 3.540795,
-      "filled_price": 284.8682,
-      "slippage_vs_est_pct": -0.078
+      "status": "awaiting_execution"
     }
   ],
+  "order_note": "加仓单 (rsi2_scale_in) 排在新开仓单前吃现金, 系引擎回测口径, **执行时不得重排** (CLAUDE.md 红线9)",
   "news_precheck": {
     "checked": [
-      "WELL",
-      "LNG",
-      "PFE",
-      "IWM"
+      "NSC",
+      "XLF"
     ],
     "red_flagged": [],
     "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
   },
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "available_min_bp_cash": 7734.51,
-    "option_collateral": 2600.0,
-    "collateral_basis": "credit_put_spread 价差宽度 26.0 × 100 × 1张 (券商实扣)",
-    "stock_cap": 5134.51,
-    "stock_total": 4034.64,
-    "skipped": [],
-    "note": "4 单全额装下, 余量 ,099.87; 无整单跳过"
-  },
-  "supersedes": {
-    "trade_date": "2026-09-14",
-    "status_was": "executed",
-    "note": "09-14 清单已 executed, 本清单为新一日产出"
-  },
-  "executed_at_et": "2026-09-15 15:31 ET",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "buying_power_at_execution": 5229.41,
-    "cash_at_execution": 7829.41,
-    "unleveraged_buying_power": 5229.41,
-    "cap_note": "期权已先行成交, 券商抵押 $2,600 已从 BP 扣除 (cash 7829.41 − BP 5229.41 = 2600)。故股票 cap 直接取实时 BP $5,229.41, **不再二次扣减**抵押; 出单额 $4,034.64 ≤ cap → 四单全额",
-    "window": "今日 15:30-15:55 ET 内 (15:31 执行)"
+    "option_orders_today": 0,
+    "option_collateral": 0.0,
+    "available_min_bp_cash": 1194.77,
+    "stock_cap": 1194.77,
+    "stock_total": 1189.77,
+    "note": "今日无期权买单, 抵押 0, 股票 cap = 实时 BP ,194.77"
   }
 }
