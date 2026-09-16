@@ -3,11 +3,11 @@
   "halted": false,
   "strategy_positions": {
     "NSC": {
-      "qty": 1.04371,
-      "entry_price": 329.5456,
+      "qty": 4.178761,
+      "entry_price": 320.3892,
       "entry_date": "2026-09-04",
-      "cost": 343.95,
-      "tranches": 1
+      "cost": 1338.83,
+      "tranches": 2
     },
     "BNY": {
       "qty": 6.40961,
@@ -1808,6 +1808,15 @@
       "price": 284.8682,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-16",
+      "symbol": "NSC",
+      "side": "buy",
+      "qty": 3.135051,
+      "price": 317.3409,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [

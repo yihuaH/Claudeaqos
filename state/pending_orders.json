@@ -2,7 +2,7 @@
   "trade_date": "2026-09-16",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-16 15:21 ET",
-  "status": "awaiting_execution",
+  "status": "partially_executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -30,10 +30,13 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
+      "status": "filled",
       "tranche": 2,
       "avg_entry_price": 329.5456,
-      "drawdown_pct": -3.79
+      "drawdown_pct": -3.79,
+      "filled_qty": 3.135051,
+      "filled_price": 317.3409,
+      "slippage_vs_est_pct": 0.095
     },
     {
       "seq": 2,
@@ -47,7 +50,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "cancelled_after_close",
+      "cancel_reason": "16:00:07 ET 提交已过收盘, market+regular_hours 单被券商 queued 至次日开盘; 次日开盘价执行不属 4C 协议 (协议为当日盘中单笔市价), 且绕过引擎次日重评, 故按 playbook「仍 queued 且已过目标时段 → cancel」撤单",
+      "order_id": "6aaaf547-d4f7-4a35-9b92-d21484872f70",
+      "final_state": "cancelled (券商确认, 0 成交)"
     }
   ],
   "order_note": "加仓单 (rsi2_scale_in) 排在新开仓单前吃现金, 系引擎回测口径, **执行时不得重排** (CLAUDE.md 红线9)",
@@ -67,5 +73,13 @@
     "stock_cap": 1194.77,
     "stock_total": 1189.77,
     "note": "今日无期权买单, 抵押 0, 股票 cap = 实时 BP ,194.77"
+  },
+  "executed_at_et": "2026-09-16 15:59 ET (NSC) / XLF 未成交已撤",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "window_note": "⚠️ **越窗执行**: 用户 15:55:0x 回「执行」, 已过 15:30-15:55 窗口约 6 秒, 用户明确选择「现在就下」。执行中 cash_printer 连接器恰好断线重连, 耗掉剩余时间。",
+    "buying_power_at_execution": 1194.77,
+    "unleveraged_buying_power": 1194.77,
+    "outcome": "NSC 15:59:32 ET 成交 (赶在 16:00 收盘前 28 秒); XLF 16:00:07 ET 提交, **已过收盘**, 券商置 queued 挂至次日开盘 → 已撤单"
   }
 }
