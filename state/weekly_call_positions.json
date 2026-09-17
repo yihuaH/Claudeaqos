@@ -3,23 +3,6 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "NVDA260923C00185000": {
-      "underlying": "NVDA",
-      "strike": 185.0,
-      "expiry": "2026-09-23",
-      "contracts": 1,
-      "entry_premium": 27.85,
-      "entry_date": "2026-09-14",
-      "entry_underlying": 212.25,
-      "entry_rsi2": 2.36,
-      "entry_quote": {
-        "bid": 27.64,
-        "ask": 27.68,
-        "mid": 27.66,
-        "spread_pct": 0.145
-      },
-      "model_price": 27.811
-    },
     "BAC260925C00051000": {
       "underlying": "BAC",
       "strike": 51.0,
@@ -36,29 +19,6 @@
         "spread_pct": 1.339
       },
       "model_price": 8.1692
-    },
-    "NVDA260925C00195000": {
-      "underlying": "NVDA",
-      "strike": 195.0,
-      "expiry": "2026-09-25",
-      "contracts": 1,
-      "entry_premium": 25.1,
-      "entry_date": "2026-09-11",
-      "entry_underlying": 218.36,
-      "entry_rsi2": 9.23,
-      "entry_quote": {
-        "bid": 24.31,
-        "ask": 24.48,
-        "mid": 24.395,
-        "spread_pct": 0.697
-      },
-      "model_price": 25.3333,
-      "_recovered": {
-        "why": "孤儿仓补录 (用户 2026-09-14 回「1」批准)。收盘后排队单跨日成交, 而 weekly_call_last_orders.json 每日整体覆写, 开仓 context 在 09-11 被冲掉, 09-14 apply_sync 匹配不上 → 成交一直回不到账本。",
-        "entry_context_source": "git 570e608 : state/weekly_call_last_orders.json (2026-09-10 引擎输出)",
-        "fill_source": "Alpaca paper /v2/orders — filled qty=1 @ 25.10, filled_at 2026-09-11T19:28:04Z",
-        "note": "entry_premium 用券商实际成交价 25.10; 09-10 引擎 est 为 24.39, 二者差 +2.9% 属排队限价至次开的滑点"
-      }
     },
     "IWM260923C00255000": {
       "underlying": "IWM",
@@ -93,6 +53,23 @@
         "spread_pct": 0.612
       },
       "model_price": 25.5835
+    },
+    "XLF260925C00050000": {
+      "underlying": "XLF",
+      "strike": 50.0,
+      "expiry": "2026-09-25",
+      "contracts": 1,
+      "entry_premium": 6.1,
+      "entry_date": "2026-09-17",
+      "entry_underlying": 55.955,
+      "entry_rsi2": 8.48,
+      "entry_quote": {
+        "bid": 5.97,
+        "ask": 6.02,
+        "mid": 5.995,
+        "spread_pct": 0.834
+      },
+      "model_price": 5.9988
     }
   },
   "trades": [
@@ -250,6 +227,33 @@
       "price": 25.9,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "NVDA260923C00185000",
+      "side": "sell",
+      "qty": 1,
+      "price": 34.7,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "NVDA260925C00195000",
+      "side": "sell",
+      "qty": 1,
+      "price": 25.0,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "XLF260925C00050000",
+      "side": "buy",
+      "qty": 1,
+      "price": 6.1,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -367,6 +371,44 @@
       "entry_mid": 9.125,
       "exit_mid": 9.67,
       "model_price": 9.1022
+    },
+    {
+      "occ": "NVDA260923C00185000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "NVDA",
+      "entry_date": "2026-09-14",
+      "exit_date": "2026-09-17",
+      "entry_premium": 27.85,
+      "exit_premium": 34.7,
+      "pnl_pct": 24.6,
+      "pnl_usd": 685.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 0.145,
+      "exit_spread_pct": 0.707,
+      "entry_mid": 27.66,
+      "exit_mid": 35.385,
+      "model_price": 27.811
+    },
+    {
+      "occ": "NVDA260925C00195000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "NVDA",
+      "entry_date": "2026-09-11",
+      "exit_date": "2026-09-17",
+      "entry_premium": 25.1,
+      "exit_premium": 25.0,
+      "pnl_pct": -0.4,
+      "pnl_usd": -10.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 0.697,
+      "exit_spread_pct": 2.331,
+      "entry_mid": 24.395,
+      "exit_mid": 25.315,
+      "model_price": 25.3333
     }
   ],
   "skip_log": [

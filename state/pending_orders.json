@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-16",
+  "trade_date": "2026-09-17",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-16 15:21 ET",
-  "status": "partially_executed",
+  "generated_at_et": "2026-09-17 15:23 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,52 +15,58 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 9948.76,
-  "buying_power_at_generation": 1194.77,
+  "portfolio_value_at_generation": 10119.06,
+  "buying_power_at_generation": 199.89,
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "NSC",
-      "dollar_amount": 994.88,
+      "symbol": "RVMD",
+      "dollar_amount": 1011.91,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 317.04,
-      "rsi2": 2.51,
+      "reason": "rsi2_entry",
+      "est_price": 195.32,
+      "rsi2": 3.73,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "tranche": 2,
-      "avg_entry_price": 329.5456,
-      "drawdown_pct": -3.79,
-      "filled_qty": 3.135051,
-      "filled_price": 317.3409,
-      "slippage_vs_est_pct": 0.095
+      "status": "awaiting_execution"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "XLF",
-      "dollar_amount": 194.89,
+      "symbol": "CVS",
+      "dollar_amount": 1011.91,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 55.53,
-      "rsi2": 3.35,
+      "est_price": 90.86,
+      "rsi2": 4.22,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "cancelled_after_close",
-      "cancel_reason": "16:00:07 ET 提交已过收盘, market+regular_hours 单被券商 queued 至次日开盘; 次日开盘价执行不属 4C 协议 (协议为当日盘中单笔市价), 且绕过引擎次日重评, 故按 playbook「仍 queued 且已过目标时段 → cancel」撤单",
-      "order_id": "6aaaf547-d4f7-4a35-9b92-d21484872f70",
-      "final_state": "cancelled (券商确认, 0 成交)"
+      "status": "awaiting_execution"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "BMY",
+      "dollar_amount": 519.38,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 62.985,
+      "rsi2": 6.69,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "status": "awaiting_execution"
     }
   ],
-  "order_note": "加仓单 (rsi2_scale_in) 排在新开仓单前吃现金, 系引擎回测口径, **执行时不得重排** (CLAUDE.md 红线9)",
+  "funding_note": "引擎按「出场回款即时可用」定额: 生成时 BP 仅 99.89, 但 NSC+PFE 出场已于 15:24 即时成交, 回款约 ,346.98 → 执行时实时 BP 会远高于生成时。执行前仍须重取实时 min(buying_power, cash) 为准 (红线9)。",
   "news_precheck": {
     "checked": [
-      "NSC",
-      "XLF"
+      "RVMD",
+      "CVS",
+      "BMY"
     ],
     "red_flagged": [],
     "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
@@ -69,17 +75,11 @@
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "available_min_bp_cash": 1194.77,
-    "stock_cap": 1194.77,
-    "stock_total": 1189.77,
-    "note": "今日无期权买单, 抵押 0, 股票 cap = 实时 BP ,194.77"
+    "note": "今日无期权买单, 抵押 0, 股票 cap = 执行时实时 BP"
   },
-  "executed_at_et": "2026-09-16 15:59 ET (NSC) / XLF 未成交已撤",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "window_note": "⚠️ **越窗执行**: 用户 15:55:0x 回「执行」, 已过 15:30-15:55 窗口约 6 秒, 用户明确选择「现在就下」。执行中 cash_printer 连接器恰好断线重连, 耗掉剩余时间。",
-    "buying_power_at_execution": 1194.77,
-    "unleveraged_buying_power": 1194.77,
-    "outcome": "NSC 15:59:32 ET 成交 (赶在 16:00 收盘前 28 秒); XLF 16:00:07 ET 提交, **已过收盘**, 券商置 queued 挂至次日开盘 → 已撤单"
+  "supersedes": {
+    "trade_date": "2026-09-16",
+    "status_was": "partially_executed",
+    "note": "09-16 清单中 XLF 94.89 未执行 (越收盘被 queued 后撤单)。按顺延协议, 次一交易日收盘前主跑产出的新清单**自动取代**旧清单 —— XLF 由今日引擎重新评估: 今日 XLF RSI-2 8.48 仍有信号, 但因可用资金不足被跳过, 未进入本清单。"
   }
 }

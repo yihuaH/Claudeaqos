@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "NSC": {
-      "qty": 4.178761,
-      "entry_price": 320.3892,
-      "entry_date": "2026-09-04",
-      "cost": 1338.83,
-      "tranches": 2
-    },
     "BNY": {
       "qty": 6.40961,
       "entry_price": 157.2108,
@@ -33,13 +26,6 @@
     "LNG": {
       "qty": 3.722042,
       "entry_price": 270.9964,
-      "entry_date": "2026-09-15",
-      "cost": 1008.66,
-      "tranches": 1
-    },
-    "PFE": {
-      "qty": 36.652022,
-      "entry_price": 27.5199,
       "entry_date": "2026-09-15",
       "cost": 1008.66,
       "tranches": 1
@@ -1817,6 +1803,24 @@
       "price": 317.3409,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "NSC",
+      "side": "sell",
+      "qty": 4.178761,
+      "price": 319.1401,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "PFE",
+      "side": "sell",
+      "qty": 36.652022,
+      "price": 27.643,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

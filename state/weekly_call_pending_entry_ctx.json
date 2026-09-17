@@ -120,7 +120,37 @@
         "mid": 26.14,
         "spread_pct": 0.612
       }
+    },
+    "XLF260925C00050000": {
+      "symbol": "XLF260925C00050000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 5.99,
+      "underlying": "XLF",
+      "strike": 50.0,
+      "expiry": "2026-09-25",
+      "dte": 8,
+      "spot": 55.955,
+      "rsi2": 8.48,
+      "model_price": 5.9988,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 5.995,
+        "model_flat": 5.9988,
+        "model_surface": 6.0219,
+        "ratio_flat_pct": 100.1,
+        "ratio_surface_pct": 100.4
+      },
+      "entry_quote": {
+        "bid": 5.97,
+        "ask": 6.02,
+        "mid": 5.995,
+        "spread_pct": 0.834
+      }
     }
   },
-  "updated": "2026-09-16"
+  "updated": "2026-09-17"
 }
