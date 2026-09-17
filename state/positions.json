@@ -36,6 +36,27 @@
       "entry_date": "2026-09-15",
       "cost": 1008.66,
       "tranches": 1
+    },
+    "RVMD": {
+      "qty": 5.186127,
+      "entry_price": 195.1186,
+      "entry_date": "2026-09-17",
+      "cost": 1011.91,
+      "tranches": 1
+    },
+    "CVS": {
+      "qty": 11.151014,
+      "entry_price": 90.746,
+      "entry_date": "2026-09-17",
+      "cost": 1011.91,
+      "tranches": 1
+    },
+    "BMY": {
+      "qty": 8.258835,
+      "entry_price": 62.8878,
+      "entry_date": "2026-09-17",
+      "cost": 519.38,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1821,6 +1842,33 @@
       "price": 27.643,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 5.186127,
+      "price": 195.1186,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "CVS",
+      "side": "buy",
+      "qty": 11.151014,
+      "price": 90.746,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "BMY",
+      "side": "buy",
+      "qty": 8.258835,
+      "price": 62.8878,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

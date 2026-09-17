@@ -2,7 +2,7 @@
   "trade_date": "2026-09-17",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-17 15:23 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -30,7 +30,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 5.186127,
+      "filled_price": 195.1186,
+      "slippage_vs_est_pct": -0.103
     },
     {
       "seq": 2,
@@ -44,7 +47,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 11.151014,
+      "filled_price": 90.746,
+      "slippage_vs_est_pct": -0.125
     },
     {
       "seq": 3,
@@ -58,7 +64,10 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution"
+      "status": "filled",
+      "filled_qty": 8.258835,
+      "filled_price": 62.8878,
+      "slippage_vs_est_pct": -0.154
     }
   ],
   "funding_note": "引擎按「出场回款即时可用」定额: 生成时 BP 仅 99.89, 但 NSC+PFE 出场已于 15:24 即时成交, 回款约 ,346.98 → 执行时实时 BP 会远高于生成时。执行前仍须重取实时 min(buying_power, cash) 为准 (红线9)。",
@@ -81,5 +90,14 @@
     "trade_date": "2026-09-16",
     "status_was": "partially_executed",
     "note": "09-16 清单中 XLF 94.89 未执行 (越收盘被 queued 后撤单)。按顺延协议, 次一交易日收盘前主跑产出的新清单**自动取代**旧清单 —— XLF 由今日引擎重新评估: 今日 XLF RSI-2 8.48 仍有信号, 但因可用资金不足被跳过, 未进入本清单。"
+  },
+  "executed_at_et": "2026-09-17 15:30 ET",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "countdown_check": "执行前先算收盘倒计时 (09-16 教训): 15:29:51 起步, 距 15:55 关窗 25.1 分, 3 单余量充足 → 全批执行。实际耗时 12 秒 (19:30:19→19:30:31)",
+    "buying_power_at_execution": 2546.61,
+    "cash_at_execution": 5146.61,
+    "unleveraged_buying_power": 2546.61,
+    "cap_note": "cap=min(BP,cash)=$2,546.61 (BP 比 cash 少的 $2,600 为 IWM 价差抵押); 出单额 $2,543.20 ≤ cap, 余 $3.41, 三单全额无跳过"
   }
 }
