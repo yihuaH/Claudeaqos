@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "UNP": {
-      "qty": 33.0,
-      "entry_price": 290.896364,
-      "entry_date": "2026-09-03",
-      "cost": 9599.58,
-      "tranches": 1
-    },
     "VRTX": {
       "qty": 8.0,
       "entry_price": 519.28,
@@ -64,6 +57,27 @@
       "entry_price": 27.644435,
       "entry_date": "2026-09-16",
       "cost": 9537.33,
+      "tranches": 1
+    },
+    "RVMD": {
+      "qty": 48.0,
+      "entry_price": 200.514375,
+      "entry_date": "2026-09-17",
+      "cost": 9624.69,
+      "tranches": 1
+    },
+    "XLF": {
+      "qty": 169.0,
+      "entry_price": 56.128757,
+      "entry_date": "2026-09-17",
+      "cost": 9485.76,
+      "tranches": 1
+    },
+    "CSX": {
+      "qty": 197.0,
+      "entry_price": 48.45,
+      "entry_date": "2026-09-17",
+      "cost": 9544.65,
       "tranches": 1
     }
   },
@@ -1668,6 +1682,42 @@
       "side": "buy",
       "qty": 345.0,
       "price": 27.644435,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 33.0,
+      "price": 283.0,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 48.0,
+      "price": 200.514375,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "XLF",
+      "side": "buy",
+      "qty": 169.0,
+      "price": 56.128757,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 197.0,
+      "price": 48.45,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
