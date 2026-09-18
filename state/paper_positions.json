@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "VRTX": {
-      "qty": 8.0,
-      "entry_price": 519.28,
-      "entry_date": "2026-09-11",
-      "cost": 4154.24,
-      "tranches": 1
-    },
     "BNY": {
       "qty": 60.0,
       "entry_price": 156.674333,
@@ -52,13 +45,6 @@
       "cost": 9440.79,
       "tranches": 1
     },
-    "PFE": {
-      "qty": 345.0,
-      "entry_price": 27.644435,
-      "entry_date": "2026-09-16",
-      "cost": 9537.33,
-      "tranches": 1
-    },
     "RVMD": {
       "qty": 48.0,
       "entry_price": 200.514375,
@@ -78,6 +64,27 @@
       "entry_price": 48.45,
       "entry_date": "2026-09-17",
       "cost": 9544.65,
+      "tranches": 1
+    },
+    "CVS": {
+      "qty": 104.0,
+      "entry_price": 90.457115,
+      "entry_date": "2026-09-18",
+      "cost": 9407.54,
+      "tranches": 1
+    },
+    "BMY": {
+      "qty": 150.0,
+      "entry_price": 62.78,
+      "entry_date": "2026-09-18",
+      "cost": 9417.0,
+      "tranches": 1
+    },
+    "HUM": {
+      "qty": 7.0,
+      "entry_price": 384.82,
+      "entry_date": "2026-09-18",
+      "cost": 2693.74,
       "tranches": 1
     }
   },
@@ -1718,6 +1725,51 @@
       "side": "buy",
       "qty": 197.0,
       "price": 48.45,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-18",
+      "symbol": "VRTX",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 513.3475,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-18",
+      "symbol": "PFE",
+      "side": "sell",
+      "qty": 345.0,
+      "price": 27.545652,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-18",
+      "symbol": "CVS",
+      "side": "buy",
+      "qty": 104.0,
+      "price": 90.457115,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-18",
+      "symbol": "BMY",
+      "side": "buy",
+      "qty": 150.0,
+      "price": 62.78,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-18",
+      "symbol": "HUM",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 384.82,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

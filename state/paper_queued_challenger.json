@@ -1,65 +1,43 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-17",
+  "date": "2026-09-18",
   "coid_prefix": "cq",
-  "next_open": "2026-09-18T09:30:00-04:00",
+  "next_open": "2026-09-21T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-09-17-VRTX-sell",
-      "order_id": "c78ff6c9-fcd8-45b7-982e-bbf9977dced0",
-      "symbol": "VRTX",
+      "coid": "cq-2026-09-18-RVMD-sell",
+      "order_id": "9163d381-a145-4708-9c9b-5f48942dbbf2",
+      "symbol": "RVMD",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "500.85",
-      "qty": "8",
+      "limit_price": "185.22",
+      "qty": "48",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-09-17-PFE-sell",
-      "order_id": "3aeb25a7-a5d9-439d-8778-3ea1013b1424",
-      "symbol": "PFE",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "26.81",
-      "qty": "345",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-09-17-CVS-buy",
-      "order_id": "9e0726e4-e7ab-48fe-be08-1d0190838269",
-      "symbol": "CVS",
+      "coid": "cq-2026-09-18-MDLZ-buy",
+      "order_id": "4259f349-2cd2-4889-8ee2-de675dfa05bc",
+      "symbol": "MDLZ",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "92.98",
-      "qty": "104",
+      "limit_price": "62.68",
+      "qty": "154",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     },
     {
-      "coid": "cq-2026-09-17-BMY-buy",
-      "order_id": "5e89c3bb-d0e4-4996-a243-798dc3d26ffd",
-      "symbol": "BMY",
+      "coid": "cq-2026-09-18-VZ-buy",
+      "order_id": "9f208ef1-2e4a-4cc7-93ca-d752f8aa90d4",
+      "symbol": "VZ",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "64.73",
-      "qty": "150",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-09-17-HUM-buy",
-      "order_id": "a399c45b-4bc4-44e2-b551-3eefd7e5cc15",
-      "symbol": "HUM",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "396.06",
-      "qty": "7",
+      "limit_price": "49.53",
+      "qty": "9",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
