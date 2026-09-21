@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "BNY": {
-      "qty": 6.40961,
-      "entry_price": 157.2108,
-      "entry_date": "2026-09-14",
-      "cost": 1007.66,
-      "tranches": 1
-    },
     "BAC": {
       "qty": 17.055885,
       "entry_price": 59.0799,
@@ -19,20 +12,6 @@
     "WELL": {
       "qty": 4.324745,
       "entry_price": 233.2299,
-      "entry_date": "2026-09-15",
-      "cost": 1008.66,
-      "tranches": 1
-    },
-    "LNG": {
-      "qty": 3.722042,
-      "entry_price": 270.9964,
-      "entry_date": "2026-09-15",
-      "cost": 1008.66,
-      "tranches": 1
-    },
-    "IWM": {
-      "qty": 3.540795,
-      "entry_price": 284.8682,
       "entry_date": "2026-09-15",
       "cost": 1008.66,
       "tranches": 1
@@ -1869,6 +1848,33 @@
       "price": 62.8878,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "BNY",
+      "side": "sell",
+      "qty": 6.40961,
+      "price": 154.0474,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "LNG",
+      "side": "sell",
+      "qty": 3.722042,
+      "price": 277.0068,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "IWM",
+      "side": "sell",
+      "qty": 3.540795,
+      "price": 286.1301,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

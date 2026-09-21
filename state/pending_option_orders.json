@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-15",
+  "trade_date": "2026-09-21",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-15 15:21 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-21 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -15,93 +15,99 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
+  "funding": {
+    "collateral_usd": 1542.0,
+    "priority": "期权优先, 已在股票 cap 中扣除"
+  },
   "orders": [
     {
       "seq": 1,
       "structure": "credit_put_spread",
-      "qty": 1,
+      "qty": 3,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "IWM260923P00276000",
+          "symbol": "XLE261002P00060500",
           "side": "sell",
           "position_effect": "open",
-          "strike": 276.0,
+          "strike": 60.5,
           "quote": {
-            "bid": 1.06,
-            "ask": 1.08
+            "bid": 0.42,
+            "ask": 0.44
           },
-          "spread_pct": 1.869
+          "spread_pct": 4.651
         },
         {
-          "symbol": "IWM260923P00250000",
+          "symbol": "XLE261002P00055000",
           "side": "buy",
           "position_effect": "open",
-          "strike": 250.0,
+          "strike": 55.0,
           "quote": {
-            "bid": 0.1,
-            "ask": 0.15
+            "bid": 0.03,
+            "ask": 0.06
           },
-          "spread_pct": 40.0
+          "spread_pct": 66.667
         }
       ],
-      "est_price": 0.91,
+      "est_price": 0.36,
       "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-09-23",
-      "dte": 8,
-      "spot": 285.09,
-      "rsi2": 7.72,
-      "model_price": 0.2213,
+      "underlying": "XLE",
+      "expiry": "2026-10-02",
+      "dte": 11,
+      "spot": 62.675,
+      "rsi2": 9.47,
+      "model_price": 0.3348,
       "model_edge": {
         "reference": "flat",
         "direction": "credit",
-        "est": 0.91,
-        "model_flat": 0.2213,
-        "model_surface": 0.8164,
-        "ratio_flat_pct": 411.2,
-        "ratio_surface_pct": 111.5
+        "est": 0.36,
+        "model_flat": 0.3348,
+        "model_surface": 0.3541,
+        "ratio_flat_pct": 107.5,
+        "ratio_surface_pct": 101.7
       },
       "entry_quote": {
-        "mid": 0.945,
-        "spread_pct": 1.869,
-        "long_spread_pct": 40.0,
-        "net_credit_conservative": 0.91
+        "mid": 0.385,
+        "spread_pct": 4.651,
+        "long_spread_pct": 66.667,
+        "net_credit_conservative": 0.36
       },
-      "risk_per_contract": 25.09,
-      "max_value_per_contract": 26.0,
-      "max_loss_usd": 2509.0,
-      "max_gain_usd": 91.0,
+      "risk_per_contract": 5.14,
+      "max_value_per_contract": 5.5,
+      "max_loss_usd": 1542.0,
+      "max_gain_usd": 108.0,
       "state_file": "state/weekly_call_live_positions.json",
       "valid_until": "same_session_1545_et",
-      "status": "filled",
-      "filled_net_credit": 0.95
-    }
-  ],
-  "funding": {
-    "collateral_usd": 2600.0,
-    "priority": "期权优先, 已在股票 cap 中扣除"
-  },
-  "executed_at_et": "2026-09-15 15:29 ET (用户 App 手动)",
-  "execution": {
-    "channel": "手动 App 通道 (agentic 不支持多腿 place)",
-    "net_credit_filled": 0.95,
-    "engine_floor": 0.91,
-    "mid_at_signal": 0.945,
-    "legs_filled": {
-      "IWM260923P00276000": {
-        "side": "sell",
-        "price": 1.07
-      },
-      "IWM260923P00250000": {
-        "side": "buy",
-        "price": 0.12
+      "status": "awaiting_execution",
+      "live_nbbo_at_notify": {
+        "checked_at_et": "2026-09-21 15:27 ET",
+        "source": "cash_printer get_option_quotes (券商真实 NBBO, 非 indicative)",
+        "XLE261002P00060500": {
+          "bid": 0.45,
+          "ask": 0.46,
+          "mark": 0.455,
+          "iv": 0.2856,
+          "delta": -0.2444,
+          "oi": 79,
+          "vol": 126
+        },
+        "XLE261002P00055000": {
+          "bid": 0.01,
+          "ask": 0.04,
+          "mark": 0.025,
+          "iv": 0.3659,
+          "delta": -0.0201,
+          "oi": 25,
+          "vol": 1
+        },
+        "net_credit_conservative_broker": 0.41,
+        "net_credit_mid_broker": 0.43,
+        "engine_floor": 0.36,
+        "suggested_net_limit": 0.42,
+        "fallback_net_limit": 0.41,
+        "note": "券商真实 NBBO 优于引擎 indicative 快照 (引擎 est 0.36)。建议限价 $0.42 (保守 0.41 与 mid 0.43 之间); 不成交可降到 $0.41 (≈ 保守价, 近确定成交)。**绝不低于引擎底线 $0.36** (红线2/3)。tick=0.01 (min_ticks below_tick, cutoff $3.00)"
       }
-    },
-    "premium_usd": 95.0,
-    "collateral_usd": 2600.0,
-    "note": "用户先挂 $0.94 未成交撤单, 改 $0.95 成交 —— 高于引擎保守底线 $0.91 与 mid $0.945",
-    "order_id": "6aa99ca2-7b3e-44e0-ad2f-3b09fb44b127"
-  }
+    }
+  ]
 }

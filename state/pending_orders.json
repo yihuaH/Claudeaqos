@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-17",
+  "trade_date": "2026-09-21",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-17 15:23 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-21 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,89 +15,133 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10119.06,
-  "buying_power_at_generation": 199.89,
+  "portfolio_value_at_generation": 10115.95,
+  "buying_power_at_generation": 5629.78,
+  "funding_note": "3 笔出场 (BNY/LNG/IWM) 已于 15:25 即时成交, 回款 $3,031.54 已到账 —— 生成时实时 BP=cash=$5,629.78 (unleveraged 相同, 无借贷额度)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "news_precheck": {
+    "checked": [
+      "CVS",
+      "CSX",
+      "ALL",
+      "UNP",
+      "MDLZ",
+      "VZ"
+    ],
+    "red_flagged": [
+      "UNP"
+    ],
+    "note": "integrations.py news, 报告级仅提示不改单 (红线2); 由用户 4C 一票否决"
+  },
+  "cross_track_funding": {
+    "rule": "期权优先 (2026-08-27 常规规则)",
+    "option_orders_today": 1,
+    "option_collateral": 1542.0,
+    "stock_cap": 4087.78,
+    "note": "cap = min(BP,cash) $5,629.78 − 期权抵押 $1,542.00 = $4,087.78。按引擎顺序累计: CVS+CSX+ALL+UNP=$4,046.96 ≤ cap; MDLZ 与 VZ 越 cap → **整单跳过不缩量**。执行时以实时资金重算。"
+  },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "RVMD",
-      "dollar_amount": 1011.91,
+      "symbol": "CVS",
+      "dollar_amount": 1011.74,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 195.32,
-      "rsi2": 3.73,
+      "reason": "rsi2_scale_in",
+      "est_price": 87.455,
+      "rsi2": 0.97,
+      "tranche": 2,
+      "avg_entry_price": 90.746,
+      "drawdown_pct": -3.63,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "filled_qty": 5.186127,
-      "filled_price": 195.1186,
-      "slippage_vs_est_pct": -0.103
+      "cap_projection": "within_cap",
+      "status": "awaiting_execution"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "CVS",
-      "dollar_amount": 1011.91,
+      "symbol": "CSX",
+      "dollar_amount": 1011.74,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 90.86,
-      "rsi2": 4.22,
+      "est_price": 45.935,
+      "rsi2": 0.34,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "filled_qty": 11.151014,
-      "filled_price": 90.746,
-      "slippage_vs_est_pct": -0.125
+      "cap_projection": "within_cap",
+      "status": "awaiting_execution"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "BMY",
-      "dollar_amount": 519.38,
+      "symbol": "ALL",
+      "dollar_amount": 1011.74,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 62.985,
-      "rsi2": 6.69,
+      "est_price": 242.41,
+      "rsi2": 1.85,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "filled_qty": 8.258835,
-      "filled_price": 62.8878,
-      "slippage_vs_est_pct": -0.154
+      "cap_projection": "within_cap",
+      "status": "awaiting_execution"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "UNP",
+      "dollar_amount": 1011.74,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 268.97,
+      "rsi2": 3.26,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": "red",
+      "news_hits": [
+        {
+          "keywords": [
+            "profit warning"
+          ],
+          "headline": "J.B. Hunt’s Diesel Shock Hits Transportation ETFs: Which Funds Have the Most Fuel-Sensitive Exposure?",
+          "created_at": "2026-09-16T18:57:39Z",
+          "url": "https://www.benzinga.com/etfs/sector-etfs/26/09/61826719/j-b-hunts-diesel-shock-hits-transportation-etfs-which-funds-have-the-most-fuel-sensitive-exposure"
+        }
+      ],
+      "cap_projection": "within_cap",
+      "status": "awaiting_execution"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "MDLZ",
+      "dollar_amount": 1011.74,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 60.5,
+      "rsi2": 3.4,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "cap_projection": "over_cap_skip_whole",
+      "status": "awaiting_execution"
+    },
+    {
+      "seq": 6,
+      "action": "buy",
+      "symbol": "VZ",
+      "dollar_amount": 567.45,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 47.875,
+      "rsi2": 4.61,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "cap_projection": "over_cap_skip_whole",
+      "status": "awaiting_execution"
     }
-  ],
-  "funding_note": "引擎按「出场回款即时可用」定额: 生成时 BP 仅 99.89, 但 NSC+PFE 出场已于 15:24 即时成交, 回款约 ,346.98 → 执行时实时 BP 会远高于生成时。执行前仍须重取实时 min(buying_power, cash) 为准 (红线9)。",
-  "news_precheck": {
-    "checked": [
-      "RVMD",
-      "CVS",
-      "BMY"
-    ],
-    "red_flagged": [],
-    "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
-  },
-  "cross_track_funding": {
-    "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 0,
-    "option_collateral": 0.0,
-    "note": "今日无期权买单, 抵押 0, 股票 cap = 执行时实时 BP"
-  },
-  "supersedes": {
-    "trade_date": "2026-09-16",
-    "status_was": "partially_executed",
-    "note": "09-16 清单中 XLF 94.89 未执行 (越收盘被 queued 后撤单)。按顺延协议, 次一交易日收盘前主跑产出的新清单**自动取代**旧清单 —— XLF 由今日引擎重新评估: 今日 XLF RSI-2 8.48 仍有信号, 但因可用资金不足被跳过, 未进入本清单。"
-  },
-  "executed_at_et": "2026-09-17 15:30 ET",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "countdown_check": "执行前先算收盘倒计时 (09-16 教训): 15:29:51 起步, 距 15:55 关窗 25.1 分, 3 单余量充足 → 全批执行。实际耗时 12 秒 (19:30:19→19:30:31)",
-    "buying_power_at_execution": 2546.61,
-    "cash_at_execution": 5146.61,
-    "unleveraged_buying_power": 2546.61,
-    "cap_note": "cap=min(BP,cash)=$2,546.61 (BP 比 cash 少的 $2,600 为 IWM 价差抵押); 出单额 $2,543.20 ≤ cap, 余 $3.41, 三单全额无跳过"
-  }
+  ]
 }
