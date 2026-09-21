@@ -2,7 +2,7 @@
   "trade_date": "2026-09-21",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-21 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "expired",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -79,7 +79,7 @@
       "max_gain_usd": 108.0,
       "state_file": "state/weekly_call_live_positions.json",
       "valid_until": "same_session_1545_et",
-      "status": "awaiting_execution",
+      "status": "expired",
       "live_nbbo_at_notify": {
         "checked_at_et": "2026-09-21 15:27 ET",
         "source": "cash_printer get_option_quotes (券商真实 NBBO, 非 indicative)",
@@ -109,5 +109,12 @@
         "note": "券商真实 NBBO 优于引擎 indicative 快照 (引擎 est 0.36)。建议限价 $0.42 (保守 0.41 与 mid 0.43 之间); 不成交可降到 $0.41 (≈ 保守价, 近确定成交)。**绝不低于引擎底线 $0.36** (红线2/3)。tick=0.01 (min_ticks below_tick, cutoff $3.00)"
       }
     }
-  ]
+  ],
+  "expiry_record": {
+    "expired_at_et": "2026-09-21 15:45 ET (窗口关闭)",
+    "detected_at_et": "2026-09-21 16:15 ET",
+    "reason": "option_pending_template exec_day=same_day, 无顺延机制。用户回复「执行」时 16:15 ET, 距期权窗关闭已 30 分钟, 且已收盘。",
+    "verified": "get_option_orders 确认今日无 XLE 单; get_option_positions / portfolio options_value=0 —— 未开仓, 无残留",
+    "next": "绝不追价 (红线2)。2026-09-22 15:20 收盘前主跑以新数据重新评估 XLE 及全部候选。"
+  }
 }
