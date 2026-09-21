@@ -1,8 +1,8 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-14",
+  "date": "2026-09-21",
   "coid_prefix": "mom",
-  "next_open": "2026-09-15T09:30:00-04:00",
+  "next_open": "2026-09-22T09:30:00-04:00",
   "skipped": [
     "QQQ sell: 排队限价下买不起 1 整股, 跳过"
   ],

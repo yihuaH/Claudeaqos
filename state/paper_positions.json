@@ -45,13 +45,6 @@
       "cost": 9440.79,
       "tranches": 1
     },
-    "RVMD": {
-      "qty": 48.0,
-      "entry_price": 200.514375,
-      "entry_date": "2026-09-17",
-      "cost": 9624.69,
-      "tranches": 1
-    },
     "XLF": {
       "qty": 169.0,
       "entry_price": 56.128757,
@@ -85,6 +78,20 @@
       "entry_price": 384.82,
       "entry_date": "2026-09-18",
       "cost": 2693.74,
+      "tranches": 1
+    },
+    "MDLZ": {
+      "qty": 154.0,
+      "entry_price": 60.808377,
+      "entry_date": "2026-09-21",
+      "cost": 9364.49,
+      "tranches": 1
+    },
+    "VZ": {
+      "qty": 9.0,
+      "entry_price": 48.188889,
+      "entry_date": "2026-09-21",
+      "cost": 433.7,
       "tranches": 1
     }
   },
@@ -1770,6 +1777,33 @@
       "side": "buy",
       "qty": 7.0,
       "price": 384.82,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "RVMD",
+      "side": "sell",
+      "qty": 48.0,
+      "price": 190.7925,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "MDLZ",
+      "side": "buy",
+      "qty": 154.0,
+      "price": 60.808377,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-21",
+      "symbol": "VZ",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 48.188889,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
