@@ -57,7 +57,64 @@
       "max_value_per_contract": 26.0,
       "max_loss_usd": 2509.0,
       "max_gain_usd": 91.0
+    },
+    "XLE261002P00060500": {
+      "structure": "credit_put_spread",
+      "qty": 3,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
+      "legs": [
+        {
+          "symbol": "XLE261002P00060500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 60.5,
+          "quote": {
+            "bid": 0.42,
+            "ask": 0.44
+          },
+          "spread_pct": 4.651
+        },
+        {
+          "symbol": "XLE261002P00055000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 55.0,
+          "quote": {
+            "bid": 0.03,
+            "ask": 0.06
+          },
+          "spread_pct": 66.667
+        }
+      ],
+      "est_price": 0.36,
+      "direction": "credit",
+      "underlying": "XLE",
+      "expiry": "2026-10-02",
+      "dte": 11,
+      "spot": 62.675,
+      "rsi2": 9.47,
+      "model_price": 0.3348,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "credit",
+        "est": 0.36,
+        "model_flat": 0.3348,
+        "model_surface": 0.3541,
+        "ratio_flat_pct": 107.5,
+        "ratio_surface_pct": 101.7
+      },
+      "entry_quote": {
+        "mid": 0.385,
+        "spread_pct": 4.651,
+        "long_spread_pct": 66.667,
+        "net_credit_conservative": 0.36
+      },
+      "risk_per_contract": 5.14,
+      "max_value_per_contract": 5.5,
+      "max_loss_usd": 1542.0,
+      "max_gain_usd": 108.0
     }
   },
-  "updated": "2026-09-21"
+  "updated": "2026-09-22"
 }

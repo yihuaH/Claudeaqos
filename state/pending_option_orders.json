@@ -2,7 +2,7 @@
   "trade_date": "2026-09-21",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-21 15:22 ET",
-  "status": "placed_by_user_after_window",
+  "status": "executed",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -79,7 +79,7 @@
       "max_gain_usd": 108.0,
       "state_file": "state/weekly_call_live_positions.json",
       "valid_until": "same_session_1545_et",
-      "status": "placed_by_user_after_window",
+      "status": "filled",
       "live_nbbo_at_notify": {
         "checked_at_et": "2026-09-21 15:27 ET",
         "source": "cash_printer get_option_quotes (券商真实 NBBO, 非 indicative)",
@@ -107,7 +107,8 @@
         "suggested_net_limit": 0.42,
         "fallback_net_limit": 0.41,
         "note": "券商真实 NBBO 优于引擎 indicative 快照 (引擎 est 0.36)。建议限价 $0.42 (保守 0.41 与 mid 0.43 之间); 不成交可降到 $0.41 (≈ 保守价, 近确定成交)。**绝不低于引擎底线 $0.36** (红线2/3)。tick=0.01 (min_ticks below_tick, cutoff $3.00)"
-      }
+      },
+      "filled_net_credit": 0.39
     }
   ],
   "expiry_record": {
@@ -123,7 +124,7 @@
     "order_id": "6ab191ce-29f6-4096-bb8e-2cbc8a40a6a2",
     "placed_agent": "user",
     "created_at_et": "2026-09-21 16:21:34 ET",
-    "state": "queued",
+    "state": "filled",
     "type": "limit",
     "direction": "credit",
     "price": 0.39,
@@ -179,6 +180,31 @@
     "execution_timing": "盘后下的 gfd + regular_hours 单 → **排队至次一交易日 (2026-09-22) 09:30 ET 开盘撮合**。本账本先例: BAC 6a890ea4 (08-21 22:51 ET 下, 08-24 09:30 成交)、NVDA 6a87b8b4 (同形态)。",
     "risk_note": "⚠️ 以 09-21 收盘时的报价挂单、次日开盘撮合 —— 期间 XLE 隔夜跳空的风险由用户承担。4D 纪律「窗口内未成交→次日以新数据重评, 绝不追价」被本次手工单绕过, 属用户主动决定 (手动 App 通道是 4D 既定渠道)。会话未下此单, 也不擅自撤单。",
     "if_filled": "成交后按 4D 用 weekly_calls.py apply 写 state/weekly_call_live_positions.json; 跨会话回收 context 已在 state/weekly_call_live_last_orders.json。",
-    "funding_impact": "抵押已实占 $1,533 → 明日股票清单 cap = 实时 min(BP,cash), 现为 $4,096.78; 原 6 单 $5,626.15 塞不下, 按引擎顺序前 4 单 $4,046.96 可执行, MDLZ/VZ 越 cap 整单跳过 (与今日结论一致)。"
+    "funding_impact": "抵押已实占 $1,533 → 明日股票清单 cap = 实时 min(BP,cash), 现为 $4,096.78; 原 6 单 $5,626.15 塞不下, 按引擎顺序前 4 单 $4,046.96 可执行, MDLZ/VZ 越 cap 整单跳过 (与今日结论一致)。",
+    "fill": {
+      "filled_at_et": "2026-09-22 09:30:02 ET (开盘撮合, 与预判一致)",
+      "processed_premium_usd": 117.0,
+      "legs_filled": {
+        "XLE261002P00060500": {
+          "side": "sell",
+          "price": 0.5,
+          "qty": 3
+        },
+        "XLE261002P00055000": {
+          "side": "buy",
+          "price": 0.11,
+          "qty": 3
+        }
+      },
+      "net_credit": 0.39,
+      "note": "两腿价格均高于 09-21 收盘报价 (短腿 0.50 vs 昨 bid 0.45; 长腿 0.11 vs 昨 ask 0.04) —— XLE 隔夜波动把两腿一起抬高, 净贷记恰好落在限价 0.39 上。",
+      "risk_per_contract": 5.11,
+      "collateral_held_usd": 1650.0,
+      "collateral_note": "券商按全宽扣 5.5x100x3 = $1,650, 贷记 $117 已入现金 → 净在险 $1,533",
+      "max_gain_usd": 117.0,
+      "max_loss_usd": 1533.0,
+      "breakeven_xle": 60.11,
+      "ledger": "已由 weekly_calls.py apply 写入 state/weekly_call_live_positions.json (entry_date=2026-09-22 券商实际成交日)"
+    }
   }
 }

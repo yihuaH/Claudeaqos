@@ -2,7 +2,54 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "XLE261002P00060500": {
+      "underlying": "XLE",
+      "strike": 60.5,
+      "expiry": "2026-10-02",
+      "contracts": 3,
+      "entry_premium": 0.39,
+      "entry_date": "2026-09-22",
+      "entry_underlying": 62.675,
+      "entry_rsi2": 9.47,
+      "entry_quote": {
+        "mid": 0.385,
+        "spread_pct": 4.651,
+        "long_spread_pct": 66.667,
+        "net_credit_conservative": 0.36
+      },
+      "model_price": 0.3348,
+      "structure": "credit_put_spread",
+      "long_occ": "XLE261002P00055000",
+      "long_strike": 55.0,
+      "risk_per_contract": 5.11,
+      "max_value_per_contract": 5.5,
+      "entry_legs": [
+        {
+          "symbol": "XLE261002P00060500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 60.5,
+          "quote": {
+            "bid": 0.42,
+            "ask": 0.44
+          },
+          "spread_pct": 4.651
+        },
+        {
+          "symbol": "XLE261002P00055000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 55.0,
+          "quote": {
+            "bid": 0.03,
+            "ask": 0.06
+          },
+          "spread_pct": 66.667
+        }
+      ]
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -102,6 +149,15 @@
       "price": 0.05,
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "XLE261002P00060500",
+      "side": "buy",
+      "qty": 3,
+      "price": 0.39,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit"
     }
   ],
   "round_trips": [
