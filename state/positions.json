@@ -24,17 +24,38 @@
       "tranches": 1
     },
     "CVS": {
-      "qty": 11.151014,
-      "entry_price": 90.746,
+      "qty": 22.711127,
+      "entry_price": 89.1039,
       "entry_date": "2026-09-17",
-      "cost": 1011.91,
-      "tranches": 1
+      "cost": 2023.65,
+      "tranches": 2
     },
     "BMY": {
       "qty": 8.258835,
       "entry_price": 62.8878,
       "entry_date": "2026-09-17",
       "cost": 519.38,
+      "tranches": 1
+    },
+    "CSX": {
+      "qty": 21.809488,
+      "entry_price": 46.3899,
+      "entry_date": "2026-09-22",
+      "cost": 1011.74,
+      "tranches": 1
+    },
+    "ALL": {
+      "qty": 4.385446,
+      "entry_price": 230.704,
+      "entry_date": "2026-09-22",
+      "cost": 1011.74,
+      "tranches": 1
+    },
+    "UNP": {
+      "qty": 3.714035,
+      "entry_price": 272.4099,
+      "entry_date": "2026-09-22",
+      "cost": 1011.74,
       "tranches": 1
     }
   },
@@ -1875,6 +1896,42 @@
       "price": 286.1301,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CVS",
+      "side": "buy",
+      "qty": 11.560113,
+      "price": 87.5199,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CSX",
+      "side": "buy",
+      "qty": 21.809488,
+      "price": 46.3899,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "ALL",
+      "side": "buy",
+      "qty": 4.385446,
+      "price": 230.704,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 3.714035,
+      "price": 272.4099,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

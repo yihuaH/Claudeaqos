@@ -2,7 +2,7 @@
   "trade_date": "2026-09-21",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-21 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -56,8 +56,12 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "within_cap",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "filled",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "filled_qty": 11.560113,
+      "filled_price": 87.5199,
+      "order_id": "6ab2b25a-f6e7-4689-883f-df364d8474d2",
+      "slippage_vs_est_pct": 0.074
     },
     {
       "seq": 2,
@@ -72,8 +76,12 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "within_cap",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "filled",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "filled_qty": 21.809488,
+      "filled_price": 46.3899,
+      "order_id": "6ab2b25c-58cf-4c4b-a340-e08772c2a006",
+      "slippage_vs_est_pct": 0.99
     },
     {
       "seq": 3,
@@ -88,8 +96,12 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "within_cap",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "filled",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "filled_qty": 4.385446,
+      "filled_price": 230.704,
+      "order_id": "6ab2b25f-dc6e-45a2-9a30-4f349f9df39f",
+      "slippage_vs_est_pct": -4.829
     },
     {
       "seq": 4,
@@ -114,8 +126,12 @@
         }
       ],
       "cap_projection": "within_cap",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "filled",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "filled_qty": 3.714035,
+      "filled_price": 272.4099,
+      "order_id": "6ab2b261-2a2b-44f0-9b13-7ac8fd831074",
+      "slippage_vs_est_pct": 1.279
     },
     {
       "seq": 5,
@@ -130,8 +146,9 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "over_cap_skip_whole",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "skipped_over_cap",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "skip_reason": "越 cap 整单跳过不缩量 (红线9); cap=$4,096.52, 前4单已占 $4,046.96"
     },
     {
       "seq": 6,
@@ -146,8 +163,9 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "over_cap_skip_whole",
-      "status": "awaiting_execution",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算"
+      "status": "skipped_over_cap",
+      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
+      "skip_reason": "越 cap 整单跳过不缩量 (红线9); cap=$4,096.52, 前4单已占 $4,046.96"
     }
   ],
   "carryover": {
@@ -157,5 +175,19 @@
     "new_valid_until": "2026-09-22 15:55 ET",
     "note": "逐字段沿用 2026-09-21 引擎输出 (红线2 不得改金额/标的)。执行时须重取实时 min(buying_power, cash)。若 2026-09-22 15:20 收盘前主跑先跑完, 新清单**自动取代**本清单。",
     "cap_note_revised": "【2026-09-22 10:50 ET 确定】XLE 期权单已于今日 09:30:02 开盘成交 (净贷记 $0.39 x3), 券商按全宽扣抵押 $1,650、贷记 $117 入现金。实时: cash $5,746.52 / BP **$4,096.52**。股票 cap = min(BP,cash) = $4,096.52。按引擎顺序 CVS+CSX+ALL+UNP = $4,046.96 ≤ cap (余 $49.56) 可执行; MDLZ $1,011.74 与 VZ $567.45 越 cap → **整单跳过不缩量** (红线9)。执行前仍须重取实时资金。"
+  },
+  "executed_at_et": "2026-09-22 12:52 ET (顺延窗)",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "countdown_check": "执行前先算收盘倒计时 (09-21 教训): 12:52:14 ET 起步, 距 15:55 关窗 182.8 分、距 15:20 新清单取代 147.8 分 → 余量充足, 全批执行。实际耗时 7 秒 (16:52:42→16:52:49 UTC)",
+    "buying_power_at_execution": 4096.52,
+    "cash_at_execution": 5746.52,
+    "unleveraged_buying_power": 4096.52,
+    "cap_note": "cap=min(BP,cash)=$4,096.52 (BP 比 cash 少的 $1,650 为 XLE 信用价差全宽抵押); 出单额 $4,046.96 ≤ cap, 余 $49.56。MDLZ/VZ 越 cap **整单跳过不缩量**, 未下单",
+    "filled": 4,
+    "skipped": 2,
+    "total_placed_usd": 4046.96,
+    "fees_usd": 0.0,
+    "price_drift_note": "顺延执行的是 09-21 收盘信号价, 至今日 12:52 已漂移: CVS +0.07% / CSX +0.99% / UNP +1.28% / **ALL −4.83%**。ALL 大幅低于信号价 —— 对均值回归买入属更优入场, 但幅度异常已在对话点名"
   }
 }
