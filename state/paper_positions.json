@@ -10,13 +10,6 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "BNY": {
-      "qty": 60.0,
-      "entry_price": 156.674333,
-      "entry_date": "2026-09-15",
-      "cost": 9400.46,
-      "tranches": 1
-    },
     "BAC": {
       "qty": 161.0,
       "entry_price": 59.388075,
@@ -24,46 +17,11 @@
       "cost": 9561.48,
       "tranches": 1
     },
-    "WELL": {
-      "qty": 40.0,
-      "entry_price": 233.94525,
-      "entry_date": "2026-09-15",
-      "cost": 9357.81,
-      "tranches": 1
-    },
-    "LNG": {
-      "qty": 35.0,
-      "entry_price": 269.769714,
-      "entry_date": "2026-09-16",
-      "cost": 9441.94,
-      "tranches": 1
-    },
-    "IWM": {
-      "qty": 33.0,
-      "entry_price": 286.084545,
-      "entry_date": "2026-09-16",
-      "cost": 9440.79,
-      "tranches": 1
-    },
     "XLF": {
       "qty": 169.0,
       "entry_price": 56.128757,
       "entry_date": "2026-09-17",
       "cost": 9485.76,
-      "tranches": 1
-    },
-    "CSX": {
-      "qty": 197.0,
-      "entry_price": 48.45,
-      "entry_date": "2026-09-17",
-      "cost": 9544.65,
-      "tranches": 1
-    },
-    "CVS": {
-      "qty": 104.0,
-      "entry_price": 90.457115,
-      "entry_date": "2026-09-18",
-      "cost": 9407.54,
       "tranches": 1
     },
     "BMY": {
@@ -92,6 +50,41 @@
       "entry_price": 48.188889,
       "entry_date": "2026-09-21",
       "cost": 433.7,
+      "tranches": 1
+    },
+    "ALL": {
+      "qty": 38.0,
+      "entry_price": 240.515,
+      "entry_date": "2026-09-22",
+      "cost": 9139.57,
+      "tranches": 1
+    },
+    "UNP": {
+      "qty": 34.0,
+      "entry_price": 272.205,
+      "entry_date": "2026-09-22",
+      "cost": 9254.97,
+      "tranches": 1
+    },
+    "CVX": {
+      "qty": 46.0,
+      "entry_price": 201.99,
+      "entry_date": "2026-09-22",
+      "cost": 9291.54,
+      "tranches": 1
+    },
+    "CB": {
+      "qty": 27.0,
+      "entry_price": 336.11,
+      "entry_date": "2026-09-22",
+      "cost": 9074.97,
+      "tranches": 1
+    },
+    "PM": {
+      "qty": 40.0,
+      "entry_price": 188.498,
+      "entry_date": "2026-09-22",
+      "cost": 7539.92,
       "tranches": 1
     }
   },
@@ -1804,6 +1797,105 @@
       "side": "buy",
       "qty": 9.0,
       "price": 48.188889,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "BNY",
+      "side": "sell",
+      "qty": 60.0,
+      "price": 152.321167,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 40.0,
+      "price": 229.024,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "LNG",
+      "side": "sell",
+      "qty": 35.0,
+      "price": 270.46,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "IWM",
+      "side": "sell",
+      "qty": 33.0,
+      "price": 287.05,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 197.0,
+      "price": 46.403655,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CVS",
+      "side": "sell",
+      "qty": 104.0,
+      "price": 87.93,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "ALL",
+      "side": "buy",
+      "qty": 38.0,
+      "price": 240.515,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "UNP",
+      "side": "buy",
+      "qty": 34.0,
+      "price": 272.205,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CVX",
+      "side": "buy",
+      "qty": 46.0,
+      "price": 201.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "CB",
+      "side": "buy",
+      "qty": 27.0,
+      "price": 336.11,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "PM",
+      "side": "buy",
+      "qty": 40.0,
+      "price": 188.498,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
