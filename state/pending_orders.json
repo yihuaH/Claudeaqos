@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-21",
+  "trade_date": "2026-09-22",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-21 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-22 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,179 +15,45 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10115.95,
-  "buying_power_at_generation": 5629.78,
-  "funding_note": "3 笔出场 (BNY/LNG/IWM) 已于 15:25 即时成交, 回款 $3,031.54 已到账 —— 生成时实时 BP=cash=$5,629.78 (unleveraged 相同, 无借贷额度)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "portfolio_value_at_generation": 10065.02,
+  "buying_power_at_generation": 49.56,
+  "funding_note": "今日**无出场卖单**, 故无回款。生成时 cash $1,699.56 / BP **$49.56** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
   "news_precheck": {
     "checked": [
-      "CVS",
-      "CSX",
-      "ALL",
-      "UNP",
-      "MDLZ",
-      "VZ"
+      "BAC"
     ],
-    "red_flagged": [
-      "UNP"
-    ],
-    "note": "integrations.py news, 报告级仅提示不改单 (红线2); 由用户 4C 一票否决"
+    "red_flagged": [],
+    "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
   },
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 1,
-    "option_collateral": 1542.0,
-    "stock_cap": 4087.78,
-    "note": "cap = min(BP,cash) $5,629.78 − 期权抵押 $1,542.00 = $4,087.78。按引擎顺序累计: CVS+CSX+ALL+UNP=$4,046.96 ≤ cap; MDLZ 与 VZ 越 cap → **整单跳过不缩量**。执行时以实时资金重算。"
+    "option_orders_today": 0,
+    "option_collateral": 0.0,
+    "note": "今日无新期权买单 → 股票 cap = 执行时实时 min(BP,cash)。已持 XLE 价差的 $1,650 抵押已反映在 BP 里, 不重复扣。"
+  },
+  "supersedes": {
+    "trade_date": "2026-09-21",
+    "status_was": "executed",
+    "note": "09-21 清单已于今日 12:52 全额执行 (4 单成交 $4,046.96, MDLZ/VZ 越 cap 跳过)。按顺延协议, 今日收盘前主跑产出的新清单自动取代旧清单。MDLZ (今日 RSI-2 已不在候选前列) 与 VZ (RSI-2 1.13 仍在候选, 但资金不足未入单) 由今日引擎重新评估。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "CVS",
-      "dollar_amount": 1011.74,
+      "symbol": "BAC",
+      "dollar_amount": 44.56,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 87.455,
-      "rsi2": 0.97,
+      "est_price": 56.41,
+      "rsi2": 7.79,
       "tranche": 2,
-      "avg_entry_price": 90.746,
-      "drawdown_pct": -3.63,
+      "avg_entry_price": 59.0799,
+      "drawdown_pct": -4.52,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "cap_projection": "within_cap",
-      "status": "filled",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "filled_qty": 11.560113,
-      "filled_price": 87.5199,
-      "order_id": "6ab2b25a-f6e7-4689-883f-df364d8474d2",
-      "slippage_vs_est_pct": 0.074
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "CSX",
-      "dollar_amount": 1011.74,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 45.935,
-      "rsi2": 0.34,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "cap_projection": "within_cap",
-      "status": "filled",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "filled_qty": 21.809488,
-      "filled_price": 46.3899,
-      "order_id": "6ab2b25c-58cf-4c4b-a340-e08772c2a006",
-      "slippage_vs_est_pct": 0.99
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "ALL",
-      "dollar_amount": 1011.74,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 242.41,
-      "rsi2": 1.85,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "cap_projection": "within_cap",
-      "status": "filled",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "filled_qty": 4.385446,
-      "filled_price": 230.704,
-      "order_id": "6ab2b25f-dc6e-45a2-9a30-4f349f9df39f",
-      "slippage_vs_est_pct": -4.829
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "UNP",
-      "dollar_amount": 1011.74,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 268.97,
-      "rsi2": 3.26,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": "red",
-      "news_hits": [
-        {
-          "keywords": [
-            "profit warning"
-          ],
-          "headline": "J.B. Hunt’s Diesel Shock Hits Transportation ETFs: Which Funds Have the Most Fuel-Sensitive Exposure?",
-          "created_at": "2026-09-16T18:57:39Z",
-          "url": "https://www.benzinga.com/etfs/sector-etfs/26/09/61826719/j-b-hunts-diesel-shock-hits-transportation-etfs-which-funds-have-the-most-fuel-sensitive-exposure"
-        }
-      ],
-      "cap_projection": "within_cap",
-      "status": "filled",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "filled_qty": 3.714035,
-      "filled_price": 272.4099,
-      "order_id": "6ab2b261-2a2b-44f0-9b13-7ac8fd831074",
-      "slippage_vs_est_pct": 1.279
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "MDLZ",
-      "dollar_amount": 1011.74,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 60.5,
-      "rsi2": 3.4,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "cap_projection": "over_cap_skip_whole",
-      "status": "skipped_over_cap",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "skip_reason": "越 cap 整单跳过不缩量 (红线9); cap=$4,096.52, 前4单已占 $4,046.96"
-    },
-    {
-      "seq": 6,
-      "action": "buy",
-      "symbol": "VZ",
-      "dollar_amount": 567.45,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 47.875,
-      "rsi2": 4.61,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "cap_projection": "over_cap_skip_whole",
-      "status": "skipped_over_cap",
-      "cap_projection_note": "原 cap 投影含期权抵押 $1,542; 期权清单已过期, 明日以实时资金重算",
-      "skip_reason": "越 cap 整单跳过不缩量 (红线9); cap=$4,096.52, 前4单已占 $4,046.96"
+      "status": "awaiting_execution",
+      "sizing_note": "引擎按可用资金定额: BP $49.56 − min_cash_reserve_usd $5.00 = $44.56 (≥ min_order_usd $5.00)。非标准档 (净值×10% ≈ $1,007) —— 昨日 4C 已把资金用到只剩 $49.56。这是**引擎自己的 sizing**, 不是会话缩量 (红线9 的「整单跳过不缩量」指执行时 cap 闸)。"
     }
-  ],
-  "carryover": {
-    "triggered_at_et": "2026-09-21 16:15 ET",
-    "reason": "用户回复「执行」时为 16:15 ET —— 当日执行窗 15:30-15:55 已关闭 20.5 分钟, 且 16:00 收盘。按 4C 协议 regular_hours 单不得在盘后下, 会话**未下任何买单**。",
-    "new_window_et": "2026-09-22 (周二) 09:45-15:55 ET",
-    "new_valid_until": "2026-09-22 15:55 ET",
-    "note": "逐字段沿用 2026-09-21 引擎输出 (红线2 不得改金额/标的)。执行时须重取实时 min(buying_power, cash)。若 2026-09-22 15:20 收盘前主跑先跑完, 新清单**自动取代**本清单。",
-    "cap_note_revised": "【2026-09-22 10:50 ET 确定】XLE 期权单已于今日 09:30:02 开盘成交 (净贷记 $0.39 x3), 券商按全宽扣抵押 $1,650、贷记 $117 入现金。实时: cash $5,746.52 / BP **$4,096.52**。股票 cap = min(BP,cash) = $4,096.52。按引擎顺序 CVS+CSX+ALL+UNP = $4,046.96 ≤ cap (余 $49.56) 可执行; MDLZ $1,011.74 与 VZ $567.45 越 cap → **整单跳过不缩量** (红线9)。执行前仍须重取实时资金。"
-  },
-  "executed_at_et": "2026-09-22 12:52 ET (顺延窗)",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "countdown_check": "执行前先算收盘倒计时 (09-21 教训): 12:52:14 ET 起步, 距 15:55 关窗 182.8 分、距 15:20 新清单取代 147.8 分 → 余量充足, 全批执行。实际耗时 7 秒 (16:52:42→16:52:49 UTC)",
-    "buying_power_at_execution": 4096.52,
-    "cash_at_execution": 5746.52,
-    "unleveraged_buying_power": 4096.52,
-    "cap_note": "cap=min(BP,cash)=$4,096.52 (BP 比 cash 少的 $1,650 为 XLE 信用价差全宽抵押); 出单额 $4,046.96 ≤ cap, 余 $49.56。MDLZ/VZ 越 cap **整单跳过不缩量**, 未下单",
-    "filled": 4,
-    "skipped": 2,
-    "total_placed_usd": 4046.96,
-    "fees_usd": 0.0,
-    "price_drift_note": "顺延执行的是 09-21 收盘信号价, 至今日 12:52 已漂移: CVS +0.07% / CSX +0.99% / UNP +1.28% / **ALL −4.83%**。ALL 大幅低于信号价 —— 对均值回归买入属更优入场, 但幅度异常已在对话点名"
-  }
+  ]
 }

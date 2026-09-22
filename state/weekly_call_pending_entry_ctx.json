@@ -150,7 +150,37 @@
         "mid": 5.995,
         "spread_pct": 0.834
       }
+    },
+    "XLE261002C00053000": {
+      "symbol": "XLE261002C00053000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 9.11,
+      "underlying": "XLE",
+      "strike": 53.0,
+      "expiry": "2026-10-02",
+      "dte": 10,
+      "spot": 62.015,
+      "rsi2": 6.29,
+      "model_price": 9.0732,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 9.105,
+        "model_flat": 9.0732,
+        "model_surface": 9.1025,
+        "ratio_flat_pct": 99.7,
+        "ratio_surface_pct": 100.0
+      },
+      "entry_quote": {
+        "bid": 9.02,
+        "ask": 9.19,
+        "mid": 9.105,
+        "spread_pct": 1.867
+      }
     }
   },
-  "updated": "2026-09-21"
+  "updated": "2026-09-22"
 }

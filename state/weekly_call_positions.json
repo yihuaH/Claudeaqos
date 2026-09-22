@@ -36,6 +36,23 @@
         "spread_pct": 0.834
       },
       "model_price": 5.9988
+    },
+    "XLE261002C00053000": {
+      "underlying": "XLE",
+      "strike": 53.0,
+      "expiry": "2026-10-02",
+      "contracts": 1,
+      "entry_premium": 9.25,
+      "entry_date": "2026-09-22",
+      "entry_underlying": 62.015,
+      "entry_rsi2": 6.29,
+      "entry_quote": {
+        "bid": 9.02,
+        "ask": 9.19,
+        "mid": 9.105,
+        "spread_pct": 1.867
+      },
+      "model_price": 9.0732
     }
   },
   "trades": [
@@ -238,6 +255,15 @@
       "price": 31.27,
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "XLE261002C00053000",
+      "side": "buy",
+      "qty": 1,
+      "price": 9.25,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [

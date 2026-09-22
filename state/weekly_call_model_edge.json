@@ -80,6 +80,22 @@
       "model_surface": 6.0219,
       "ratio_flat_pct": 100.1,
       "ratio_surface_pct": 100.4
+    },
+    {
+      "date": "2026-09-22",
+      "symbol": "XLE",
+      "outcome": "order",
+      "reason": "rsi2_entry_call",
+      "est_price": 9.11,
+      "spot": 62.015,
+      "rsi2": 6.29,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 9.105,
+      "model_flat": 9.0732,
+      "model_surface": 9.1025,
+      "ratio_flat_pct": 99.7,
+      "ratio_surface_pct": 100.0
     }
   ]
 }
