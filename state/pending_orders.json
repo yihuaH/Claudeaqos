@@ -2,7 +2,7 @@
   "trade_date": "2026-09-22",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-22 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -52,8 +52,36 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "sizing_note": "引擎按可用资金定额: BP $49.56 − min_cash_reserve_usd $5.00 = $44.56 (≥ min_order_usd $5.00)。非标准档 (净值×10% ≈ $1,007) —— 昨日 4C 已把资金用到只剩 $49.56。这是**引擎自己的 sizing**, 不是会话缩量 (红线9 的「整单跳过不缩量」指执行时 cap 闸)。"
+      "status": "filled",
+      "sizing_note": "引擎按可用资金定额: BP $49.56 − min_cash_reserve_usd $5.00 = $44.56 (≥ min_order_usd $5.00)。非标准档 (净值×10% ≈ $1,007) —— 昨日 4C 已把资金用到只剩 $49.56。这是**引擎自己的 sizing**, 不是会话缩量 (红线9 的「整单跳过不缩量」指执行时 cap 闸)。",
+      "filled_qty": 0.798567,
+      "filled_price": 55.7999,
+      "order_id": "6ab3f80a-e57f-4e0c-981c-d3e5f5a0276f",
+      "slippage_vs_est_pct": -1.082
     }
-  ]
+  ],
+  "executed_at_et": "2026-09-23 12:02 ET (顺延窗)",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "countdown_check": "12:02:07 ET 起步, 距 15:55 关窗 232.9 分、距 15:20 新清单取代 197.9 分 → 余量充足。耗时 11 秒",
+    "buying_power_at_execution": 49.56,
+    "cash_at_execution": 1699.56,
+    "unleveraged_buying_power": 49.56,
+    "cap_note": "cap=min(BP,cash)=$49.56; 出单 $44.56 ≤ cap, 余 $5.00 = min_cash_reserve_usd。无跳过",
+    "filled": 1,
+    "skipped": 0,
+    "total_placed_usd": 44.56,
+    "fees_usd": 0.0,
+    "price_drift_note": "09-22 信号价 56.41 → 今日 12:02 成交 55.7999, **低 1.08%** —— 顺延执行的入场更优 (连续第二个同向样本, 见 09-22 ALL)",
+    "position_after": {
+      "qty": 17.854452,
+      "entry_price": 58.9332,
+      "cost": 1052.22,
+      "tranches": 2,
+      "avg_moved": "59.0799 → 58.9332 (降 $0.1467)",
+      "exposure_pct_of_equity": 10.4,
+      "stop_loss_price": 54.81,
+      "note": "⚠️ **档位已满但敞口只用了 10.4%** —— 第2档因现金见底只买了 $44.56 (标准档 ~$1,007)。tranches=2 触顶后引擎**不会再加 BAC**, 即使后续跌得更深。这是「现金约束 × 档位计数」的一个副作用, 已记入待办。"
+    }
+  }
 }
