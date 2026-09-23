@@ -2,7 +2,7 @@
   "trade_date": "2026-09-23",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-23 15:24 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -80,8 +80,12 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "filled",
+      "cap_projection": "within_cap",
+      "filled_qty": 3.791232,
+      "filled_price": 265.0299,
+      "order_id": "6ab42926-a6df-4516-80c2-2e9681365105",
+      "slippage_vs_est_pct": -0.015
     },
     {
       "seq": 2,
@@ -95,8 +99,26 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "filled",
+      "cap_projection": "within_cap",
+      "filled_qty": 0.500405,
+      "filled_price": 54.6357,
+      "order_id": "6ab42928-4ec0-4ec4-a99a-a86a04ec1562",
+      "slippage_vs_est_pct": 0.001
     }
-  ]
+  ],
+  "executed_at_et": "2026-09-23 15:31 ET",
+  "execution": {
+    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
+    "countdown_check": "15:31:37 ET 起步 —— 窗口已开 (15:30), 距 15:55 关窗 23.4 分, 余量充足。耗时 14 秒",
+    "buying_power_at_execution": 1037.03,
+    "cash_at_execution": 2687.03,
+    "unleveraged_buying_power": 1037.03,
+    "cap_note": "cap=min(BP,cash)=$1,037.03 (cash 比 BP 多的 $1,650 为 XLE 价差全宽抵押); 出单 $1,032.13 ≤ cap, 余 $4.90, 无跳过",
+    "filled": 2,
+    "skipped": 0,
+    "total_placed_usd": 1032.13,
+    "fees_usd": 0.0,
+    "price_drift_note": "当日执行 (非顺延), 漂移极小: ADP −0.015% / XLF +0.001%"
+  }
 }

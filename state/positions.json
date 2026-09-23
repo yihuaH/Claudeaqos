@@ -50,6 +50,20 @@
       "entry_date": "2026-09-22",
       "cost": 1011.74,
       "tranches": 1
+    },
+    "ADP": {
+      "qty": 3.791232,
+      "entry_price": 265.0299,
+      "entry_date": "2026-09-23",
+      "cost": 1004.79,
+      "tranches": 1
+    },
+    "XLF": {
+      "qty": 0.500405,
+      "entry_price": 54.6357,
+      "entry_date": "2026-09-23",
+      "cost": 27.34,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1943,6 +1957,24 @@
       "price": 47.3215,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "ADP",
+      "side": "buy",
+      "qty": 3.791232,
+      "price": 265.0299,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "XLF",
+      "side": "buy",
+      "qty": 0.500405,
+      "price": 54.6357,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
