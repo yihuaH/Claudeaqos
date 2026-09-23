@@ -37,13 +37,6 @@
       "cost": 519.38,
       "tranches": 1
     },
-    "CSX": {
-      "qty": 21.809488,
-      "entry_price": 46.3899,
-      "entry_date": "2026-09-22",
-      "cost": 1011.74,
-      "tranches": 1
-    },
     "ALL": {
       "qty": 4.385446,
       "entry_price": 230.704,
@@ -1941,6 +1934,15 @@
       "price": 55.7999,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "CSX",
+      "side": "sell",
+      "qty": 21.809488,
+      "price": 47.3215,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

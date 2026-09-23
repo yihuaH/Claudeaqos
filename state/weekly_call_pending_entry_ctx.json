@@ -180,7 +180,67 @@
         "mid": 9.105,
         "spread_pct": 1.867
       }
+    },
+    "XLF261005C00048000": {
+      "symbol": "XLF261005C00048000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 6.69,
+      "underlying": "XLF",
+      "strike": 48.0,
+      "expiry": "2026-10-05",
+      "dte": 12,
+      "spot": 54.635,
+      "rsi2": 1.52,
+      "model_price": 6.6981,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 6.69,
+        "model_flat": 6.6981,
+        "model_surface": 6.7537,
+        "ratio_flat_pct": 100.1,
+        "ratio_surface_pct": 101.0
+      },
+      "entry_quote": {
+        "bid": 6.64,
+        "ask": 6.74,
+        "mid": 6.69,
+        "spread_pct": 1.495
+      }
+    },
+    "BAC261002C00049000": {
+      "symbol": "BAC261002C00049000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 7.19,
+      "underlying": "BAC",
+      "strike": 49.0,
+      "expiry": "2026-10-02",
+      "dte": 9,
+      "spot": 56.05,
+      "rsi2": 6.19,
+      "model_price": 7.1005,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 7.185,
+        "model_flat": 7.1005,
+        "model_surface": 7.1317,
+        "ratio_flat_pct": 98.8,
+        "ratio_surface_pct": 99.3
+      },
+      "entry_quote": {
+        "bid": 7.12,
+        "ask": 7.25,
+        "mid": 7.185,
+        "spread_pct": 1.809
+      }
     }
   },
-  "updated": "2026-09-22"
+  "updated": "2026-09-23"
 }

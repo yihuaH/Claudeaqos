@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-22",
+  "trade_date": "2026-09-23",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-22 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-23 15:24 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,12 +15,13 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10065.02,
-  "buying_power_at_generation": 49.56,
-  "funding_note": "今日**无出场卖单**, 故无回款。生成时 cash $1,699.56 / BP **$49.56** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "portfolio_value_at_generation": 10048.21,
+  "buying_power_at_generation": 1037.03,
+  "funding_note": "CSX 出场已于 15:24 即时成交, 回款 $1,032.06 到账 → 实时 cash $2,687.03 / BP **$1,037.03** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
   "news_precheck": {
     "checked": [
-      "BAC"
+      "ADP",
+      "XLF"
     ],
     "red_flagged": [],
     "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
@@ -29,59 +30,73 @@
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "note": "今日无新期权买单 → 股票 cap = 执行时实时 min(BP,cash)。已持 XLE 价差的 $1,650 抵押已反映在 BP 里, 不重复扣。"
+    "stock_cap": 1037.03,
+    "note": "今日无新期权买单 → 股票 cap = 实时 min(BP,cash) = $1,037.03。已持 XLE 价差的 $1,650 抵押已反映在 BP 里, 不重复扣。两单合计 $1,032.13 ≤ cap, 余 $4.90, 全部在 cap 内。"
   },
   "supersedes": {
-    "trade_date": "2026-09-21",
+    "trade_date": "2026-09-22",
     "status_was": "executed",
-    "note": "09-21 清单已于今日 12:52 全额执行 (4 单成交 $4,046.96, MDLZ/VZ 越 cap 跳过)。按顺延协议, 今日收盘前主跑产出的新清单自动取代旧清单。MDLZ (今日 RSI-2 已不在候选前列) 与 VZ (RSI-2 1.13 仍在候选, 但资金不足未入单) 由今日引擎重新评估。"
+    "note": "09-22 清单 (BAC $44.56) 已于今日 12:02 执行成交。本清单按协议自动取代。"
+  },
+  "option_alert": {
+    "near_signals": [
+      {
+        "symbol": "AMZN",
+        "rsi2_now": 20.43,
+        "scenario": "2d_-1%x2",
+        "spot": 249.71,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 1958
+      },
+      {
+        "symbol": "IWM",
+        "rsi2_now": 20.26,
+        "scenario": "2d_-1%x2",
+        "spot": 282.42,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 2489
+      },
+      {
+        "symbol": "DIA",
+        "rsi2_now": 19.42,
+        "scenario": "1d_-1%",
+        "spot": 514.52,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 4543
+      }
+    ],
+    "note": "报告级预警, **不产生订单** (红线2)。三只均为 credit_put_spread 情景推演: AMZN rsi2 20.43 / IWM 20.26 / DIA 19.42, 距入场闸 rsi2<10 尚远。est_premium_usd 是引擎给的**参考保留额**, 非订单金额。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "BAC",
-      "dollar_amount": 44.56,
+      "symbol": "ADP",
+      "dollar_amount": 1004.79,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 56.41,
-      "rsi2": 7.79,
-      "tranche": 2,
-      "avg_entry_price": 59.0799,
-      "drawdown_pct": -4.52,
+      "reason": "rsi2_entry",
+      "est_price": 265.07,
+      "rsi2": 1.36,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
-      "sizing_note": "引擎按可用资金定额: BP $49.56 − min_cash_reserve_usd $5.00 = $44.56 (≥ min_order_usd $5.00)。非标准档 (净值×10% ≈ $1,007) —— 昨日 4C 已把资金用到只剩 $49.56。这是**引擎自己的 sizing**, 不是会话缩量 (红线9 的「整单跳过不缩量」指执行时 cap 闸)。",
-      "filled_qty": 0.798567,
-      "filled_price": 55.7999,
-      "order_id": "6ab3f80a-e57f-4e0c-981c-d3e5f5a0276f",
-      "slippage_vs_est_pct": -1.082
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 2,
+      "action": "buy",
+      "symbol": "XLF",
+      "dollar_amount": 27.34,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 54.635,
+      "rsi2": 1.52,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     }
-  ],
-  "executed_at_et": "2026-09-23 12:02 ET (顺延窗)",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "countdown_check": "12:02:07 ET 起步, 距 15:55 关窗 232.9 分、距 15:20 新清单取代 197.9 分 → 余量充足。耗时 11 秒",
-    "buying_power_at_execution": 49.56,
-    "cash_at_execution": 1699.56,
-    "unleveraged_buying_power": 49.56,
-    "cap_note": "cap=min(BP,cash)=$49.56; 出单 $44.56 ≤ cap, 余 $5.00 = min_cash_reserve_usd。无跳过",
-    "filled": 1,
-    "skipped": 0,
-    "total_placed_usd": 44.56,
-    "fees_usd": 0.0,
-    "price_drift_note": "09-22 信号价 56.41 → 今日 12:02 成交 55.7999, **低 1.08%** —— 顺延执行的入场更优 (连续第二个同向样本, 见 09-22 ALL)",
-    "position_after": {
-      "qty": 17.854452,
-      "entry_price": 58.9332,
-      "cost": 1052.22,
-      "tranches": 2,
-      "avg_moved": "59.0799 → 58.9332 (降 $0.1467)",
-      "exposure_pct_of_equity": 10.4,
-      "stop_loss_price": 54.81,
-      "note": "⚠️ **档位已满但敞口只用了 10.4%** —— 第2档因现金见底只买了 $44.56 (标准档 ~$1,007)。tranches=2 触顶后引擎**不会再加 BAC**, 即使后续跌得更深。这是「现金约束 × 档位计数」的一个副作用, 已记入待办。"
-    }
-  }
+  ]
 }

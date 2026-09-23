@@ -3,40 +3,6 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "BAC260925C00051000": {
-      "underlying": "BAC",
-      "strike": 51.0,
-      "expiry": "2026-09-25",
-      "contracts": 1,
-      "entry_premium": 8.35,
-      "entry_date": "2026-09-14",
-      "entry_underlying": 59.105,
-      "entry_rsi2": 3.01,
-      "entry_quote": {
-        "bid": 8.16,
-        "ask": 8.27,
-        "mid": 8.215,
-        "spread_pct": 1.339
-      },
-      "model_price": 8.1692
-    },
-    "XLF260925C00050000": {
-      "underlying": "XLF",
-      "strike": 50.0,
-      "expiry": "2026-09-25",
-      "contracts": 1,
-      "entry_premium": 6.1,
-      "entry_date": "2026-09-17",
-      "entry_underlying": 55.955,
-      "entry_rsi2": 8.48,
-      "entry_quote": {
-        "bid": 5.97,
-        "ask": 6.02,
-        "mid": 5.995,
-        "spread_pct": 0.834
-      },
-      "model_price": 5.9988
-    },
     "XLE261002C00053000": {
       "underlying": "XLE",
       "strike": 53.0,
@@ -53,6 +19,40 @@
         "spread_pct": 1.867
       },
       "model_price": 9.0732
+    },
+    "XLF261005C00048000": {
+      "underlying": "XLF",
+      "strike": 48.0,
+      "expiry": "2026-10-05",
+      "contracts": 1,
+      "entry_premium": 6.85,
+      "entry_date": "2026-09-23",
+      "entry_underlying": 54.635,
+      "entry_rsi2": 1.52,
+      "entry_quote": {
+        "bid": 6.64,
+        "ask": 6.74,
+        "mid": 6.69,
+        "spread_pct": 1.495
+      },
+      "model_price": 6.6981
+    },
+    "BAC261002C00049000": {
+      "underlying": "BAC",
+      "strike": 49.0,
+      "expiry": "2026-10-02",
+      "contracts": 1,
+      "entry_premium": 7.2,
+      "entry_date": "2026-09-23",
+      "entry_underlying": 56.05,
+      "entry_rsi2": 6.19,
+      "entry_quote": {
+        "bid": 7.12,
+        "ask": 7.25,
+        "mid": 7.185,
+        "spread_pct": 1.809
+      },
+      "model_price": 7.1005
     }
   },
   "trades": [
@@ -264,6 +264,42 @@
       "price": 9.25,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "BAC260925C00051000",
+      "side": "sell",
+      "qty": 1,
+      "price": 4.9,
+      "bucket": "weekly_calls",
+      "reason": "expiry_close"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "XLF260925C00050000",
+      "side": "sell",
+      "qty": 1,
+      "price": 4.6,
+      "bucket": "weekly_calls",
+      "reason": "expiry_close"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "XLF261005C00048000",
+      "side": "buy",
+      "qty": 1,
+      "price": 6.85,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-23",
+      "symbol": "BAC261002C00049000",
+      "side": "buy",
+      "qty": 1,
+      "price": 7.2,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -457,6 +493,44 @@
       "entry_mid": 30.725,
       "exit_mid": 31.455,
       "model_price": 30.3135
+    },
+    {
+      "occ": "BAC260925C00051000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "BAC",
+      "entry_date": "2026-09-14",
+      "exit_date": "2026-09-23",
+      "entry_premium": 8.35,
+      "exit_premium": 4.9,
+      "pnl_pct": -41.32,
+      "pnl_usd": -345.0,
+      "reason": "expiry_close",
+      "entry_spread_pct": 1.339,
+      "exit_spread_pct": 5.771,
+      "entry_mid": 8.215,
+      "exit_mid": 5.025,
+      "model_price": 8.1692
+    },
+    {
+      "occ": "XLF260925C00050000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "XLF",
+      "entry_date": "2026-09-17",
+      "exit_date": "2026-09-23",
+      "entry_premium": 6.1,
+      "exit_premium": 4.6,
+      "pnl_pct": -24.59,
+      "pnl_usd": -150.0,
+      "reason": "expiry_close",
+      "entry_spread_pct": 0.834,
+      "exit_spread_pct": 3.575,
+      "entry_mid": 5.995,
+      "exit_mid": 4.755,
+      "model_price": 5.9988
     }
   ],
   "skip_log": [

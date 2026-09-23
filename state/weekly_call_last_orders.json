@@ -1,41 +1,125 @@
 {
-  "date": "2026-09-22",
+  "date": "2026-09-23",
   "halted": false,
-  "sells": [],
+  "sells": [
+    {
+      "symbol": "BAC260925C00051000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "expiry_close",
+      "est_price": 5.03,
+      "exit_quote": {
+        "bid": 4.88,
+        "ask": 5.17,
+        "mid": 5.025,
+        "spread_pct": 5.771
+      }
+    },
+    {
+      "symbol": "XLF260925C00050000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "expiry_close",
+      "est_price": 4.75,
+      "exit_quote": {
+        "bid": 4.67,
+        "ask": 4.84,
+        "mid": 4.755,
+        "spread_pct": 3.575
+      }
+    }
+  ],
   "buys": [
     {
-      "symbol": "XLE261002C00053000",
+      "symbol": "XLF261005C00048000",
       "qty": 1,
       "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call",
-      "est_price": 9.11,
-      "underlying": "XLE",
-      "strike": 53.0,
-      "expiry": "2026-10-02",
-      "dte": 10,
-      "spot": 62.015,
-      "rsi2": 6.29,
-      "model_price": 9.0732,
+      "est_price": 6.69,
+      "underlying": "XLF",
+      "strike": 48.0,
+      "expiry": "2026-10-05",
+      "dte": 12,
+      "spot": 54.635,
+      "rsi2": 1.52,
+      "model_price": 6.6981,
       "model_edge": {
         "reference": "flat",
         "direction": "debit",
-        "est": 9.105,
-        "model_flat": 9.0732,
-        "model_surface": 9.1025,
-        "ratio_flat_pct": 99.7,
-        "ratio_surface_pct": 100.0
+        "est": 6.69,
+        "model_flat": 6.6981,
+        "model_surface": 6.7537,
+        "ratio_flat_pct": 100.1,
+        "ratio_surface_pct": 101.0
       },
       "entry_quote": {
-        "bid": 9.02,
-        "ask": 9.19,
-        "mid": 9.105,
-        "spread_pct": 1.867
+        "bid": 6.64,
+        "ask": 6.74,
+        "mid": 6.69,
+        "spread_pct": 1.495
+      }
+    },
+    {
+      "symbol": "BAC261002C00049000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 7.19,
+      "underlying": "BAC",
+      "strike": 49.0,
+      "expiry": "2026-10-02",
+      "dte": 9,
+      "spot": 56.05,
+      "rsi2": 6.19,
+      "model_price": 7.1005,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 7.185,
+        "model_flat": 7.1005,
+        "model_surface": 7.1317,
+        "ratio_flat_pct": 98.8,
+        "ratio_surface_pct": 99.3
+      },
+      "entry_quote": {
+        "bid": 7.12,
+        "ask": 7.25,
+        "mid": 7.185,
+        "spread_pct": 1.809
       }
     }
   ],
   "skips": [],
   "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "near_signals": [
+    {
+      "symbol": "AMZN",
+      "rsi2_now": 20.43,
+      "scenario": "2d_-1%x2",
+      "spot": 249.71,
+      "structure": "single",
+      "est_premium_usd": 2555
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 20.26,
+      "scenario": "2d_-1%x2",
+      "spot": 282.42,
+      "structure": "single",
+      "est_premium_usd": 2859
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 19.42,
+      "scenario": "1d_-1%",
+      "spot": 514.52,
+      "structure": "single",
+      "est_premium_usd": 5209
+    }
+  ],
+  "suggested_reserve_usd": 2555.0
 }
