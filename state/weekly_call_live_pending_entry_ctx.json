@@ -1,63 +1,6 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
   "entries": {
-    "IWM260923P00276000": {
-      "structure": "credit_put_spread",
-      "qty": 1,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "IWM260923P00276000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 276.0,
-          "quote": {
-            "bid": 1.06,
-            "ask": 1.08
-          },
-          "spread_pct": 1.869
-        },
-        {
-          "symbol": "IWM260923P00250000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 250.0,
-          "quote": {
-            "bid": 0.1,
-            "ask": 0.15
-          },
-          "spread_pct": 40.0
-        }
-      ],
-      "est_price": 0.91,
-      "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-09-23",
-      "dte": 8,
-      "spot": 285.09,
-      "rsi2": 7.72,
-      "model_price": 0.2213,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "credit",
-        "est": 0.91,
-        "model_flat": 0.2213,
-        "model_surface": 0.8164,
-        "ratio_flat_pct": 411.2,
-        "ratio_surface_pct": 111.5
-      },
-      "entry_quote": {
-        "mid": 0.945,
-        "spread_pct": 1.869,
-        "long_spread_pct": 40.0,
-        "net_credit_conservative": 0.91
-      },
-      "risk_per_contract": 25.09,
-      "max_value_per_contract": 26.0,
-      "max_loss_usd": 2509.0,
-      "max_gain_usd": 91.0
-    },
     "XLE261002P00060500": {
       "structure": "credit_put_spread",
       "qty": 3,
@@ -116,5 +59,5 @@
       "max_gain_usd": 108.0
     }
   },
-  "updated": "2026-09-22"
+  "updated": "2026-09-24"
 }
