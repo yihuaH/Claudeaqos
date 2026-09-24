@@ -1,65 +1,32 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "coid_prefix": "cq",
-  "next_open": "2026-09-24T09:30:00-04:00",
+  "next_open": "2026-09-25T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-09-23-MDLZ-sell",
-      "order_id": "67f215d3-47d1-419a-a2f3-090798d42dd7",
-      "symbol": "MDLZ",
+      "coid": "cq-2026-09-24-CVX-sell",
+      "order_id": "b8336cc1-4a18-4175-8fa2-33affa4d0420",
+      "symbol": "CVX",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "59.6",
-      "qty": "154",
+      "limit_price": "199.48",
+      "qty": "46",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-09-23-ALL-buy",
-      "order_id": "6405c8d8-5819-4d2a-b234-b8fca082bb80",
-      "symbol": "ALL",
+      "coid": "cq-2026-09-24-PSX-buy",
+      "order_id": "720d81e7-3ded-4bdc-bd5a-46da4cfbd96e",
+      "symbol": "PSX",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "232.43",
-      "qty": "41",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-09-23-ADP-buy",
-      "order_id": "47ca1cca-6557-4098-a15d-c1dd1c73c28e",
-      "symbol": "ADP",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "271.59",
-      "qty": "35",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-09-23-MDT-buy",
-      "order_id": "ea6b988d-d458-4f44-8c04-d3ac58d6a7b1",
-      "symbol": "MDT",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "91.98",
-      "qty": "103",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-09-23-ELV-buy",
-      "order_id": "5c02c157-6a0d-4fbb-aa23-cfa89fe52ce7",
-      "symbol": "ELV",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "410.52",
-      "qty": "5",
+      "limit_price": "263.55",
+      "qty": "36",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
