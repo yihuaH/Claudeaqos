@@ -1,125 +1,58 @@
 {
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "halted": false,
   "sells": [
     {
-      "symbol": "BAC260925C00051000",
+      "symbol": "XLE261002C00053000",
       "qty": 1,
       "position_intent": "sell_to_close",
       "bucket": "weekly_calls",
-      "reason": "expiry_close",
-      "est_price": 5.03,
+      "reason": "exit_strength",
+      "est_price": 9.69,
       "exit_quote": {
-        "bid": 4.88,
-        "ask": 5.17,
-        "mid": 5.025,
-        "spread_pct": 5.771
-      }
-    },
-    {
-      "symbol": "XLF260925C00050000",
-      "qty": 1,
-      "position_intent": "sell_to_close",
-      "bucket": "weekly_calls",
-      "reason": "expiry_close",
-      "est_price": 4.75,
-      "exit_quote": {
-        "bid": 4.67,
-        "ask": 4.84,
-        "mid": 4.755,
-        "spread_pct": 3.575
+        "bid": 9.39,
+        "ask": 9.98,
+        "mid": 9.685,
+        "spread_pct": 6.092
       }
     }
   ],
-  "buys": [
-    {
-      "symbol": "XLF261005C00048000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 6.69,
-      "underlying": "XLF",
-      "strike": 48.0,
-      "expiry": "2026-10-05",
-      "dte": 12,
-      "spot": 54.635,
-      "rsi2": 1.52,
-      "model_price": 6.6981,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 6.69,
-        "model_flat": 6.6981,
-        "model_surface": 6.7537,
-        "ratio_flat_pct": 100.1,
-        "ratio_surface_pct": 101.0
-      },
-      "entry_quote": {
-        "bid": 6.64,
-        "ask": 6.74,
-        "mid": 6.69,
-        "spread_pct": 1.495
-      }
-    },
-    {
-      "symbol": "BAC261002C00049000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 7.19,
-      "underlying": "BAC",
-      "strike": 49.0,
-      "expiry": "2026-10-02",
-      "dte": 9,
-      "spot": 56.05,
-      "rsi2": 6.19,
-      "model_price": 7.1005,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 7.185,
-        "model_flat": 7.1005,
-        "model_surface": 7.1317,
-        "ratio_flat_pct": 98.8,
-        "ratio_surface_pct": 99.3
-      },
-      "entry_quote": {
-        "bid": 7.12,
-        "ask": 7.25,
-        "mid": 7.185,
-        "spread_pct": 1.809
-      }
-    }
-  ],
+  "buys": [],
   "skips": [],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "AMZN",
-      "rsi2_now": 20.43,
+      "rsi2_now": 22.89,
       "scenario": "2d_-1%x2",
-      "spot": 249.71,
+      "spot": 249.48,
       "structure": "single",
-      "est_premium_usd": 2555
+      "est_premium_usd": 2553
     },
     {
       "symbol": "IWM",
-      "rsi2_now": 20.26,
-      "scenario": "2d_-1%x2",
-      "spot": 282.42,
+      "rsi2_now": 15.69,
+      "scenario": "1d_-1%",
+      "spot": 281.25,
       "structure": "single",
-      "est_premium_usd": 2859
+      "est_premium_usd": 2847
     },
     {
       "symbol": "DIA",
-      "rsi2_now": 19.42,
+      "rsi2_now": 11.99,
       "scenario": "1d_-1%",
-      "spot": 514.52,
+      "spot": 512.51,
       "structure": "single",
-      "est_premium_usd": 5209
+      "est_premium_usd": 5188
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 35.28,
+      "scenario": "1d_-1%",
+      "spot": 767.56,
+      "structure": "single",
+      "est_premium_usd": 7770
     }
   ],
-  "suggested_reserve_usd": 2555.0
+  "suggested_reserve_usd": 2553.0
 }

@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-23",
+  "trade_date": "2026-09-24",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-23 15:24 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-24 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,13 +15,13 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10048.21,
-  "buying_power_at_generation": 1037.03,
-  "funding_note": "CSX 出场已于 15:24 即时成交, 回款 $1,032.06 到账 → 实时 cash $2,687.03 / BP **$1,037.03** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "portfolio_value_at_generation": 10095.39,
+  "buying_power_at_generation": 2045.86,
+  "funding_note": "WELL/RVMD 出场已于 15:22 即时成交, 回款 $2,041.01 到账 → 实时 cash $3,695.86 / BP **$2,045.86** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
   "news_precheck": {
     "checked": [
-      "ADP",
-      "XLF"
+      "BMY",
+      "USB"
     ],
     "red_flagged": [],
     "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
@@ -30,95 +30,92 @@
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "stock_cap": 1037.03,
-    "note": "今日无新期权买单 → 股票 cap = 实时 min(BP,cash) = $1,037.03。已持 XLE 价差的 $1,650 抵押已反映在 BP 里, 不重复扣。两单合计 $1,032.13 ≤ cap, 余 $4.90, 全部在 cap 内。"
+    "stock_cap": 2045.86,
+    "note": "今日期权轨道是**平仓单 (释放资金)**, 不是买单, 故无抵押预留。股票 cap = 执行时实时 min(BP,cash) = $2,045.86。两单合计 $2,019.88 ≤ cap, 余 $25.98, 全部在 cap 内。⚠️ 若用户同时执行了期权平仓 ($0.26×300 = $78 借记, 释放 $1,650 抵押), BP 会再增约 $1,572 —— 但本清单金额由引擎按生成时资金定额, **不因此放大** (红线2)。"
   },
   "supersedes": {
-    "trade_date": "2026-09-22",
+    "trade_date": "2026-09-23",
     "status_was": "executed",
-    "note": "09-22 清单 (BAC $44.56) 已于今日 12:02 执行成交。本清单按协议自动取代。"
+    "note": "09-23 清单 (ADP+XLF) 已于当日 15:31 全额执行。"
   },
   "option_alert": {
     "near_signals": [
       {
-        "symbol": "AMZN",
-        "rsi2_now": 20.43,
-        "scenario": "2d_-1%x2",
-        "spot": 249.71,
+        "symbol": "BAC",
+        "rsi2_now": 20.33,
+        "scenario": "1d_-1%",
+        "spot": 56.12,
         "structure": "credit_put_spread",
-        "est_premium_usd": 1958
+        "est_premium_usd": 448
+      },
+      {
+        "symbol": "AMZN",
+        "rsi2_now": 22.89,
+        "scenario": "2d_-1%x2",
+        "spot": 249.48,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 1953
       },
       {
         "symbol": "IWM",
-        "rsi2_now": 20.26,
-        "scenario": "2d_-1%x2",
-        "spot": 282.42,
+        "rsi2_now": 15.69,
+        "scenario": "1d_-1%",
+        "spot": 281.25,
         "structure": "credit_put_spread",
-        "est_premium_usd": 2489
+        "est_premium_usd": 2475
       },
       {
         "symbol": "DIA",
-        "rsi2_now": 19.42,
+        "rsi2_now": 11.99,
         "scenario": "1d_-1%",
-        "spot": 514.52,
+        "spot": 512.51,
         "structure": "credit_put_spread",
-        "est_premium_usd": 4543
+        "est_premium_usd": 4525
+      },
+      {
+        "symbol": "SPY",
+        "rsi2_now": 35.28,
+        "scenario": "1d_-1%",
+        "spot": 767.56,
+        "structure": "credit_put_spread",
+        "est_premium_usd": 6777
       }
     ],
-    "note": "报告级预警, **不产生订单** (红线2)。三只均为 credit_put_spread 情景推演: AMZN rsi2 20.43 / IWM 20.26 / DIA 19.42, 距入场闸 rsi2<10 尚远。est_premium_usd 是引擎给的**参考保留额**, 非订单金额。"
+    "note": "报告级预警, 不产生订单 (红线2)。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ADP",
-      "dollar_amount": 1004.79,
+      "symbol": "BMY",
+      "dollar_amount": 1009.94,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 265.07,
-      "rsi2": 1.36,
+      "reason": "rsi2_scale_in",
+      "est_price": 60.665,
+      "rsi2": 1.27,
+      "tranche": 2,
+      "avg_entry_price": 62.8878,
+      "drawdown_pct": -3.53,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
       "cap_projection": "within_cap",
-      "filled_qty": 3.791232,
-      "filled_price": 265.0299,
-      "order_id": "6ab42926-a6df-4516-80c2-2e9681365105",
-      "slippage_vs_est_pct": -0.015
+      "status": "awaiting_execution"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "XLF",
-      "dollar_amount": 27.34,
+      "symbol": "USB",
+      "dollar_amount": 1009.94,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 54.635,
-      "rsi2": 1.52,
+      "est_price": 58.425,
+      "rsi2": 7.18,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "filled",
       "cap_projection": "within_cap",
-      "filled_qty": 0.500405,
-      "filled_price": 54.6357,
-      "order_id": "6ab42928-4ec0-4ec4-a99a-a86a04ec1562",
-      "slippage_vs_est_pct": 0.001
+      "status": "awaiting_execution"
     }
-  ],
-  "executed_at_et": "2026-09-23 15:31 ET",
-  "execution": {
-    "protocol": "4C 单笔 market+regular_hours+dollar_amount",
-    "countdown_check": "15:31:37 ET 起步 —— 窗口已开 (15:30), 距 15:55 关窗 23.4 分, 余量充足。耗时 14 秒",
-    "buying_power_at_execution": 1037.03,
-    "cash_at_execution": 2687.03,
-    "unleveraged_buying_power": 1037.03,
-    "cap_note": "cap=min(BP,cash)=$1,037.03 (cash 比 BP 多的 $1,650 为 XLE 价差全宽抵押); 出单 $1,032.13 ≤ cap, 余 $4.90, 无跳过",
-    "filled": 2,
-    "skipped": 0,
-    "total_placed_usd": 1032.13,
-    "fees_usd": 0.0,
-    "price_drift_note": "当日执行 (非顺延), 漂移极小: ADP −0.015% / XLF +0.001%"
-  }
+  ]
 }

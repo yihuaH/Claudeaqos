@@ -9,20 +9,6 @@
       "cost": 1052.22,
       "tranches": 2
     },
-    "WELL": {
-      "qty": 4.324745,
-      "entry_price": 233.2299,
-      "entry_date": "2026-09-15",
-      "cost": 1008.66,
-      "tranches": 1
-    },
-    "RVMD": {
-      "qty": 5.186127,
-      "entry_price": 195.1186,
-      "entry_date": "2026-09-17",
-      "cost": 1011.91,
-      "tranches": 1
-    },
     "CVS": {
       "qty": 22.711127,
       "entry_price": 89.1039,
@@ -1975,6 +1961,24 @@
       "price": 54.6357,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-24",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 4.324745,
+      "price": 234.86,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-24",
+      "symbol": "RVMD",
+      "side": "sell",
+      "qty": 5.186127,
+      "price": 197.7001,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

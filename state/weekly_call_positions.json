@@ -3,23 +3,6 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "XLE261002C00053000": {
-      "underlying": "XLE",
-      "strike": 53.0,
-      "expiry": "2026-10-02",
-      "contracts": 1,
-      "entry_premium": 9.25,
-      "entry_date": "2026-09-22",
-      "entry_underlying": 62.015,
-      "entry_rsi2": 6.29,
-      "entry_quote": {
-        "bid": 9.02,
-        "ask": 9.19,
-        "mid": 9.105,
-        "spread_pct": 1.867
-      },
-      "model_price": 9.0732
-    },
     "XLF261005C00048000": {
       "underlying": "XLF",
       "strike": 48.0,
@@ -300,6 +283,15 @@
       "price": 7.2,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-09-24",
+      "symbol": "XLE261002C00053000",
+      "side": "sell",
+      "qty": 1,
+      "price": 9.45,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -531,6 +523,25 @@
       "entry_mid": 5.995,
       "exit_mid": 4.755,
       "model_price": 5.9988
+    },
+    {
+      "occ": "XLE261002C00053000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "XLE",
+      "entry_date": "2026-09-22",
+      "exit_date": "2026-09-24",
+      "entry_premium": 9.25,
+      "exit_premium": 9.45,
+      "pnl_pct": 2.16,
+      "pnl_usd": 20.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 1.867,
+      "exit_spread_pct": 6.092,
+      "entry_mid": 9.105,
+      "exit_mid": 9.685,
+      "model_price": 9.0732
     }
   ],
   "skip_log": [

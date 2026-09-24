@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-21",
+  "trade_date": "2026-09-24",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-21 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-24 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -15,196 +15,92 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
-  "funding": {
-    "collateral_usd": 1542.0,
-    "priority": "期权优先, 已在股票 cap 中扣除"
-  },
+  "kind": "exit_close",
+  "channel_note": "⚠️ 本单是**平仓** (出场类, 红线9 本可全自动), 但 agentic 不支持多腿 place (2026-08-15 实测), 故仍走手动 App 通道 —— 与开仓同渠道, 原因不同。",
   "orders": [
     {
       "seq": 1,
       "structure": "credit_put_spread",
       "qty": 3,
       "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
+      "reason": "exit_strength",
+      "direction": "debit",
+      "est_price": 0.26,
+      "underlying": "XLE",
+      "expiry": "2026-10-02",
       "legs": [
         {
           "symbol": "XLE261002P00060500",
-          "side": "sell",
-          "position_effect": "open",
+          "side": "buy",
+          "position_effect": "close",
           "strike": 60.5,
           "quote": {
-            "bid": 0.42,
-            "ask": 0.44
-          },
-          "spread_pct": 4.651
+            "bid": 0.23,
+            "ask": 0.29
+          }
         },
         {
           "symbol": "XLE261002P00055000",
-          "side": "buy",
-          "position_effect": "open",
+          "side": "sell",
+          "position_effect": "close",
           "strike": 55.0,
           "quote": {
             "bid": 0.03,
-            "ask": 0.06
-          },
-          "spread_pct": 66.667
+            "ask": 0.07
+          }
         }
       ],
-      "est_price": 0.36,
-      "direction": "credit",
-      "underlying": "XLE",
-      "expiry": "2026-10-02",
-      "dte": 11,
-      "spot": 62.675,
-      "rsi2": 9.47,
-      "model_price": 0.3348,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "credit",
-        "est": 0.36,
-        "model_flat": 0.3348,
-        "model_surface": 0.3541,
-        "ratio_flat_pct": 107.5,
-        "ratio_surface_pct": 101.7
+      "exit_quote": {
+        "short_ask": 0.29,
+        "long_bid": 0.03,
+        "net_debit": 0.26,
+        "mid": 0.21,
+        "spread_pct": 23.077,
+        "long_spread_pct": 80.0
       },
-      "entry_quote": {
-        "mid": 0.385,
-        "spread_pct": 4.651,
-        "long_spread_pct": 66.667,
-        "net_credit_conservative": 0.36
-      },
-      "risk_per_contract": 5.14,
-      "max_value_per_contract": 5.5,
-      "max_loss_usd": 1542.0,
-      "max_gain_usd": 108.0,
       "state_file": "state/weekly_call_live_positions.json",
       "valid_until": "same_session_1545_et",
-      "status": "filled",
+      "status": "awaiting_execution",
       "live_nbbo_at_notify": {
-        "checked_at_et": "2026-09-21 15:27 ET",
-        "source": "cash_printer get_option_quotes (券商真实 NBBO, 非 indicative)",
+        "checked_at_et": "2026-09-24 15:22 ET",
+        "source": "cash_printer get_option_quotes (券商真实 NBBO)",
         "XLE261002P00060500": {
-          "bid": 0.45,
-          "ask": 0.46,
-          "mark": 0.455,
-          "iv": 0.2856,
-          "delta": -0.2444,
-          "oi": 79,
-          "vol": 126
+          "bid": 0.25,
+          "ask": 0.27,
+          "mark": 0.26,
+          "iv": 0.2833,
+          "delta": -0.1784
         },
         "XLE261002P00055000": {
           "bid": 0.01,
-          "ask": 0.04,
-          "mark": 0.025,
-          "iv": 0.3659,
-          "delta": -0.0201,
-          "oi": 25,
-          "vol": 1
+          "ask": 0.05,
+          "mark": 0.03,
+          "iv": 0.4417,
+          "delta": -0.0195
         },
-        "net_credit_conservative_broker": 0.41,
-        "net_credit_mid_broker": 0.43,
-        "engine_floor": 0.36,
-        "suggested_net_limit": 0.42,
-        "fallback_net_limit": 0.41,
-        "note": "券商真实 NBBO 优于引擎 indicative 快照 (引擎 est 0.36)。建议限价 $0.42 (保守 0.41 与 mid 0.43 之间); 不成交可降到 $0.41 (≈ 保守价, 近确定成交)。**绝不低于引擎底线 $0.36** (红线2/3)。tick=0.01 (min_ticks below_tick, cutoff $3.00)"
+        "net_debit_mid": 0.23,
+        "net_debit_conservative": 0.26,
+        "engine_est": 0.26,
+        "engine_cap": 0.27,
+        "cap_rule": "est × 1.03 (playbook 4D)",
+        "suggested_limit": 0.24
       },
-      "filled_net_credit": 0.39
-    }
-  ],
-  "expiry_record": {
-    "expired_at_et": "2026-09-21 15:45 ET (窗口关闭)",
-    "detected_at_et": "2026-09-21 16:15 ET",
-    "reason": "option_pending_template exec_day=same_day, 无顺延机制。用户回复「执行」时 16:15 ET, 距期权窗关闭已 30 分钟, 且已收盘。",
-    "verified": "get_option_orders 确认今日无 XLE 单; get_option_positions / portfolio options_value=0 —— 未开仓, 无残留",
-    "next": "绝不追价 (红线2)。2026-09-22 15:20 收盘前主跑以新数据重新评估 XLE 及全部候选。",
-    "superseded_by": "user_manual_order_6ab191ce",
-    "correction": "本条 16:15 ET 写下时属实 (当时 get_option_orders 确认无 XLE 单)。但用户随后于 **16:18-16:21 ET** 在 App 手工下单 5 次 (0.39→0.42→0.45→0.46→0.39), 最后一笔 6ab191ce 留在簿上。故本清单实际结局不是「作废」而是「用户越窗手工执行」。"
-  },
-  "user_manual_order": {
-    "order_id": "6ab191ce-29f6-4096-bb8e-2cbc8a40a6a2",
-    "placed_agent": "user",
-    "created_at_et": "2026-09-21 16:21:34 ET",
-    "state": "filled",
-    "type": "limit",
-    "direction": "credit",
-    "price": 0.39,
-    "quantity": 3,
-    "time_in_force": "gfd",
-    "market_hours": "regular_hours",
-    "is_replaceable": true,
-    "legs": [
-      {
-        "symbol": "XLE261002P00060500",
-        "side": "sell",
-        "position_effect": "open",
-        "strike": 60.5
+      "pnl_scenarios": {
+        "0.23": 48,
+        "0.26": 39,
+        "0.27": 36
       },
-      {
-        "symbol": "XLE261002P00055000",
-        "side": "buy",
-        "position_effect": "open",
-        "strike": 55.0
-      }
-    ],
-    "collateral_held_usd": 1533.0,
-    "collateral_check": "(5.5-0.39)x100x3 = $1,533.00, 与券商 BP 缺口 (cash $5,629.78 - BP $4,096.78) 分文不差",
-    "vs_engine": "净贷记 $0.39 ≥ 引擎保守底线 $0.36 ✅ (红线2/3 合规); 低于会话建议的 $0.42 与券商 15:27 mid $0.43",
-    "attempt_history": [
-      {
-        "created_at_et": "16:17:59",
-        "price": 0.39,
-        "state": "cancelled"
-      },
-      {
-        "created_at_et": "16:18:37",
-        "price": 0.42,
-        "state": "cancelled"
-      },
-      {
-        "created_at_et": "16:20:58",
-        "price": 0.45,
-        "state": "cancelled"
-      },
-      {
-        "created_at_et": "16:21:20",
-        "price": 0.46,
-        "state": "cancelled"
-      },
-      {
-        "created_at_et": "16:21:34",
-        "price": 0.39,
-        "state": "queued",
-        "live": true
-      }
-    ],
-    "execution_timing": "盘后下的 gfd + regular_hours 单 → **排队至次一交易日 (2026-09-22) 09:30 ET 开盘撮合**。本账本先例: BAC 6a890ea4 (08-21 22:51 ET 下, 08-24 09:30 成交)、NVDA 6a87b8b4 (同形态)。",
-    "risk_note": "⚠️ 以 09-21 收盘时的报价挂单、次日开盘撮合 —— 期间 XLE 隔夜跳空的风险由用户承担。4D 纪律「窗口内未成交→次日以新数据重评, 绝不追价」被本次手工单绕过, 属用户主动决定 (手动 App 通道是 4D 既定渠道)。会话未下此单, 也不擅自撤单。",
-    "if_filled": "成交后按 4D 用 weekly_calls.py apply 写 state/weekly_call_live_positions.json; 跨会话回收 context 已在 state/weekly_call_live_last_orders.json。",
-    "funding_impact": "抵押已实占 $1,533 → 明日股票清单 cap = 实时 min(BP,cash), 现为 $4,096.78; 原 6 单 $5,626.15 塞不下, 按引擎顺序前 4 单 $4,046.96 可执行, MDLZ/VZ 越 cap 整单跳过 (与今日结论一致)。",
-    "fill": {
-      "filled_at_et": "2026-09-22 09:30:02 ET (开盘撮合, 与预判一致)",
-      "processed_premium_usd": 117.0,
-      "legs_filled": {
-        "XLE261002P00060500": {
-          "side": "sell",
-          "price": 0.5,
-          "qty": 3
-        },
-        "XLE261002P00055000": {
-          "side": "buy",
-          "price": 0.11,
-          "qty": 3
-        }
-      },
-      "net_credit": 0.39,
-      "note": "两腿价格均高于 09-21 收盘报价 (短腿 0.50 vs 昨 bid 0.45; 长腿 0.11 vs 昨 ask 0.04) —— XLE 隔夜波动把两腿一起抬高, 净贷记恰好落在限价 0.39 上。",
+      "entry_credit": 0.39,
       "risk_per_contract": 5.11,
-      "collateral_held_usd": 1650.0,
-      "collateral_note": "券商按全宽扣 5.5x100x3 = $1,650, 贷记 $117 已入现金 → 净在险 $1,533",
-      "max_gain_usd": 117.0,
-      "max_loss_usd": 1533.0,
-      "breakeven_xle": 60.11,
-      "ledger": "已由 weekly_calls.py apply 写入 state/weekly_call_live_positions.json (entry_date=2026-09-22 券商实际成交日)"
+      "collateral_released_usd": 1650.0,
+      "hold_to_expiry_alt": {
+        "max_gain_usd": 117,
+        "dte": 8,
+        "xle_spot": 62.755,
+        "breakeven": 60.11,
+        "cushion_pct": -3.59,
+        "broker_prob_short_side": 0.837
+      }
     }
-  }
+  ]
 }
