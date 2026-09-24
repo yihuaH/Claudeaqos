@@ -2,7 +2,7 @@
   "trade_date": "2026-09-24",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-24 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "vetoed_by_user",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -100,7 +100,8 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "within_cap",
-      "status": "awaiting_execution"
+      "status": "vetoed_by_user",
+      "veto_note": "用户 15:33 指示「保留给期权」, 本单未下达。按 playbook 晨检规则, 标 vetoed_by_user 的单次日**不再提示**。"
     },
     {
       "seq": 2,
@@ -115,7 +116,18 @@
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
       "cap_projection": "within_cap",
-      "status": "awaiting_execution"
+      "status": "vetoed_by_user",
+      "veto_note": "用户 15:33 指示「保留给期权」, 本单未下达。按 playbook 晨检规则, 标 vetoed_by_user 的单次日**不再提示**。"
     }
-  ]
+  ],
+  "vetoed_at_et": "2026-09-24 15:33 ET",
+  "veto": {
+    "by": "user",
+    "instruction": "保留给期权",
+    "scope": "**仅本清单 (2026-09-24)**。会话按「今日一票否决」处理, 未改任何配置。",
+    "reason": "用户选择把资金留给期权轨道, 不建今日两笔股票仓。背景: 今日 XLF 期权信号 (rsi2 1.20, 够格) 因引擎跑时 BP 仅 $5 被 insufficient_buying_power 跳过; 且 near_signals 中 DIA 11.99 / IWM 15.69 距入场闸 (rsi2<10) 很近, 执行股票清单会把可用资金从 $3,620.60 压到约 $1,600, 只剩 BAC ($448) 够得着。",
+    "funds_preserved_usd": 2019.88,
+    "buying_power_after_veto": 3620.6,
+    "not_a_config_change": "⚠️ 本次**不改** config.json / weekly_calls_live.json 任何字段。跨轨道资金规则仍是 2026-08-27 的「期权优先 (按抵押预留)」, **不是**常设现金储备。若用户要把「为期权留钱」升级为常设规则, 属 sizing 类 (红线3: 上限只能由用户改), 需明确授权并回测。"
+  }
 }
