@@ -1,32 +1,65 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-09-24",
+  "date": "2026-09-25",
   "coid_prefix": "cq",
-  "next_open": "2026-09-25T09:30:00-04:00",
+  "next_open": "2026-09-28T09:30:00-04:00",
   "skipped": [
     "DIA sell: 排队限价下买不起 1 整股, 跳过"
   ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-09-24-CVX-sell",
-      "order_id": "b8336cc1-4a18-4175-8fa2-33affa4d0420",
-      "symbol": "CVX",
+      "coid": "cq-2026-09-25-BMY-sell",
+      "order_id": "6cc24b14-17ed-472b-9b21-23d3b5317275",
+      "symbol": "BMY",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "199.48",
-      "qty": "46",
+      "limit_price": "60.97",
+      "qty": "150",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-09-24-PSX-buy",
-      "order_id": "720d81e7-3ded-4bdc-bd5a-46da4cfbd96e",
-      "symbol": "PSX",
+      "coid": "cq-2026-09-25-UNP-sell",
+      "order_id": "15e34461-2cd4-40c0-9466-ae76f2f529e2",
+      "symbol": "UNP",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "265.58",
+      "qty": "34",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-09-25-ROKU-buy",
+      "order_id": "22e897c8-a5f0-445b-a048-2d37843bb01f",
+      "symbol": "ROKU",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "263.55",
-      "qty": "36",
+      "limit_price": "157.26",
+      "qty": "60",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-25-TRGP-buy",
+      "order_id": "af4381ce-4a9a-4549-9db6-844141bb7b2e",
+      "symbol": "TRGP",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "286.18",
+      "qty": "33",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-09-25-DXCM-buy",
+      "order_id": "24b12e2e-5be5-40e4-af9b-d3513b630beb",
+      "symbol": "DXCM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "89.22",
+      "qty": "9",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

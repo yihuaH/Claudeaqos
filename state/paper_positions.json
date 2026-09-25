@@ -31,13 +31,6 @@
       "cost": 9254.97,
       "tranches": 1
     },
-    "CVX": {
-      "qty": 46.0,
-      "entry_price": 201.99,
-      "entry_date": "2026-09-22",
-      "cost": 9291.54,
-      "tranches": 1
-    },
     "CB": {
       "qty": 27.0,
       "entry_price": 336.11,
@@ -85,6 +78,13 @@
       "entry_price": 399.8,
       "entry_date": "2026-09-24",
       "cost": 1999.0,
+      "tranches": 1
+    },
+    "PSX": {
+      "qty": 36.0,
+      "entry_price": 253.488333,
+      "entry_date": "2026-09-25",
+      "cost": 9125.58,
       "tranches": 1
     }
   },
@@ -2004,6 +2004,24 @@
       "side": "buy",
       "qty": 5.0,
       "price": 399.8,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "CVX",
+      "side": "sell",
+      "qty": 46.0,
+      "price": 203.58,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "PSX",
+      "side": "buy",
+      "qty": 36.0,
+      "price": 253.488333,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
