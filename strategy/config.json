@@ -98,7 +98,18 @@
   "execution": {
     "mode": "semi_auto",
     "since": "2026-07-20 (用户指示: 买入半自动 — 无人值守买单被平台分类器拦截, 属平台安全边界)",
-    "rule": "出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation/accelerated_liquidation 换仓/加速清理卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行。时效 (2026-09-10 用户批准, 取代原 09:25 盘外两腿方案): 买单与换仓卖单有效至次一交易日 15:55 ET, 执行窗口 09:45-15:55 ET (必须在 09:30 开盘之后 —— 出场回款 09:30 才到账, 原 09:25 截止使引擎算进去的回款结构性拿不到, 实测占出单额 32%), 推荐锚在 10:45 ET 晨检窗口; 形态为单笔 market + regular_hours + dollar_amount (原生支持分数股, 故两腿混合执行/whole==0/24h降级阶梯一并作废); 不设价格闸; 换仓/加速清理卖单同窗口照常执行。隔夜轨道买单仅当日 15:55 ET。approval.json 闸门已退役。"
+    "rule": "出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation/accelerated_liquidation 换仓/加速清理卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行。时效 (2026-09-10 用户批准, 取代原 09:25 盘外两腿方案): 买单与换仓卖单有效至次一交易日 15:55 ET, 执行窗口 09:45-15:55 ET (必须在 09:30 开盘之后 —— 出场回款 09:30 才到账, 原 09:25 截止使引擎算进去的回款结构性拿不到, 实测占出单额 32%), 推荐锚在 10:45 ET 晨检窗口; 形态为单笔 market + regular_hours + dollar_amount (原生支持分数股, 故两腿混合执行/whole==0/24h降级阶梯一并作废); 不设价格闸; 换仓/加速清理卖单同窗口照常执行。隔夜轨道买单仅当日 15:55 ET。approval.json 闸门已退役。【2026-09-25 用户选「3」: 恢复盘外腿, 执行形态改为**双模式**】(a) 盘中 09:45-15:55 ET —— 单笔 market+regular_hours+dollar_amount, 原生分数股, 零额外成本, **首选**; (b) 盘外 15:55 ET 后至次一交易日 09:45 ET (含周末) —— 恢复 2026-09-10 退役的**整股限价①腿** (limit = est_price × 1.010, all_day_hours→extended_hours→regular_hours 降级), 买不下的零头**不再走旧②腿开盘市价单**, 而是随清单既有顺延机制走次日盘中窗 —— 既恢复盘后可执行性, 又不重蹈原 09:25 截止「回款结构性拿不到」的缺陷 (退役理由①已规避)。退役理由②③ (①腿实测多付 0.55%、运维复杂度) 依然成立, 故盘外模式是**有成本的退路而非首选**。触发依据: 5 个交易日内越窗两次 (2026-09-21 / 2026-09-25, 后者跨周末)。",
+    "offhours_leg": {
+      "enabled": true,
+      "since": "2026-09-25 (用户选「3」)",
+      "limit_multiplier": 1.010,
+      "limit_basis": "引擎 est_price (确定性, 红线2 — 不得改用实时价)",
+      "market_hours_ladder": ["all_day_hours", "extended_hours", "regular_hours"],
+      "remainder": "不下②腿; 零头随 pending 既有 exec_day 顺延走次日盘中窗 (09:45-15:55)",
+      "whole_zero": "whole==0 (股价 > 单笔金额, 如 EQIX) → 该单盘外整单跳过, 全额留给次日盘中窗",
+      "measured_cost": "①腿实测多付 0.55% (中位 +0.59%, n=10, 见 2026-09-10 退役依据); 盘后点差中位约 2% (2026-09-25 实测 1.31~2.97%)",
+      "_invariants": "sizing/风控不受影响: 金额仍逐字段照抄引擎输出, cap 仍取实时 min(buying_power, cash), 超 cap 整单跳过不缩量 (红线2/9); 限价基准必须是引擎 est_price 而非实时价"
+    }
   },
   "etf_universe_note": "2026-07-22: SPLG 剔除 (Robinhood 查无 symbol + Alpaca 历史K线自 2025-10-30 断供, 双源异常无法交易)。标普广谱暴露由 universe.json 100 只大盘股覆盖; 若需 S&P500 ETF, SPY 可交易但每股~$630 仅当日市价窗口可买 (盘外整股限价不足一股)。池现为 8 ETF + 100 股。"
 }

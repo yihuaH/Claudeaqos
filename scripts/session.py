@@ -75,23 +75,39 @@ def detect_window(t):
 
 
 def exec_window(t):
-    """4C 股票买单执行窗 (2026-09-10 用户批准): 交易日 09:45-15:55 ET, 推荐锚 10:45 晨检。
-    必须在 09:30 开盘之后 —— 出场回款 09:30 才到账 (原 09:25 截止使其结构性拿不到)。
+    """4C 股票买单执行窗。
+
+    **双模式 (2026-09-25 用户选「3」恢复盘外腿)**:
+      · 盘中 intraday: 交易日 09:45-15:55 ET —— 单笔 market+regular_hours+dollar_amount,
+        原生分数股, 无额外成本。**首选**。推荐锚 10:45 晨检。
+        必须在 09:30 开盘之后 —— 出场回款 09:30 才到账 (原 09:25 截止使其结构性拿不到)。
+      · 盘外 offhours: 15:55 ET 后至次一交易日 09:45 ET (含周末) —— 恢复 2026-09-10 退役的
+        **整股限价①腿** (limit = est x 1.010, all_day_hours→extended_hours→regular_hours 降级);
+        买不下的零头**不走旧②腿**, 而是随清单既有顺延机制走次日盘中窗 (规避原 09:25 缺陷)。
+        ⚠️ ①腿实测多付约 0.55% (中位 +0.59%, n=10) + 盘后点差中位约 2%, 属**有成本的退路**;
+        股价 > 单笔金额的标的 (whole==0) 盘外一股都买不到, 该单整单留给次日盘中窗。
+
     与 detect_window 正交: 12:00-15:55 不属任何作业窗口, 但用户说「执行」时仍合法。"""
     m = t.hour * 60 + t.minute
     if t.weekday() >= 5:
-        return {"open": False, "reason": "周末"}
+        return {"open": True, "mode": "offhours",
+                "reason": "周末 → 盘外模式: 可挂整股限价①腿 (all_day_hours), "
+                          "零头随清单顺延走次一交易日盘中窗。⚠️ 周末流动性最差, 谨慎"}
     if m < 9 * 60 + 45:
-        return {"open": False, "reason": f"未到 09:45 开窗 (现 {t:%H:%M} ET); "
-                                         f"开盘前执行会吃不到当日出场回款"}
+        return {"open": True, "mode": "offhours",
+                "reason": f"未到 09:45 盘中开窗 (现 {t:%H:%M} ET) → **盘外模式**: 可下整股限价①腿; "
+                          f"⚠️ 零头仍须等 09:45 后 (开盘前吃不到当日出场回款)"}
     if m >= 15 * 60 + 55:
         # 2026-09-11 修正: 原文写死「清单当日过期, 引擎当晚重算」, 那是顺延协议 (用户选项2) 之前
         # 的行为。现在是否过期取决于清单**自带的 exec_day** —— same_day_then_next_session 的收盘前
         # 清单关窗后仍 awaiting_execution, 顺延到次一交易日 09:45-15:55, 不重算。本函数看不到清单,
         # 故只说"本窗口关闭", 过期判定交给下面 pending_exec_state 那行 (它读清单自己的模板)。
-        return {"open": False, "reason": f"已过 15:55 关窗 (现 {t:%H:%M} ET); 本窗口不再执行 — "
-                                         f"清单是否过期以其自带 exec_day 为准 (见下方「待执行清单自带执行窗」)"}
-    return {"open": True, "reason": f"09:45-15:55 ET 执行窗开放中 (现 {t:%H:%M} ET)"}
+        return {"open": True, "mode": "offhours",
+                "reason": f"已过 15:55 盘中关窗 (现 {t:%H:%M} ET) → **盘外模式**: 可下整股限价①腿 "
+                          f"(limit=est x1.010, all_day_hours), 零头随清单顺延走次日盘中窗。"
+                          f"⚠️ 实测多付约 0.55%, 非首选; 清单是否过期以其自带 exec_day 为准"}
+    return {"open": True, "mode": "intraday",
+            "reason": f"09:45-15:55 ET 盘中执行窗开放中 (现 {t:%H:%M} ET) — 单笔市价, 首选"}
 
 
 def preclose_state(date):
