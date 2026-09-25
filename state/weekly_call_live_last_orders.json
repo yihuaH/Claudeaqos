@@ -1,107 +1,19 @@
 {
-  "date": "2026-09-24",
+  "date": "2026-09-25",
   "halted": false,
-  "sells": [
-    {
-      "structure": "credit_put_spread",
-      "qty": 3,
-      "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "direction": "debit",
-      "est_price": 0.26,
-      "underlying": "XLE",
-      "expiry": "2026-10-02",
-      "legs": [
-        {
-          "symbol": "XLE261002P00060500",
-          "side": "buy",
-          "position_effect": "close",
-          "strike": 60.5,
-          "quote": {
-            "bid": 0.23,
-            "ask": 0.29
-          }
-        },
-        {
-          "symbol": "XLE261002P00055000",
-          "side": "sell",
-          "position_effect": "close",
-          "strike": 55.0,
-          "quote": {
-            "bid": 0.03,
-            "ask": 0.07
-          }
-        }
-      ],
-      "exit_quote": {
-        "short_ask": 0.29,
-        "long_bid": 0.03,
-        "net_debit": 0.26,
-        "mid": 0.21,
-        "spread_pct": 23.077,
-        "long_spread_pct": 80.0
-      }
-    }
-  ],
+  "sells": [],
   "buys": [],
-  "skips": [
-    {
-      "symbol": "XLF",
-      "reason": "insufficient_buying_power(cost=1617,bp_left=5)",
-      "rsi2": 1.2,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "credit",
-        "est": 0.11,
-        "model_flat": 0.0982,
-        "model_surface": 0.2529,
-        "ratio_flat_pct": 112.0,
-        "ratio_surface_pct": 43.5
-      }
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "BAC",
-      "rsi2_now": 20.33,
+      "symbol": "NVDA",
+      "rsi2_now": 24.95,
       "scenario": "1d_-1%",
-      "spot": 56.12,
+      "spot": 223.79,
       "structure": "credit_put_spread",
-      "est_premium_usd": 448
-    },
-    {
-      "symbol": "AMZN",
-      "rsi2_now": 22.89,
-      "scenario": "2d_-1%x2",
-      "spot": 249.48,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 1953
-    },
-    {
-      "symbol": "IWM",
-      "rsi2_now": 15.69,
-      "scenario": "1d_-1%",
-      "spot": 281.25,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 2475
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 11.99,
-      "scenario": "1d_-1%",
-      "spot": 512.51,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 4525
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 35.28,
-      "scenario": "1d_-1%",
-      "spot": 767.56,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 6777
+      "est_premium_usd": 1685
     }
   ],
-  "suggested_reserve_usd": 1.72
+  "suggested_reserve_usd": 1267.21
 }

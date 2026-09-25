@@ -2,27 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "BAC": {
-      "qty": 17.854452,
-      "entry_price": 58.9332,
-      "entry_date": "2026-09-14",
-      "cost": 1052.22,
-      "tranches": 2
-    },
-    "CVS": {
-      "qty": 22.711127,
-      "entry_price": 89.1039,
-      "entry_date": "2026-09-17",
-      "cost": 2023.65,
-      "tranches": 2
-    },
-    "BMY": {
-      "qty": 8.258835,
-      "entry_price": 62.8878,
-      "entry_date": "2026-09-17",
-      "cost": 519.38,
-      "tranches": 1
-    },
     "ALL": {
       "qty": 4.385446,
       "entry_price": 230.704,
@@ -1977,6 +1956,33 @@
       "side": "sell",
       "qty": 5.186127,
       "price": 197.7001,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "BAC",
+      "side": "sell",
+      "qty": 17.854452,
+      "price": 56.6722,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "CVS",
+      "side": "sell",
+      "qty": 22.711127,
+      "price": 89.1666,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "BMY",
+      "side": "sell",
+      "qty": 8.258835,
+      "price": 62.6501,
       "bucket": "strategy",
       "reason": "exit_strength"
     }

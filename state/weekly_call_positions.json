@@ -19,23 +19,6 @@
         "spread_pct": 1.495
       },
       "model_price": 6.6981
-    },
-    "BAC261002C00049000": {
-      "underlying": "BAC",
-      "strike": 49.0,
-      "expiry": "2026-10-02",
-      "contracts": 1,
-      "entry_premium": 7.2,
-      "entry_date": "2026-09-23",
-      "entry_underlying": 56.05,
-      "entry_rsi2": 6.19,
-      "entry_quote": {
-        "bid": 7.12,
-        "ask": 7.25,
-        "mid": 7.185,
-        "spread_pct": 1.809
-      },
-      "model_price": 7.1005
     }
   },
   "trades": [
@@ -292,6 +275,15 @@
       "price": 9.45,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-25",
+      "symbol": "BAC261002C00049000",
+      "side": "sell",
+      "qty": 1,
+      "price": 7.6,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -542,6 +534,25 @@
       "entry_mid": 9.105,
       "exit_mid": 9.685,
       "model_price": 9.0732
+    },
+    {
+      "occ": "BAC261002C00049000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "BAC",
+      "entry_date": "2026-09-23",
+      "exit_date": "2026-09-25",
+      "entry_premium": 7.2,
+      "exit_premium": 7.6,
+      "pnl_pct": 5.56,
+      "pnl_usd": 40.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 1.809,
+      "exit_spread_pct": 3.927,
+      "entry_mid": 7.185,
+      "exit_mid": 7.64,
+      "model_price": 7.1005
     }
   ],
   "skip_log": [

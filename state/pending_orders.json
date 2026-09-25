@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-24",
+  "trade_date": "2026-09-25",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-24 15:22 ET",
-  "status": "vetoed_by_user",
+  "generated_at_et": "2026-09-25 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,70 +15,41 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10095.39,
-  "buying_power_at_generation": 2045.86,
-  "funding_note": "WELL/RVMD 出场已于 15:22 即时成交, 回款 $2,041.01 到账 → 实时 cash $3,695.86 / BP **$2,045.86** (cash 比 BP 多的 $1,650 = XLE 信用价差全宽抵押)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "portfolio_value_at_generation": 10217.12,
+  "buying_power_at_generation": 7174.86,
+  "funding_note": "BAC/CVS/BMY 三笔出场已于 15:23 即时成交, 回款 $3,554.34 到账 → 实时 cash = BP = **$7,174.86** (无期权抵押占用)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
   "news_precheck": {
     "checked": [
-      "BMY",
-      "USB"
+      "CB",
+      "ELV",
+      "ROKU",
+      "TRGP",
+      "EQIX"
     ],
     "red_flagged": [],
-    "note": "integrations.py news, 报告级仅提示不改单 (红线2)"
+    "note": "integrations.py news, 报告级仅提示不改单 (红线2); 5 只中 2 只有新闻, 均无命中关键词"
   },
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "stock_cap": 2045.86,
-    "note": "今日期权轨道是**平仓单 (释放资金)**, 不是买单, 故无抵押预留。股票 cap = 执行时实时 min(BP,cash) = $2,045.86。两单合计 $2,019.88 ≤ cap, 余 $25.98, 全部在 cap 内。⚠️ 若用户同时执行了期权平仓 ($0.26×300 = $78 借记, 释放 $1,650 抵押), BP 会再增约 $1,572 —— 但本清单金额由引擎按生成时资金定额, **不因此放大** (红线2)。 【15:27 更新】用户已执行期权平仓 (净借记 0.25, 付 $75, 释放抵押 $1,650) → 实时 cash=BP=**$3,620.60**。cap 相应放宽, 但清单金额仍为引擎生成时定额, 不放大 (红线2)。"
+    "stock_cap": 7174.86,
+    "note": "今日无期权买单 (near_signals 仅 NVDA rsi2 24.95, 距入场闸 <10 尚远) → 股票 cap = 实时 min(BP,cash) = $7,174.86。5 单合计 $5,109.75 ≤ cap, 余 $2,065.11, 全部在 cap 内。⚠️ 用户 09-24 曾指示「保留给期权」但**仅限当日清单**, 未成常设规则 —— 本清单按常规流程产出, 是否再次保留由用户决定。参考: 今日唯一 near_signal NVDA 参考保留额 $1,685 < 余额 $2,065.11, 即使 5 单全执行仍留得下。"
   },
   "supersedes": {
-    "trade_date": "2026-09-23",
-    "status_was": "executed",
-    "note": "09-23 清单 (ADP+XLF) 已于当日 15:31 全额执行。"
+    "trade_date": "2026-09-24",
+    "status_was": "vetoed_by_user",
+    "note": "09-24 清单 (BMY+USB) 已被用户否决。本清单按协议自动取代。注: BMY 今日已因 exit_strength 出场 (原持仓, 非 09-24 未执行的加仓单)。"
   },
   "option_alert": {
     "near_signals": [
       {
-        "symbol": "BAC",
-        "rsi2_now": 20.33,
+        "symbol": "NVDA",
+        "rsi2_now": 24.95,
         "scenario": "1d_-1%",
-        "spot": 56.12,
+        "spot": 223.79,
         "structure": "credit_put_spread",
-        "est_premium_usd": 448
-      },
-      {
-        "symbol": "AMZN",
-        "rsi2_now": 22.89,
-        "scenario": "2d_-1%x2",
-        "spot": 249.48,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 1953
-      },
-      {
-        "symbol": "IWM",
-        "rsi2_now": 15.69,
-        "scenario": "1d_-1%",
-        "spot": 281.25,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 2475
-      },
-      {
-        "symbol": "DIA",
-        "rsi2_now": 11.99,
-        "scenario": "1d_-1%",
-        "spot": 512.51,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 4525
-      },
-      {
-        "symbol": "SPY",
-        "rsi2_now": 35.28,
-        "scenario": "1d_-1%",
-        "spot": 767.56,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 6777
+        "est_premium_usd": 1685
       }
     ],
     "note": "报告级预警, 不产生订单 (红线2)。"
@@ -87,47 +58,77 @@
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "BMY",
-      "dollar_amount": 1009.94,
+      "symbol": "CB",
+      "dollar_amount": 1021.95,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 60.665,
-      "rsi2": 1.27,
-      "tranche": 2,
-      "avg_entry_price": 62.8878,
-      "drawdown_pct": -3.53,
+      "reason": "rsi2_entry",
+      "est_price": 334.05,
+      "rsi2": 0.88,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "cap_projection": "within_cap",
-      "status": "vetoed_by_user",
-      "veto_note": "用户 15:33 指示「保留给期权」, 本单未下达。按 playbook 晨检规则, 标 vetoed_by_user 的单次日**不再提示**。"
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "USB",
-      "dollar_amount": 1009.94,
+      "symbol": "ELV",
+      "dollar_amount": 1021.95,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 58.425,
-      "rsi2": 7.18,
+      "est_price": 397.02,
+      "rsi2": 1.4,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "cap_projection": "within_cap",
-      "status": "vetoed_by_user",
-      "veto_note": "用户 15:33 指示「保留给期权」, 本单未下达。按 playbook 晨检规则, 标 vetoed_by_user 的单次日**不再提示**。"
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 3,
+      "action": "buy",
+      "symbol": "ROKU",
+      "dollar_amount": 1021.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 152.75,
+      "rsi2": 5.18,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "TRGP",
+      "dollar_amount": 1021.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 278.83,
+      "rsi2": 8.65,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "EQIX",
+      "dollar_amount": 1021.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 1014.64,
+      "rsi2": 9.23,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "news_flag": null,
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     }
-  ],
-  "vetoed_at_et": "2026-09-24 15:33 ET",
-  "veto": {
-    "by": "user",
-    "instruction": "保留给期权",
-    "scope": "**仅本清单 (2026-09-24)**。会话按「今日一票否决」处理, 未改任何配置。",
-    "reason": "用户选择把资金留给期权轨道, 不建今日两笔股票仓。背景: 今日 XLF 期权信号 (rsi2 1.20, 够格) 因引擎跑时 BP 仅 $5 被 insufficient_buying_power 跳过; 且 near_signals 中 DIA 11.99 / IWM 15.69 距入场闸 (rsi2<10) 很近, 执行股票清单会把可用资金从 $3,620.60 压到约 $1,600, 只剩 BAC ($448) 够得着。",
-    "funds_preserved_usd": 2019.88,
-    "buying_power_after_veto": 3620.6,
-    "not_a_config_change": "⚠️ 本次**不改** config.json / weekly_calls_live.json 任何字段。跨轨道资金规则仍是 2026-08-27 的「期权优先 (按抵押预留)」, **不是**常设现金储备。若用户要把「为期权留钱」升级为常设规则, 属 sizing 类 (红线3: 上限只能由用户改), 需明确授权并回测。"
-  }
+  ]
 }

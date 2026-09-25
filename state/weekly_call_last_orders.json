@@ -1,19 +1,19 @@
 {
-  "date": "2026-09-24",
+  "date": "2026-09-25",
   "halted": false,
   "sells": [
     {
-      "symbol": "XLE261002C00053000",
+      "symbol": "BAC261002C00049000",
       "qty": 1,
       "position_intent": "sell_to_close",
       "bucket": "weekly_calls",
       "reason": "exit_strength",
-      "est_price": 9.69,
+      "est_price": 7.64,
       "exit_quote": {
-        "bid": 9.39,
-        "ask": 9.98,
-        "mid": 9.685,
-        "spread_pct": 6.092
+        "bid": 7.49,
+        "ask": 7.79,
+        "mid": 7.64,
+        "spread_pct": 3.927
       }
     }
   ],
@@ -22,37 +22,13 @@
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "AMZN",
-      "rsi2_now": 22.89,
-      "scenario": "2d_-1%x2",
-      "spot": 249.48,
-      "structure": "single",
-      "est_premium_usd": 2553
-    },
-    {
-      "symbol": "IWM",
-      "rsi2_now": 15.69,
+      "symbol": "NVDA",
+      "rsi2_now": 24.95,
       "scenario": "1d_-1%",
-      "spot": 281.25,
+      "spot": 223.79,
       "structure": "single",
-      "est_premium_usd": 2847
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 11.99,
-      "scenario": "1d_-1%",
-      "spot": 512.51,
-      "structure": "single",
-      "est_premium_usd": 5188
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 35.28,
-      "scenario": "1d_-1%",
-      "spot": 767.56,
-      "structure": "single",
-      "est_premium_usd": 7770
+      "est_premium_usd": 2316
     }
   ],
-  "suggested_reserve_usd": 2553.0
+  "suggested_reserve_usd": 2316.0
 }
