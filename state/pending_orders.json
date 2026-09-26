@@ -2,7 +2,7 @@
   "trade_date": "2026-09-25",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-25 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "partially_placed_offhours_leg1",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -67,8 +67,22 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "offhours_leg1_queued",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "order_id": "6ab728ba-32be-4a0c-9f93-af8aa76d4f5c",
+        "qty": 3,
+        "limit": 337.39,
+        "leg1_max": 1012.17,
+        "remainder": 9.78,
+        "type": "limit",
+        "market_hours": "all_day_hours",
+        "time_in_force": "gtc",
+        "state_at_place": "queued",
+        "cumulative_quantity": 0,
+        "placed_at_et": "2026-09-25 22:06-22:07 ET",
+        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)"
+      }
     },
     {
       "seq": 2,
@@ -82,8 +96,22 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "offhours_leg1_queued",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "order_id": "6ab728c0-212f-4e04-9d7c-aafc85640c62",
+        "qty": 2,
+        "limit": 400.99,
+        "leg1_max": 801.98,
+        "remainder": 219.97,
+        "type": "limit",
+        "market_hours": "all_day_hours",
+        "time_in_force": "gtc",
+        "state_at_place": "queued",
+        "cumulative_quantity": 0,
+        "placed_at_et": "2026-09-25 22:06-22:07 ET",
+        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)"
+      }
     },
     {
       "seq": 3,
@@ -97,8 +125,22 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "offhours_leg1_queued",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "order_id": "6ab728ce-d8e8-4f5f-8bd6-39e751fc7972",
+        "qty": 6,
+        "limit": 154.28,
+        "leg1_max": 925.68,
+        "remainder": 96.27,
+        "type": "limit",
+        "market_hours": "all_day_hours",
+        "time_in_force": "gtc",
+        "state_at_place": "queued",
+        "cumulative_quantity": 0,
+        "placed_at_et": "2026-09-25 22:06-22:07 ET",
+        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)"
+      }
     },
     {
       "seq": 4,
@@ -112,8 +154,22 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "offhours_leg1_queued",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "order_id": "6ab728e1-5e6b-4684-aedd-5e09cd31fd30",
+        "qty": 3,
+        "limit": 281.62,
+        "leg1_max": 844.86,
+        "remainder": 177.09,
+        "type": "limit",
+        "market_hours": "all_day_hours",
+        "time_in_force": "gtc",
+        "state_at_place": "queued",
+        "cumulative_quantity": 0,
+        "placed_at_et": "2026-09-25 22:06-22:07 ET",
+        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)"
+      }
     },
     {
       "seq": 5,
@@ -127,8 +183,12 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "offhours_skipped_whole_zero",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "placed": false,
+        "reason": "whole = floor(1021.95 / 1024.79) = 0 → 盘外整单跳过, 全额 $1,021.95 留给周一盘中窗"
+      }
     }
   ],
   "carryover": {
@@ -139,6 +199,52 @@
     "note": "逐字段沿用 2026-09-25 引擎输出 (红线2 不得改金额/标的)。执行时须重取实时 min(buying_power, cash)。",
     "weekend_gap": "⚠️ 本次顺延跨**周末** (09-25 周五 → 09-28 周一), 间隔 3 个日历日 / 1 个交易日。价格漂移风险高于平日顺延 —— 历史两次顺延样本 (09-22 ALL −4.83% / 09-23 BAC −1.08%) 都只隔 1 个日历日。",
     "monday_note": "⚠️ 周一 13:00 有股票池刷新, 15:20 收盘前主跑产出新清单时**自动取代本清单**。要执行本清单须在周一 15:20 之前。",
-    "cap_note": "生成时 cap = $7,174.86, 5 单 $5,109.75 全部在 cap 内。周一执行时资金应无大变化 (周末无交易), 但仍须重取。"
+    "cap_note": "生成时 cap = $7,174.86, 5 单 $5,109.75 全部在 cap 内。周一执行时资金应无大变化 (周末无交易), 但仍须重取。",
+    "superseded_by": "offhours_execution (2026-09-25 22:06 ET); 零头与 EQIX 仍按 carryover 走周一 09:45-15:55, 但金额须按 MONDAY_CANCEL_FIRST 重算"
+  },
+  "offhours_execution": {
+    "user_command": "执行 (2026-09-25 22:03 ET)",
+    "executed_at_et": "2026-09-25 22:06-22:07 ET",
+    "protocol": "4C (b) 盘外整股限价①腿 (2026-09-25 用户选「3」恢复)",
+    "placed": 4,
+    "skipped": 1,
+    "leg1_total_usd": 3584.69,
+    "cap_usd": 7174.86,
+    "cap_source": "实时 min(buying_power, cash) = min(7174.86, 7174.86); unleveraged == buying_power → 无借贷 (红线3 防杠杆闸)",
+    "cap_headroom_usd": 3590.17,
+    "reviews": "4/4 review_equity_order 通过, order_checks 均为空",
+    "fills_at_place": 0,
+    "timing_deviation": {
+      "offered_at_et": "2026-09-25 17:49 ET (当时盘后剩 2h11m)",
+      "command_at_et": "2026-09-25 22:03 ET",
+      "gap_minutes": 254,
+      "fact": "盘后 (extended_hours) 已于 20:00 ET 收市; Robinhood 24 Hour Market 周五 20:00 ET → 周日 20:00 ET 休市。下单时**无任何交易场所开放**, 4 单均为 queued 排队, 最早可成交时点 = 2026-09-28 (周日) 20:00 ET 24小时盘开盘。",
+      "disclosed": "是 — 已向用户如实说明 (见 journal/2026-09-25-offhours-exec.md)"
+    },
+    "cost_deviation": {
+      "quoted_at_1749": "①腿实测多付 0.55%; 盘后点差 1.31-2.97%",
+      "actual_at_2203": "点差报价已退化为残值/stub (ELV ask 539.89 = +36%, ROKU ask 171.10 = +21%); 周日夜盘流动性极薄",
+      "expected": "限价封顶 est x 1.010 → 单笔最差多付 1.0% (约 $36/4单), 不会更差; 大概率结果是**不成交**"
+    },
+    "gtc_rationale": "gfd 在周五夜间下单会在任何交易时段出现前失效, 等于白下; 只有 gtc 能活到周日 20:00 ET。",
+    "MONDAY_CANCEL_FIRST": {
+      "obligation": "⚠️ **周一 (2026-09-28) 任何执行动作之前, 必须先撤掉仍在 working 的 ①腿 GTC 限价单**, 再按实际成交量重算零头。",
+      "why": "all_day_hours + gtc 的单子在周一 09:30 常规时段仍然 live。若同时又按清单下 $1,021.95 的整额市价单, 同一标的会**买两次**, 敞口超过引擎输出金额 → 违反红线2 (不得放大订单) / 红线3 (仓位上限)。",
+      "steps": [
+        "1. get_equity_orders 查 4 个 order_id 的 state 与 cumulative_quantity",
+        "2. 对 state 仍为 queued/confirmed/partially_filled 的单 → cancel_equity_order",
+        "3. 用实际 cumulative_quantity x average_price 算已买入金额, 零头 = 1021.95 - 已买入",
+        "4. 零头 < min_order_usd ($5.00) 则该单结清不再补",
+        "5. 剩余零头 + EQIX 全额 $1,021.95 才是周一盘中窗 (09:45-15:55) 的市价单清单"
+      ],
+      "deadline": "周一 15:20 ET 收盘前主跑会产出新清单自动取代本清单; 撤单动作不受此影响, 无论如何都要做"
+    },
+    "order_ids": [
+      "6ab728ba-32be-4a0c-9f93-af8aa76d4f5c",
+      "6ab728c0-212f-4e04-9d7c-aafc85640c62",
+      "6ab728ce-d8e8-4f5f-8bd6-39e751fc7972",
+      "6ab728e1-5e6b-4684-aedd-5e09cd31fd30"
+    ],
+    "how_to_abort": "用户若改主意, 在 App 里撤掉这 4 张单即可 (或让会话调 cancel_equity_order), 全部未成交无任何成本"
   }
 }
