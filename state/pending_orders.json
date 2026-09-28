@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-25",
+  "trade_date": "2026-09-28",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-25 15:22 ET",
-  "status": "leg1_filled_remainder_vetoed",
+  "generated_at_et": "2026-09-28 15:23 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,317 +15,95 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10217.12,
-  "buying_power_at_generation": 7174.86,
-  "funding_note": "BAC/CVS/BMY 三笔出场已于 15:23 即时成交, 回款 $3,554.34 到账 → 实时 cash = BP = **$7,174.86** (无期权抵押占用)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
-  "news_precheck": {
-    "checked": [
-      "CB",
-      "ELV",
-      "ROKU",
-      "TRGP",
-      "EQIX"
-    ],
-    "red_flagged": [],
-    "note": "integrations.py news, 报告级仅提示不改单 (红线2); 5 只中 2 只有新闻, 均无命中关键词"
-  },
+  "portfolio_value_at_generation": 10153.75,
+  "buying_power_at_generation": 4589.65,
+  "funding_note": "ALL 出场已于 15:24 即时成交 (4.385446 @ $227.4701, 回款 $997.54), 实时 cash=BP=$4,589.65 (limited margin 即时可用)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 0,
-    "option_collateral": 0.0,
-    "stock_cap": 7174.86,
-    "note": "今日无期权买单 (near_signals 仅 NVDA rsi2 24.95, 距入场闸 <10 尚远) → 股票 cap = 实时 min(BP,cash) = $7,174.86。5 单合计 $5,109.75 ≤ cap, 余 $2,065.11, 全部在 cap 内。⚠️ 用户 09-24 曾指示「保留给期权」但**仅限当日清单**, 未成常设规则 —— 本清单按常规流程产出, 是否再次保留由用户决定。参考: 今日唯一 near_signal NVDA 参考保留额 $1,685 < 余额 $2,065.11, 即使 5 单全执行仍留得下。"
+    "option_orders_today": 1,
+    "option_collateral": 2250.0,
+    "collateral_basis": "价差宽度 22.5 x 100 x 1张 (券商实扣全额宽度)",
+    "stock_cap": 2339.65,
+    "stock_used": 2031.78,
+    "stock_headroom": 307.87,
+    "note": "引擎按 $4,589.65 全额出了 5 单共 $4,585.60; 期权优先规则下先为 AMZN 价差留足 $2,250 抵押, 股票 cap=$2,339.65 → 按引擎原序逐单吃, PSX/MCK 保留, DXCM/BNY/NOW **整单跳过不缩量** (不得重排顺序)。"
   },
   "supersedes": {
-    "trade_date": "2026-09-24",
-    "status_was": "vetoed_by_user",
-    "note": "09-24 清单 (BMY+USB) 已被用户否决。本清单按协议自动取代。注: BMY 今日已因 exit_strength 出场 (原持仓, 非 09-24 未执行的加仓单)。"
+    "trade_date": "2026-09-25",
+    "status_was": "leg1_filled_remainder_vetoed",
+    "note": "09-25 清单已结清 (①腿4单成交, 零头经用户 09-28 「这些不执行了」整批否决)。本清单按协议自动取代。"
   },
-  "option_alert": {
-    "near_signals": [
-      {
-        "symbol": "NVDA",
-        "rsi2_now": 24.95,
-        "scenario": "1d_-1%",
-        "spot": 223.79,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 1685
-      }
-    ],
-    "note": "报告级预警, 不产生订单 (红线2)。"
-  },
+  "universe_note": "本清单为今日 13:22 刷新后的新池 (100只) 首次生效。PSX/MCK/DXCM/BNY/NOW 均在新池内。",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "CB",
-      "dollar_amount": 1021.95,
+      "symbol": "PSX",
+      "dollar_amount": 1015.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 334.05,
-      "rsi2": 0.88,
+      "est_price": 253.435,
+      "rsi2": 2.73,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "offhours_leg1_filled_remainder_vetoed",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "order_id": "6ab728ba-32be-4a0c-9f93-af8aa76d4f5c",
-        "qty": 3,
-        "limit": 337.39,
-        "leg1_max": 1012.17,
-        "remainder": 9.78,
-        "type": "limit",
-        "market_hours": "all_day_hours",
-        "time_in_force": "gtc",
-        "state_at_place": "queued",
-        "cumulative_quantity": 0,
-        "placed_at_et": "2026-09-25 22:06-22:07 ET",
-        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)",
-        "state_final": "filled",
-        "filled_qty": 3,
-        "avg_price": 336.74,
-        "filled_usd": 1010.22
-      },
-      "remainder_usd": 11.73
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "ELV",
-      "dollar_amount": 1021.95,
+      "symbol": "MCK",
+      "dollar_amount": 1015.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 397.02,
-      "rsi2": 1.4,
+      "est_price": 858.64,
+      "rsi2": 4.84,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "offhours_leg1_filled_remainder_vetoed",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "order_id": "6ab728c0-212f-4e04-9d7c-aafc85640c62",
-        "qty": 2,
-        "limit": 400.99,
-        "leg1_max": 801.98,
-        "remainder": 219.97,
-        "type": "limit",
-        "market_hours": "all_day_hours",
-        "time_in_force": "gtc",
-        "state_at_place": "queued",
-        "cumulative_quantity": 0,
-        "placed_at_et": "2026-09-25 22:06-22:07 ET",
-        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)",
-        "state_final": "filled",
-        "filled_qty": 2,
-        "avg_price": 400.99,
-        "filled_usd": 801.98
-      },
-      "remainder_usd": 219.97
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "ROKU",
-      "dollar_amount": 1021.95,
+      "symbol": "DXCM",
+      "dollar_amount": 1015.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 152.75,
+      "est_price": 86.28,
       "rsi2": 5.18,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "offhours_leg1_filled_remainder_vetoed",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "order_id": "6ab728ce-d8e8-4f5f-8bd6-39e751fc7972",
-        "qty": 6,
-        "limit": 154.28,
-        "leg1_max": 925.68,
-        "remainder": 96.27,
-        "type": "limit",
-        "market_hours": "all_day_hours",
-        "time_in_force": "gtc",
-        "state_at_place": "queued",
-        "cumulative_quantity": 0,
-        "placed_at_et": "2026-09-25 22:06-22:07 ET",
-        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)",
-        "state_final": "filled",
-        "filled_qty": 6,
-        "avg_price": 154.28,
-        "filled_usd": 925.68
-      },
-      "remainder_usd": 96.27
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9: 不得缩量)"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "TRGP",
-      "dollar_amount": 1021.95,
+      "symbol": "BNY",
+      "dollar_amount": 1015.89,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 278.83,
-      "rsi2": 8.65,
+      "est_price": 147.86,
+      "rsi2": 6.55,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "offhours_leg1_filled_remainder_vetoed",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "order_id": "6ab728e1-5e6b-4684-aedd-5e09cd31fd30",
-        "qty": 3,
-        "limit": 281.62,
-        "leg1_max": 844.86,
-        "remainder": 177.09,
-        "type": "limit",
-        "market_hours": "all_day_hours",
-        "time_in_force": "gtc",
-        "state_at_place": "queued",
-        "cumulative_quantity": 0,
-        "placed_at_et": "2026-09-25 22:06-22:07 ET",
-        "limit_basis": "引擎 est_price x 1.010 (红线2, 非实时价)",
-        "state_final": "filled",
-        "filled_qty": 3,
-        "avg_price": 281.62,
-        "filled_usd": 844.86
-      },
-      "remainder_usd": 177.09
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9: 不得缩量)"
     },
     {
       "seq": 5,
       "action": "buy",
-      "symbol": "EQIX",
-      "dollar_amount": 1021.95,
+      "symbol": "NOW",
+      "dollar_amount": 522.04,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 1014.64,
-      "rsi2": 9.23,
+      "est_price": 131.33,
+      "rsi2": 8.14,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "news_flag": null,
-      "status": "vetoed_by_user",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "placed": false,
-        "reason": "whole = floor(1021.95 / 1024.79) = 0 → 盘外整单跳过, 全额 $1,021.95 留给周一盘中窗"
-      },
-      "remainder_usd": 1021.95
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9: 不得缩量)"
     }
-  ],
-  "carryover": {
-    "triggered_at_et": "2026-09-25 16:13 ET",
-    "reason": "用户回复「执行」时为 16:13 ET —— 当日执行窗 15:30-15:55 已关闭 18.6 分钟, 且 16:00 已收盘。按 4C 协议 market+regular_hours 单不得在盘后下, 会话**未下任何买单** (与 2026-09-21 同一情形)。",
-    "new_window_et": "2026-09-28 (周一) 09:45-15:55 ET",
-    "new_valid_until": "2026-09-28 15:55 ET",
-    "note": "逐字段沿用 2026-09-25 引擎输出 (红线2 不得改金额/标的)。执行时须重取实时 min(buying_power, cash)。",
-    "weekend_gap": "⚠️ 本次顺延跨**周末** (09-25 周五 → 09-28 周一), 间隔 3 个日历日 / 1 个交易日。价格漂移风险高于平日顺延 —— 历史两次顺延样本 (09-22 ALL −4.83% / 09-23 BAC −1.08%) 都只隔 1 个日历日。",
-    "monday_note": "⚠️ 周一 13:00 有股票池刷新, 15:20 收盘前主跑产出新清单时**自动取代本清单**。要执行本清单须在周一 15:20 之前。",
-    "cap_note": "生成时 cap = $7,174.86, 5 单 $5,109.75 全部在 cap 内。周一执行时资金应无大变化 (周末无交易), 但仍须重取。",
-    "superseded_by": "offhours_execution (2026-09-25 22:06 ET); 零头与 EQIX 仍按 carryover 走周一 09:45-15:55, 但金额须按 MONDAY_CANCEL_FIRST 重算"
-  },
-  "offhours_execution": {
-    "user_command": "执行 (2026-09-25 22:03 ET)",
-    "executed_at_et": "2026-09-25 22:06-22:07 ET",
-    "protocol": "4C (b) 盘外整股限价①腿 (2026-09-25 用户选「3」恢复)",
-    "placed": 4,
-    "skipped": 1,
-    "leg1_total_usd": 3584.69,
-    "cap_usd": 7174.86,
-    "cap_source": "实时 min(buying_power, cash) = min(7174.86, 7174.86); unleveraged == buying_power → 无借贷 (红线3 防杠杆闸)",
-    "cap_headroom_usd": 3590.17,
-    "reviews": "4/4 review_equity_order 通过, order_checks 均为空",
-    "fills_at_place": 0,
-    "timing_deviation": {
-      "offered_at_et": "2026-09-25 17:49 ET (当时盘后剩 2h11m)",
-      "command_at_et": "2026-09-25 22:03 ET",
-      "gap_minutes": 254,
-      "fact": "盘后 (extended_hours) 已于 20:00 ET 收市; Robinhood 24 Hour Market 周五 20:00 ET → 周日 20:00 ET 休市。下单时**无任何交易场所开放**, 4 单均为 queued 排队, 最早可成交时点 = 2026-09-28 (周日) 20:00 ET 24小时盘开盘。",
-      "disclosed": "是 — 已向用户如实说明 (见 journal/2026-09-25-offhours-exec.md)"
-    },
-    "cost_deviation": {
-      "quoted_at_1749": "①腿实测多付 0.55%; 盘后点差 1.31-2.97%",
-      "actual_at_2203": "点差报价已退化为残值/stub (ELV ask 539.89 = +36%, ROKU ask 171.10 = +21%); 周日夜盘流动性极薄",
-      "expected": "限价封顶 est x 1.010 → 单笔最差多付 1.0% (约 $36/4单), 不会更差; 大概率结果是**不成交**"
-    },
-    "gtc_rationale": "gfd 在周五夜间下单会在任何交易时段出现前失效, 等于白下; 只有 gtc 能活到周日 20:00 ET。",
-    "MONDAY_CANCEL_FIRST": {
-      "obligation": "⚠️ **周一 (2026-09-28) 任何执行动作之前, 必须先撤掉仍在 working 的 ①腿 GTC 限价单**, 再按实际成交量重算零头。",
-      "why": "all_day_hours + gtc 的单子在周一 09:30 常规时段仍然 live。若同时又按清单下 $1,021.95 的整额市价单, 同一标的会**买两次**, 敞口超过引擎输出金额 → 违反红线2 (不得放大订单) / 红线3 (仓位上限)。",
-      "steps": [
-        "1. get_equity_orders 查 4 个 order_id 的 state 与 cumulative_quantity",
-        "2. 对 state 仍为 queued/confirmed/partially_filled 的单 → cancel_equity_order",
-        "3. 用实际 cumulative_quantity x average_price 算已买入金额, 零头 = 1021.95 - 已买入",
-        "4. 零头 < min_order_usd ($5.00) 则该单结清不再补",
-        "5. 剩余零头 + EQIX 全额 $1,021.95 才是周一盘中窗 (09:45-15:55) 的市价单清单"
-      ],
-      "deadline": "周一 15:20 ET 收盘前主跑会产出新清单自动取代本清单; 撤单动作不受此影响, 无论如何都要做",
-      "resolved": {
-        "checked_at_et": "2026-09-28 10:4x ET",
-        "result": "4/4 order_id 全部 state=filled, cumulative_quantity 打满, **无 working 残单 → 无需 cancel**, 双买隐患不存在",
-        "fill_time_et": "2026-09-27 (周日) 20:00:00 ET —— 24 小时盘开盘瞬间",
-        "fills": {
-          "CB": {
-            "qty": 3,
-            "avg": 336.74,
-            "usd": 1010.22,
-            "vs_est_pct": 0.805
-          },
-          "ELV": {
-            "qty": 2,
-            "avg": 400.99,
-            "usd": 801.98,
-            "vs_est_pct": 1.0
-          },
-          "ROKU": {
-            "qty": 6,
-            "avg": 154.28,
-            "usd": 925.68,
-            "vs_est_pct": 1.002
-          },
-          "TRGP": {
-            "qty": 3,
-            "avg": 281.62,
-            "usd": 844.86,
-            "vs_est_pct": 1.001
-          }
-        },
-        "total_usd": 3582.74,
-        "weighted_premium_pct": 0.946,
-        "note": "4 单中 3 单成交在限价本身 —— 验证 09-25 披露的'薄盘要么不成交要么成交在限价 +1.0%'",
-        "ledger_writeback": "2026-09-28 13:2x ET 用户回「放行」后 signals.py apply 成功; position_check verdict=ok, 8/8 一致"
-      }
-    },
-    "order_ids": [
-      "6ab728ba-32be-4a0c-9f93-af8aa76d4f5c",
-      "6ab728c0-212f-4e04-9d7c-aafc85640c62",
-      "6ab728ce-d8e8-4f5f-8bd6-39e751fc7972",
-      "6ab728e1-5e6b-4684-aedd-5e09cd31fd30"
-    ],
-    "how_to_abort": "用户若改主意, 在 App 里撤掉这 4 张单即可 (或让会话调 cancel_equity_order), 全部未成交无任何成本"
-  },
-  "remainder": {
-    "computed_at_et": "2026-09-28 13:2x ET (按实际成交重算, MONDAY_CANCEL_FIRST 第3步)",
-    "by_symbol": {
-      "CB": 11.73,
-      "ELV": 219.97,
-      "ROKU": 96.27,
-      "TRGP": 177.09,
-      "EQIX": 1021.95
-    },
-    "total_usd": 1527.01,
-    "cap_usd": 3592.12,
-    "within_cap": true,
-    "exec_window_et": "2026-09-28 09:45-15:55 ET 盘中单笔市价",
-    "status": "vetoed_by_user",
-    "min_order_check": "CB 零头 $11.73 ≥ min_order_usd $5.00, 全部合格",
-    "EQIX_flag": "⚠️ EQIX ($1,021.95, 全额) 已于今日 13:22 的周度刷新中**被剔除出 universe.json**。清单逐字段不得改 (红线2), 但用户可一票否决该单; 今日 15:20 收盘前主跑会按新池重算并自动取代本清单。",
-    "superseded_by": "今日 15:20 ET 收盘前主跑产出的新清单",
-    "veto": {
-      "at_et": "2026-09-28 ~13:30 ET",
-      "user_words": "这些不执行了",
-      "scope": "整批零头 5 单全部否决 (CB $11.73 / ELV $219.97 / ROKU $96.27 / TRGP $177.09 / EQIX $1,021.95 = $1,527.01)",
-      "orders_placed": 0,
-      "note": "会话未下任何买单。已成交的盘外①腿 (CB 3 / ELV 2 / ROKU 6 / TRGP 3, $3,582.74) 不受影响, 已入账。"
-    }
-  }
+  ]
 }

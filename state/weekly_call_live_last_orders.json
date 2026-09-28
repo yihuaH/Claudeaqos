@@ -1,19 +1,85 @@
 {
-  "date": "2026-09-25",
+  "date": "2026-09-28",
   "halted": false,
   "sells": [],
-  "buys": [],
+  "buys": [
+    {
+      "structure": "credit_put_spread",
+      "qty": 1,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_put_credit",
+      "legs": [
+        {
+          "symbol": "AMZN261009P00237500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 237.5,
+          "quote": {
+            "bid": 1.71,
+            "ask": 1.82
+          },
+          "spread_pct": 6.232
+        },
+        {
+          "symbol": "AMZN261009P00215000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 215.0,
+          "quote": {
+            "bid": 0.11,
+            "ask": 0.17
+          },
+          "spread_pct": 42.857
+        }
+      ],
+      "est_price": 1.54,
+      "direction": "credit",
+      "underlying": "AMZN",
+      "expiry": "2026-10-09",
+      "dte": 11,
+      "spot": 246.1,
+      "rsi2": 8.18,
+      "model_price": 1.5708,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "credit",
+        "est": 1.54,
+        "model_flat": 1.5708,
+        "model_surface": 1.4995,
+        "ratio_flat_pct": 98.0,
+        "ratio_surface_pct": 102.7
+      },
+      "entry_quote": {
+        "mid": 1.625,
+        "spread_pct": 6.232,
+        "long_spread_pct": 42.857,
+        "net_credit_conservative": 1.54
+      },
+      "risk_per_contract": 20.96,
+      "max_value_per_contract": 22.5,
+      "max_loss_usd": 2096.0,
+      "max_gain_usd": 154.0
+    }
+  ],
   "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "NVDA",
-      "rsi2_now": 24.95,
+      "symbol": "XLE",
+      "rsi2_now": 28.08,
       "scenario": "1d_-1%",
-      "spot": 223.79,
+      "spot": 62.05,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1685
+      "est_premium_usd": 512
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 11.54,
+      "scenario": "1d_-1%",
+      "spot": 280.31,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 2475
     }
   ],
-  "suggested_reserve_usd": 1267.21
+  "suggested_reserve_usd": 512.0
 }

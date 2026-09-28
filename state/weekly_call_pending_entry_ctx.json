@@ -1,36 +1,6 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
   "entries": {
-    "BAC260925C00051000": {
-      "symbol": "BAC260925C00051000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 8.21,
-      "underlying": "BAC",
-      "strike": 51.0,
-      "expiry": "2026-09-25",
-      "dte": 11,
-      "spot": 59.105,
-      "rsi2": 3.01,
-      "model_price": 8.1692,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 8.215,
-        "model_flat": 8.1692,
-        "model_surface": 8.2164,
-        "ratio_flat_pct": 99.4,
-        "ratio_surface_pct": 100.0
-      },
-      "entry_quote": {
-        "bid": 8.16,
-        "ask": 8.27,
-        "mid": 8.215,
-        "spread_pct": 1.339
-      }
-    },
     "AMZN261002C00220000": {
       "symbol": "AMZN261002C00220000",
       "qty": 1,
@@ -59,36 +29,6 @@
         "ask": 26.22,
         "mid": 26.14,
         "spread_pct": 0.612
-      }
-    },
-    "XLF260925C00050000": {
-      "symbol": "XLF260925C00050000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 5.99,
-      "underlying": "XLF",
-      "strike": 50.0,
-      "expiry": "2026-09-25",
-      "dte": 8,
-      "spot": 55.955,
-      "rsi2": 8.48,
-      "model_price": 5.9988,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 5.995,
-        "model_flat": 5.9988,
-        "model_surface": 6.0219,
-        "ratio_flat_pct": 100.1,
-        "ratio_surface_pct": 100.4
-      },
-      "entry_quote": {
-        "bid": 5.97,
-        "ask": 6.02,
-        "mid": 5.995,
-        "spread_pct": 0.834
       }
     },
     "XLE261002C00053000": {
@@ -182,5 +122,5 @@
       }
     }
   },
-  "updated": "2026-09-25"
+  "updated": "2026-09-28"
 }

@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-24",
-  "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-24 15:22 ET",
-  "status": "executed",
+  "trade_date": "2026-09-28",
+  "generated_by": "scripts/weekly_calls.py signal (via daily.py --phase preclose)",
+  "generated_at_et": "2026-09-28 15:23 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -15,144 +15,67 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
-  "kind": "exit_close",
-  "channel_note": "⚠️ 本单是**平仓** (出场类, 红线9 本可全自动), 但 agentic 不支持多腿 place (2026-08-15 实测), 故仍走手动 App 通道 —— 与开仓同渠道, 原因不同。",
+  "ledger": "state/weekly_call_live_positions.json",
+  "buying_power_at_generation": 4589.65,
+  "collateral_required": 2250.0,
+  "budget_note": "budget 不设上限 (2026-08-18 用户「不设上限」); 唯一硬约束 = 实时 buying_power $4,589.65 >= 抵押 $2,250 ✅ (红线3 防杠杆闸, unleveraged==buying_power 无借贷)",
   "orders": [
     {
-      "seq": 1,
       "structure": "credit_put_spread",
-      "qty": 3,
+      "qty": 1,
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "direction": "debit",
-      "est_price": 0.26,
-      "underlying": "XLE",
-      "expiry": "2026-10-02",
+      "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "XLE261002P00060500",
-          "side": "buy",
-          "position_effect": "close",
-          "strike": 60.5,
+          "symbol": "AMZN261009P00237500",
+          "side": "sell",
+          "position_effect": "open",
+          "strike": 237.5,
           "quote": {
-            "bid": 0.23,
-            "ask": 0.29
-          }
+            "bid": 1.71,
+            "ask": 1.82
+          },
+          "spread_pct": 6.232
         },
         {
-          "symbol": "XLE261002P00055000",
-          "side": "sell",
-          "position_effect": "close",
-          "strike": 55.0,
+          "symbol": "AMZN261009P00215000",
+          "side": "buy",
+          "position_effect": "open",
+          "strike": 215.0,
           "quote": {
-            "bid": 0.03,
-            "ask": 0.07
-          }
+            "bid": 0.11,
+            "ask": 0.17
+          },
+          "spread_pct": 42.857
         }
       ],
-      "exit_quote": {
-        "short_ask": 0.29,
-        "long_bid": 0.03,
-        "net_debit": 0.26,
-        "mid": 0.21,
-        "spread_pct": 23.077,
-        "long_spread_pct": 80.0
+      "est_price": 1.54,
+      "direction": "credit",
+      "underlying": "AMZN",
+      "expiry": "2026-10-09",
+      "dte": 11,
+      "spot": 246.1,
+      "rsi2": 8.18,
+      "model_price": 1.5708,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "credit",
+        "est": 1.54,
+        "model_flat": 1.5708,
+        "model_surface": 1.4995,
+        "ratio_flat_pct": 98.0,
+        "ratio_surface_pct": 102.7
       },
-      "state_file": "state/weekly_call_live_positions.json",
-      "valid_until": "same_session_1545_et",
-      "status": "filled",
-      "live_nbbo_at_notify": {
-        "checked_at_et": "2026-09-24 15:22 ET",
-        "source": "cash_printer get_option_quotes (券商真实 NBBO)",
-        "XLE261002P00060500": {
-          "bid": 0.25,
-          "ask": 0.27,
-          "mark": 0.26,
-          "iv": 0.2833,
-          "delta": -0.1784
-        },
-        "XLE261002P00055000": {
-          "bid": 0.01,
-          "ask": 0.05,
-          "mark": 0.03,
-          "iv": 0.4417,
-          "delta": -0.0195
-        },
-        "net_debit_mid": 0.23,
-        "net_debit_conservative": 0.26,
-        "engine_est": 0.26,
-        "engine_cap": 0.27,
-        "cap_rule": "est × 1.03 (playbook 4D)",
-        "suggested_limit": 0.24
+      "entry_quote": {
+        "mid": 1.625,
+        "spread_pct": 6.232,
+        "long_spread_pct": 42.857,
+        "net_credit_conservative": 1.54
       },
-      "pnl_scenarios": {
-        "0.23": 48,
-        "0.26": 39,
-        "0.27": 36
-      },
-      "entry_credit": 0.39,
-      "risk_per_contract": 5.11,
-      "collateral_released_usd": 1650.0,
-      "hold_to_expiry_alt": {
-        "max_gain_usd": 117,
-        "dte": 8,
-        "xle_spot": 62.755,
-        "breakeven": 60.11,
-        "cushion_pct": -3.59,
-        "broker_prob_short_side": 0.837
-      },
-      "filled_net_debit": 0.25,
-      "execution": {
-        "order_id": "6ab5798a-5ea1-4038-a840-34e3a8f01d08",
-        "placed_agent": "user",
-        "legs_filled": {
-          "XLE261002P00060500": {
-            "side": "buy",
-            "position_effect": "close",
-            "price": 0.27,
-            "qty": 3
-          },
-          "XLE261002P00055000": {
-            "side": "sell",
-            "position_effect": "close",
-            "price": 0.02,
-            "qty": 3
-          }
-        },
-        "net_debit": 0.25,
-        "processed_premium_usd": 75.0,
-        "attempt_history": [
-          {
-            "created_at_et": "15:26:19",
-            "price": 0.24,
-            "state": "cancelled"
-          },
-          {
-            "created_at_et": "15:27:06",
-            "price": 0.25,
-            "state": "filled"
-          }
-        ],
-        "vs_engine": "净借记 $0.25 < 引擎 est 0.26 < 上限 0.27 ✅ —— 比引擎估价还便宜 1 分, 比会话建议的 0.24 贵 1 分",
-        "pnl_usd": 42.0,
-        "pnl_pct_of_risk": 2.74,
-        "pnl_pct_of_max_gain": 35.9,
-        "leg_breakdown": {
-          "short_60.5P": {
-            "open": 0.5,
-            "close": 0.27,
-            "pnl_usd": 69.0
-          },
-          "long_55P": {
-            "open": 0.11,
-            "close": 0.02,
-            "pnl_usd": -27.0
-          }
-        },
-        "collateral_released_usd": 1650.0,
-        "ledger": "已由 weekly_calls.py apply 写入 state/weekly_call_live_positions.json (round_trip #7)"
-      }
+      "risk_per_contract": 20.96,
+      "max_value_per_contract": 22.5,
+      "max_loss_usd": 2096.0,
+      "max_gain_usd": 154.0
     }
-  ],
-  "executed_at_et": "2026-09-24 15:27:07 ET (用户 App 手动)"
+  ]
 }

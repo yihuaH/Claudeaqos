@@ -1,34 +1,34 @@
 {
-  "date": "2026-09-25",
+  "date": "2026-09-28",
   "halted": false,
-  "sells": [
+  "sells": [],
+  "buys": [],
+  "skips": [
     {
-      "symbol": "BAC261002C00049000",
-      "qty": 1,
-      "position_intent": "sell_to_close",
-      "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "est_price": 7.64,
-      "exit_quote": {
-        "bid": 7.49,
-        "ask": 7.79,
-        "mid": 7.64,
-        "spread_pct": 3.927
-      }
+      "symbol": "AMZN",
+      "reason": "spread_too_wide(best=5.17%)",
+      "rsi2": 8.18,
+      "spot": 246.1
     }
   ],
-  "buys": [],
-  "skips": [],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "NVDA",
-      "rsi2_now": 24.95,
+      "symbol": "XLE",
+      "rsi2_now": 28.08,
       "scenario": "1d_-1%",
-      "spot": 223.79,
+      "spot": 62.05,
       "structure": "single",
-      "est_premium_usd": 2316
+      "est_premium_usd": 630
+    },
+    {
+      "symbol": "IWM",
+      "rsi2_now": 11.54,
+      "scenario": "1d_-1%",
+      "spot": 280.31,
+      "structure": "single",
+      "est_premium_usd": 2838
     }
   ],
-  "suggested_reserve_usd": 2316.0
+  "suggested_reserve_usd": 630.0
 }

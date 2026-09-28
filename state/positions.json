@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "ALL": {
-      "qty": 4.385446,
-      "entry_price": 230.704,
-      "entry_date": "2026-09-22",
-      "cost": 1011.74,
-      "tranches": 1
-    },
     "UNP": {
       "qty": 3.714035,
       "entry_price": 272.4099,
@@ -2049,6 +2042,15 @@
       "price": 281.62,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "ALL",
+      "side": "sell",
+      "qty": 4.385446,
+      "price": 227.4701,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
