@@ -2,7 +2,7 @@
   "trade_date": "2026-09-28",
   "generated_by": "scripts/weekly_calls.py signal (via daily.py --phase preclose)",
   "generated_at_et": "2026-09-28 15:23 ET",
-  "status": "expired_window_closed",
+  "status": "attempted_no_fill",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -81,8 +81,29 @@
   "outcome": {
     "checked_at_et": "2026-09-28 16:34 ET",
     "evidence": "get_portfolio: options_value=0, cash 仍为 $4,589.65 分毫未动 → 未成交",
-    "window": "15:30-15:45 ET, 已过 49 分钟",
+    "window": "15:30-15:45 ET",
     "rule": "4D: 15:45 后不得下单 (收盘前点差极端); 窗口内未成交 → 次日主跑以新数据重评, **绝不追价** (红线2)",
-    "open_question": "⚠️ 用户 16:35 回「成交不了」—— 尚不确定是指本期权单实际尝试后未成交, 还是指股票盘外①腿。若是前者, 说明 $1.54 净贷记在实盘挂不上, 属**实测摩擦数据**, 应记入 skip_log 供模型回校。待用户澄清后补记。"
+    "status": "attempted_no_fill",
+    "reported_by": "用户 (2026-09-28 对话「期权 没成交」)",
+    "order": "AMZN credit_put_spread 2026-10-09, 1张, 卖 237.5P / 买 215.0P, 净贷记限价 $1.54",
+    "engine_quotes_at_1523": {
+      "short": {
+        "bid": 1.71,
+        "ask": 1.82,
+        "spread_pct": 6.232
+      },
+      "long": {
+        "bid": 0.11,
+        "ask": 0.17,
+        "spread_pct": 42.857
+      },
+      "mid_credit": 1.625,
+      "conservative_credit": 1.54
+    },
+    "inference": "引擎的 $1.54 已是**保守口径** (短腿按 bid 卖、长腿按 ask 买, 即两腿都吃亏的一侧)。市场连这个价都不接, 说明真实可成交净贷记 **低于 1.54**, 比保守构造还差。",
+    "root_cause_candidate": "期权链仍是 `feed=indicative` (OPRA 需签协议, 实测 403) —— 点差闸读的不是交易所真实 NBBO。CLAUDE.md 已标注『首笔实盘成交后需回校』, **本次即是回校证据: indicative 报价系统性乐观**。",
+    "not_written_to_skip_log": "⚠️ 本次**未**写入 skip_log。skip_log 由引擎 apply 从 context 的 gate 拒绝项生成, 统计口径是 `skips_spread_gate` 等『闸拦了多少机会』; 而本次是**过了全部闸、出了单、市场不接**, 属不同类别。手工塞进去会污染 go/no-go 指标 (weekly_calls.py:1090-1091)。引擎目前**没有这个类别**, 属缺口, 待用户决定是否加。",
+    "no_chase": "按 4D / 红线2, 不追价。次日主跑以新数据重评。",
+    "clarified_at_et": "2026-09-28 16:4x ET"
   }
 }
