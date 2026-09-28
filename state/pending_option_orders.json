@@ -2,7 +2,7 @@
   "trade_date": "2026-09-28",
   "generated_by": "scripts/weekly_calls.py signal (via daily.py --phase preclose)",
   "generated_at_et": "2026-09-28 15:23 ET",
-  "status": "awaiting_execution",
+  "status": "expired_window_closed",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -77,5 +77,12 @@
       "max_loss_usd": 2096.0,
       "max_gain_usd": 154.0
     }
-  ]
+  ],
+  "outcome": {
+    "checked_at_et": "2026-09-28 16:34 ET",
+    "evidence": "get_portfolio: options_value=0, cash 仍为 $4,589.65 分毫未动 → 未成交",
+    "window": "15:30-15:45 ET, 已过 49 分钟",
+    "rule": "4D: 15:45 后不得下单 (收盘前点差极端); 窗口内未成交 → 次日主跑以新数据重评, **绝不追价** (红线2)",
+    "open_question": "⚠️ 用户 16:35 回「成交不了」—— 尚不确定是指本期权单实际尝试后未成交, 还是指股票盘外①腿。若是前者, 说明 $1.54 净贷记在实盘挂不上, 属**实测摩擦数据**, 应记入 skip_log 供模型回校。待用户澄清后补记。"
+  }
 }
