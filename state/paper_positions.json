@@ -17,20 +17,6 @@
       "cost": 9485.76,
       "tranches": 1
     },
-    "BMY": {
-      "qty": 150.0,
-      "entry_price": 62.78,
-      "entry_date": "2026-09-18",
-      "cost": 9417.0,
-      "tranches": 1
-    },
-    "UNP": {
-      "qty": 34.0,
-      "entry_price": 272.205,
-      "entry_date": "2026-09-22",
-      "cost": 9254.97,
-      "tranches": 1
-    },
     "CB": {
       "qty": 27.0,
       "entry_price": 336.11,
@@ -85,6 +71,27 @@
       "entry_price": 253.488333,
       "entry_date": "2026-09-25",
       "cost": 9125.58,
+      "tranches": 1
+    },
+    "ROKU": {
+      "qty": 60.0,
+      "entry_price": 152.075667,
+      "entry_date": "2026-09-28",
+      "cost": 9124.54,
+      "tranches": 1
+    },
+    "TRGP": {
+      "qty": 33.0,
+      "entry_price": 278.52,
+      "entry_date": "2026-09-28",
+      "cost": 9191.16,
+      "tranches": 1
+    },
+    "DXCM": {
+      "qty": 9.0,
+      "entry_price": 86.42,
+      "entry_date": "2026-09-28",
+      "cost": 777.78,
       "tranches": 1
     }
   },
@@ -2022,6 +2029,51 @@
       "side": "buy",
       "qty": 36.0,
       "price": 253.488333,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "BMY",
+      "side": "sell",
+      "qty": 150.0,
+      "price": 62.724133,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 34.0,
+      "price": 272.602353,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "ROKU",
+      "side": "buy",
+      "qty": 60.0,
+      "price": 152.075667,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "TRGP",
+      "side": "buy",
+      "qty": 33.0,
+      "price": 278.52,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "DXCM",
+      "side": "buy",
+      "qty": 9.0,
+      "price": 86.42,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
