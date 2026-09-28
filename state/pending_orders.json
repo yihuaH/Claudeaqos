@@ -2,7 +2,7 @@
   "trade_date": "2026-09-25",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-25 15:22 ET",
-  "status": "leg1_filled_remainder_pending",
+  "status": "leg1_filled_remainder_vetoed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -67,7 +67,7 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "offhours_leg1_filled",
+      "status": "offhours_leg1_filled_remainder_vetoed",
       "cap_projection": "within_cap",
       "offhours_leg1": {
         "order_id": "6ab728ba-32be-4a0c-9f93-af8aa76d4f5c",
@@ -101,7 +101,7 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "offhours_leg1_filled",
+      "status": "offhours_leg1_filled_remainder_vetoed",
       "cap_projection": "within_cap",
       "offhours_leg1": {
         "order_id": "6ab728c0-212f-4e04-9d7c-aafc85640c62",
@@ -135,7 +135,7 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "offhours_leg1_filled",
+      "status": "offhours_leg1_filled_remainder_vetoed",
       "cap_projection": "within_cap",
       "offhours_leg1": {
         "order_id": "6ab728ce-d8e8-4f5f-8bd6-39e751fc7972",
@@ -169,7 +169,7 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "offhours_leg1_filled",
+      "status": "offhours_leg1_filled_remainder_vetoed",
       "cap_projection": "within_cap",
       "offhours_leg1": {
         "order_id": "6ab728e1-5e6b-4684-aedd-5e09cd31fd30",
@@ -203,7 +203,7 @@
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "news_flag": null,
-      "status": "offhours_skipped_whole_zero",
+      "status": "vetoed_by_user",
       "cap_projection": "within_cap",
       "offhours_leg1": {
         "placed": false,
@@ -316,9 +316,16 @@
     "cap_usd": 3592.12,
     "within_cap": true,
     "exec_window_et": "2026-09-28 09:45-15:55 ET 盘中单笔市价",
-    "status": "awaiting_user_execute — 用户未说「执行」, 未下任何单",
+    "status": "vetoed_by_user",
     "min_order_check": "CB 零头 $11.73 ≥ min_order_usd $5.00, 全部合格",
     "EQIX_flag": "⚠️ EQIX ($1,021.95, 全额) 已于今日 13:22 的周度刷新中**被剔除出 universe.json**。清单逐字段不得改 (红线2), 但用户可一票否决该单; 今日 15:20 收盘前主跑会按新池重算并自动取代本清单。",
-    "superseded_by": "今日 15:20 ET 收盘前主跑产出的新清单"
+    "superseded_by": "今日 15:20 ET 收盘前主跑产出的新清单",
+    "veto": {
+      "at_et": "2026-09-28 ~13:30 ET",
+      "user_words": "这些不执行了",
+      "scope": "整批零头 5 单全部否决 (CB $11.73 / ELV $219.97 / ROKU $96.27 / TRGP $177.09 / EQIX $1,021.95 = $1,527.01)",
+      "orders_placed": 0,
+      "note": "会话未下任何买单。已成交的盘外①腿 (CB 3 / ELV 2 / ROKU 6 / TRGP 3, $3,582.74) 不受影响, 已入账。"
+    }
   }
 }
