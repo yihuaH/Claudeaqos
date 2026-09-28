@@ -29,6 +29,34 @@
       "entry_date": "2026-09-23",
       "cost": 27.34,
       "tranches": 1
+    },
+    "CB": {
+      "qty": 3.0,
+      "entry_price": 336.74,
+      "entry_date": "2026-09-28",
+      "cost": 1010.22,
+      "tranches": 1
+    },
+    "ELV": {
+      "qty": 2.0,
+      "entry_price": 400.99,
+      "entry_date": "2026-09-28",
+      "cost": 801.98,
+      "tranches": 1
+    },
+    "ROKU": {
+      "qty": 6.0,
+      "entry_price": 154.28,
+      "entry_date": "2026-09-28",
+      "cost": 925.68,
+      "tranches": 1
+    },
+    "TRGP": {
+      "qty": 3.0,
+      "entry_price": 281.62,
+      "entry_date": "2026-09-28",
+      "cost": 844.86,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -1985,6 +2013,42 @@
       "price": 62.6501,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "CB",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 336.74,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "ELV",
+      "side": "buy",
+      "qty": 2.0,
+      "price": 400.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "ROKU",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 154.28,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-28",
+      "symbol": "TRGP",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 281.62,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
