@@ -38,10 +38,24 @@
       "tranches": 1
     },
     "TRGP": {
-      "qty": 3.0,
-      "entry_price": 281.62,
+      "qty": 6.72036,
+      "entry_price": 276.4733,
       "entry_date": "2026-09-28",
-      "cost": 844.86,
+      "cost": 1858.0,
+      "tranches": 2
+    },
+    "PSX": {
+      "qty": 4.009845,
+      "entry_price": 252.6631,
+      "entry_date": "2026-09-29",
+      "cost": 1013.14,
+      "tranches": 1
+    },
+    "BNY": {
+      "qty": 6.886491,
+      "entry_price": 147.1199,
+      "entry_date": "2026-09-29",
+      "cost": 1013.14,
       "tranches": 1
     }
   },
@@ -2053,6 +2067,33 @@
       "price": 274.3334,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-29",
+      "symbol": "TRGP",
+      "side": "buy",
+      "qty": 3.72036,
+      "price": 272.3231,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-09-29",
+      "symbol": "PSX",
+      "side": "buy",
+      "qty": 4.009845,
+      "price": 252.6631,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-29",
+      "symbol": "BNY",
+      "side": "buy",
+      "qty": 6.886491,
+      "price": 147.1199,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

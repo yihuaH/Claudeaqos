@@ -2,7 +2,7 @@
   "trade_date": "2026-09-29",
   "generated_by": "scripts/weekly_calls.py signal (via daily.py --phase preclose)",
   "generated_at_et": "2026-09-29 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "filled",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -79,5 +79,24 @@
       "max_loss_usd": 2435.0,
       "max_gain_usd": 65.0
     }
-  ]
+  ],
+  "fill": {
+    "order_id": "6abc127b-aea6-433a-8dfb-e72fd5ada49d",
+    "state": "filled",
+    "at_et": "2026-09-29 15:33:15 ET",
+    "structure": "IWM credit_put_spread 2026-10-07, 1张",
+    "net_credit": 0.61,
+    "engine_est": 0.65,
+    "vs_est_pct": -6.15,
+    "legs": {
+      "sell_270P": 0.64,
+      "buy_245P": 0.03
+    },
+    "collateral": 2500.0,
+    "risk_per_contract": 24.39,
+    "max_loss_usd": 2439.0,
+    "max_gain_usd": 61.0,
+    "placed_agent": "user (手动 App 通道, 4D)",
+    "prior_attempts": "用户先试 2 张 @0.64 与 @0.62 (均撤), 最终 1 张 @0.61 成交"
+  }
 }

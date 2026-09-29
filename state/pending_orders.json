@@ -2,7 +2,7 @@
   "trade_date": "2026-09-29",
   "generated_by": "scripts/daily.py --phase preclose",
   "generated_at_et": "2026-09-29 15:22 ET",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -59,11 +59,19 @@
       "rsi2": 1.8,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
+      "status": "filled",
       "cap_projection": "within_cap",
       "tranche": 2,
       "avg_entry_price": 281.62,
-      "drawdown_pct": -3.33
+      "drawdown_pct": -3.33,
+      "fill": {
+        "qty": 3.72036,
+        "price": 272.3231,
+        "usd": 1013.14,
+        "order_id": "6abc12d0-7f17-4abc-b20a-6e927fe89e59",
+        "state": "filled",
+        "slippage_vs_est_pct": 0.029
+      }
     },
     {
       "seq": 2,
@@ -76,8 +84,16 @@
       "rsi2": 1.47,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "skipped_funding",
-      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
+      "status": "filled",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)",
+      "fill": {
+        "qty": 4.009845,
+        "price": 252.6631,
+        "usd": 1013.14,
+        "order_id": "6abc12d5-e1a8-4b83-9689-3b1c6d3d4f33",
+        "state": "filled",
+        "slippage_vs_est_pct": 0.241
+      }
     },
     {
       "seq": 3,
@@ -90,8 +106,16 @@
       "rsi2": 3.83,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "skipped_funding",
-      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
+      "status": "filled",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)",
+      "fill": {
+        "qty": 6.886491,
+        "price": 147.1199,
+        "usd": 1013.14,
+        "order_id": "6abc12da-1e11-47b4-ab6d-abd70177b2d2",
+        "state": "filled",
+        "slippage_vs_est_pct": -0.017
+      }
     },
     {
       "seq": 4,
@@ -107,5 +131,77 @@
       "status": "skipped_funding",
       "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
     }
-  ]
+  ],
+  "execution": {
+    "user_command": "撤掉 AMZN，执行 (2026-09-29 ~15:33 ET)",
+    "executed_at_et": "2026-09-29 15:34:40–15:34:50 ET",
+    "window": "15:30–15:55 ET 盘中窗, 在窗内",
+    "form": "单笔 market + regular_hours + dollar_amount (4C 盘中模式)",
+    "amzn_cancel": {
+      "requested_at_et": "2026-09-29 15:33:57 ET",
+      "result": "403 Order cannot be cancelled at this time",
+      "reason": "该单已于 **15:31:23 ET** 被撤 (canceled_quantity=1), 早于会话请求 2.5 分钟 —— 403 是因为单子已不存在, 非撤单失败",
+      "order_id": "6abad34b-954f-4b84-8c52-afd3829e4fa1",
+      "outcome": "抵押 $2,082 已释放"
+    },
+    "cap_recomputed": {
+      "at_et": "2026-09-29 15:34 ET",
+      "cash": 5669.41,
+      "buying_power": 3169.41,
+      "min_used": 3169.41,
+      "unleveraged_equals_bp": true,
+      "note": "⚠️ 与 15:22 呈报时不同: IWM 期权价差已于 15:33:15 **成交**, 抵押 $2,500 已直接反映在 BP 中, 故 cap = min(BP,cash) 直接取用, **不再二次扣减抵押**",
+      "filled": [
+        "TRGP",
+        "PSX",
+        "BNY"
+      ],
+      "used": 3039.42,
+      "headroom": 129.99,
+      "skipped": [
+        "IWM"
+      ]
+    },
+    "fills": {
+      "TRGP": {
+        "qty": 3.72036,
+        "price": 272.3231,
+        "usd": 1013.14,
+        "order_id": "6abc12d0-7f17-4abc-b20a-6e927fe89e59"
+      },
+      "PSX": {
+        "qty": 4.009845,
+        "price": 252.6631,
+        "usd": 1013.14,
+        "order_id": "6abc12d5-e1a8-4b83-9689-3b1c6d3d4f33"
+      },
+      "BNY": {
+        "qty": 6.886491,
+        "price": 147.1199,
+        "usd": 1013.14,
+        "order_id": "6abc12da-1e11-47b4-ab6d-abd70177b2d2"
+      }
+    },
+    "orders_placed": 3,
+    "orders_filled": 3
+  },
+  "option_filled_today": {
+    "order_id": "6abc127b-aea6-433a-8dfb-e72fd5ada49d",
+    "state": "filled",
+    "at_et": "2026-09-29 15:33:15 ET",
+    "structure": "IWM credit_put_spread 2026-10-07, 1张",
+    "net_credit": 0.61,
+    "engine_est": 0.65,
+    "vs_est_pct": -6.15,
+    "legs": {
+      "sell_270P": 0.64,
+      "buy_245P": 0.03
+    },
+    "collateral": 2500.0,
+    "risk_per_contract": 24.39,
+    "max_loss_usd": 2439.0,
+    "max_gain_usd": 61.0,
+    "placed_agent": "user (手动 App 通道, 4D)",
+    "prior_attempts": "用户先试 2 张 @0.64 与 @0.62 (均撤), 最终 1 张 @0.61 成交"
+  }
 }
