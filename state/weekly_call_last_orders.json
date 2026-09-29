@@ -1,34 +1,73 @@
 {
-  "date": "2026-09-28",
+  "date": "2026-09-29",
   "halted": false,
   "sells": [],
-  "buys": [],
+  "buys": [
+    {
+      "symbol": "IWM261007C00250000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 29.32,
+      "underlying": "IWM",
+      "strike": 250.0,
+      "expiry": "2026-10-07",
+      "dte": 8,
+      "spot": 278.81,
+      "rsi2": 5.8,
+      "model_price": 29.0291,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 29.32,
+        "model_flat": 29.0291,
+        "model_surface": 29.1476,
+        "ratio_flat_pct": 99.0,
+        "ratio_surface_pct": 99.4
+      },
+      "entry_quote": {
+        "bid": 29.16,
+        "ask": 29.48,
+        "mid": 29.32,
+        "spread_pct": 1.091
+      }
+    }
+  ],
   "skips": [
     {
-      "symbol": "AMZN",
-      "reason": "spread_too_wide(best=5.17%)",
-      "rsi2": 8.18,
-      "spot": 246.1
+      "symbol": "XLE",
+      "reason": "spread_too_wide(best=4.37%)",
+      "rsi2": 9.99,
+      "spot": 61.41
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLE",
-      "rsi2_now": 28.08,
+      "symbol": "AAPL",
+      "rsi2_now": 12.55,
       "scenario": "1d_-1%",
-      "spot": 62.05,
+      "spot": 330.44,
       "structure": "single",
-      "est_premium_usd": 630
+      "est_premium_usd": 3360
     },
     {
-      "symbol": "IWM",
-      "rsi2_now": 11.54,
+      "symbol": "DIA",
+      "rsi2_now": 27.54,
       "scenario": "1d_-1%",
-      "spot": 280.31,
+      "spot": 512.92,
       "structure": "single",
-      "est_premium_usd": 2838
+      "est_premium_usd": 5192
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 22.02,
+      "scenario": "1d_-1%",
+      "spot": 764.46,
+      "structure": "single",
+      "est_premium_usd": 7739
     }
   ],
-  "suggested_reserve_usd": 630.0
+  "suggested_reserve_usd": 3360.0
 }

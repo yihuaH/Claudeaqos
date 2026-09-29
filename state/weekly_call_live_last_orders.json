@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-28",
+  "date": "2026-09-29",
   "halted": false,
   "sells": [],
   "buys": [
@@ -10,146 +10,99 @@
       "reason": "rsi2_entry_put_credit",
       "legs": [
         {
-          "symbol": "AMZN261009P00237500",
+          "symbol": "IWM261007P00270000",
           "side": "sell",
           "position_effect": "open",
-          "strike": 237.5,
+          "strike": 270.0,
           "quote": {
-            "bid": 1.71,
-            "ask": 1.82
+            "bid": 0.68,
+            "ask": 0.7
           },
-          "spread_pct": 6.232
+          "spread_pct": 2.899
         },
         {
-          "symbol": "AMZN261009P00215000",
+          "symbol": "IWM261007P00245000",
           "side": "buy",
           "position_effect": "open",
-          "strike": 215.0,
+          "strike": 245.0,
           "quote": {
-            "bid": 0.11,
-            "ask": 0.17
+            "bid": 0.01,
+            "ask": 0.03
           },
-          "spread_pct": 42.857
+          "spread_pct": 100.0
         }
       ],
-      "est_price": 1.54,
+      "est_price": 0.65,
       "direction": "credit",
-      "underlying": "AMZN",
-      "expiry": "2026-10-09",
-      "dte": 11,
-      "spot": 246.1,
-      "rsi2": 8.18,
-      "model_price": 1.5708,
+      "underlying": "IWM",
+      "expiry": "2026-10-07",
+      "dte": 8,
+      "spot": 278.81,
+      "rsi2": 5.8,
+      "model_price": 0.1845,
       "model_edge": {
         "reference": "flat",
         "direction": "credit",
-        "est": 1.54,
-        "model_flat": 1.5708,
-        "model_surface": 1.4995,
-        "ratio_flat_pct": 98.0,
-        "ratio_surface_pct": 102.7
+        "est": 0.65,
+        "model_flat": 0.1845,
+        "model_surface": 0.7682,
+        "ratio_flat_pct": 352.3,
+        "ratio_surface_pct": 84.6
       },
       "entry_quote": {
-        "mid": 1.625,
-        "spread_pct": 6.232,
-        "long_spread_pct": 42.857,
-        "net_credit_conservative": 1.54
+        "mid": 0.67,
+        "spread_pct": 2.899,
+        "long_spread_pct": 100.0,
+        "net_credit_conservative": 0.65
       },
-      "risk_per_contract": 20.96,
-      "max_value_per_contract": 22.5,
-      "max_loss_usd": 2096.0,
-      "max_gain_usd": 154.0
+      "risk_per_contract": 24.35,
+      "max_value_per_contract": 25.0,
+      "max_loss_usd": 2435.0,
+      "max_gain_usd": 65.0
     }
   ],
-  "skips": [],
+  "skips": [
+    {
+      "symbol": "XLE",
+      "reason": "insufficient_buying_power(cost=1976,bp_left=73)",
+      "rsi2": 9.99,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "credit",
+        "est": 0.56,
+        "model_flat": 0.5307,
+        "model_surface": 0.4815,
+        "ratio_flat_pct": 105.5,
+        "ratio_surface_pct": 116.3
+      }
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLE",
-      "rsi2_now": 28.08,
+      "symbol": "AAPL",
+      "rsi2_now": 12.55,
       "scenario": "1d_-1%",
-      "spot": 62.05,
+      "spot": 330.44,
       "structure": "credit_put_spread",
-      "est_premium_usd": 512
+      "est_premium_usd": 2683
     },
     {
-      "symbol": "IWM",
-      "rsi2_now": 11.54,
+      "symbol": "DIA",
+      "rsi2_now": 27.54,
       "scenario": "1d_-1%",
-      "spot": 280.31,
+      "spot": 512.92,
       "structure": "credit_put_spread",
-      "est_premium_usd": 2475
+      "est_premium_usd": 4529
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 22.02,
+      "scenario": "1d_-1%",
+      "spot": 764.46,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 6750
     }
   ],
-  "suggested_reserve_usd": 512.0,
-  "execution_outcome": {
-    "status": "attempted_no_fill",
-    "reported_by": "用户 (2026-09-28 对话「期权 没成交」)",
-    "window": "15:30-15:45 ET",
-    "order": "AMZN credit_put_spread 2026-10-09, 1张, 卖 237.5P / 买 215.0P, 净贷记限价 $1.54",
-    "engine_quotes_at_1523": {
-      "short": {
-        "bid": 1.71,
-        "ask": 1.82,
-        "spread_pct": 6.232
-      },
-      "long": {
-        "bid": 0.11,
-        "ask": 0.17,
-        "spread_pct": 42.857
-      },
-      "mid_credit": 1.625,
-      "conservative_credit": 1.54
-    },
-    "not_written_to_skip_log": "⚠️ 本次**未**写入 skip_log。skip_log 由引擎 apply 从 context 的 gate 拒绝项生成, 统计口径是 `skips_spread_gate` 等『闸拦了多少机会』; 而本次是**过了全部闸、出了单、市场不接**, 属不同类别。手工塞进去会污染 go/no-go 指标 (weekly_calls.py:1090-1091)。引擎目前**没有这个类别**, 属缺口, 待用户决定是否加。",
-    "no_chase": "按 4D / 红线2, 不追价。次日主跑以新数据重评。",
-    "inference_RETRACTED": {
-      "status": "RETRACTED (2026-09-28 wrapup)",
-      "why": "查 get_option_orders 后发现 6 张单全部下在 16:37-16:51 ET, 即期权市场 16:00 收市之后, 且均为 gfd + regular_hours (排队等次一常规时段开盘)。今日不可能成交, 与价格无关。'没成交'是市场关着, 不是市场拒绝该价格。",
-      "original_claim": "市场连 $1.54 都不接 → 真实可成交净贷记低于 1.54; indicative 报价系统性乐观, 本次是回校证据",
-      "correction": "该推断无任何证据支持。feed=indicative 是否乐观仍是 CLAUDE.md 里未验证的已知风险, 本次未提供数据。"
-    },
-    "actual_orders": [
-      {
-        "n": 1,
-        "et": "16:37:51",
-        "limit": 1.54,
-        "state": "cancelled"
-      },
-      {
-        "n": 2,
-        "et": "16:38:01",
-        "limit": 1.59,
-        "state": "cancelled"
-      },
-      {
-        "n": 3,
-        "et": "16:38:40",
-        "limit": 1.6,
-        "state": "cancelled"
-      },
-      {
-        "n": 4,
-        "et": "16:38:50",
-        "limit": 1.65,
-        "state": "cancelled"
-      },
-      {
-        "n": 5,
-        "et": "16:40:57",
-        "limit": 1.59,
-        "state": "cancelled"
-      },
-      {
-        "n": 6,
-        "et": "16:51:23",
-        "limit": 1.68,
-        "state": "queued",
-        "order_id": "6abad34b-954f-4b84-8c52-afd3829e4fa1",
-        "note": "仍挂着, 排队等 2026-09-29 09:30 开盘; 扣押 BP $2,082 = 22.5x100 - 1.68x100"
-      }
-    ],
-    "all_placed_after_options_close": "是 —— 期权市场 16:00 ET 收市, 全部 6 张均在其后; time_in_force=gfd, market_hours=regular_hours",
-    "live_order_open_question": "⚠️ 第6张仍活着。(a) 明天开盘成交会绕过 4D 的『次日主跑以新数据重评』; (b) 压缩明日股票 cap $2,082。会话未动此单 (用户手工单)。待用户决定是否撤。"
-  }
+  "suggested_reserve_usd": 877.68
 }

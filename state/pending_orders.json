@@ -1,7 +1,7 @@
 {
-  "trade_date": "2026-09-28",
+  "trade_date": "2026-09-29",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-28 15:23 ET",
+  "generated_at_et": "2026-09-29 15:22 ET",
   "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
@@ -15,148 +15,97 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10153.75,
-  "buying_power_at_generation": 4589.65,
-  "funding_note": "ALL 出场已于 15:24 即时成交 (4.385446 @ $227.4701, 回款 $997.54), 实时 cash=BP=$4,589.65 (limited margin 即时可用)。执行时仍须重取实时 min(buying_power, cash) (红线9)。",
+  "portfolio_value_at_generation": 10133.81,
+  "buying_power_at_generation": 3526.51,
+  "cash_at_generation": 5608.51,
+  "funding_note": "UNP 出场已于 15:22 即时成交 (3.714035 @ $274.3334, 回款 $1,018.84)。⚠️ cash $5,608.51 但 BP 仅 $3,526.51 —— 差额 $2,082 被昨日用户手工下的 AMZN $1.68 credit spread 单 (order_id 6abad34b…) 扣押。该单 gfd, 今日 16:00 自动失效。红线9 取 min(BP,cash)=BP。",
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 0,
-    "option_collateral": 0.0,
-    "collateral_basis": "价差宽度 22.5 x 100 x 1张 (券商实扣全额宽度)",
-    "stock_cap": 4589.65,
-    "stock_used": 2031.78,
-    "stock_headroom": 307.87,
-    "note": "引擎按 $4,589.65 全额出了 5 单共 $4,585.60; 期权优先规则下先为 AMZN 价差留足 $2,250 抵押, 股票 cap=$2,339.65 → 按引擎原序逐单吃, PSX/MCK 保留, DXCM/BNY/NOW **整单跳过不缩量** (不得重排顺序)。",
-    "revision": {
-      "at_et": "2026-09-28 16:35 ET",
-      "why": "AMZN credit_put_spread 未下单且窗口 15:30-15:45 已过 → 今日无实盘期权买单 → 抵押预留 $2,250 释放",
-      "effect": "股票 cap $2,339.65 → $4,589.65; 15:27 标 skipped_funding 的 DXCM/BNY/NOW 恢复 awaiting_execution",
-      "invariant": "引擎 5 单的标的与金额逐字段未动 (红线2); 变的只是执行时的实时资金上限 (红线9)"
+    "option_orders_today": 1,
+    "option_collateral": 2500.0,
+    "collateral_basis": "价差宽度 25.0 x 100 x 1张",
+    "stock_cap": 1026.51,
+    "stock_used": 1013.14,
+    "stock_headroom": 13.37,
+    "if_amzn_cancelled": {
+      "min_bp_cash": 5608.51,
+      "stock_cap": 3108.51,
+      "would_keep": [
+        "TRGP",
+        "PSX",
+        "BNY"
+      ],
+      "would_keep_usd": 3039.42,
+      "would_skip": [
+        "IWM"
+      ],
+      "note": "撤掉 AMZN 单可多执行 PSX+BNY 两单 ($2,026.28)。由用户决定, 会话不自行撤用户手工单。"
     }
   },
   "supersedes": {
-    "trade_date": "2026-09-25",
-    "status_was": "leg1_filled_remainder_vetoed",
-    "note": "09-25 清单已结清 (①腿4单成交, 零头经用户 09-28 「这些不执行了」整批否决)。本清单按协议自动取代。"
+    "trade_date": "2026-09-28",
+    "status_was": "awaiting_execution",
+    "note": "09-28 清单 (PSX/MCK/DXCM/BNY/NOW) 未执行, 按协议被本清单自动取代。"
   },
-  "universe_note": "本清单为今日 13:22 刷新后的新池 (100只) 首次生效。PSX/MCK/DXCM/BNY/NOW 均在新池内。",
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "PSX",
-      "dollar_amount": 1015.89,
+      "symbol": "TRGP",
+      "dollar_amount": 1013.14,
       "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 253.435,
-      "rsi2": 2.73,
+      "reason": "rsi2_scale_in",
+      "est_price": 272.245,
+      "rsi2": 1.8,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "status": "awaiting_execution",
-      "cap_note": "15:27 曾按\"期权优先\"标 skipped_funding; 期权单 15:45 窗口过期作废后抵押预留释放, cap 回到全额 $4,589.65, 5 单全部在 cap 内。执行时仍须重取实时 min(BP,cash)。"
+      "cap_projection": "within_cap",
+      "tranche": 2,
+      "avg_entry_price": 281.62,
+      "drawdown_pct": -3.33
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "MCK",
-      "dollar_amount": 1015.89,
+      "symbol": "PSX",
+      "dollar_amount": 1013.14,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 858.64,
-      "rsi2": 4.84,
+      "est_price": 252.055,
+      "rsi2": 1.47,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_note": "15:27 曾按\"期权优先\"标 skipped_funding; 期权单 15:45 窗口过期作废后抵押预留释放, cap 回到全额 $4,589.65, 5 单全部在 cap 内。执行时仍须重取实时 min(BP,cash)。"
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "DXCM",
-      "dollar_amount": 1015.89,
+      "symbol": "BNY",
+      "dollar_amount": 1013.14,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 86.28,
-      "rsi2": 5.18,
+      "est_price": 147.145,
+      "rsi2": 3.83,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_note": "15:27 曾按\"期权优先\"标 skipped_funding; 期权单 15:45 窗口过期作废后抵押预留释放, cap 回到全额 $4,589.65, 5 单全部在 cap 内。执行时仍须重取实时 min(BP,cash)。"
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
     },
     {
       "seq": 4,
       "action": "buy",
-      "symbol": "BNY",
-      "dollar_amount": 1015.89,
+      "symbol": "IWM",
+      "dollar_amount": 482.51,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 147.86,
-      "rsi2": 6.55,
+      "est_price": 278.81,
+      "rsi2": 5.8,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_note": "15:27 曾按\"期权优先\"标 skipped_funding; 期权单 15:45 窗口过期作废后抵押预留释放, cap 回到全额 $4,589.65, 5 单全部在 cap 内。执行时仍须重取实时 min(BP,cash)。"
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "NOW",
-      "dollar_amount": 522.04,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 131.33,
-      "rsi2": 8.14,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_note": "15:27 曾按\"期权优先\"标 skipped_funding; 期权单 15:45 窗口过期作废后抵押预留释放, cap 回到全额 $4,589.65, 5 单全部在 cap 内。执行时仍须重取实时 min(BP,cash)。"
+      "status": "skipped_funding",
+      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
     }
-  ],
-  "carryover": {
-    "triggered_at_et": "2026-09-28 16:35 ET",
-    "reason": "用户 16:34 回「执行」时盘中窗 15:30-15:55 已关 39 分钟 (第3次越窗)。会话按双模式协议改出盘外①腿批次并重做 4C-1B 确认, 用户回「成交不了」—— **非「执行」, 不构成授权**, 会话未下任何单。",
-    "offhours_batch_declined": {
-      "computed": {
-        "PSX": {
-          "limit": 255.97,
-          "whole": 3,
-          "leg1": 767.91
-        },
-        "MCK": {
-          "limit": 867.23,
-          "whole": 1,
-          "leg1": 867.23
-        },
-        "DXCM": {
-          "limit": 87.14,
-          "whole": 11,
-          "leg1": 958.54
-        },
-        "BNY": {
-          "limit": 149.34,
-          "whole": 6,
-          "leg1": 896.04
-        },
-        "NOW": {
-          "limit": 132.64,
-          "whole": 3,
-          "leg1": 397.92
-        }
-      },
-      "leg1_total": 3887.64,
-      "cap": 4589.65,
-      "post_market_spreads_pct": {
-        "PSX": 2.09,
-        "MCK": 1.34,
-        "DXCM": 3.8,
-        "BNY": 1.54,
-        "NOW": 0.66
-      },
-      "orders_placed": 0
-    },
-    "new_window_et": "2026-09-29 (周二) 09:45-15:55 ET",
-    "new_valid_until": "2026-09-29 15:55 ET",
-    "monday_note": "⚠️ 明日 15:20 收盘前主跑产出新清单时**自动取代本清单**。要执行须在 15:20 之前。",
-    "cap_note": "明日执行须重取实时 min(buying_power, cash); 今日 16:35 为 $4,589.65。"
-  }
+  ]
 }

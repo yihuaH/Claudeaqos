@@ -128,6 +128,22 @@
       "model_surface": 7.1317,
       "ratio_flat_pct": 98.8,
       "ratio_surface_pct": 99.3
+    },
+    {
+      "date": "2026-09-29",
+      "symbol": "IWM",
+      "outcome": "order",
+      "reason": "rsi2_entry_call",
+      "est_price": 29.32,
+      "spot": 278.81,
+      "rsi2": 5.8,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 29.32,
+      "model_flat": 29.0291,
+      "model_surface": 29.1476,
+      "ratio_flat_pct": 99.0,
+      "ratio_surface_pct": 99.4
     }
   ]
 }

@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "UNP": {
-      "qty": 3.714035,
-      "entry_price": 272.4099,
-      "entry_date": "2026-09-22",
-      "cost": 1011.74,
-      "tranches": 1
-    },
     "ADP": {
       "qty": 3.791232,
       "entry_price": 265.0299,
@@ -2049,6 +2042,15 @@
       "side": "sell",
       "qty": 4.385446,
       "price": 227.4701,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-29",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 3.714035,
+      "price": 274.3334,
       "bucket": "strategy",
       "reason": "exit_strength"
     }
