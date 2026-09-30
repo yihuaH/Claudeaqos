@@ -79,6 +79,27 @@
       "entry_date": "2026-09-29",
       "cost": 9191.26,
       "tranches": 1
+    },
+    "KO": {
+      "qty": 105.0,
+      "entry_price": 87.317238,
+      "entry_date": "2026-09-30",
+      "cost": 9168.31,
+      "tranches": 1
+    },
+    "IWM": {
+      "qty": 32.0,
+      "entry_price": 279.83,
+      "entry_date": "2026-09-30",
+      "cost": 8954.56,
+      "tranches": 1
+    },
+    "STT": {
+      "qty": 3.0,
+      "entry_price": 177.77,
+      "entry_date": "2026-09-30",
+      "cost": 533.31,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2132,6 +2153,33 @@
       "side": "buy",
       "qty": 70.0,
       "price": 131.303714,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-30",
+      "symbol": "KO",
+      "side": "buy",
+      "qty": 105.0,
+      "price": 87.317238,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-30",
+      "symbol": "IWM",
+      "side": "buy",
+      "qty": 32.0,
+      "price": 279.83,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-30",
+      "symbol": "STT",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 177.77,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
