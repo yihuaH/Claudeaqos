@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-29",
+  "trade_date": "2026-09-30",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-29 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-09-30 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,193 +15,69 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10133.81,
-  "buying_power_at_generation": 3526.51,
-  "cash_at_generation": 5608.51,
-  "funding_note": "UNP 出场已于 15:22 即时成交 (3.714035 @ $274.3334, 回款 $1,018.84)。⚠️ cash $5,608.51 但 BP 仅 $3,526.51 —— 差额 $2,082 被昨日用户手工下的 AMZN $1.68 credit spread 单 (order_id 6abad34b…) 扣押。该单 gfd, 今日 16:00 自动失效。红线9 取 min(BP,cash)=BP。",
+  "portfolio_value_at_generation": 10123.11,
+  "buying_power_at_generation": 2080.52,
+  "cash_at_generation": 4580.52,
+  "funding_note": "ROKU/PSX 两笔出场已于 15:23 即时成交, 回款 $1,950.13。⚠️ cash $4,580.52 但 BP 仅 $2,080.52 —— 差额 $2,500 是 IWM credit_put_spread (10-07 到期) 的券商抵押, 该仓仍持有。红线9 取 min(BP,cash)=BP。",
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 1,
-    "option_collateral": 2500.0,
-    "collateral_basis": "价差宽度 25.0 x 100 x 1张",
-    "stock_cap": 1026.51,
-    "stock_used": 1013.14,
-    "stock_headroom": 13.37,
-    "if_amzn_cancelled": {
-      "min_bp_cash": 5608.51,
-      "stock_cap": 3108.51,
-      "would_keep": [
-        "TRGP",
-        "PSX",
-        "BNY"
-      ],
-      "would_keep_usd": 3039.42,
-      "would_skip": [
-        "IWM"
-      ],
-      "note": "撤掉 AMZN 单可多执行 PSX+BNY 两单 ($2,026.28)。由用户决定, 会话不自行撤用户手工单。"
-    }
+    "option_orders_today": 0,
+    "option_collateral": 0.0,
+    "note": "今日引擎**无期权买单** (option_buys 为空), 故无需预留新抵押; 已持 IWM 仓的 $2,500 抵押已直接反映在 BP 中, cap 直接取 min(BP,cash)=$2,080.52, **不再二次扣减** (09-29 已明确该口径)。",
+    "stock_cap": 2080.52,
+    "stock_used": 2077.09,
+    "stock_headroom": 3.43
   },
   "supersedes": {
-    "trade_date": "2026-09-28",
-    "status_was": "awaiting_execution",
-    "note": "09-28 清单 (PSX/MCK/DXCM/BNY/NOW) 未执行, 按协议被本清单自动取代。"
+    "trade_date": "2026-09-29",
+    "status_was": "executed",
+    "note": "09-29 清单已全部执行完毕, 本清单按协议自动取代。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "TRGP",
-      "dollar_amount": 1013.14,
+      "symbol": "CB",
+      "dollar_amount": 1012.87,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 272.245,
-      "rsi2": 1.8,
+      "est_price": 326.37,
+      "rsi2": 5.21,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
+      "status": "awaiting_execution",
       "cap_projection": "within_cap",
       "tranche": 2,
-      "avg_entry_price": 281.62,
-      "drawdown_pct": -3.33,
-      "fill": {
-        "qty": 3.72036,
-        "price": 272.3231,
-        "usd": 1013.14,
-        "order_id": "6abc12d0-7f17-4abc-b20a-6e927fe89e59",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.029
-      }
+      "avg_entry_price": 336.74,
+      "drawdown_pct": -3.08
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "PSX",
-      "dollar_amount": 1013.14,
+      "symbol": "KO",
+      "dollar_amount": 1012.87,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 252.055,
-      "rsi2": 1.47,
+      "est_price": 86.335,
+      "rsi2": 2.76,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)",
-      "fill": {
-        "qty": 4.009845,
-        "price": 252.6631,
-        "usd": 1013.14,
-        "order_id": "6abc12d5-e1a8-4b83-9689-3b1c6d3d4f33",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.241
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "BNY",
-      "dollar_amount": 1013.14,
+      "symbol": "STT",
+      "dollar_amount": 51.35,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 147.145,
-      "rsi2": 3.83,
+      "est_price": 175.405,
+      "rsi2": 2.91,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)",
-      "fill": {
-        "qty": 6.886491,
-        "price": 147.1199,
-        "usd": 1013.14,
-        "order_id": "6abc12da-1e11-47b4-ab6d-abd70177b2d2",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.017
-      }
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "IWM",
-      "dollar_amount": 482.51,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 278.81,
-      "rsi2": 5.8,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "skipped_funding",
-      "cap_projection": "超 cap 整单跳过不缩量 (红线2/9)"
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     }
-  ],
-  "execution": {
-    "user_command": "撤掉 AMZN，执行 (2026-09-29 ~15:33 ET)",
-    "executed_at_et": "2026-09-29 15:34:40–15:34:50 ET",
-    "window": "15:30–15:55 ET 盘中窗, 在窗内",
-    "form": "单笔 market + regular_hours + dollar_amount (4C 盘中模式)",
-    "amzn_cancel": {
-      "requested_at_et": "2026-09-29 15:33:57 ET",
-      "result": "403 Order cannot be cancelled at this time",
-      "reason": "该单已于 **15:31:23 ET** 被撤 (canceled_quantity=1), 早于会话请求 2.5 分钟 —— 403 是因为单子已不存在, 非撤单失败",
-      "order_id": "6abad34b-954f-4b84-8c52-afd3829e4fa1",
-      "outcome": "抵押 $2,082 已释放"
-    },
-    "cap_recomputed": {
-      "at_et": "2026-09-29 15:34 ET",
-      "cash": 5669.41,
-      "buying_power": 3169.41,
-      "min_used": 3169.41,
-      "unleveraged_equals_bp": true,
-      "note": "⚠️ 与 15:22 呈报时不同: IWM 期权价差已于 15:33:15 **成交**, 抵押 $2,500 已直接反映在 BP 中, 故 cap = min(BP,cash) 直接取用, **不再二次扣减抵押**",
-      "filled": [
-        "TRGP",
-        "PSX",
-        "BNY"
-      ],
-      "used": 3039.42,
-      "headroom": 129.99,
-      "skipped": [
-        "IWM"
-      ]
-    },
-    "fills": {
-      "TRGP": {
-        "qty": 3.72036,
-        "price": 272.3231,
-        "usd": 1013.14,
-        "order_id": "6abc12d0-7f17-4abc-b20a-6e927fe89e59"
-      },
-      "PSX": {
-        "qty": 4.009845,
-        "price": 252.6631,
-        "usd": 1013.14,
-        "order_id": "6abc12d5-e1a8-4b83-9689-3b1c6d3d4f33"
-      },
-      "BNY": {
-        "qty": 6.886491,
-        "price": 147.1199,
-        "usd": 1013.14,
-        "order_id": "6abc12da-1e11-47b4-ab6d-abd70177b2d2"
-      }
-    },
-    "orders_placed": 3,
-    "orders_filled": 3
-  },
-  "option_filled_today": {
-    "order_id": "6abc127b-aea6-433a-8dfb-e72fd5ada49d",
-    "state": "filled",
-    "at_et": "2026-09-29 15:33:15 ET",
-    "structure": "IWM credit_put_spread 2026-10-07, 1张",
-    "net_credit": 0.61,
-    "engine_est": 0.65,
-    "vs_est_pct": -6.15,
-    "legs": {
-      "sell_270P": 0.64,
-      "buy_245P": 0.03
-    },
-    "collateral": 2500.0,
-    "risk_per_contract": 24.39,
-    "max_loss_usd": 2439.0,
-    "max_gain_usd": 61.0,
-    "placed_agent": "user (手动 App 通道, 4D)",
-    "prior_attempts": "用户先试 2 张 @0.64 与 @0.62 (均撤), 最终 1 张 @0.61 成交"
-  }
+  ]
 }

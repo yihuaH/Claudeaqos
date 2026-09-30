@@ -30,26 +30,12 @@
       "cost": 801.98,
       "tranches": 1
     },
-    "ROKU": {
-      "qty": 6.0,
-      "entry_price": 154.28,
-      "entry_date": "2026-09-28",
-      "cost": 925.68,
-      "tranches": 1
-    },
     "TRGP": {
       "qty": 6.72036,
       "entry_price": 276.4733,
       "entry_date": "2026-09-28",
       "cost": 1858.0,
       "tranches": 2
-    },
-    "PSX": {
-      "qty": 4.009845,
-      "entry_price": 252.6631,
-      "entry_date": "2026-09-29",
-      "cost": 1013.14,
-      "tranches": 1
     },
     "BNY": {
       "qty": 6.886491,
@@ -2094,6 +2080,24 @@
       "price": 147.1199,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-09-30",
+      "symbol": "ROKU",
+      "side": "sell",
+      "qty": 6.0,
+      "price": 153.026,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-09-30",
+      "symbol": "PSX",
+      "side": "sell",
+      "qty": 4.009845,
+      "price": 257.4701,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

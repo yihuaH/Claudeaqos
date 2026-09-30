@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-29",
-  "generated_by": "scripts/weekly_calls.py signal (via daily.py --phase preclose)",
-  "generated_at_et": "2026-09-29 15:22 ET",
-  "status": "filled",
+  "trade_date": "2026-09-30",
+  "generated_by": "scripts/daily.py --phase preclose",
+  "generated_at_et": "2026-09-30 15:22 ET",
+  "status": "no_orders",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -15,88 +15,16 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
-  "ledger": "state/weekly_call_live_positions.json",
-  "buying_power_at_generation": 3526.51,
-  "collateral_required": 2500.0,
-  "budget_note": "budget 不设上限 (2026-08-18); 唯一硬约束 = 实时 BP $3,526.51 >= 抵押 $2,500 ✅ (余 $1,026.51)",
-  "model_edge_divergence": "⚠️ 两个参考价**首次在 90% 闸两侧分叉**: flat 352.3% (通过) vs surface 84.6% (若启用会被拦)。引擎用缺省 flat 故放行。长腿 bid 0.01/ask 0.03 (点差 100%) 近乎废纸, 是分叉主因。属影子模式观察样本, 不改引擎行为 (2026-09-11 用户选 B 方案)。",
-  "prior_day_note": "⚠️ 昨日 AMZN 单仍 queued 未失效; 若今日再开 IWM 单, 两单抵押合计 $2,082+$2,500=$4,582 > cash $5,608.51 尚可, 但 BP 只剩 $1,026.51。",
-  "orders": [
-    {
-      "structure": "credit_put_spread",
-      "qty": 1,
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "IWM261007P00270000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 270.0,
-          "quote": {
-            "bid": 0.68,
-            "ask": 0.7
-          },
-          "spread_pct": 2.899
-        },
-        {
-          "symbol": "IWM261007P00245000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 245.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.03
-          },
-          "spread_pct": 100.0
-        }
-      ],
-      "est_price": 0.65,
-      "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-10-07",
-      "dte": 8,
-      "spot": 278.81,
-      "rsi2": 5.8,
-      "model_price": 0.1845,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "credit",
-        "est": 0.65,
-        "model_flat": 0.1845,
-        "model_surface": 0.7682,
-        "ratio_flat_pct": 352.3,
-        "ratio_surface_pct": 84.6
-      },
-      "entry_quote": {
-        "mid": 0.67,
-        "spread_pct": 2.899,
-        "long_spread_pct": 100.0,
-        "net_credit_conservative": 0.65
-      },
-      "risk_per_contract": 24.35,
-      "max_value_per_contract": 25.0,
-      "max_loss_usd": 2435.0,
-      "max_gain_usd": 65.0
-    }
-  ],
-  "fill": {
-    "order_id": "6abc127b-aea6-433a-8dfb-e72fd5ada49d",
-    "state": "filled",
-    "at_et": "2026-09-29 15:33:15 ET",
-    "structure": "IWM credit_put_spread 2026-10-07, 1张",
-    "net_credit": 0.61,
-    "engine_est": 0.65,
-    "vs_est_pct": -6.15,
-    "legs": {
-      "sell_270P": 0.64,
-      "buy_245P": 0.03
-    },
+  "note": "今日引擎无期权买单 (option_buys 为空)。near_signals 2 只仅提示不出单: XLV rsi2 14.29 / DIA rsi2 13.50。",
+  "open_position_carried": {
+    "occ": "IWM261007P00270000",
+    "structure": "credit_put_spread",
+    "contracts": 1,
+    "entry_premium": 0.61,
+    "expiry": "2026-10-07",
+    "dte": 7,
     "collateral": 2500.0,
-    "risk_per_contract": 24.39,
-    "max_loss_usd": 2439.0,
-    "max_gain_usd": 61.0,
-    "placed_agent": "user (手动 App 通道, 4D)",
-    "prior_attempts": "用户先试 2 张 @0.64 与 @0.62 (均撤), 最终 1 张 @0.61 成交"
-  }
+    "note": "09-29 开仓, 仍持有; 出场跟正股同形规则, 引擎已能读到该仓 (账本已入)。今日无出场信号。"
+  },
+  "orders": []
 }
