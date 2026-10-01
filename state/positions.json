@@ -10,11 +10,11 @@
       "tranches": 1
     },
     "ELV": {
-      "qty": 2.0,
-      "entry_price": 400.99,
+      "qty": 4.646209,
+      "entry_price": 389.4853,
       "entry_date": "2026-09-28",
-      "cost": 801.98,
-      "tranches": 1
+      "cost": 1809.63,
+      "tranches": 2
     },
     "BNY": {
       "qty": 6.886491,
@@ -35,6 +35,34 @@
       "entry_price": 175.5095,
       "entry_date": "2026-09-30",
       "cost": 51.35,
+      "tranches": 1
+    },
+    "DE": {
+      "qty": 1.523925,
+      "entry_price": 661.2199,
+      "entry_date": "2026-10-01",
+      "cost": 1007.65,
+      "tranches": 1
+    },
+    "JNJ": {
+      "qty": 3.884393,
+      "entry_price": 259.4099,
+      "entry_date": "2026-10-01",
+      "cost": 1007.65,
+      "tranches": 1
+    },
+    "FCX": {
+      "qty": 14.569859,
+      "entry_price": 69.1599,
+      "entry_date": "2026-10-01",
+      "cost": 1007.65,
+      "tranches": 1
+    },
+    "VRTX": {
+      "qty": 1.702235,
+      "entry_price": 506.4399,
+      "entry_date": "2026-10-01",
+      "cost": 862.08,
       "tranches": 1
     }
   },
@@ -2145,6 +2173,51 @@
       "price": 277.9392,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "ELV",
+      "side": "buy",
+      "qty": 2.646209,
+      "price": 380.7899,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 1.523925,
+      "price": 661.2199,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "JNJ",
+      "side": "buy",
+      "qty": 3.884393,
+      "price": 259.4099,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "FCX",
+      "side": "buy",
+      "qty": 14.569859,
+      "price": 69.1599,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "VRTX",
+      "side": "buy",
+      "qty": 1.702235,
+      "price": 506.4399,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
