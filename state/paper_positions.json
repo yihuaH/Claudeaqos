@@ -10,32 +10,11 @@
       "entry_date": "2026-07-20",
       "cost": 15134.62
     },
-    "CB": {
-      "qty": 27.0,
-      "entry_price": 336.11,
-      "entry_date": "2026-09-22",
-      "cost": 9074.97,
-      "tranches": 1
-    },
-    "ADP": {
-      "qty": 35.0,
-      "entry_price": 267.667714,
-      "entry_date": "2026-09-24",
-      "cost": 9368.37,
-      "tranches": 1
-    },
     "ELV": {
       "qty": 5.0,
       "entry_price": 399.8,
       "entry_date": "2026-09-24",
       "cost": 1999.0,
-      "tranches": 1
-    },
-    "PSX": {
-      "qty": 36.0,
-      "entry_price": 253.488333,
-      "entry_date": "2026-09-25",
-      "cost": 9125.58,
       "tranches": 1
     },
     "ROKU": {
@@ -66,20 +45,6 @@
       "cost": 8550.0,
       "tranches": 1
     },
-    "BNY": {
-      "qty": 62.0,
-      "entry_price": 149.3,
-      "entry_date": "2026-09-29",
-      "cost": 9256.6,
-      "tranches": 1
-    },
-    "NOW": {
-      "qty": 70.0,
-      "entry_price": 131.303714,
-      "entry_date": "2026-09-29",
-      "cost": 9191.26,
-      "tranches": 1
-    },
     "KO": {
       "qty": 105.0,
       "entry_price": 87.317238,
@@ -99,6 +64,27 @@
       "entry_price": 177.77,
       "entry_date": "2026-09-30",
       "cost": 533.31,
+      "tranches": 1
+    },
+    "DE": {
+      "qty": 13.0,
+      "entry_price": 659.973846,
+      "entry_date": "2026-10-01",
+      "cost": 8579.66,
+      "tranches": 1
+    },
+    "TRV": {
+      "qty": 25.0,
+      "entry_price": 356.6252,
+      "entry_date": "2026-10-01",
+      "cost": 8915.63,
+      "tranches": 1
+    },
+    "FCX": {
+      "qty": 119.0,
+      "entry_price": 69.174202,
+      "entry_date": "2026-10-01",
+      "cost": 8231.73,
       "tranches": 1
     }
   },
@@ -2180,6 +2166,78 @@
       "side": "buy",
       "qty": 3.0,
       "price": 177.77,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "CB",
+      "side": "sell",
+      "qty": 27.0,
+      "price": 325.0,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "ADP",
+      "side": "sell",
+      "qty": 35.0,
+      "price": 264.79,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "PSX",
+      "side": "sell",
+      "qty": 36.0,
+      "price": 253.32,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "BNY",
+      "side": "sell",
+      "qty": 62.0,
+      "price": 143.793226,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "NOW",
+      "side": "sell",
+      "qty": 70.0,
+      "price": 139.58,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 13.0,
+      "price": 659.973846,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "TRV",
+      "side": "buy",
+      "qty": 25.0,
+      "price": 356.6252,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "FCX",
+      "side": "buy",
+      "qty": 119.0,
+      "price": 69.174202,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
