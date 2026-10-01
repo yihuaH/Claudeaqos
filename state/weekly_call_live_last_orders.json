@@ -1,27 +1,26 @@
 {
-  "date": "2026-09-30",
+  "date": "2026-10-01",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [],
+  "skips": [
+    {
+      "symbol": "XLV",
+      "reason": "credit_leg_spread_too_wide(best=29.17%)",
+      "rsi2": 5.12,
+      "spot": 166.65
+    }
+  ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLV",
-      "rsi2_now": 14.29,
-      "scenario": "1d_-1%",
-      "spot": 169.04,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 1483
-    },
-    {
       "symbol": "DIA",
-      "rsi2_now": 13.5,
+      "rsi2_now": 13.22,
       "scenario": "1d_-1%",
-      "spot": 510.49,
+      "spot": 508.69,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4507
+      "est_premium_usd": 4491
     }
   ],
-  "suggested_reserve_usd": 45.5
+  "suggested_reserve_usd": 1.2
 }

@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-09-30",
+  "trade_date": "2026-10-01",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-30 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-10-01 15:22 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,136 +15,97 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10123.11,
-  "buying_power_at_generation": 2080.52,
-  "cash_at_generation": 4580.52,
-  "funding_note": "ROKU/PSX 两笔出场已于 15:23 即时成交, 回款 $1,950.13。⚠️ cash $4,580.52 但 BP 仅 $2,080.52 —— 差额 $2,500 是 IWM credit_put_spread (10-07 到期) 的券商抵押, 该仓仍持有。红线9 取 min(BP,cash)=BP。",
+  "portfolio_value_at_generation": 10190.86,
+  "buying_power_at_generation": 4893.26,
+  "cash_at_generation": 7393.26,
+  "funding_note": "ADP/CB/TRGP 三笔出场已于 15:23 即时成交, 回款 $4,889.83。⚠️ cash $7,393.26 但 BP $4,893.26 —— 差额 $2,500 是 IWM credit_put_spread (10-07, 4 DTE) 的券商抵押。红线9 取 min(BP,cash)=BP。",
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "note": "今日引擎**无期权买单** (option_buys 为空), 故无需预留新抵押; 已持 IWM 仓的 $2,500 抵押已直接反映在 BP 中, cap 直接取 min(BP,cash)=$2,080.52, **不再二次扣减** (09-29 已明确该口径)。",
-    "stock_cap": 2080.52,
-    "stock_used": 2077.09,
-    "stock_headroom": 3.43
+    "note": "今日引擎无期权买单; 已持 IWM 仓 $2,500 抵押已直接反映在 BP 中, cap 直接取 min(BP,cash)=$4,893.26, 不二次扣减。",
+    "stock_cap": 4893.26,
+    "stock_used": 4892.68,
+    "stock_headroom": 0.58
   },
   "supersedes": {
-    "trade_date": "2026-09-29",
+    "trade_date": "2026-09-30",
     "status_was": "executed",
-    "note": "09-29 清单已全部执行完毕, 本清单按协议自动取代。"
+    "note": "09-30 清单已全部执行完毕, 本清单按协议自动取代。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "CB",
-      "dollar_amount": 1012.87,
+      "symbol": "ELV",
+      "dollar_amount": 1007.65,
       "bucket": "strategy",
       "reason": "rsi2_scale_in",
-      "est_price": 326.37,
-      "rsi2": 5.21,
+      "est_price": 381.73,
+      "rsi2": 0.03,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
+      "status": "awaiting_execution",
       "cap_projection": "within_cap",
       "tranche": 2,
-      "avg_entry_price": 336.74,
-      "drawdown_pct": -3.08,
-      "fill": {
-        "qty": 3.103061,
-        "price": 326.4099,
-        "usd": 1012.87,
-        "order_id": "6abd622c-46b9-4909-aa2c-9c3ea0b2b96d",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.012
-      }
+      "avg_entry_price": 400.99,
+      "drawdown_pct": -4.8
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "KO",
-      "dollar_amount": 1012.87,
+      "symbol": "DE",
+      "dollar_amount": 1007.65,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 86.335,
-      "rsi2": 2.76,
+      "est_price": 661.47,
+      "rsi2": 1.47,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 11.735514,
-        "price": 86.3081,
-        "usd": 1012.87,
-        "order_id": "6abd6232-4060-4525-a70d-3670fd0f86a9",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.031
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "STT",
-      "dollar_amount": 51.35,
+      "symbol": "JNJ",
+      "dollar_amount": 1007.65,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 175.405,
-      "rsi2": 2.91,
+      "est_price": 259.58,
+      "rsi2": 2.23,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 0.292576,
-        "price": 175.5095,
-        "usd": 51.35,
-        "order_id": "6abd6238-de8b-40be-ad41-9316c757fd84",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.06
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 4,
+      "action": "buy",
+      "symbol": "FCX",
+      "dollar_amount": 1007.65,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 69.17,
+      "rsi2": 2.25,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
+    },
+    {
+      "seq": 5,
+      "action": "buy",
+      "symbol": "VRTX",
+      "dollar_amount": 862.08,
+      "bucket": "strategy",
+      "reason": "rsi2_entry",
+      "est_price": 506.0,
+      "rsi2": 3.45,
+      "state_file": "state/positions.json",
+      "valid_until": "same_session_1555_et_then_next_session_1555_et",
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     }
-  ],
-  "execution": {
-    "user_command": "执行 (2026-09-30 15:25 ET)",
-    "executed_at_et": "2026-09-30 15:25:32–15:25:44 ET",
-    "form": "单笔 market + regular_hours + dollar_amount (4C 盘中模式)",
-    "cap_recheck": {
-      "at_et": "15:25 ET",
-      "cash": 4580.52,
-      "buying_power": 2080.52,
-      "min_used": 2080.52,
-      "unleveraged_equals_bp": true,
-      "used": 2077.09,
-      "headroom": 3.43,
-      "skipped": []
-    },
-    "window_deviation": {
-      "fact": "清单自带 exec_window_et 写的是当日 **15:30–15:55**; 实际下单 **15:25:32–15:25:44**, **早 4.5 分钟**。",
-      "rationale": "红线9 的盘中执行窗是 **09:45–15:55 ET**, 15:25 在其内; 市场开市、订单形态 (market+regular_hours+dollar_amount) 与清单一致、cap 已重取核对。15:30 是清单的起始标注而非风控闸 (无任何风控与 15:30 绑定)。",
-      "disclosed": "是 —— 已在对话中明确说明这 4.5 分钟偏差, 未默默执行",
-      "note": "若用户认为该窗口起点应为硬闸, 需在 playbook 4C 明确; 目前协议文本未赋其风控含义。"
-    },
-    "fills": {
-      "CB": {
-        "qty": 3.103061,
-        "price": 326.4099,
-        "usd": 1012.87,
-        "order_id": "6abd622c-46b9-4909-aa2c-9c3ea0b2b96d"
-      },
-      "KO": {
-        "qty": 11.735514,
-        "price": 86.3081,
-        "usd": 1012.87,
-        "order_id": "6abd6232-4060-4525-a70d-3670fd0f86a9"
-      },
-      "STT": {
-        "qty": 0.292576,
-        "price": 175.5095,
-        "usd": 51.35,
-        "order_id": "6abd6238-de8b-40be-ad41-9316c757fd84"
-      }
-    },
-    "orders_placed": 3,
-    "orders_filled": 3
-  }
+  ]
 }

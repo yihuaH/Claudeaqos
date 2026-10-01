@@ -1,7 +1,7 @@
 {
-  "trade_date": "2026-09-30",
+  "trade_date": "2026-10-01",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-09-30 15:22 ET",
+  "generated_at_et": "2026-10-01 15:22 ET",
   "status": "no_orders",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
@@ -15,16 +15,17 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
-  "note": "今日引擎无期权买单 (option_buys 为空)。near_signals 2 只仅提示不出单: XLV rsi2 14.29 / DIA rsi2 13.50。",
+  "note": "今日引擎无期权买单。near_signals 1 只仅提示: DIA rsi2 13.22。",
   "open_position_carried": {
     "occ": "IWM261007P00270000",
-    "structure": "credit_put_spread",
     "contracts": 1,
     "entry_premium": 0.61,
     "expiry": "2026-10-07",
-    "dte": 7,
+    "dte": 6,
     "collateral": 2500.0,
-    "note": "09-29 开仓, 仍持有; 出场跟正股同形规则, 引擎已能读到该仓 (账本已入)。今日无出场信号。"
+    "mark_today": -38,
+    "mark_prev": -76,
+    "note": "IWM 今日 279.39 (+0.54%), 期权市值由 −$76 收窄至 −$38, 方向转好。短腿 270 仍 OTM 约 3.4%。今日无出场信号。"
   },
   "orders": []
 }

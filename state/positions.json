@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "ADP": {
-      "qty": 3.791232,
-      "entry_price": 265.0299,
-      "entry_date": "2026-09-23",
-      "cost": 1004.79,
-      "tranches": 1
-    },
     "XLF": {
       "qty": 0.500405,
       "entry_price": 54.6357,
@@ -16,26 +9,12 @@
       "cost": 27.34,
       "tranches": 1
     },
-    "CB": {
-      "qty": 6.103061,
-      "entry_price": 331.4878,
-      "entry_date": "2026-09-28",
-      "cost": 2023.09,
-      "tranches": 2
-    },
     "ELV": {
       "qty": 2.0,
       "entry_price": 400.99,
       "entry_date": "2026-09-28",
       "cost": 801.98,
       "tranches": 1
-    },
-    "TRGP": {
-      "qty": 6.72036,
-      "entry_price": 276.4733,
-      "entry_date": "2026-09-28",
-      "cost": 1858.0,
-      "tranches": 2
     },
     "BNY": {
       "qty": 6.886491,
@@ -2139,6 +2118,33 @@
       "price": 175.5095,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "ADP",
+      "side": "sell",
+      "qty": 3.791232,
+      "price": 264.5576,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "CB",
+      "side": "sell",
+      "qty": 6.103061,
+      "price": 330.8301,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "TRGP",
+      "side": "sell",
+      "qty": 6.72036,
+      "price": 277.9392,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
