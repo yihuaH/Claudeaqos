@@ -3,7 +3,125 @@
   "challenger_started": "2026-10-02",
   "high_water_mark": 10218.49,
   "halted": false,
-  "strategy_positions": {},
+  "strategy_positions": {
+    "BNY": {
+      "qty": 64.0,
+      "entry_price": 144.963125,
+      "entry_date": "2026-10-02",
+      "cost": 9277.64,
+      "tranches": 1
+    },
+    "JNJ": {
+      "qty": 35.0,
+      "entry_price": 258.17,
+      "entry_date": "2026-10-02",
+      "cost": 9035.95,
+      "tranches": 1
+    },
+    "IQV": {
+      "qty": 35.0,
+      "entry_price": 260.831429,
+      "entry_date": "2026-10-02",
+      "cost": 9129.1,
+      "tranches": 1
+    },
+    "C": {
+      "qty": 72.0,
+      "entry_price": 128.106667,
+      "entry_date": "2026-10-02",
+      "cost": 9223.68,
+      "tranches": 1
+    },
+    "MMM": {
+      "qty": 14.0,
+      "entry_price": 164.55,
+      "entry_date": "2026-10-02",
+      "cost": 2303.7,
+      "tranches": 1
+    }
+  },
   "legacy_positions": {},
-  "trades": []
+  "trades": [
+    {
+      "date": "2026-10-02",
+      "symbol": "ELV",
+      "side": "sell",
+      "qty": 5.0,
+      "price": 379.666,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "TRGP",
+      "side": "sell",
+      "qty": 33.0,
+      "price": 276.458182,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "MCK",
+      "side": "sell",
+      "qty": 10.0,
+      "price": 889.492,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "TRV",
+      "side": "sell",
+      "qty": 25.0,
+      "price": 359.5,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "BNY",
+      "side": "buy",
+      "qty": 64.0,
+      "price": 144.963125,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "JNJ",
+      "side": "buy",
+      "qty": 35.0,
+      "price": 258.17,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "IQV",
+      "side": "buy",
+      "qty": 35.0,
+      "price": 260.831429,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "C",
+      "side": "buy",
+      "qty": 72.0,
+      "price": 128.106667,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 14.0,
+      "price": 164.55,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    }
+  ]
 }

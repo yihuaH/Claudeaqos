@@ -1,110 +1,19 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-01",
+  "date": "2026-10-02",
   "coid_prefix": "cq",
-  "next_open": "2026-10-02T09:30:00-04:00",
-  "skipped": [
-    "DIA sell: 排队限价下买不起 1 整股, 跳过",
-    "ELV buy: 同日已有卖单 → wash trade 冲突, 买单跳过 (出场优先)"
-  ],
+  "next_open": "2026-10-05T09:30:00-04:00",
+  "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-01-ELV-sell",
-      "order_id": "f7593f64-4580-45d6-80a2-142170169fd9",
-      "symbol": "ELV",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "370.22",
-      "qty": "5",
-      "bucket": "strategy",
-      "reason": "stop_loss"
-    },
-    {
-      "coid": "cq-2026-10-01-TRGP-sell",
-      "order_id": "23ce2792-5ea5-4168-9470-1cab44d37294",
-      "symbol": "TRGP",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "270.93",
-      "qty": "33",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-01-MCK-sell",
-      "order_id": "d602d719-c4c7-4415-b842-ba0f40c6a59d",
-      "symbol": "MCK",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "871.86",
-      "qty": "10",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-01-TRV-sell",
-      "order_id": "cbfc237e-71c6-4473-9408-fceddbb6c99a",
-      "symbol": "TRV",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "350.79",
-      "qty": "25",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-01-BNY-buy",
-      "order_id": "b30d9d7e-df31-401d-b929-513b2aae6217",
-      "symbol": "BNY",
+      "coid": "cq-2026-10-02-DXCM-buy",
+      "order_id": "8cf94683-c293-42e3-a85c-98cf3c4d0cc7",
+      "symbol": "DXCM",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "148.24",
-      "qty": "64",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-10-01-JNJ-buy",
-      "order_id": "fb28ed5b-0e35-467e-a1b6-8f63678f0a8e",
-      "symbol": "JNJ",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "266.42",
-      "qty": "35",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-10-01-IQV-buy",
-      "order_id": "7ce9805e-bdb5-496b-80c1-707ca8d6b299",
-      "symbol": "IQV",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "268.54",
-      "qty": "35",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-10-01-C-buy",
-      "order_id": "6fafc69e-39d3-47ad-b0f8-79a6f5acabcf",
-      "symbol": "C",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "130.81",
-      "qty": "72",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-10-01-MMM-buy",
-      "order_id": "944c5d98-44e2-44b4-b013-32f19c99e90a",
-      "symbol": "MMM",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "167.91",
-      "qty": "14",
+      "limit_price": "87.92",
+      "qty": "1",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
