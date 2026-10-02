@@ -8,7 +8,21 @@
     },
     "since": "2026-07-15"
   },
-  "challenger": null,
+  "challenger": {
+    "params": {
+      "entry.rsi2_max": 10.0,
+      "exit.rsi2_min": 65.0,
+      "exit.stop_loss_pct": 8.0,
+      "exit.max_holding_days": 15
+    },
+    "started": "2026-10-02",
+    "status": "validating",
+    "sim": {
+      "score": 3.0608,
+      "champion_score": 2.9349,
+      "trades": 100
+    }
+  },
   "equity_history": [
     {
       "date": "2026-07-15",
