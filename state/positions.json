@@ -50,6 +50,20 @@
       "entry_date": "2026-10-01",
       "cost": 862.08,
       "tranches": 1
+    },
+    "DXCM": {
+      "qty": 11.0,
+      "entry_price": 85.99,
+      "entry_date": "2026-10-02",
+      "cost": 945.89,
+      "tranches": 1
+    },
+    "MMM": {
+      "qty": 6.0,
+      "entry_price": 163.36,
+      "entry_date": "2026-10-02",
+      "cost": 980.16,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2222,6 +2236,24 @@
       "price": 72.013,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "DXCM",
+      "side": "buy",
+      "qty": 11.0,
+      "price": 85.99,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "MMM",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 163.36,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
