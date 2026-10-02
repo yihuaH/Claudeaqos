@@ -1,26 +1,32 @@
 {
-  "date": "2026-10-01",
+  "date": "2026-10-02",
   "halted": false,
-  "sells": [],
+  "sells": [
+    {
+      "symbol": "IWM261007C00250000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength",
+      "est_price": 31.82,
+      "exit_quote": {
+        "bid": 31.7,
+        "ask": 31.95,
+        "mid": 31.825,
+        "spread_pct": 0.786
+      }
+    }
+  ],
   "buys": [],
   "skips": [
     {
       "symbol": "XLV",
-      "reason": "spread_too_wide(best=8.08%)",
-      "rsi2": 5.12,
-      "spot": 166.65
+      "reason": "spread_too_wide(best=7.81%)",
+      "rsi2": 4.0,
+      "spot": 165.97
     }
   ],
   "warnings": [],
-  "near_signals": [
-    {
-      "symbol": "DIA",
-      "rsi2_now": 13.22,
-      "scenario": "1d_-1%",
-      "spot": 508.69,
-      "structure": "single",
-      "est_premium_usd": 5150
-    }
-  ],
-  "suggested_reserve_usd": 5150.0
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }

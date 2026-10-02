@@ -19,23 +19,6 @@
         "spread_pct": 1.495
       },
       "model_price": 6.6981
-    },
-    "IWM261007C00250000": {
-      "underlying": "IWM",
-      "strike": 250.0,
-      "expiry": "2026-10-07",
-      "contracts": 1,
-      "entry_premium": 29.32,
-      "entry_date": "2026-09-29",
-      "entry_underlying": 278.81,
-      "entry_rsi2": 5.8,
-      "entry_quote": {
-        "bid": 29.16,
-        "ask": 29.48,
-        "mid": 29.32,
-        "spread_pct": 1.091
-      },
-      "model_price": 29.0291
     }
   },
   "trades": [
@@ -319,6 +302,15 @@
       "price": 29.32,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "IWM261007C00250000",
+      "side": "sell",
+      "qty": 1,
+      "price": 31.5,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -588,6 +580,25 @@
       "entry_mid": 7.185,
       "exit_mid": 7.64,
       "model_price": 7.1005
+    },
+    {
+      "occ": "IWM261007C00250000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "IWM",
+      "entry_date": "2026-09-29",
+      "exit_date": "2026-10-02",
+      "entry_premium": 29.32,
+      "exit_premium": 31.5,
+      "pnl_pct": 7.44,
+      "pnl_usd": 218.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 1.091,
+      "exit_spread_pct": 0.786,
+      "entry_mid": 29.32,
+      "exit_mid": 31.825,
+      "model_price": 29.0291
     }
   ],
   "skip_log": [
@@ -814,6 +825,20 @@
       "reason": "spread_too_wide(best=4.37%)",
       "rsi2": 9.99,
       "spot": 61.41
+    },
+    {
+      "date": "2026-10-01",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=8.08%)",
+      "rsi2": 5.12,
+      "spot": 166.65
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "XLV",
+      "reason": "spread_too_wide(best=7.81%)",
+      "rsi2": 4.0,
+      "spot": 165.97
     }
   ],
   "assignments": [

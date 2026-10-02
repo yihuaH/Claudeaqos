@@ -37,23 +37,9 @@
       "cost": 51.35,
       "tranches": 1
     },
-    "DE": {
-      "qty": 1.523925,
-      "entry_price": 661.2199,
-      "entry_date": "2026-10-01",
-      "cost": 1007.65,
-      "tranches": 1
-    },
     "JNJ": {
       "qty": 3.884393,
       "entry_price": 259.4099,
-      "entry_date": "2026-10-01",
-      "cost": 1007.65,
-      "tranches": 1
-    },
-    "FCX": {
-      "qty": 14.569859,
-      "entry_price": 69.1599,
       "entry_date": "2026-10-01",
       "cost": 1007.65,
       "tranches": 1
@@ -2218,6 +2204,24 @@
       "price": 506.4399,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "DE",
+      "side": "sell",
+      "qty": 1.523925,
+      "price": 684.9822,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-02",
+      "symbol": "FCX",
+      "side": "sell",
+      "qty": 14.569859,
+      "price": 72.013,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

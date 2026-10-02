@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-10-01",
+  "trade_date": "2026-10-02",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-10-01 15:22 ET",
-  "status": "no_orders",
+  "generated_at_et": "2026-10-02 15:23 ET",
+  "status": "awaiting_execution_exit",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
   "exec_day": "same_day",
@@ -15,17 +15,49 @@
     "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
   },
-  "note": "今日引擎无期权买单。near_signals 1 只仅提示: DIA rsi2 13.22。",
-  "open_position_carried": {
-    "occ": "IWM261007P00270000",
-    "contracts": 1,
-    "entry_premium": 0.61,
+  "ledger": "state/weekly_call_live_positions.json",
+  "kind": "exit_only",
+  "note": "今日无期权买单; 有 **1 张平仓单** (IWM 价差 exit_strength)。",
+  "channel_note": "⚠️ 出场卖单按设计属全自动类, 但 **agentic 账户不支持多腿 place_option_order** (2026-08-15 实测), 故平仓同样只能走手动 App 通道 (playbook 4D 注记)。会话无法代下。",
+  "exit_order": {
+    "structure": "credit_put_spread",
+    "qty": 1,
+    "bucket": "weekly_calls",
+    "reason": "exit_strength",
+    "direction": "debit",
+    "est_price": 0.12,
+    "underlying": "IWM",
     "expiry": "2026-10-07",
-    "dte": 6,
-    "collateral": 2500.0,
-    "mark_today": -38,
-    "mark_prev": -76,
-    "note": "IWM 今日 279.39 (+0.54%), 期权市值由 −$76 收窄至 −$38, 方向转好。短腿 270 仍 OTM 约 3.4%。今日无出场信号。"
+    "legs": [
+      {
+        "symbol": "IWM261007P00270000",
+        "side": "buy",
+        "position_effect": "close",
+        "strike": 270.0,
+        "quote": {
+          "bid": 0.07,
+          "ask": 0.12
+        }
+      },
+      {
+        "symbol": "IWM261007P00245000",
+        "side": "sell",
+        "position_effect": "close",
+        "strike": 245.0,
+        "quote": {
+          "bid": 0,
+          "ask": 0.03
+        }
+      }
+    ],
+    "exit_quote": {
+      "short_ask": 0.12,
+      "long_bid": 0,
+      "net_debit": 0.12,
+      "mid": null,
+      "spread_pct": 52.632,
+      "long_spread_pct": null
+    }
   },
   "orders": []
 }

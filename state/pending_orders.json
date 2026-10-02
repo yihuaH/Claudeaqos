@@ -1,8 +1,8 @@
 {
-  "trade_date": "2026-10-01",
+  "trade_date": "2026-10-02",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-10-01 15:22 ET",
-  "status": "executed",
+  "generated_at_et": "2026-10-02 15:23 ET",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -15,193 +15,66 @@
     "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
     "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
   },
-  "portfolio_value_at_generation": 10190.86,
-  "buying_power_at_generation": 4893.26,
-  "cash_at_generation": 7393.26,
-  "funding_note": "ADP/CB/TRGP 三笔出场已于 15:23 即时成交, 回款 $4,889.83。⚠️ cash $7,393.26 但 BP $4,893.26 —— 差额 $2,500 是 IWM credit_put_spread (10-07, 4 DTE) 的券商抵押。红线9 取 min(BP,cash)=BP。",
+  "portfolio_value_at_generation": 10314.82,
+  "buying_power_at_generation": 2093.61,
+  "cash_at_generation": 4593.61,
+  "funding_note": "DE/FCX 两笔出场已于 15:23 即时成交, 回款 $4,093.03。⚠️ cash $4,593.61 但 BP $2,093.61 —— 差额 $2,500 仍是 IWM 价差抵押 (今日有平仓单待用户手动执行; 平掉后抵押才释放)。红线9 取 min(BP,cash)=BP。",
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_orders_today": 0,
     "option_collateral": 0.0,
-    "note": "今日引擎无期权买单; 已持 IWM 仓 $2,500 抵押已直接反映在 BP 中, cap 直接取 min(BP,cash)=$4,893.26, 不二次扣减。",
-    "stock_cap": 4893.26,
-    "stock_used": 4892.68,
-    "stock_headroom": 0.58
+    "note": "今日引擎无期权**买单** (仅有一张平仓卖单, 属出场类不占新抵押)。cap 直接取 min(BP,cash)=$2,093.61。⚠️ 若用户先平掉 IWM 价差, $2,500 抵押释放, cap 会升至约 $4,593 (需重取); 本清单按**当前** BP 产出, 执行时须重取。",
+    "stock_cap": 2093.61,
+    "stock_used": 2085.95,
+    "stock_headroom": 7.66
   },
   "supersedes": {
-    "trade_date": "2026-09-30",
+    "trade_date": "2026-10-01",
     "status_was": "executed",
-    "note": "09-30 清单已全部执行完毕, 本清单按协议自动取代。"
+    "note": "10-01 清单已全部执行完毕, 本清单按协议自动取代。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "ELV",
-      "dollar_amount": 1007.65,
+      "symbol": "DXCM",
+      "dollar_amount": 1031.39,
       "bucket": "strategy",
-      "reason": "rsi2_scale_in",
-      "est_price": 381.73,
-      "rsi2": 0.03,
+      "reason": "rsi2_entry",
+      "est_price": 85.14,
+      "rsi2": 0.58,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "tranche": 2,
-      "avg_entry_price": 400.99,
-      "drawdown_pct": -4.8,
-      "fill": {
-        "qty": 2.646209,
-        "price": 380.7899,
-        "usd": 1007.65,
-        "order_id": "6abeb41a-225b-4c81-a3c9-65af751819d7",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.246
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "DE",
-      "dollar_amount": 1007.65,
+      "symbol": "MMM",
+      "dollar_amount": 1031.39,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 661.47,
-      "rsi2": 1.47,
+      "est_price": 161.84,
+      "rsi2": 2.93,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 1.523925,
-        "price": 661.2199,
-        "usd": 1007.65,
-        "order_id": "6abeb41f-0a20-427b-824f-092e83401c2d",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.038
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "JNJ",
-      "dollar_amount": 1007.65,
+      "symbol": "ROST",
+      "dollar_amount": 23.17,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 259.58,
-      "rsi2": 2.23,
+      "est_price": 229.01,
+      "rsi2": 7.84,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 3.884393,
-        "price": 259.4099,
-        "usd": 1007.65,
-        "order_id": "6abeb426-544d-443d-ae4a-0763dd136691",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.066
-      }
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "FCX",
-      "dollar_amount": 1007.65,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 69.17,
-      "rsi2": 2.25,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 14.569859,
-        "price": 69.1599,
-        "usd": 1007.65,
-        "order_id": "6abeb42b-7faa-44e7-813c-fcd8343f574c",
-        "state": "filled",
-        "slippage_vs_est_pct": -0.015
-      }
-    },
-    {
-      "seq": 5,
-      "action": "buy",
-      "symbol": "VRTX",
-      "dollar_amount": 862.08,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 506.0,
-      "rsi2": 3.45,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "filled",
-      "cap_projection": "within_cap",
-      "fill": {
-        "qty": 1.702235,
-        "price": 506.4399,
-        "usd": 862.08,
-        "order_id": "6abeb430-3b6d-4cbb-b8f1-09081e3815d0",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.087
-      }
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     }
-  ],
-  "execution": {
-    "user_command": "执行 (2026-10-01 15:27 ET)",
-    "executed_at_et": "2026-10-01 15:27:22–15:27:44 ET",
-    "form": "单笔 market + regular_hours + dollar_amount (4C 盘中模式)",
-    "cap_recheck": {
-      "at_et": "15:27 ET",
-      "cash": 7393.26,
-      "buying_power": 4893.26,
-      "min_used": 4893.26,
-      "unleveraged_equals_bp": true,
-      "used": 4892.68,
-      "headroom": 0.58,
-      "skipped": []
-    },
-    "window_deviation": {
-      "fact": "清单 exec_window_et 写 15:30–15:55; 实际下单 15:27:22–15:27:44, **早约 2.6 分钟**",
-      "rationale": "同 09-30: 红线9 盘中窗 09:45–15:55 覆盖该时点, 形态一致, cap 已重取。15:30 在协议文本中无风控含义。",
-      "disclosed": "是 (对话已说明)",
-      "recurrence": "第 2 次 (09-30 早 4.5 分钟, 今日早 2.6 分钟) —— 成因是收盘前主跑 15:22 即产出清单、用户随即回复, 实属流程常态。建议把 pending_template 的 exec_window_et 起点从 15:30 改为与红线9 一致的 09:45, 或明确 15:30 只是建议锚点。待用户定。"
-    },
-    "fills": {
-      "ELV": {
-        "qty": 2.646209,
-        "price": 380.7899,
-        "usd": 1007.65,
-        "order_id": "6abeb41a-225b-4c81-a3c9-65af751819d7"
-      },
-      "DE": {
-        "qty": 1.523925,
-        "price": 661.2199,
-        "usd": 1007.65,
-        "order_id": "6abeb41f-0a20-427b-824f-092e83401c2d"
-      },
-      "JNJ": {
-        "qty": 3.884393,
-        "price": 259.4099,
-        "usd": 1007.65,
-        "order_id": "6abeb426-544d-443d-ae4a-0763dd136691"
-      },
-      "FCX": {
-        "qty": 14.569859,
-        "price": 69.1599,
-        "usd": 1007.65,
-        "order_id": "6abeb42b-7faa-44e7-813c-fcd8343f574c"
-      },
-      "VRTX": {
-        "qty": 1.702235,
-        "price": 506.4399,
-        "usd": 862.08,
-        "order_id": "6abeb430-3b6d-4cbb-b8f1-09081e3815d0"
-      }
-    },
-    "orders_placed": 5,
-    "orders_filled": 5,
-    "slippage_weighted_pct": -0.0597
-  }
+  ]
 }
