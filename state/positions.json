@@ -29,6 +29,27 @@
       "entry_date": "2026-10-02",
       "cost": 980.16,
       "tranches": 1
+    },
+    "PFE": {
+      "qty": 37.0,
+      "entry_price": 27.45,
+      "entry_date": "2026-10-05",
+      "cost": 1015.65,
+      "tranches": 1
+    },
+    "TGT": {
+      "qty": 6.0,
+      "entry_price": 153.71,
+      "entry_date": "2026-10-05",
+      "cost": 922.26,
+      "tranches": 1
+    },
+    "WELL": {
+      "qty": 4.0,
+      "entry_price": 225.57,
+      "entry_date": "2026-10-05",
+      "cost": 902.28,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2264,6 +2285,33 @@
       "price": 87.0004,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "PFE",
+      "side": "buy",
+      "qty": 37.0,
+      "price": 27.45,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "TGT",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 153.71,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "WELL",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 225.57,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

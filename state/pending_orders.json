@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-10-05",
   "generated_by": "scripts/daily.py --phase preclose",
-  "status": "awaiting_execution",
+  "status": "partially_executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -37,8 +37,23 @@
       "rsi2": 1.55,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "executed_offhours_leg1_partial",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "placed_et": "2026-10-05 16:01",
+        "limit_price": 27.8,
+        "whole_shares": 37,
+        "fill_price": 27.45,
+        "fill_amount": 1015.65,
+        "market_hours": "all_day_hours",
+        "time_in_force": "gfd",
+        "order_id": "6ac401fb-c4ed-4ec1-a57f-93e10f090d0b",
+        "state": "filled",
+        "fees": 0.0,
+        "slippage_vs_est_pct": -0.254
+      },
+      "remainder_usd": 21.22,
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
     },
     {
       "seq": 2,
@@ -51,8 +66,23 @@
       "rsi2": 2.44,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "executed_offhours_leg1_partial",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "placed_et": "2026-10-05 16:01",
+        "limit_price": 154.42,
+        "whole_shares": 6,
+        "fill_price": 153.71,
+        "fill_amount": 922.26,
+        "market_hours": "all_day_hours",
+        "time_in_force": "gfd",
+        "order_id": "6ac40200-ab1c-4862-bf8c-fa7992c4bc9a",
+        "state": "filled",
+        "fees": 0.0,
+        "slippage_vs_est_pct": 0.536
+      },
+      "remainder_usd": 114.61,
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
     },
     {
       "seq": 3,
@@ -65,8 +95,41 @@
       "rsi2": 9.45,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "executed_offhours_leg1_partial",
+      "cap_projection": "within_cap",
+      "offhours_leg1": {
+        "placed_et": "2026-10-05 16:01",
+        "limit_price": 226.67,
+        "whole_shares": 4,
+        "fill_price": 225.57,
+        "fill_amount": 902.28,
+        "market_hours": "all_day_hours",
+        "time_in_force": "gfd",
+        "order_id": "6ac40206-304d-4220-a279-3225cd47f37c",
+        "state": "filled",
+        "fees": 0.0,
+        "slippage_vs_est_pct": 0.508
+      },
+      "remainder_usd": 134.59,
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
     }
-  ]
+  ],
+  "offhours_execution": {
+    "protocol": "4C (b) 盘外整股限价①腿 (2026-09-25 用户选「3」)",
+    "trigger": "用户 2026-10-05 16:00 回「确认」(已基于盘外逐笔明细重做 4C-1B 确认)",
+    "why_offhours": "用户「执行」到达时 15:58:51, 盘中协议窗 (…15:55) 已过 4 分钟; 常规时段仅剩 69 秒, 不足以走完 3 单 review→place, 故不自行放宽窗口, 改走盘外腿",
+    "cap_refetched_et": "2026-10-05 16:00",
+    "cap_usd": 6549.17,
+    "cap_basis": "min(buying_power 6549.17, cash 6549.17); unleveraged==buying_power 无借贷; IWM 抵押已于 15:35 释放, 缺口归零",
+    "leg1_planned_usd": 2861.8,
+    "leg1_filled_usd": 2840.19,
+    "cap_headroom_usd": 3708.98,
+    "orders_placed": 3,
+    "orders_filled": 3,
+    "orders_skipped_whole_zero": 0,
+    "weighted_slippage_vs_est_pct": 0.245,
+    "remainder_total_usd": 270.42,
+    "remainder_pct_of_list": 8.7,
+    "note": "三单均在 16:01:00-16:01:10 下单后 <1 秒成交, **全部低于限价**: PFE 27.45 (限 27.80) / TGT 153.71 (限 154.42) / WELL 225.57 (限 226.67)。加权多付仅 +0.245%, 其中 PFE 实际比引擎 est 还便宜 0.25%。这是盘外①腿三个样本里最便宜的一次 —— 因为下单时点是 16:01, 距收盘仅 1 分钟, 盘后簿子还紧, 与 09-25 周日夜间的残值报价完全不同。"
+  }
 }
