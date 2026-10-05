@@ -1,19 +1,63 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-02",
+  "date": "2026-10-05",
   "coid_prefix": "cq",
-  "next_open": "2026-10-05T09:30:00-04:00",
+  "next_open": "2026-10-06T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-02-DXCM-buy",
-      "order_id": "8cf94683-c293-42e3-a85c-98cf3c4d0cc7",
+      "coid": "cq-2026-10-05-IQV-sell",
+      "order_id": "9341dac3-44f8-4f2d-a1b9-2feee8292842",
+      "symbol": "IQV",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "258.11",
+      "qty": "35",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-05-DXCM-sell",
+      "order_id": "ee6aa5d1-2e29-4168-b2c7-ab8d6622108b",
       "symbol": "DXCM",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "84.29",
+      "qty": "1",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-05-PFE-buy",
+      "order_id": "c277c0b0-25f6-4e55-9fed-91d8f71bb6c2",
+      "symbol": "PFE",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "87.92",
-      "qty": "1",
+      "limit_price": "28.23",
+      "qty": "138",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-05-VRTX-buy",
+      "order_id": "35d33252-d0e0-465a-803b-c0c0f43ca812",
+      "symbol": "VRTX",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "518.61",
+      "qty": "7",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-05-TGT-buy",
+      "order_id": "eaed12c2-5ba9-4a59-b79d-34ac3e340e67",
+      "symbol": "TGT",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "157.58",
+      "qty": "10",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

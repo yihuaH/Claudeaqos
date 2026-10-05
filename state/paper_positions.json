@@ -38,6 +38,13 @@
       "entry_date": "2026-10-02",
       "cost": 2303.7,
       "tranches": 1
+    },
+    "DXCM": {
+      "qty": 1.0,
+      "entry_price": 85.71,
+      "entry_date": "2026-10-05",
+      "cost": 85.71,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -120,6 +127,15 @@
       "side": "buy",
       "qty": 14.0,
       "price": 164.55,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "DXCM",
+      "side": "buy",
+      "qty": 1.0,
+      "price": 85.71,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
