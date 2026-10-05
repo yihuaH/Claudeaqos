@@ -1,31 +1,18 @@
 {
-  "trade_date": "2026-10-02",
+  "trade_date": "2026-10-05",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-10-02 15:23 ET",
   "status": "awaiting_execution_exit",
+  "kind": "exit_only",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
-  "exec_day": "same_day",
-  "option_pending_template": {
-    "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
-    "order_valid_until": "same_session_1545_et",
-    "exec_window_et": "15:30-15:45",
-    "exec_day": "same_day",
-    "channel_note": "开仓仍走**手动通道** (agentic 暂不支持多腿 place, playbook 4D 注记): 会话在对话给出 App 参数, 用户手动下单。窗口仅 15 分钟, 会话须**先发期权参数再发股票清单** (期权窗口更窄)",
-    "spread_note": "15:45 后不得下单 —— 收盘前 15 分钟点差极端 (4D 既有纪律)。窗口内未成交 → 次日主跑以新数据重评, 绝不追价 (红线2)",
-    "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**"
-  },
-  "ledger": "state/weekly_call_live_positions.json",
-  "kind": "exit_only",
-  "note": "今日无期权买单; 有 **1 张平仓单** (IWM 价差 exit_strength)。",
-  "channel_note": "⚠️ 出场卖单按设计属全自动类, 但 **agentic 账户不支持多腿 place_option_order** (2026-08-15 实测), 故平仓同样只能走手动 App 通道 (playbook 4D 注记)。会话无法代下。",
-  "exit_order": {
+  "channel_note": "⚠️ agentic 账户不支持多腿 place_option_order (2026-08-15 实测), **出场卖单亦只能走手动 App 通道** —— 会话下不了, 需用户操作 (playbook 4D 既有注记)。",
+  "order": {
     "structure": "credit_put_spread",
     "qty": 1,
     "bucket": "weekly_calls",
-    "reason": "exit_strength",
+    "reason": "expiry_close",
     "direction": "debit",
-    "est_price": 0.12,
+    "est_price": 0.05,
     "underlying": "IWM",
     "expiry": "2026-10-07",
     "legs": [
@@ -35,8 +22,8 @@
         "position_effect": "close",
         "strike": 270.0,
         "quote": {
-          "bid": 0.07,
-          "ask": 0.12
+          "bid": 0.01,
+          "ask": 0.05
         }
       },
       {
@@ -46,18 +33,35 @@
         "strike": 245.0,
         "quote": {
           "bid": 0,
-          "ask": 0.03
+          "ask": 0.01
         }
       }
     ],
     "exit_quote": {
-      "short_ask": 0.12,
+      "short_ask": 0.05,
       "long_bid": 0,
-      "net_debit": 0.12,
+      "net_debit": 0.05,
       "mid": null,
-      "spread_pct": 52.632,
+      "spread_pct": 133.333,
       "long_spread_pct": null
     }
   },
-  "orders": []
+  "economics": {
+    "entry_credit": 0.61,
+    "exit_net_debit": 0.05,
+    "realized_per_contract_usd": 56.0,
+    "pct_of_max_credit": 91.8,
+    "risk_per_contract_usd": 2439.0,
+    "return_on_risk_pct": 2.3,
+    "collateral_released_usd": 2500.0,
+    "hold_to_expiry_max_usd": 61.0,
+    "note": "到期 2026-10-07 (周三)。不平最多再多赚 $5。"
+  },
+  "prior_attempt": {
+    "order_id": "6ac00e3f-621d-4297-9aca-870efed3e961",
+    "price": 0.07,
+    "state": "cancelled",
+    "cancelled_at_et": "2026-10-02 16:15:32",
+    "by": "非本会话 (会话未调 cancel_option_order)"
+  }
 }

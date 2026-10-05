@@ -2,39 +2,11 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "XLF": {
-      "qty": 0.500405,
-      "entry_price": 54.6357,
-      "entry_date": "2026-09-23",
-      "cost": 27.34,
-      "tranches": 1
-    },
-    "ELV": {
-      "qty": 4.646209,
-      "entry_price": 389.4853,
-      "entry_date": "2026-09-28",
-      "cost": 1809.63,
-      "tranches": 2
-    },
     "BNY": {
       "qty": 6.886491,
       "entry_price": 147.1199,
       "entry_date": "2026-09-29",
       "cost": 1013.14,
-      "tranches": 1
-    },
-    "KO": {
-      "qty": 11.735514,
-      "entry_price": 86.3081,
-      "entry_date": "2026-09-30",
-      "cost": 1012.87,
-      "tranches": 1
-    },
-    "STT": {
-      "qty": 0.292576,
-      "entry_price": 175.5095,
-      "entry_date": "2026-09-30",
-      "cost": 51.35,
       "tranches": 1
     },
     "JNJ": {
@@ -49,13 +21,6 @@
       "entry_price": 506.4399,
       "entry_date": "2026-10-01",
       "cost": 862.08,
-      "tranches": 1
-    },
-    "DXCM": {
-      "qty": 11.0,
-      "entry_price": 85.99,
-      "entry_date": "2026-10-02",
-      "cost": 945.89,
       "tranches": 1
     },
     "MMM": {
@@ -2254,6 +2219,51 @@
       "price": 163.36,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "XLF",
+      "side": "sell",
+      "qty": 0.500405,
+      "price": 53.9347,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "ELV",
+      "side": "sell",
+      "qty": 4.646209,
+      "price": 395.165,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "KO",
+      "side": "sell",
+      "qty": 11.735514,
+      "price": 86.5001,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "STT",
+      "side": "sell",
+      "qty": 0.292576,
+      "price": 176.5801,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "DXCM",
+      "side": "sell",
+      "qty": 11.0,
+      "price": 87.0004,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

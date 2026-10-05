@@ -1,14 +1,14 @@
 {
-  "date": "2026-10-02",
+  "date": "2026-10-05",
   "halted": false,
   "sells": [
     {
       "structure": "credit_put_spread",
       "qty": 1,
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
+      "reason": "expiry_close",
       "direction": "debit",
-      "est_price": 0.12,
+      "est_price": 0.05,
       "underlying": "IWM",
       "expiry": "2026-10-07",
       "legs": [
@@ -18,8 +18,8 @@
           "position_effect": "close",
           "strike": 270.0,
           "quote": {
-            "bid": 0.07,
-            "ask": 0.12
+            "bid": 0.01,
+            "ask": 0.05
           }
         },
         {
@@ -29,29 +29,22 @@
           "strike": 245.0,
           "quote": {
             "bid": 0,
-            "ask": 0.03
+            "ask": 0.01
           }
         }
       ],
       "exit_quote": {
-        "short_ask": 0.12,
+        "short_ask": 0.05,
         "long_bid": 0,
-        "net_debit": 0.12,
+        "net_debit": 0.05,
         "mid": null,
-        "spread_pct": 52.632,
+        "spread_pct": 133.333,
         "long_spread_pct": null
       }
     }
   ],
   "buys": [],
-  "skips": [
-    {
-      "symbol": "XLV",
-      "reason": "credit_leg_spread_too_wide(best=22.78%)",
-      "rsi2": 4.0,
-      "spot": 165.97
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [],
   "suggested_reserve_usd": 0.0

@@ -2,25 +2,7 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "XLF261005C00048000": {
-      "underlying": "XLF",
-      "strike": 48.0,
-      "expiry": "2026-10-05",
-      "contracts": 1,
-      "entry_premium": 6.85,
-      "entry_date": "2026-09-23",
-      "entry_underlying": 54.635,
-      "entry_rsi2": 1.52,
-      "entry_quote": {
-        "bid": 6.64,
-        "ask": 6.74,
-        "mid": 6.69,
-        "spread_pct": 1.495
-      },
-      "model_price": 6.6981
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -311,6 +293,15 @@
       "price": 31.5,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-05",
+      "symbol": "XLF261005C00048000",
+      "side": "sell",
+      "qty": 1,
+      "price": 5.85,
+      "bucket": "weekly_calls",
+      "reason": "expiry_close"
     }
   ],
   "round_trips": [
@@ -599,6 +590,25 @@
       "entry_mid": 29.32,
       "exit_mid": 31.825,
       "model_price": 29.0291
+    },
+    {
+      "occ": "XLF261005C00048000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "XLF",
+      "entry_date": "2026-09-23",
+      "exit_date": "2026-10-05",
+      "entry_premium": 6.85,
+      "exit_premium": 5.85,
+      "pnl_pct": -14.6,
+      "pnl_usd": -100.0,
+      "reason": "expiry_close",
+      "entry_spread_pct": 1.495,
+      "exit_spread_pct": 1.014,
+      "entry_mid": 6.69,
+      "exit_mid": 5.92,
+      "model_price": 6.6981
     }
   ],
   "skip_log": [

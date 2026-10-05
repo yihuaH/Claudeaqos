@@ -1,139 +1,71 @@
 {
-  "trade_date": "2026-10-02",
+  "trade_date": "2026-10-05",
   "generated_by": "scripts/daily.py --phase preclose",
-  "generated_at_et": "2026-10-02 15:23 ET",
-  "status": "partially_executed",
+  "status": "awaiting_execution",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
-  "pending_template": {
-    "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
-    "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
-    "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
-    "exec_day": "same_day_then_next_session",
-    "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
-    "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
-    "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**; 隔夜轨道买单另有 same_day_1555_et, 见 playbook 4B"
-  },
-  "portfolio_value_at_generation": 10314.82,
-  "buying_power_at_generation": 2093.61,
-  "cash_at_generation": 4593.61,
-  "funding_note": "DE/FCX 两笔出场已于 15:23 即时成交, 回款 $4,093.03。⚠️ cash $4,593.61 但 BP $2,093.61 —— 差额 $2,500 仍是 IWM 价差抵押 (今日有平仓单待用户手动执行; 平掉后抵押才释放)。红线9 取 min(BP,cash)=BP。",
+  "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
+  "order_form": null,
+  "buying_power_at_generation": 4054.26,
+  "cash_at_generation": 6554.26,
   "cross_track_funding": {
     "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_orders_today": 0,
-    "option_collateral": 0.0,
-    "note": "今日引擎无期权**买单** (仅有一张平仓卖单, 属出场类不占新抵押)。cap 直接取 min(BP,cash)=$2,093.61。⚠️ 若用户先平掉 IWM 价差, $2,500 抵押释放, cap 会升至约 $4,593 (需重取); 本清单按**当前** BP 产出, 执行时须重取。",
-    "stock_cap": 2093.61,
-    "stock_used": 2085.95,
-    "stock_headroom": 7.66
+    "option_buy_orders_today": 0,
+    "option_collateral_reserved": 0.0,
+    "note": "今日引擎无期权**买单** (仅一张 IWM 平仓卖单, 属出场类不占新抵押, 成交后反而释放 $2,500)。cap 直接取 min(BP,cash)=$4,054.26。",
+    "stock_cap": 4054.26,
+    "stock_used": 3110.61,
+    "stock_headroom": 943.65
   },
-  "supersedes": {
-    "trade_date": "2026-10-01",
-    "status_was": "executed",
-    "note": "10-01 清单已全部执行完毕, 本清单按协议自动取代。"
+  "universe_note": "⚠️ 本清单 3 只 (PFE/TGT/WELL) 全部在今日 13:00 刷新后的新 universe.json 内; 今日另有 ROST/MMM 零头清单已被本清单覆写 (见下)。",
+  "superseded": {
+    "prev_trade_date": "2026-10-02",
+    "prev_status": "partially_executed",
+    "note": "按协议, 次一交易日收盘前主跑产出新清单时**覆写**旧清单 —— 10-02 的零头 (DXCM $85.50 / MMM $51.23 / ROST $23.17, 合计 $159.90) 自此作废, 不再执行, 不存在两份并存。DXCM 今日已被引擎出场卖掉, 补零头已无意义。"
   },
   "orders": [
     {
       "seq": 1,
       "action": "buy",
-      "symbol": "DXCM",
-      "dollar_amount": 1031.39,
+      "symbol": "PFE",
+      "dollar_amount": 1036.87,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 85.14,
-      "rsi2": 0.58,
+      "est_price": 27.52,
+      "rsi2": 1.55,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed_offhours_leg1_partial",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "placed_et": "2026-10-02 16:12",
-        "limit_price": 85.99,
-        "whole_shares": 11.0,
-        "fill_price": 85.99,
-        "fill_amount": 945.89,
-        "market_hours": "all_day_hours",
-        "time_in_force": "gfd",
-        "order_id": "6ac01012-0e9a-43ba-b726-7f4182fbe42b",
-        "state": "filled",
-        "fees": 0.0,
-        "slippage_vs_est_pct": 0.998
-      },
-      "remainder_usd": 85.5,
-      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-05) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 2,
       "action": "buy",
-      "symbol": "MMM",
-      "dollar_amount": 1031.39,
+      "symbol": "TGT",
+      "dollar_amount": 1036.87,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 161.84,
-      "rsi2": 2.93,
+      "est_price": 152.89,
+      "rsi2": 2.44,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed_offhours_leg1_partial",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "placed_et": "2026-10-02 16:12",
-        "limit_price": 163.46,
-        "whole_shares": 6.0,
-        "fill_price": 163.36,
-        "fill_amount": 980.16,
-        "market_hours": "all_day_hours",
-        "time_in_force": "gfd",
-        "order_id": "6ac0102f-7827-44a4-bef7-cee835bbca42",
-        "state": "filled",
-        "fees": 0.0,
-        "slippage_vs_est_pct": 0.939
-      },
-      "remainder_usd": 51.23,
-      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-05) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
+      "status": "awaiting_execution",
+      "cap_projection": "within_cap"
     },
     {
       "seq": 3,
       "action": "buy",
-      "symbol": "ROST",
-      "dollar_amount": 23.17,
+      "symbol": "WELL",
+      "dollar_amount": 1036.87,
       "bucket": "strategy",
       "reason": "rsi2_entry",
-      "est_price": 229.01,
-      "rsi2": 7.84,
+      "est_price": 224.43,
+      "rsi2": 9.45,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
       "status": "awaiting_execution",
-      "cap_projection": "within_cap",
-      "offhours_leg1": {
-        "skipped": "whole==0 (单笔 $23.17 < 1 股限价 231.30)",
-        "disposition": "全额 $23.17 留给次一交易日盘中窗"
-      },
-      "remainder_usd": 23.17,
-      "remainder_disposition": "同上"
+      "cap_projection": "within_cap"
     }
-  ],
-  "offhours_execution": {
-    "protocol": "4C (b) 盘外整股限价①腿 (2026-09-25 用户选「3」)",
-    "trigger": "用户 2026-10-02 16:11 ET 回「下单」(已基于盘外逐笔明细重做 4C-1B 确认)",
-    "why_offhours": "用户「执行」到达时已过 15:55 盘中窗 (实际 16:03+), 第 4 次越窗 (09-21/09-25/09-28/10-02)",
-    "cap_refetched_et": "2026-10-02 16:11",
-    "cap_usd": 2093.61,
-    "cap_basis": "min(buying_power 2093.61, cash 4593.61); unleveraged==buying_power 无借贷",
-    "leg1_total_usd": 1926.05,
-    "cap_headroom_usd": 167.56,
-    "orders_placed": 2,
-    "orders_filled": 2,
-    "orders_skipped_whole_zero": 1,
-    "weighted_slippage_vs_est_pct": 0.968,
-    "remainder_total_usd": 159.9,
-    "remainder_pct_of_list": 7.67,
-    "note": "两单均在下单后 <1 秒成交 (盘后 all_day_hours)。DXCM 以限价 85.99 成交 (当时 ask 已飘到 86.44), MMM 以 163.36 成交, 优于限价 163.46 $0.10/股。实测加权多付 0.968%, 与 09-25 的 0.946% 几乎一致 —— 档案里的 0.55% 偏低, 盘外①腿真实成本约 0.95%。"
-  },
-  "ledger_writeback": {
-    "applied_et": "2026-10-02 16:14",
-    "tool": "scripts/signals.py apply",
-    "fills_file": "scratchpad/fills_1002_offhours.json",
-    "positions_after": 9
-  }
+  ]
 }

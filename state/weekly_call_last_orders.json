@@ -1,31 +1,24 @@
 {
-  "date": "2026-10-02",
+  "date": "2026-10-05",
   "halted": false,
   "sells": [
     {
-      "symbol": "IWM261007C00250000",
+      "symbol": "XLF261005C00048000",
       "qty": 1,
       "position_intent": "sell_to_close",
       "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "est_price": 31.82,
+      "reason": "expiry_close",
+      "est_price": 5.92,
       "exit_quote": {
-        "bid": 31.7,
-        "ask": 31.95,
-        "mid": 31.825,
-        "spread_pct": 0.786
+        "bid": 5.89,
+        "ask": 5.95,
+        "mid": 5.92,
+        "spread_pct": 1.014
       }
     }
   ],
   "buys": [],
-  "skips": [
-    {
-      "symbol": "XLV",
-      "reason": "spread_too_wide(best=7.81%)",
-      "rsi2": 4.0,
-      "spot": 165.97
-    }
-  ],
+  "skips": [],
   "warnings": [],
   "near_signals": [],
   "suggested_reserve_usd": 0.0
