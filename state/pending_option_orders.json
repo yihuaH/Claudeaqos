@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-10-05",
   "generated_by": "scripts/daily.py --phase preclose",
-  "status": "awaiting_execution_exit",
+  "status": "executed_filled",
   "kind": "exit_only",
   "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
   "exec_window_et": "15:30-15:45",
@@ -63,5 +63,47 @@
     "state": "cancelled",
     "cancelled_at_et": "2026-10-02 16:15:32",
     "by": "非本会话 (会话未调 cancel_option_order)"
+  },
+  "fill": {
+    "order_id": "6ac3fbad-0f93-47e7-8d5f-4ac39ae133e9",
+    "placed_agent": "user",
+    "channel": "手动 App 通道",
+    "placed_at_et": "2026-10-05 15:34:05",
+    "filled_at_et": "2026-10-05 15:35:55",
+    "limit_net_debit": 0.05,
+    "net_debit_filled": 0.05,
+    "processed_premium_usd": 5.0,
+    "legs": [
+      {
+        "symbol": "IWM261007P00270000",
+        "side": "buy",
+        "effect": "close",
+        "price": 0.06
+      },
+      {
+        "symbol": "IWM261007P00245000",
+        "side": "sell",
+        "effect": "close",
+        "price": 0.01
+      }
+    ],
+    "realized_usd": 56.0,
+    "pct_of_max_credit": 91.8,
+    "return_on_risk_pct": 2.3,
+    "prior_try": {
+      "order_id": "6ac3fb87-1a61-46d9-b0fe-4fe34f6088e5",
+      "price": 0.03,
+      "state": "cancelled",
+      "cancelled_at_et": "2026-10-05 15:34:06",
+      "note": "0.03 挂 39 秒未成交, 改 0.05 即成 —— 与会话 15:35 的建议一致 (挂 0.05 按最优价成交且留余量)"
+    },
+    "collateral_released_usd": 2500.0,
+    "ledger_writeback": {
+      "tool": "scripts/weekly_calls.py apply",
+      "round_trip_no": 8,
+      "positions_after": "EMPTY",
+      "pnl_usd": 56.0,
+      "pnl_pct": 2.3
+    }
   }
 }

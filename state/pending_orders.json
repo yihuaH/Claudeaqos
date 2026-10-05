@@ -13,10 +13,11 @@
     "rule": "期权优先 (2026-08-27 常规规则)",
     "option_buy_orders_today": 0,
     "option_collateral_reserved": 0.0,
-    "note": "今日引擎无期权**买单** (仅一张 IWM 平仓卖单, 属出场类不占新抵押, 成交后反而释放 $2,500)。cap 直接取 min(BP,cash)=$4,054.26。",
+    "note": "今日引擎无期权**买单** (仅一张 IWM 平仓卖单, 属出场类不占新抵押)。清单产出时 cap=min(BP,cash)=$4,054.26。⚠️ **15:35:55 用户已平掉 IWM 价差**, $2,500 抵押释放 → BP 升至 **$6,549.17** 且已等于 cash (缺口消失)。本清单金额为引擎固定输出 $3,110.61, 不因 cap 变大而改变 (红线2); 执行时仍按 playbook 重取实时 min(BP,cash)。",
     "stock_cap": 4054.26,
     "stock_used": 3110.61,
-    "stock_headroom": 943.65
+    "stock_headroom": 943.65,
+    "buying_power_after_option_close": 6549.17
   },
   "universe_note": "⚠️ 本清单 3 只 (PFE/TGT/WELL) 全部在今日 13:00 刷新后的新 universe.json 内; 今日另有 ROST/MMM 零头清单已被本清单覆写 (见下)。",
   "superseded": {
