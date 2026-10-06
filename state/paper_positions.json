@@ -18,13 +18,6 @@
       "cost": 9035.95,
       "tranches": 1
     },
-    "IQV": {
-      "qty": 35.0,
-      "entry_price": 260.831429,
-      "entry_date": "2026-10-02",
-      "cost": 9129.1,
-      "tranches": 1
-    },
     "C": {
       "qty": 72.0,
       "entry_price": 128.106667,
@@ -39,11 +32,25 @@
       "cost": 2303.7,
       "tranches": 1
     },
-    "DXCM": {
-      "qty": 1.0,
-      "entry_price": 85.71,
-      "entry_date": "2026-10-05",
-      "cost": 85.71,
+    "PFE": {
+      "qty": 138.0,
+      "entry_price": 27.51,
+      "entry_date": "2026-10-06",
+      "cost": 3796.38,
+      "tranches": 1
+    },
+    "VRTX": {
+      "qty": 7.0,
+      "entry_price": 506.142857,
+      "entry_date": "2026-10-06",
+      "cost": 3543.0,
+      "tranches": 1
+    },
+    "TGT": {
+      "qty": 10.0,
+      "entry_price": 153.469,
+      "entry_date": "2026-10-06",
+      "cost": 1534.69,
       "tranches": 1
     }
   },
@@ -136,6 +143,51 @@
       "side": "buy",
       "qty": 1.0,
       "price": 85.71,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "IQV",
+      "side": "sell",
+      "qty": 35.0,
+      "price": 269.119714,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "DXCM",
+      "side": "sell",
+      "qty": 1.0,
+      "price": 86.01,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "PFE",
+      "side": "buy",
+      "qty": 138.0,
+      "price": 27.51,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "VRTX",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 506.142857,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "TGT",
+      "side": "buy",
+      "qty": 10.0,
+      "price": 153.469,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-10-05",
   "generated_by": "scripts/daily.py --phase preclose",
-  "status": "partially_executed",
+  "status": "expired",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -53,7 +53,8 @@
         "slippage_vs_est_pct": -0.254
       },
       "remainder_usd": 21.22,
-      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿",
+      "remainder_status": "expired"
     },
     {
       "seq": 2,
@@ -82,7 +83,8 @@
         "slippage_vs_est_pct": 0.536
       },
       "remainder_usd": 114.61,
-      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿",
+      "remainder_status": "expired"
     },
     {
       "seq": 3,
@@ -111,7 +113,8 @@
         "slippage_vs_est_pct": 0.508
       },
       "remainder_usd": 134.59,
-      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿"
+      "remainder_disposition": "随清单顺延至次一交易日 (2026-10-06) 09:45-15:55 ET 盘中市价窗; 不下旧②腿",
+      "remainder_status": "expired"
     }
   ],
   "offhours_execution": {
@@ -132,5 +135,7 @@
     "remainder_pct_of_list": 8.7,
     "note": "三单均在 16:01:00-16:01:10 下单后 <1 秒成交, **全部低于限价**: PFE 27.45 (限 27.80) / TGT 153.71 (限 154.42) / WELL 225.57 (限 226.67)。加权多付仅 +0.245%, 其中 PFE 实际比引擎 est 还便宜 0.25%。这是盘外①腿三个样本里最便宜的一次 —— 因为下单时点是 16:01, 距收盘仅 1 分钟, 盘后簿子还紧, 与 09-25 周日夜间的残值报价完全不同。"
   },
-  "carryover_final_session_note": "本清单生成日 2026-10-05, exec_day=same_day_then_next_session → 次一交易日 = 2026-10-06 (今天), **今日 15:55 ET 为最后时效**, 之后改 expired。今日收盘前主跑**未产出任何买单** (equity_buys_to_pending=0), 故本清单未被新清单覆写, 零头仍有效至 15:55。"
+  "carryover_final_session_note": "本清单生成日 2026-10-05, exec_day=same_day_then_next_session → 次一交易日 = 2026-10-06 (今天), **今日 15:55 ET 为最后时效**, 之后改 expired。今日收盘前主跑**未产出任何买单** (equity_buys_to_pending=0), 故本清单未被新清单覆写, 零头仍有效至 15:55。",
+  "expired_note": "10-05 清单 exec_day=same_day_then_next_session, 次一交易日 2026-10-06 的 15:55 ET 窗口已过, 未执行的零头合计 $270.42 (PFE/TGT/WELL) 按 playbook 改 expired。10-06 收盘前主跑无买单故未产出新清单覆写, 本清单自然到期。⚠️ MMM 的零头本就在 10-05 已执行部分之外, 而 MMM 已于 10-06 整仓出场, 零头概念已不适用。",
+  "expired_at_et": "2026-10-06 15:55"
 }
