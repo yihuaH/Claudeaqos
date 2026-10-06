@@ -1,36 +1,5 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
-  "entries": {
-    "XLF261005C00048000": {
-      "symbol": "XLF261005C00048000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 6.69,
-      "underlying": "XLF",
-      "strike": 48.0,
-      "expiry": "2026-10-05",
-      "dte": 12,
-      "spot": 54.635,
-      "rsi2": 1.52,
-      "model_price": 6.6981,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 6.69,
-        "model_flat": 6.6981,
-        "model_surface": 6.7537,
-        "ratio_flat_pct": 100.1,
-        "ratio_surface_pct": 101.0
-      },
-      "entry_quote": {
-        "bid": 6.64,
-        "ask": 6.74,
-        "mid": 6.69,
-        "spread_pct": 1.495
-      }
-    }
-  },
-  "updated": "2026-10-05"
+  "entries": {},
+  "updated": "2026-10-06"
 }

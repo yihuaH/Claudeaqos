@@ -1,48 +1,7 @@
 {
-  "date": "2026-10-05",
+  "date": "2026-10-06",
   "halted": false,
-  "sells": [
-    {
-      "structure": "credit_put_spread",
-      "qty": 1,
-      "bucket": "weekly_calls",
-      "reason": "expiry_close",
-      "direction": "debit",
-      "est_price": 0.05,
-      "underlying": "IWM",
-      "expiry": "2026-10-07",
-      "legs": [
-        {
-          "symbol": "IWM261007P00270000",
-          "side": "buy",
-          "position_effect": "close",
-          "strike": 270.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.05
-          }
-        },
-        {
-          "symbol": "IWM261007P00245000",
-          "side": "sell",
-          "position_effect": "close",
-          "strike": 245.0,
-          "quote": {
-            "bid": 0,
-            "ask": 0.01
-          }
-        }
-      ],
-      "exit_quote": {
-        "short_ask": 0.05,
-        "long_bid": 0,
-        "net_debit": 0.05,
-        "mid": null,
-        "spread_pct": 133.333,
-        "long_spread_pct": null
-      }
-    }
-  ],
+  "sells": [],
   "buys": [],
   "skips": [],
   "warnings": [],

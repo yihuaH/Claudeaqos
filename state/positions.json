@@ -23,13 +23,6 @@
       "cost": 862.08,
       "tranches": 1
     },
-    "MMM": {
-      "qty": 6.0,
-      "entry_price": 163.36,
-      "entry_date": "2026-10-02",
-      "cost": 980.16,
-      "tranches": 1
-    },
     "PFE": {
       "qty": 37.0,
       "entry_price": 27.45,
@@ -2312,6 +2305,15 @@
       "price": 225.57,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-06",
+      "symbol": "MMM",
+      "side": "sell",
+      "qty": 6.0,
+      "price": 163.8677,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
