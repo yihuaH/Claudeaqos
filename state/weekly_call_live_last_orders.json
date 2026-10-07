@@ -1,10 +1,27 @@
 {
-  "date": "2026-10-06",
+  "date": "2026-10-07",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [],
   "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "near_signals": [
+    {
+      "symbol": "META",
+      "rsi2_now": 18.52,
+      "scenario": "2d_-1%x2",
+      "spot": 722.61,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4719
+    },
+    {
+      "symbol": "SMH",
+      "rsi2_now": 22.97,
+      "scenario": "2d_-1%x2",
+      "spot": 622.58,
+      "structure": "credit_put_spread",
+      "est_premium_usd": 4733
+    }
+  ],
+  "suggested_reserve_usd": 1642.36
 }

@@ -9,27 +9,6 @@
       "cost": 1013.14,
       "tranches": 1
     },
-    "JNJ": {
-      "qty": 3.884393,
-      "entry_price": 259.4099,
-      "entry_date": "2026-10-01",
-      "cost": 1007.65,
-      "tranches": 1
-    },
-    "VRTX": {
-      "qty": 1.702235,
-      "entry_price": 506.4399,
-      "entry_date": "2026-10-01",
-      "cost": 862.08,
-      "tranches": 1
-    },
-    "PFE": {
-      "qty": 37.0,
-      "entry_price": 27.45,
-      "entry_date": "2026-10-05",
-      "cost": 1015.65,
-      "tranches": 1
-    },
     "TGT": {
       "qty": 6.0,
       "entry_price": 153.71,
@@ -2312,6 +2291,33 @@
       "side": "sell",
       "qty": 6.0,
       "price": 163.8677,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "JNJ",
+      "side": "sell",
+      "qty": 3.884393,
+      "price": 258.28,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "VRTX",
+      "side": "sell",
+      "qty": 1.702235,
+      "price": 505.922,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "PFE",
+      "side": "sell",
+      "qty": 37.0,
+      "price": 28.0301,
       "bucket": "strategy",
       "reason": "exit_strength"
     }
