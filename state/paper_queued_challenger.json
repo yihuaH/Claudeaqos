@@ -1,32 +1,65 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-06",
+  "date": "2026-10-07",
   "coid_prefix": "cq",
-  "next_open": "2026-10-07T09:30:00-04:00",
+  "next_open": "2026-10-08T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-06-C-sell",
-      "order_id": "5ebd12b5-90c9-4d8e-b0e0-53384cffbcec",
-      "symbol": "C",
+      "coid": "cq-2026-10-07-JNJ-sell",
+      "order_id": "12fce030-617a-42d6-852a-8d0a5eb709d2",
+      "symbol": "JNJ",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "124.66",
-      "qty": "72",
+      "limit_price": "250.7",
+      "qty": "35",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-10-06-MMM-sell",
-      "order_id": "cd349e51-ddba-4593-9070-341cc2b414c2",
-      "symbol": "MMM",
+      "coid": "cq-2026-10-07-PFE-sell",
+      "order_id": "e272245c-2604-436a-84bc-f7726aa7c5a2",
+      "symbol": "PFE",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "158.73",
-      "qty": "14",
+      "limit_price": "27.16",
+      "qty": "138",
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-07-VRTX-sell",
+      "order_id": "5d62479b-ece2-43ae-9de6-8b1eee2dba84",
+      "symbol": "VRTX",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "490.47",
+      "qty": "7",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-07-JPM-buy",
+      "order_id": "afd3918a-3d4f-47e6-9f34-cb10cda06f0a",
+      "symbol": "JPM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "339.47",
+      "qty": "11",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-07-DE-buy",
+      "order_id": "7e59b8da-ee78-4cfb-951a-c575f6acfe66",
+      "symbol": "DE",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "676.58",
+      "qty": "5",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

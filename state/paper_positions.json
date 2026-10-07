@@ -18,20 +18,6 @@
       "cost": 9035.95,
       "tranches": 1
     },
-    "C": {
-      "qty": 72.0,
-      "entry_price": 128.106667,
-      "entry_date": "2026-10-02",
-      "cost": 9223.68,
-      "tranches": 1
-    },
-    "MMM": {
-      "qty": 14.0,
-      "entry_price": 164.55,
-      "entry_date": "2026-10-02",
-      "cost": 2303.7,
-      "tranches": 1
-    },
     "PFE": {
       "qty": 138.0,
       "entry_price": 27.51,
@@ -190,6 +176,24 @@
       "price": 153.469,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "C",
+      "side": "sell",
+      "qty": 72.0,
+      "price": 125.476667,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "MMM",
+      "side": "sell",
+      "qty": 14.0,
+      "price": 162.126429,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ]
 }
