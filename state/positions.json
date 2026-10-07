@@ -3,11 +3,11 @@
   "halted": false,
   "strategy_positions": {
     "BNY": {
-      "qty": 6.886491,
-      "entry_price": 147.1199,
+      "qty": 14.171384,
+      "entry_price": 144.729,
       "entry_date": "2026-09-29",
-      "cost": 1013.14,
-      "tranches": 1
+      "cost": 2051.01,
+      "tranches": 2
     },
     "TGT": {
       "qty": 6.0,
@@ -21,6 +21,20 @@
       "entry_price": 225.57,
       "entry_date": "2026-10-05",
       "cost": 902.28,
+      "tranches": 1
+    },
+    "JPM": {
+      "qty": 3.148782,
+      "entry_price": 329.6099,
+      "entry_date": "2026-10-07",
+      "cost": 1037.87,
+      "tranches": 1
+    },
+    "DE": {
+      "qty": 1.574701,
+      "entry_price": 659.0899,
+      "entry_date": "2026-10-07",
+      "cost": 1037.87,
       "tranches": 1
     }
   },
@@ -2320,6 +2334,33 @@
       "price": 28.0301,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "BNY",
+      "side": "buy",
+      "qty": 7.284893,
+      "price": 142.4688,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "JPM",
+      "side": "buy",
+      "qty": 3.148782,
+      "price": 329.6099,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-07",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 1.574701,
+      "price": 659.0899,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

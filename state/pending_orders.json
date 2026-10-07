@@ -1,7 +1,7 @@
 {
   "trade_date": "2026-10-07",
   "generated_by": "scripts/daily.py --phase preclose",
-  "status": "awaiting_execution",
+  "status": "executed",
   "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
   "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
   "exec_day": "same_day_then_next_session",
@@ -54,11 +54,22 @@
       "rsi2": 8.51,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
+      "status": "executed",
       "cap_projection": "within_cap",
       "tranche": 2,
       "avg_entry_price": 147.1199,
-      "drawdown_pct": -3.27
+      "drawdown_pct": -3.27,
+      "execution": {
+        "placed_et": "2026-10-07 15:27-15:28",
+        "form": "market + regular_hours + dollar_amount",
+        "filled_qty": 7.284893,
+        "fill_price": 142.4688,
+        "fill_amount": 1037.87,
+        "fees": 0.0,
+        "order_id": "6ac69d35-971a-4c64-9bfd-c29f1053829e",
+        "state": "filled",
+        "slippage_vs_est_pct": 0.115
+      }
     },
     {
       "seq": 2,
@@ -71,8 +82,19 @@
       "rsi2": 4.79,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "executed",
+      "cap_projection": "within_cap",
+      "execution": {
+        "placed_et": "2026-10-07 15:27-15:28",
+        "form": "market + regular_hours + dollar_amount",
+        "filled_qty": 3.148782,
+        "fill_price": 329.6099,
+        "fill_amount": 1037.87,
+        "fees": 0.0,
+        "order_id": "6ac69d3f-1e44-47b8-a5ca-ec818f087673",
+        "state": "filled",
+        "slippage_vs_est_pct": 0.24
+      }
     },
     {
       "seq": 3,
@@ -85,8 +107,30 @@
       "rsi2": 9.75,
       "state_file": "state/positions.json",
       "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "awaiting_execution",
-      "cap_projection": "within_cap"
+      "status": "executed",
+      "cap_projection": "within_cap",
+      "execution": {
+        "placed_et": "2026-10-07 15:27-15:28",
+        "form": "market + regular_hours + dollar_amount",
+        "filled_qty": 1.574701,
+        "fill_price": 659.0899,
+        "fill_amount": 1037.87,
+        "fees": 0.0,
+        "order_id": "6ac69d4b-cccf-4c8d-8260-3d1aac0f9c36",
+        "state": "filled",
+        "slippage_vs_est_pct": 0.011
+      }
     }
-  ]
+  ],
+  "execution_summary": {
+    "trigger": "用户 2026-10-07 15:27 回「执行」",
+    "orders": 3,
+    "filled": 3,
+    "total_usd": 3113.61,
+    "weighted_slippage_vs_est_pct": 0.122,
+    "fees_usd": 0.0,
+    "cap_refetched_et": "2026-10-07 15:27",
+    "cap_usd": 7593.97,
+    "window_note": "⚠️ 实际下单 15:27:49-15:28:11, 比清单首选窗起点 15:30 **早约 2.5 分钟** (第 3 次, 前两次 09-30 早 4.5 分 / 10-01 早 2.6 分)。红线9 的盘中窗是 09:45-15:55, 形态与窗内完全相同 (market+regular_hours+dollar_amount), 故在红线内; 15:30 是清单的首选起点而非风控闸 (playbook 明述 15:55 按操作便利选定、研究显示盘中时点无方向性代价)。已如实披露, 建议把 exec_window_et 起点改成 09:45 或明确标注 15:30 为非闸门。"
+  }
 }
