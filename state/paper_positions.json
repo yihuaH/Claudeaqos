@@ -11,32 +11,25 @@
       "cost": 9277.64,
       "tranches": 1
     },
-    "JNJ": {
-      "qty": 35.0,
-      "entry_price": 258.17,
-      "entry_date": "2026-10-02",
-      "cost": 9035.95,
-      "tranches": 1
-    },
-    "PFE": {
-      "qty": 138.0,
-      "entry_price": 27.51,
-      "entry_date": "2026-10-06",
-      "cost": 3796.38,
-      "tranches": 1
-    },
-    "VRTX": {
-      "qty": 7.0,
-      "entry_price": 506.142857,
-      "entry_date": "2026-10-06",
-      "cost": 3543.0,
-      "tranches": 1
-    },
     "TGT": {
       "qty": 10.0,
       "entry_price": 153.469,
       "entry_date": "2026-10-06",
       "cost": 1534.69,
+      "tranches": 1
+    },
+    "JPM": {
+      "qty": 11.0,
+      "entry_price": 327.42,
+      "entry_date": "2026-10-08",
+      "cost": 3601.62,
+      "tranches": 1
+    },
+    "DE": {
+      "qty": 5.0,
+      "entry_price": 655.14,
+      "entry_date": "2026-10-08",
+      "cost": 3275.7,
       "tranches": 1
     }
   },
@@ -194,6 +187,51 @@
       "price": 162.126429,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "JNJ",
+      "side": "sell",
+      "qty": 35.0,
+      "price": 257.113429,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "PFE",
+      "side": "sell",
+      "qty": 138.0,
+      "price": 27.861595,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "VRTX",
+      "side": "sell",
+      "qty": 7.0,
+      "price": 501.562857,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "JPM",
+      "side": "buy",
+      "qty": 11.0,
+      "price": 327.42,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 655.14,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }
