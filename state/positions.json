@@ -9,25 +9,11 @@
       "cost": 2051.01,
       "tranches": 2
     },
-    "TGT": {
-      "qty": 6.0,
-      "entry_price": 153.71,
-      "entry_date": "2026-10-05",
-      "cost": 922.26,
-      "tranches": 1
-    },
     "WELL": {
       "qty": 4.0,
       "entry_price": 225.57,
       "entry_date": "2026-10-05",
       "cost": 902.28,
-      "tranches": 1
-    },
-    "JPM": {
-      "qty": 3.148782,
-      "entry_price": 329.6099,
-      "entry_date": "2026-10-07",
-      "cost": 1037.87,
       "tranches": 1
     },
     "DE": {
@@ -2361,6 +2347,24 @@
       "price": 659.0899,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "TGT",
+      "side": "sell",
+      "qty": 6.0,
+      "price": 155.7854,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "JPM",
+      "side": "sell",
+      "qty": 3.148782,
+      "price": 331.8001,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
