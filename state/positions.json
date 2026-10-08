@@ -22,6 +22,34 @@
       "entry_date": "2026-10-07",
       "cost": 1037.87,
       "tranches": 1
+    },
+    "RVMD": {
+      "qty": 5.498801,
+      "entry_price": 189.5595,
+      "entry_date": "2026-10-08",
+      "cost": 1042.35,
+      "tranches": 1
+    },
+    "SOXQ": {
+      "qty": 10.508863,
+      "entry_price": 99.1877,
+      "entry_date": "2026-10-08",
+      "cost": 1042.35,
+      "tranches": 1
+    },
+    "AMAT": {
+      "qty": 2.052471,
+      "entry_price": 507.8512,
+      "entry_date": "2026-10-08",
+      "cost": 1042.35,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 12.786432,
+      "entry_price": 81.52,
+      "entry_date": "2026-10-08",
+      "cost": 1042.35,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2365,6 +2393,42 @@
       "price": 331.8001,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 5.498801,
+      "price": 189.5595,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "SOXQ",
+      "side": "buy",
+      "qty": 10.508863,
+      "price": 99.1877,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 2.052471,
+      "price": 507.8512,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 12.786432,
+      "price": 81.52,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
