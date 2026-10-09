@@ -1,206 +1,88 @@
 {
-  "trade_date": "2026-10-08",
-  "generated_by": "scripts/daily.py --phase preclose",
-  "status": "executed",
-  "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
-  "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
-  "exec_day": "same_day_then_next_session",
-  "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
-  "order_form": null,
-  "buying_power_at_generation": 6459.79,
-  "cash_at_generation": 6459.79,
-  "cross_track_funding": {
-    "rule": "期权优先 (2026-08-27 常规规则)",
-    "option_buy_orders_today": 0,
-    "option_collateral_reserved": 0.0,
-    "stock_cap": 6459.79,
-    "stock_used": 4169.4,
-    "stock_headroom": 2290.39,
-    "note": "今日引擎**无期权买单** (option_buys 空)。cap = min(BP,cash) = $6,459.79。"
-  },
-  "option_alert": {
-    "source": "state/weekly_call_live_last_orders.json (引擎输出, 逐字段照抄)",
-    "near_signals_count": 8,
-    "near_signals": [
-      {
-        "symbol": "NVDA",
-        "rsi2_now": 11.23,
-        "scenario": "1d_-1%",
-        "spot": 230.38,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 1846
-      },
-      {
-        "symbol": "TSM",
-        "rsi2_now": 10.68,
-        "scenario": "1d_-1%",
-        "spot": 456.24,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 3503
-      },
-      {
-        "symbol": "AMD",
-        "rsi2_now": 15.12,
-        "scenario": "2d_-1%x2",
-        "spot": 615.6,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 4006
-      },
-      {
-        "symbol": "MSFT",
-        "rsi2_now": 24.39,
-        "scenario": "2d_-1%x2",
-        "spot": 521.7,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 4314
-      },
-      {
-        "symbol": "DIA",
-        "rsi2_now": 36.38,
-        "scenario": "1d_-1%",
-        "spot": 511.18,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 4513
-      },
-      {
-        "symbol": "META",
-        "rsi2_now": 14.26,
-        "scenario": "1d_-1%",
-        "spot": 718.56,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 4700
-      },
-      {
-        "symbol": "QQQ",
-        "rsi2_now": 15.47,
-        "scenario": "1d_-1%",
-        "spot": 746.24,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 6454
-      },
-      {
-        "symbol": "SPY",
-        "rsi2_now": 29.25,
-        "scenario": "1d_-1%",
-        "spot": 773.09,
-        "structure": "credit_put_spread",
-        "est_premium_usd": 6826
-      }
-    ],
-    "suggested_reserve_usd": 1568.13,
-    "note": "⚠️ near_signals 由 10-07 的 2 只 (META/SMH) 扩到今日 **8 只** —— 科技/大盘宽度转弱的信号。今日仍未触发开仓, 无需真预留; 本清单用掉后余额见 stock_headroom。若明日触发按 4D-2D 期权优先。"
-  },
-  "orders": [
-    {
-      "seq": 1,
-      "action": "buy",
-      "symbol": "RVMD",
-      "dollar_amount": 1042.35,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 188.48,
-      "rsi2": 4.96,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed",
-      "cap_projection": "within_cap",
-      "execution": {
-        "placed_et": "2026-10-08 15:26-15:27",
-        "form": "market + regular_hours + dollar_amount",
-        "filled_qty": 5.498801,
-        "fill_price": 189.5595,
-        "fill_amount": 1042.35,
-        "fees": 0.0,
-        "order_id": "6ac7ee79-1df1-423c-8bb9-70ed4ba16ef0",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.573
-      }
-    },
-    {
-      "seq": 2,
-      "action": "buy",
-      "symbol": "SOXQ",
-      "dollar_amount": 1042.35,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 98.915,
-      "rsi2": 6.9,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed",
-      "cap_projection": "within_cap",
-      "execution": {
-        "placed_et": "2026-10-08 15:26-15:27",
-        "form": "market + regular_hours + dollar_amount",
-        "filled_qty": 10.508863,
-        "fill_price": 99.1877,
-        "fill_amount": 1042.35,
-        "fees": 0.0,
-        "order_id": "6ac7ee83-761f-4360-af50-368f2d876114",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.276
-      }
-    },
-    {
-      "seq": 3,
-      "action": "buy",
-      "symbol": "AMAT",
-      "dollar_amount": 1042.35,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 505.725,
-      "rsi2": 7.12,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed",
-      "cap_projection": "within_cap",
-      "execution": {
-        "placed_et": "2026-10-08 15:26-15:27",
-        "form": "market + regular_hours + dollar_amount",
-        "filled_qty": 2.052471,
-        "fill_price": 507.8512,
-        "fill_amount": 1042.35,
-        "fees": 0.0,
-        "order_id": "6ac7ee91-a34a-4bd1-bb34-d3330803f6e6",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.42
-      }
-    },
-    {
-      "seq": 4,
-      "action": "buy",
-      "symbol": "DAL",
-      "dollar_amount": 1042.35,
-      "bucket": "strategy",
-      "reason": "rsi2_entry",
-      "est_price": 81.4017,
-      "rsi2": 7.94,
-      "state_file": "state/positions.json",
-      "valid_until": "same_session_1555_et_then_next_session_1555_et",
-      "status": "executed",
-      "cap_projection": "within_cap",
-      "execution": {
-        "placed_et": "2026-10-08 15:26-15:27",
-        "form": "market + regular_hours + dollar_amount",
-        "filled_qty": 12.786432,
-        "fill_price": 81.52,
-        "fill_amount": 1042.35,
-        "fees": 0.0,
-        "order_id": "6ac7ee9a-fd89-439b-8fa2-9079a0dd878a",
-        "state": "filled",
-        "slippage_vs_est_pct": 0.145
-      }
-    }
+ "trade_date": "2026-10-09",
+ "generated_by": "scripts/daily.py --phase preclose",
+ "status": "awaiting_execution",
+ "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+ "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+ "exec_day": "same_day_then_next_session",
+ "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
+ "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
+ "order_form": null,
+ "buying_power_at_generation": 2290.39,
+ "cash_at_generation": 2290.39,
+ "exit_proceeds_today_usd": 907.31,
+ "cross_track_funding": {
+  "rule": "期权优先 (2026-08-27 常规规则)",
+  "option_buy_orders_today": 0,
+  "option_collateral_reserved": 0.0,
+  "stock_cap": 2290.39,
+  "stock_used": 2078.54,
+  "stock_headroom": 211.85,
+  "note": "今日引擎**无期权买单** (option_buys 空)。cap = min(BP,cash) = $2290.39 (该值取于 15:21 ET, **不含** 15:23 成交的 WELL 回款 $907.31; limited margin 下回款即时可用, 执行时重取会更高)。"
+ },
+ "option_alert": {
+  "source": "plan.json to_pending.near_signals (引擎输出, 逐字段照抄)",
+  "near_signals_count": 3,
+  "near_signals": [
+   {
+    "symbol": "NVDA",
+    "rsi2_now": 10.08,
+    "scenario": "1d_-1%",
+    "spot": 229.92,
+    "structure": "credit_put_spread",
+    "est_premium_usd": 1843
+   },
+   {
+    "symbol": "AMD",
+    "rsi2_now": 10.88,
+    "scenario": "1d_-1%",
+    "spot": 610.71,
+    "structure": "credit_put_spread",
+    "est_premium_usd": 3988
+   },
+   {
+    "symbol": "META",
+    "rsi2_now": 15.65,
+    "scenario": "1d_-1%",
+    "spot": 720.38,
+    "structure": "credit_put_spread",
+    "est_premium_usd": 4712
+   }
   ],
-  "execution_summary": {
-    "trigger": "用户 2026-10-08 15:26 回「执行」",
-    "orders": 4,
-    "filled": 4,
-    "total_usd": 4169.4,
-    "weighted_slippage_vs_est_pct": 0.354,
-    "fees_usd": 0.0,
-    "cap_refetched_et": "2026-10-08 15:26",
-    "cap_usd": 6459.79,
-    "window_note": "⚠️ 实际下单 15:26:49-15:27:23, 比清单首选窗起点 15:30 **早约 3 分钟** (第 4 次; 09-30 早 4.5 分 / 10-01 早 2.6 分 / 10-07 早 2.5 分)。红线9 盘中窗 09:45-15:55 内, 形态与窗内相同, 15:30 为首选起点非风控闸 (playbook 明述 15:55 按操作便利选定)。建议 (第 4 次提): exec_window_et 起点改 09:45 或标注 15:30 非闸门。"
+  "note": "near_signals 由 10-08 的 8 只收缩回 **3 只** (NVDA/AMD/META); 今日未触发开仓, 无需预留。"
+ },
+ "_protocol_note": "时效字段逐字段照抄 plan.json 的 to_pending.pending_template (红线9 + 2026-09-10 事故纪律), 未凭记忆组装。",
+ "orders": [
+  {
+   "seq": 1,
+   "action": "buy",
+   "symbol": "DE",
+   "dollar_amount": 1039.27,
+   "bucket": "strategy",
+   "reason": "rsi2_scale_in",
+   "est_price": 626.19,
+   "rsi2": 1.92,
+   "state_file": "state/positions.json",
+   "valid_until": "same_session_1555_et_then_next_session_1555_et",
+   "status": "awaiting_execution",
+   "cap_projection": "within_cap",
+   "tranche": 2,
+   "avg_entry_price": 659.0899,
+   "drawdown_pct": -4.99
+  },
+  {
+   "seq": 2,
+   "action": "buy",
+   "symbol": "TSM",
+   "dollar_amount": 1039.27,
+   "bucket": "strategy",
+   "reason": "rsi2_entry",
+   "est_price": 452.56,
+   "rsi2": 7.79,
+   "state_file": "state/positions.json",
+   "valid_until": "same_session_1555_et_then_next_session_1555_et",
+   "status": "awaiting_execution",
+   "cap_projection": "within_cap"
   }
+ ]
 }

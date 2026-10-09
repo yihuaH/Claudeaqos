@@ -849,6 +849,13 @@
       "reason": "spread_too_wide(best=7.81%)",
       "rsi2": 4.0,
       "spot": 165.97
+    },
+    {
+      "date": "2026-10-08",
+      "symbol": "SMH",
+      "reason": "premium_too_large(9133)",
+      "rsi2": 6.07,
+      "spot": 604.5
     }
   ],
   "assignments": [

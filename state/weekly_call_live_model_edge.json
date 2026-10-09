@@ -336,6 +336,38 @@
       "model_surface": 4.0016,
       "ratio_flat_pct": 65.6,
       "ratio_surface_pct": 97.0
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "SMH",
+      "outcome": "skip",
+      "reason": "model_edge_too_thin(credit:est=5.8500,model=8.8263,ratio=66.3%,min=90%,ref=flat)",
+      "est_price": null,
+      "spot": 604.35,
+      "rsi2": 5.43,
+      "reference": "flat",
+      "direction": "credit",
+      "est": 5.85,
+      "model_flat": 8.8263,
+      "model_surface": 5.8457,
+      "ratio_flat_pct": 66.3,
+      "ratio_surface_pct": 100.1
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "TSM",
+      "outcome": "skip",
+      "reason": "model_edge_too_thin(credit:est=4.9600,model=5.9940,ratio=82.7%,min=90%,ref=flat)",
+      "est_price": null,
+      "spot": 452.56,
+      "rsi2": 7.79,
+      "reference": "flat",
+      "direction": "credit",
+      "est": 4.96,
+      "model_flat": 5.994,
+      "model_surface": 4.1568,
+      "ratio_flat_pct": 82.7,
+      "ratio_surface_pct": 119.3
     }
   ]
 }

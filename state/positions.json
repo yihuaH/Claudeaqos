@@ -9,13 +9,6 @@
       "cost": 2051.01,
       "tranches": 2
     },
-    "WELL": {
-      "qty": 4.0,
-      "entry_price": 225.57,
-      "entry_date": "2026-10-05",
-      "cost": 902.28,
-      "tranches": 1
-    },
     "DE": {
       "qty": 1.574701,
       "entry_price": 659.0899,
@@ -2429,6 +2422,15 @@
       "price": 81.52,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 4.0,
+      "price": 226.8325,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [

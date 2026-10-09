@@ -1,22 +1,37 @@
 {
-  "date": "2026-10-08",
+  "date": "2026-10-09",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "SMH",
-      "reason": "model_edge_too_thin(credit:est=3.8800,model=5.9106,ratio=65.6%,min=90%,ref=flat)",
-      "rsi2": 6.07,
-      "spot": 604.5,
+      "reason": "model_edge_too_thin(credit:est=5.8500,model=8.8263,ratio=66.3%,min=90%,ref=flat)",
+      "rsi2": 5.43,
+      "spot": 604.35,
       "model_edge": {
         "reference": "flat",
         "direction": "credit",
-        "est": 3.88,
-        "model_flat": 5.9106,
-        "model_surface": 4.0016,
-        "ratio_flat_pct": 65.6,
-        "ratio_surface_pct": 97.0
+        "est": 5.85,
+        "model_flat": 8.8263,
+        "model_surface": 5.8457,
+        "ratio_flat_pct": 66.3,
+        "ratio_surface_pct": 100.1
+      }
+    },
+    {
+      "symbol": "TSM",
+      "reason": "model_edge_too_thin(credit:est=4.9600,model=5.9940,ratio=82.7%,min=90%,ref=flat)",
+      "rsi2": 7.79,
+      "spot": 452.56,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "credit",
+        "est": 4.96,
+        "model_flat": 5.994,
+        "model_surface": 4.1568,
+        "ratio_flat_pct": 82.7,
+        "ratio_surface_pct": 119.3
       }
     }
   ],
@@ -24,68 +39,28 @@
   "near_signals": [
     {
       "symbol": "NVDA",
-      "rsi2_now": 11.23,
+      "rsi2_now": 10.08,
       "scenario": "1d_-1%",
-      "spot": 230.38,
+      "spot": 229.92,
       "structure": "credit_put_spread",
-      "est_premium_usd": 1846
-    },
-    {
-      "symbol": "TSM",
-      "rsi2_now": 10.68,
-      "scenario": "1d_-1%",
-      "spot": 456.24,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 3503
+      "est_premium_usd": 1843
     },
     {
       "symbol": "AMD",
-      "rsi2_now": 15.12,
-      "scenario": "2d_-1%x2",
-      "spot": 615.6,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 4006
-    },
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 24.39,
-      "scenario": "2d_-1%x2",
-      "spot": 521.7,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 4314
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 36.38,
+      "rsi2_now": 10.88,
       "scenario": "1d_-1%",
-      "spot": 511.18,
+      "spot": 610.71,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4513
+      "est_premium_usd": 3988
     },
     {
       "symbol": "META",
-      "rsi2_now": 14.26,
+      "rsi2_now": 15.65,
       "scenario": "1d_-1%",
-      "spot": 718.56,
+      "spot": 720.38,
       "structure": "credit_put_spread",
-      "est_premium_usd": 4700
-    },
-    {
-      "symbol": "QQQ",
-      "rsi2_now": 15.47,
-      "scenario": "1d_-1%",
-      "spot": 746.24,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 6454
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 29.25,
-      "scenario": "1d_-1%",
-      "spot": 773.09,
-      "structure": "credit_put_spread",
-      "est_premium_usd": 6826
+      "est_premium_usd": 4712
     }
   ],
-  "suggested_reserve_usd": 1568.13
+  "suggested_reserve_usd": 801.64
 }
