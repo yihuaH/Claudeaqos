@@ -1,7 +1,7 @@
 {
  "trade_date": "2026-10-09",
  "generated_by": "scripts/daily.py --phase preclose",
- "status": "awaiting_execution",
+ "status": "executed",
  "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
  "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
  "exec_day": "same_day_then_next_session",
@@ -64,11 +64,22 @@
    "rsi2": 1.92,
    "state_file": "state/positions.json",
    "valid_until": "same_session_1555_et_then_next_session_1555_et",
-   "status": "awaiting_execution",
+   "status": "executed",
    "cap_projection": "within_cap",
    "tranche": 2,
    "avg_entry_price": 659.0899,
-   "drawdown_pct": -4.99
+   "drawdown_pct": -4.99,
+   "execution": {
+    "placed_et": "2026-10-09 15:48:55",
+    "form": "market + regular_hours + dollar_amount",
+    "filled_qty": 1.668384,
+    "fill_price": 622.9199,
+    "fill_amount": 1039.27,
+    "fees": 0.0,
+    "order_id": "6ac94526-65ab-4868-9be7-7936a459994d",
+    "state": "filled",
+    "slippage_vs_est_pct": -0.522
+   }
   },
   {
    "seq": 2,
@@ -81,8 +92,32 @@
    "rsi2": 7.79,
    "state_file": "state/positions.json",
    "valid_until": "same_session_1555_et_then_next_session_1555_et",
-   "status": "awaiting_execution",
-   "cap_projection": "within_cap"
+   "status": "executed",
+   "cap_projection": "within_cap",
+   "execution": {
+    "placed_et": "2026-10-09 15:49:02",
+    "form": "market + regular_hours + dollar_amount",
+    "filled_qty": 2.298151,
+    "fill_price": 452.2199,
+    "fill_amount": 1039.27,
+    "fees": 0.0,
+    "order_id": "6ac9452e-178b-4ecf-8e3f-772709dbe904",
+    "state": "filled",
+    "slippage_vs_est_pct": -0.075
+   }
   }
- ]
+ ],
+ "execution_summary": {
+  "trigger": "用户 2026-10-09 回「执行」",
+  "orders": 2,
+  "filled": 2,
+  "total_usd": 2078.54,
+  "weighted_slippage_vs_est_pct": -0.299,
+  "fees_usd": 0.0,
+  "cap_refetched_et": "2026-10-09 15:48",
+  "cap_usd": 3197.7,
+  "cap_note": "重取实时 min(buying_power, cash) = $3,197.70 (生成时 $2,290.39 + WELL 回款 $907.31, 与清单预估的 $3,197.70 分毫不差); unleveraged_buying_power == buying_power, 未动用任何杠杆 (红线3)。用掉 $2,078.54, 余 $1,119.16。",
+  "window_note": "✅ 实际下单 15:48:55-15:49:02, **落在首选窗 15:30-15:55 之内** (距窗口结束 6 分钟) —— 连续 4 次早于 15:30 之后, 本次首次完全合窗, 无偏离需披露。",
+  "slippage_note": "加权滑点 **−0.299%** (负 = 买得比引擎 est 更便宜)。DE −0.522% / TSM −0.075%。成因是 15:21 引擎快照到 15:49 下单之间 DE 继续下跌 (626.19 → 622.92), 方向偶然有利; 与 10-08 的 +0.354% 同属半自动流程固有的价格漂移, 不可预测方向。"
+ }
 }

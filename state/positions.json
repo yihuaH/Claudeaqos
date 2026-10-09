@@ -10,11 +10,11 @@
       "tranches": 2
     },
     "DE": {
-      "qty": 1.574701,
-      "entry_price": 659.0899,
+      "qty": 3.243085,
+      "entry_price": 640.4828,
       "entry_date": "2026-10-07",
-      "cost": 1037.87,
-      "tranches": 1
+      "cost": 2077.14,
+      "tranches": 2
     },
     "RVMD": {
       "qty": 5.498801,
@@ -42,6 +42,13 @@
       "entry_price": 81.52,
       "entry_date": "2026-10-08",
       "cost": 1042.35,
+      "tranches": 1
+    },
+    "TSM": {
+      "qty": 2.298151,
+      "entry_price": 452.2199,
+      "entry_date": "2026-10-09",
+      "cost": 1039.27,
       "tranches": 1
     }
   },
@@ -2431,6 +2438,24 @@
       "price": 226.8325,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 1.668384,
+      "price": 622.9199,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "TSM",
+      "side": "buy",
+      "qty": 2.298151,
+      "price": 452.2199,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
