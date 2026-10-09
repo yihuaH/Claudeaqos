@@ -1,0 +1,15 @@
+{
+ "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
+ "tasks": [
+  {
+   "id": "platform-layer-test-2026-10",
+   "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
+   "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
+   "runbook": "journal/2026-10-09-platform-layer-test-plan.md",
+   "note": "⚠️ 非引擎订单 (基础设施测试, 同 2026-07-20 先例)。XLU 1 整股限价 $20.00 (约市价一半, 结构上不可成交) → place → 核实 → **立刻撤单** → 核实 state=cancelled 且 cumulative_quantity=0。**只测一次**, 无论通过或被拦都不重试 (playbook: 不要反复尝试下单)。在有人值守窗口里跑**没有意义**, 不要在用户对话中执行。",
+   "status": "pending",
+   "created": "2026-10-09",
+   "authorized_by": "用户 2026-10-09 「做一次平台层测试」"
+  }
+ ]
+}

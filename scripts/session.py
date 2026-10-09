@@ -455,6 +455,22 @@ def main():
         for b in blockers:
             print(f"    - {b}")
 
+    oneshot = load("state/oneshot_tasks.json") or {}
+    todo = [t for t in (oneshot.get("tasks") or []) if t.get("status") == "pending"]
+    if todo:
+        print()
+        print("  " + "!" * 74)
+        print("  ⚡ 一次性任务 (state/oneshot_tasks.json) —— 本窗口须先处理:")
+        for t in todo:
+            print(f"    - [{t.get('id')}] {t.get('title')}")
+            if t.get("window"):
+                print(f"      适用窗口: {t['window']}")
+            if t.get("runbook"):
+                print(f"      步骤详见: {t['runbook']}")
+            if t.get("note"):
+                print(f"      {t['note']}")
+        print("  " + "!" * 74)
+
     print()
     print("-" * 78)
     print(f"  本窗口任务清单 ({W})")
