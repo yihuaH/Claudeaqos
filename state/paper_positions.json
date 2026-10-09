@@ -11,25 +11,32 @@
       "cost": 9277.64,
       "tranches": 1
     },
-    "TGT": {
-      "qty": 10.0,
-      "entry_price": 153.469,
-      "entry_date": "2026-10-06",
-      "cost": 1534.69,
-      "tranches": 1
-    },
-    "JPM": {
-      "qty": 11.0,
-      "entry_price": 327.42,
-      "entry_date": "2026-10-08",
-      "cost": 3601.62,
-      "tranches": 1
-    },
     "DE": {
       "qty": 5.0,
       "entry_price": 655.14,
       "entry_date": "2026-10-08",
       "cost": 3275.7,
+      "tranches": 1
+    },
+    "RVMD": {
+      "qty": 20.0,
+      "entry_price": 187.879501,
+      "entry_date": "2026-10-09",
+      "cost": 3757.59,
+      "tranches": 1
+    },
+    "SOXQ": {
+      "qty": 38.0,
+      "entry_price": 100.756053,
+      "entry_date": "2026-10-09",
+      "cost": 3828.73,
+      "tranches": 1
+    },
+    "AMAT": {
+      "qty": 7.0,
+      "entry_price": 518.114286,
+      "entry_date": "2026-10-09",
+      "cost": 3626.8,
       "tranches": 1
     }
   },
@@ -230,6 +237,51 @@
       "side": "buy",
       "qty": 5.0,
       "price": 655.14,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "TGT",
+      "side": "sell",
+      "qty": 10.0,
+      "price": 153.82,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "JPM",
+      "side": "sell",
+      "qty": 11.0,
+      "price": 331.469091,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "RVMD",
+      "side": "buy",
+      "qty": 20.0,
+      "price": 187.879501,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "SOXQ",
+      "side": "buy",
+      "qty": 38.0,
+      "price": 100.756053,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 518.114286,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
