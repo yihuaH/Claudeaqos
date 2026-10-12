@@ -2,7 +2,25 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "NVDA261023C00200000": {
+      "underlying": "NVDA",
+      "strike": 200.0,
+      "expiry": "2026-10-23",
+      "contracts": 1,
+      "entry_premium": 27.15,
+      "entry_date": "2026-10-12",
+      "entry_underlying": 226.534,
+      "entry_rsi2": 4.53,
+      "entry_quote": {
+        "bid": 27.1,
+        "ask": 27.45,
+        "mid": 27.275,
+        "spread_pct": 1.283
+      },
+      "model_price": 26.7855
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -302,6 +320,15 @@
       "price": 5.85,
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "NVDA261023C00200000",
+      "side": "buy",
+      "qty": 1,
+      "price": 27.15,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -856,6 +883,41 @@
       "reason": "premium_too_large(9133)",
       "rsi2": 6.07,
       "spot": 604.5
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "SMH",
+      "reason": "premium_too_large(7324)",
+      "rsi2": 5.43,
+      "spot": 604.35
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "TSM",
+      "reason": "spread_too_wide(best=3.00%)",
+      "rsi2": 7.79,
+      "spot": 452.56
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "SMH",
+      "reason": "premium_too_large(6944)",
+      "rsi2": 1.92,
+      "spot": 590.43
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "TSM",
+      "reason": "premium_too_large(6700)",
+      "rsi2": 4.1,
+      "spot": 445.36
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "AMD",
+      "reason": "spread_too_wide(best=3.09%)",
+      "rsi2": 4.5,
+      "spot": 590.64
     }
   ],
   "assignments": [

@@ -50,6 +50,20 @@
       "entry_date": "2026-10-09",
       "cost": 1039.27,
       "tranches": 1
+    },
+    "KLAC": {
+      "qty": 5.440547,
+      "entry_price": 190.0599,
+      "entry_date": "2026-10-12",
+      "cost": 1034.03,
+      "tranches": 1
+    },
+    "NVDA": {
+      "qty": 0.353809,
+      "entry_price": 226.478,
+      "entry_date": "2026-10-12",
+      "cost": 80.13,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2454,6 +2468,24 @@
       "side": "buy",
       "qty": 2.298151,
       "price": 452.2199,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "KLAC",
+      "side": "buy",
+      "qty": 5.440547,
+      "price": 190.0599,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 0.353809,
+      "price": 226.478,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

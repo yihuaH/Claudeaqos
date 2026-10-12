@@ -1,48 +1,69 @@
 {
-  "date": "2026-10-09",
+  "date": "2026-10-12",
   "halted": false,
   "sells": [],
-  "buys": [],
+  "buys": [
+    {
+      "symbol": "NVDA261023C00200000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 27.27,
+      "underlying": "NVDA",
+      "strike": 200.0,
+      "expiry": "2026-10-23",
+      "dte": 11,
+      "spot": 226.534,
+      "rsi2": 4.53,
+      "model_price": 26.7855,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 27.275,
+        "model_flat": 26.7855,
+        "model_surface": 27.0274,
+        "ratio_flat_pct": 98.2,
+        "ratio_surface_pct": 99.1
+      },
+      "entry_quote": {
+        "bid": 27.1,
+        "ask": 27.45,
+        "mid": 27.275,
+        "spread_pct": 1.283
+      }
+    }
+  ],
   "skips": [
     {
       "symbol": "SMH",
-      "reason": "premium_too_large(7324)",
-      "rsi2": 5.43,
-      "spot": 604.35
+      "reason": "premium_too_large(6944)",
+      "rsi2": 1.92,
+      "spot": 590.43
     },
     {
       "symbol": "TSM",
-      "reason": "spread_too_wide(best=3.00%)",
-      "rsi2": 7.79,
-      "spot": 452.56
+      "reason": "premium_too_large(6700)",
+      "rsi2": 4.1,
+      "spot": 445.36
+    },
+    {
+      "symbol": "AMD",
+      "reason": "spread_too_wide(best=3.09%)",
+      "rsi2": 4.5,
+      "spot": 590.64
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "NVDA",
-      "rsi2_now": 10.08,
+      "symbol": "QQQ",
+      "rsi2_now": 21.78,
       "scenario": "1d_-1%",
-      "spot": 229.92,
+      "spot": 745.38,
       "structure": "single",
-      "est_premium_usd": 2342
-    },
-    {
-      "symbol": "AMD",
-      "rsi2_now": 10.88,
-      "scenario": "1d_-1%",
-      "spot": 610.71,
-      "structure": "single",
-      "est_premium_usd": 6866
-    },
-    {
-      "symbol": "META",
-      "rsi2_now": 15.65,
-      "scenario": "1d_-1%",
-      "spot": 720.38,
-      "structure": "single",
-      "est_premium_usd": 8087
+      "est_premium_usd": 7546
     }
   ],
-  "suggested_reserve_usd": 2342.0
+  "suggested_reserve_usd": 7546.0
 }
