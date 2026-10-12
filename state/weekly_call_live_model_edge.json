@@ -368,6 +368,38 @@
       "model_surface": 4.1568,
       "ratio_flat_pct": 82.7,
       "ratio_surface_pct": 119.3
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "NVDA",
+      "outcome": "skip",
+      "reason": "insufficient_buying_power(cost=2608,bp_left=1119)",
+      "est_price": null,
+      "spot": null,
+      "rsi2": 8.94,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 26.08,
+      "model_flat": 24.7459,
+      "model_surface": 25.206,
+      "ratio_flat_pct": 94.9,
+      "ratio_surface_pct": 96.6
+    },
+    {
+      "date": "2026-10-09",
+      "symbol": "AMD",
+      "outcome": "skip",
+      "reason": "insufficient_buying_power(cost=6861,bp_left=1119)",
+      "est_price": null,
+      "spot": null,
+      "rsi2": 9.91,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 68.61,
+      "model_flat": 71.4296,
+      "model_surface": 67.437,
+      "ratio_flat_pct": 104.1,
+      "ratio_surface_pct": 98.3
     }
   ]
 }

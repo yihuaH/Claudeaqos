@@ -37,18 +37,28 @@
     "_underlying_stop_note": "**刻意保持 5%, 不跟随股票轨道 2026-08-07 的 5→7% 调整** — 两条理由: ① 价差买腿行权价在 -6% 处, 5% 止损**先于**买腿失去内在价值触发, 是最大亏损的天然缓冲; 放宽到 7% 会在买腿已变虚值后才出场, 等于放弃这层保护 (单腿形态同理, 深ITM 0.90 在 -10% 处, 缓冲更厚但逻辑相同)。② 7% 的依据是**正股**收益扫描 (+1.030% vs +0.968%); 期权有 ~6 倍杠杆, -5% 正股≈-45% 期权、-7%≈-60%+, 非线性放大使正股结论不能直接搬运。若要改, 须用期权口径单独回测。"
   },
   "contract": {
-    "structure": "credit_put_spread",
-    "short_put_moneyness": 0.97,
-    "long_put_moneyness": 0.88,
+    "structure": "single",
+    "_structure_note": "2026-10-12 用户「期权也只买单腿吧」「实盘买单腿 call 或者 put 都可以」→ credit_put_spread 换 single (深 ITM 买 call)。⚠️ **put 做不到**: `_pick_contract` 硬过滤 `meta['type'] != 'C'` 只认 call, 且 entry 信号是**单向看多** (close > SMA200 且 rsi2 < 10 = 上升趋势中的超卖反弹), 长 put 与信号方向相反、没有任何信号可驱动 —— 要做须改引擎并新造一个看空信号, 属红线2 禁区, 未做。回退: 把 structure 改回 credit_put_spread 并用下方 _retired_credit_put_spread 的字段还原即可。",
+    "moneyness": 0.9,
+    "floor_moneyness": 0.85,
+    "max_spread_pct": 2.0,
+    "_single_params_note": "三个单腿参数**逐字段照抄 paper 轨道 strategy/weekly_calls.json** (该轨道 2026-08-04 起跑, 16 回合实测), 未自行发明数值。0.90 亦与本文件 exit._underlying_stop_note 里既有的「单腿形态同理, 深ITM 0.90 在 -10% 处」表述一致。",
     "min_dte_calendar": 8,
     "max_dte_calendar": 17,
-    "max_credit_leg_spread_pct": 12.0,
-    "max_credit_leg_spread_abs": 0.1,
-    "max_far_leg_spread_pct": 24.0,
-    "max_far_leg_spread_abs": 0.1,
     "min_bid": 0.05,
+    "_retired_credit_put_spread": {
+      "_what": "2026-08-13→2026-10-12 实盘形态的参数, 留档以便一键回退 (该形态战绩 8 回合 8 胜 / +$573.00 / 最差一笔 +0.90%)",
+      "short_put_moneyness": 0.97,
+      "long_put_moneyness": 0.88,
+      "max_credit_leg_spread_pct": 12.0,
+      "max_credit_leg_spread_abs": 0.1,
+      "max_far_leg_spread_pct": 24.0,
+      "max_far_leg_spread_abs": 0.1
+    },
     "max_premium_per_contract_usd": null,
+    "_premium_cap_note": "⚠️ **这个 null 是为 credit_put_spread 设的 (2026-08-18 用户「不设上限」), 该形态每张风险 = 宽度−贷记, 天然有界。换成 single 之后长 call 可亏掉 100% 权利金, 这个 null 的含义就变了。** 2026-10-12 已向用户点明并索要一个单张权利金上限的数字, 用户未给前**保持 null 不动** (红线3: 风控上限只能由用户定, 会话不得自行设)。当前实际约束: 注码 position_pct_of_portfolio=20% + 实时 min(buying_power,cash) + 期权开仓仍走手动 App 通道 (用户逐单过目, 保留下单前一票否决)。参考: paper 轨道同形态设的是 max_premium_per_contract_usd=5000。",
     "min_est_vs_model_pct": 90.0,
+    "_min_est_note": "换 single 后该闸**方向自动翻转, 数值无需改**: 公允价边际闸按方向对称 — credit 要 est ≥ model×0.90, debit (单腿买 call) 要 est ≤ model÷0.90 = model×1.111, 即「不得比参考公允价贵过 11%」。对买方正是想要的方向。",
     "model_edge_reference": "flat",
     "_model_edge_reference_note": "公允价闸的参考价 (2026-09-11 用户「b」批准): \"flat\"=引擎原口径 (RV×iv_rv_mult, 两腿同 IV), \"surface\"=model.surface 实测曲面。**缺省 flat = 行为与 09-03 上线以来完全一致**; 两个参考价无论如何都并行计算并写进 skips/buys 的 model_edge 字段 (影子模式), 攒够样本后由用户决定是否切 surface。 起因: 同一个 min_est_vs_model_pct=90 常数对上「公平比值」54%(TSLA)~252%(XLI) 的区间 —— 9/21 只即使报价公允也被拦, 8/21 只几乎永不触发; 而补测四中表现最好的 META/AMD/TSM 恰在被拦的一批里, 表现最差的 BAC/XLF 反而几乎从不设防。详 journal/2026-09-10-research-ema-vwap-rsi.md 补测五。",
     "_min_est_vs_model_note": "公允价边际闸 (\"B 案\", 用户 2026-09-03 回复「b」批准; 红线8 规定风控闸永不自学习, 只能由用户开关与定值)。口径按方向对称: credit 形态要求**收到的**保守净贷记 est ≥ 引擎 BS 公允价 model × 90%; debit 形态要求**付出的**净借记 est ≤ model ÷ 90%。缺省 (字段缺失/null) = 闸关闭, 向后兼容, paper 轨道 weekly_calls.json 未加此字段故不受影响。起因: 2026-09-01 XLF 单保守净贷记 $0.02 仅为 model $0.0621 的 32%, 风险收益比 249:1 (需 99.6% 胜率打平); 行权价由 0.97/0.88×spot 固定几何定 → 宽度只随股价走, 而贷记由 IV 定, 低 IV 标的上分母不变分子塌陷。引擎的 BS 模型是现成判别器, 此前无任何闸使用它。⚠️ 历史三样本回判: BAC 08-28 ratio 120.9% 过 / IWM 08-31 95.6% **过** / XLF 09-01 32.2% **拦**。即 90% 这一档只拦得住 XLF 那类重度负边际, 拦不住 IWM 那类轻度负边际 (99:1); 阈值未按样本拟合 (3 个点定不出阈值, 且 est 来自 indicative 链, 实测高估可成交贷记约 12%), 收紧须用户另行决定。"
@@ -72,13 +82,14 @@
     "allow_unknown_earnings": true
   },
   "validation": {
-    "start_date": "2026-08-14",
+    "start_date": "2026-10-12",
     "min_round_trips": 15,
     "min_trading_days": 30,
     "go_bar": {
-      "max_median_leg_spread_pct": 8.0,
+      "max_median_leg_spread_pct": 2.25,
       "min_median_trade_pnl_pct": 0.0
     },
+    "_structure_switch_2026_10_12": "形态 credit_put_spread → single, **验证时钟第二次重置** (先例: 2026-08-13 切 credit 时 start_date 08-04→08-14 同样重置)。start_date 08-14→10-12; 点差 bar 8.0→**2.25** —— 8.0 是专为 credit 形态的 OTM put 卖腿校的 (那种腿百分比点差天然宽), 深 ITM call 用不着放这么宽, 2.25 正是 08-13 之前该形态原本的值, 属**还原而非新定**。已归零的 credit 形态战绩 (8/8, +$573.00) 留在 state/weekly_call_live_positions.json 的 round_trips 里, 不删。",
     "_note": "实盘自评报告 (report 命令) 沿用同一 go_bar 口径: 若实测中位点差/盈亏跌破, 主动向用户建议关停。2026-08-13 形态切换 credit_put_spread 后验证时钟重置 (start_date 08-04→08-14), 点差 bar 2.25→8.0 重校 (卖腿是 ~$2-5 的 OTM put, 百分比点差天然比深ITM call 宽; 回测盈亏假设的绝对半点差 ≤$0.10/股/腿, 折中位 % 约 4-8; 首批实测后回校)。"
   },
   "model": {
