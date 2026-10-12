@@ -196,12 +196,13 @@ CHECKLIST = {
         ("执行 (playbook §4)", [
             "place_now.equity_sells → 4A: review_equity_order → place (market+regular_hours), 无需用户确认",
             "place_now.option_sells → 4D: limit = 引擎 est_price×0.97, gfd; 成交后 weekly_calls.py apply 回写",
-            "to_pending.equity_buys (+rotation_sells) → 写 state/pending_orders.json "
-            "(valid_until 次日 15:55 ET, 执行窗 09:45-15:55 = 开盘后, 推荐锚 10:45 晨检); "
-            "买单标的跑 integrations.py news 红旗预检; near_signals 非空则加 option_alert "
-            "(reserve_usd 直接照抄引擎 suggested_reserve_usd, 不得自算)",
+            "to_pending.equity_buys (+rotation_sells) → **4B-auto: 直接 review → place** "
+            "(2026-10-12 用户「你直接执行」, execution.mode=auto_buys); 先取实时 cap=min(buying_power,cash), "
+            "期权优先留抵押, 超 cap 整单跳过不缩量; 被拦则退回 4B-failsafe 写 pending 不重试; "
+            "买单标的跑 integrations.py news 红旗预检 (报告级, 成交后点名让用户事后处置)",
             "to_pending.option_buys → 写 state/pending_option_orders.json (valid_until 次日 10:30 ET)",
-            "⚠️ 买单一律绝不 place (无人值守会被平台分类器拦)",
+            "⚠️ **仅期权开仓**绝不 place (agentic 不支持多腿); 正股买单自 2026-10-12 起直接 place "
+            "(execution.mode=auto_buys); 被分类器拦则退回写 pending 不重试",
         ]),
         ("战报 (2026-09-11 由 18:45 独立窗口并入本窗口)", [
             "组合净值/回撤/信号摘要/成交/告警异常",
@@ -254,15 +255,19 @@ CHECKLIST = {
         ("执行 (playbook §4)", [
             "place_now.equity_sells → 4A: review → place (market+regular_hours), **盘中即时成交**",
             "place_now.option_sells → 4D: limit = 引擎 est×0.97, gfd",
-            "to_pending.equity_buys → 写 state/pending_orders.json, 时效字段**逐字段照抄** "
-            "plan.json 的 to_pending.pending_template (顺延协议后 exec_day=same_day_then_next_session: "
-            "首选窗当日 15:30-15:55, 未执行顺延次日 09:45-15:55, 次日 15:55 才 expired)",
+            "to_pending.equity_buys (+rotation_sells) → **4B-auto: 直接 review → place** "
+            "(2026-10-12 用户「你直接执行」, execution.mode=auto_buys; 不再写 pending、不再等「执行」)。"
+            "先 get_portfolio 取实时 cap=min(buying_power,cash), 有期权单则先留抵押 (期权优先), "
+            "逐单累计超 cap 整单跳过不缩量; 成交后 signals.py apply 回写 + **立即发执行报告**",
+            "🛟 若 place 被分类器拦 → **不重试**, 退回 4B-failsafe 写 state/pending_orders.json "
+            "(时效字段**逐字段照抄** plan.json 的 to_pending.pending_template), 通知用户走 4C",
             "to_pending.option_buys → 写 state/pending_option_orders.json, 时效字段**逐字段照抄** "
             "plan.json 的 to_pending.option_pending_template (2026-09-11 起当日执行: "
             "执行窗 **15:30-15:45 ET**, 比股票早 10 分钟收口 — 15:45 后是 4D 明令避开的收盘前极端点差区)",
             "⚠️ **先发期权参数, 再发股票清单** — 期权窗口只有 15 分钟且开仓走手动通道 (App 组合单); "
             "两轨对同一时刻实时 BP 算, 按 2D 期权优先 (playbook 4C-2D-0)",
-            "⚠️ 买单一律绝不 place (红线9)",
+            "⚠️ **仅期权开仓**绝不 place (agentic 不支持多腿, 走 App 手动通道); "
+            "正股买单自 2026-10-12 起直接 place (execution.mode=auto_buys)",
         ]),
         ("通知用户 (本窗口的关键动作)", [
             "commit+push, 然后 PushNotification 附逐笔明细, 明确写两个窗口 (别写混): "
@@ -293,7 +298,9 @@ CHECKLIST = {
             "   · `same_day_then_next_session` = 昨天收盘前清单**没在 25 分钟窗内执行**, 今天是顺延窗",
             "   · `next_session` = 昨天走了 fail-safe (收盘前没跑成, wrapup 退化为完整主跑)",
             "③ `status` 已是 executed / expired / vetoed → 本段无事",
-            "**任何情况下仍须用户明确说「执行」** (红线9): 附逐笔明细提醒即可, 绝不自行下买单",
+            "⚠️ **2026-10-12 起 pending 清单只在 4B-failsafe (自动 place 被分类器拦) 时才会存在** —— "
+            "正常日买单已在 15:20 当场成交, 不产生清单。若真有清单,说明昨天被拦了: "
+            "**此时仍须用户明确说「执行」**, 附逐笔明细提醒即可, **本窗口不自行重试 place** (不重试纪律)",
             "逐单看 status: 标了 `vetoed_by_user` 的**不要再提**, 用户已一票否决过",
             "同日若有待执行的 pending_option_orders → 按 4D-2D 期权优先 (窗口 09:45-10:30 更窄)",
             "已过 15:55 ET 仍未执行 → status=expired, journal 注明, commit",

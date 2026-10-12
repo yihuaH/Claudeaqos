@@ -158,13 +158,27 @@
 
 如果输出里 `circuit_breaker_triggered: true`:
 把 `state/positions.json` 的 `halted` 改为 `true`, 写日志, **通知用户**, 结束。不执行任何订单。
-## 4. 执行订单 (execution.mode=semi_auto: 卖出全自动, 买入半自动)
+## 4. 执行订单 (execution.mode=auto_buys: 卖出全自动, **正股买入亦全自动**)
 
-> **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述旧的 confirm 闸门 (approval.json 确认),
-> 一律以本节 (4A/4B/4C) 与 CLAUDE.md 红线 9 为准 — 买单在无人值守下可 review、绝不 place, 也不再读 approval.json。
+> **优先级说明**: Routine 唤醒词无法在线更新, 若其中仍描述「买单只写 pending 等用户回执行」或更早的
+> confirm 闸门 (approval.json), 一律以本节与 CLAUDE.md 红线 9 为准。approval.json 早已退役。
 
-背景: 无人值守会话的实盘**买单 place (下单)** 会被平台分类器拦截 (review 不受限; 卖单与有人值守会话不受影响),
-仓库配置无法解除; 故买入半自动 — 无人值守只生成待执行清单, 由用户在场时触发 (见 4C)。
+**2026-10-12 换代 (用户「以后不用我回复执行了, 你直接执行」)**: 实盘正股买单与配套换仓/加速清理卖单
+现在**直接 review → place**, 不再写 pending、不再等用户回「执行」。
+前置事实: 2026-10-12 10:48 ET 无人值守平台层测试 `place` 未被拦 (`journal/2026-10-12-morning.md`);
+此前 2026-07-16/17 连续 3 日被 `Blocked by classifier` 的限制已不复现。
+
+⚠️ **只取消了「等用户回执行」这一步**。红线2 (逐字段照抄引擎、不得缩量)、红线3 (上限即上限)、
+**防杠杆闸** (实时 `min(buying_power, cash)` 为上限, 超出整单跳过不缩量, 绝不用借来的钱)、
+**期权优先**的跨轨道资金优先级、出场卖单全自动 —— 全部照旧。
+**期权开仓仍是手动 App 通道** (4D), 那是平台不支持多腿 place, 不是 semi_auto 的遗留。
+
+🛟 **fail-safe**: `place` 若被分类器拦 → **不重试**, 退回 4B 写 `state/pending_orders.json` 并通知用户,
+之后按 4C 执行。**绝不因为被拦而丢单。** (测试 n=1, 且分类器非确定性 —— 09-11 LLY 出场卖单
+首次 place 就被拦过, 先 review 再 place 才通过。)
+
+📢 **报告义务**: 用户失去了下单前的一票否决点, 故**成交后必须立即发执行报告**, 并点名所有旗标项
+(新闻红旗 / 同因子敞口 / 财报黑窗失效 / 防御层拦单), 让用户能事后处置。
 
 **4A. 出场/止损/兜底卖单 (无人值守, 照旧自动执行)** — `sells` 中 reason 为
 出场/止损/兜底类 (`rsi2_exit`/`time_stop`/`legacy_protective_stop`/`legacy_take_profit`/`overnight_exit`/`close_backstop_exit` 等,
@@ -173,11 +187,26 @@
 2. 无异常告警 → `place_equity_order(同参数, ref_id=新UUID)`; 出现**预期外**告警(停牌、限制等) → 跳过该单并记入日志的 anomalies。
 3. `get_equity_orders` 确认成交, 记录实际 qty/price。风险只减不增, 此类卖单永不需要用户确认。
 
-**4B. 生成待执行清单 (无人值守)** — `buys` 全部订单 + `sells` 中 reason=`funding_rotation` 的换仓卖单
-与 reason=`accelerated_liquidation` 的加速清理卖单 (2026-07-21 用户设立"加速换仓给引擎供血",
-见 config.json legacy 段; 与买入需求无关, 每日最弱存量最多3只),
-**绝不 place** (无人值守 place 会被分类器拦截, 不要再尝试下单); 如需可 review 核对报价/告警 (review 不受限),
-但结果只写入 `state/pending_orders.json`, 不下单:
+**4B-auto. 买单与换仓卖单直接执行 (2026-10-12 起的默认路径)** — `buys` 全部订单 + `sells` 中
+reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理卖单, 逐单:
+
+1. **先取实时资金上限**: `get_portfolio` → `cap = min(buying_power, cash)`。
+   若同日有实盘期权买单 → 先按期权最大在险额留足抵押, `股票 cap = cap − 期权抵押` (期权优先)。
+   **逐单累计, 超 cap 的单整单跳过不缩量** (红线3 防杠杆闸); 若 `buying_power > cash` 说明券商
+   开了借贷额度 → **以 cash 为准, 绝不用借来的钱**, 并在报告里点名该异常。
+2. `review_equity_order(...)` —— 形态照旧**单笔 market + regular_hours + dollar_amount**
+   (盘中 09:45-15:55 ET; 15:20 主跑产出的单当场就在窗内)。看 `order_checks`。
+3. `order_checks` 空 → `place_equity_order(同参数, ref_id=新UUID)`。
+   出现**预期外**告警 (停牌/限制等) → **跳过该单**, 记 anomalies, 继续下一单。
+4. `get_equity_orders` 确认成交, 逐单记录实际 `filled_qty` / `average_price` / `fees`,
+   算 `slippage_vs_est_pct`, 回写账本 (`signals.py apply`)。
+5. **成交后立即发执行报告** (报告义务, 见本节开头)。
+
+⚠️ **顺序不得重排**: 加仓单排在新开仓单前吃现金 (回测口径, `config.json scale_in`), 执行时照抄引擎顺序。
+
+🛟 **4B-failsafe. 退回待执行清单 (仅当 place 被分类器拦)** — 不重试, 把该单及其后所有未下的
+买单/换仓卖单写入 `state/pending_orders.json` (逐字段来自引擎输出), 通知用户, 之后按 4C 执行。
+清单格式与时效字段照旧 (`plan.json` 的 `pending_template` 逐字段照抄):
 
 ```json
 {
@@ -259,7 +288,10 @@
   不执行则今日只出不进"。⚠️ 不要提示用户在开盘前执行 —— 出场回款 09:30 才到账。
 - 当日无买单信号 → 不生成文件, 不打扰用户。
 
-**4C. 半自动执行协议 (有人值守, 用户触发)** — 仅当用户在任一有人值守会话中明确下达
+**4C. 半自动执行协议 (有人值守, 用户触发)** — ⚠️ **2026-10-12 起这条不再是默认路径**,
+只在两种情形下还会走到: ① **4B-failsafe** —— 自动 place 被分类器拦截后退回了 pending 清单;
+② 用户单独指示某批单要他自己过目。两种情形下本节原样适用 (含 1B 逐批确认)。
+触发条件不变 —— 仅当用户在任一有人值守会话中明确下达
 "执行"(或等义指令) 时进行, 执行者通常为报告窗口会话:
 0. `git fetch` 交易分支取最新 `state/pending_orders.json`。
 1. 校验 (任一不满足 → 不执行并告知用户原因): `status` = `awaiting_execution`; 按逐单 `valid_until`
