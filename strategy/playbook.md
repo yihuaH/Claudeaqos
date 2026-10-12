@@ -171,7 +171,7 @@
 ⚠️ **只取消了「等用户回执行」这一步**。红线2 (逐字段照抄引擎、不得缩量)、红线3 (上限即上限)、
 **防杠杆闸** (实时 `min(buying_power, cash)` 为上限, 超出整单跳过不缩量, 绝不用借来的钱)、
 **期权优先**的跨轨道资金优先级、出场卖单全自动 —— 全部照旧。
-**期权开仓仍是手动 App 通道** (4D), 那是平台不支持多腿 place, 不是 semi_auto 的遗留。
+**期权开仓自 2026-10-12 起也自动** (4D, 用户应用 autoMode 改动后实测放行); **仅单腿** —— 多腿仍被 Robinhood API 400 拒。
 
 🛟 **fail-safe**: `place` 若被分类器拦 → **不重试**, 退回 4B 写 `state/pending_orders.json` 并通知用户,
 之后按 4C 执行。**绝不因为被拦而丢单。** (测试 n=1, 且分类器非确定性 —— 09-11 LLY 出场卖单
@@ -403,7 +403,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
      **整个价差宽度 × 100 × 张数**, 非净贷记; 借记型按净借记)。逐字段取引擎输出, 不自行估算。
    - 股票 cap = 实时 min(buying_power, cash) − 期权抵押合计; 其余按 2 的规则逐 seq 累计,
      **装不下整单跳过不缩量** (红线2/红线3)。
-   - 期权单本身**会话下不了** (平台限制, 见 4D): 留出的抵押只是**不被股票占用**, 下单仍须用户在 App 手动执行;
+   - 期权单自 2026-10-12 起也由会话自动下单 (见 4D): 留出的抵押是**不被股票占用**, 两轨同窗口各自执行;
      用户当日若明确弃掉该期权单, 保留额即刻释放, 股票照原 seq 继续吃。
    - 与 2C 的 `option_alert` 保留额**不叠加**: 已进 `pending_option_orders.json` 的实盘期权单按本条扣
      实际抵押, `option_alert` 只覆盖尚未出信号的预警标的; 同一标的两者都在时只扣本条。
@@ -419,7 +419,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 - 引擎没输出的单**绝不下**; 引擎输出的金额/数量**绝不放大**。
 - 收盘前 5 分钟(15:55 ET)后不再提交新单, 未执行的记入日志顺延。
 
-**4D. 实盘周call实验仓 (开仓/平仓均走用户 App 手动通道 —— 平台能力限制, 非 semi_auto 遗留; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
+**4D. 实盘周call实验仓 (开仓/平仓均由会话自动下单, 2026-10-12 起; **仅单腿**, 多腿仍被 Robinhood API 400 拒; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
 
 订单**只**来自 `weekly_calls.py signal --config strategy/weekly_calls_live.json` (§7C 步骤 7 生成,
 **规模约束**: 2026-08-18 用户「不设上限」后 `budget.max_open_premium_pct_of_portfolio` 与
@@ -434,11 +434,15 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 - 前形态沿革 (vertical_spread 2026-08-07→08-13 共 0 成交 1 skip; credit_put_spread 08-13→10-12
   共 8 回合 8 胜 +$573.00, 含 pin risk / 提前行权 / 五条未验证风险等完整注记) 见
   `strategy/archive/track-rationale.md`; credit 参数留档在 `contract._retired_credit_put_spread` 可一键回退。
-- ⚠️ **出场卖单 (sell_to_close) 也不是自动的** (2026-08-15 起): agentic 账户多腿 `place` 被
-  Robinhood API 400 拒、单腿 `place` 被 Claude Code 分类器 `[Real-World Transactions]` 拒
-  (2026-10-12 实测)。故**开仓与平仓统统**写入 `state/pending_option_orders.json` + 在对话发 App 参数,
-  由用户手动下单; 成交后会话跑 `weekly_calls.py apply --context` 回写账本 (**这一步不在任何 Routine 里,
-  靠会话自觉**)。限价仍按引擎: 平仓 `est_price×0.97` 保底, 开仓 `min(est_price×1.03, 执行时 ask)`。
+- ✅ **2026-10-12 起开仓与平仓均由会话自动下单** (用户当日在 GitHub 应用 `.claude/settings.json` 的
+  `autoMode` 改动后实测 `place_option_order` 放行, 改完**当场生效**; 见
+  `journal/2026-10-12-option-channel-unblocked.md`)。逐单: `get_option_instruments` 定位合约 →
+  `review_option_order` → `order_checks` 空则 `place_option_order` (**limit**, `gfd`) →
+  `get_option_orders` 确认 → `weekly_calls.py apply --context` 回写账本。
+  限价按引擎: 平仓 `est_price×0.97` 保底, 开仓 `min(est_price×1.03, 执行时 ask)`。
+  **`order_checks` 非空 → 跳过该单**, 原文记 anomalies 并在报告点名 (实测过
+  `OPTION_NOT_ENOUGH_BP_FOR_PREMIUM`)。⚠️ **多腿仍不可下** (Robinhood API 400), 故形态必须 `single`。
+  ⚠️ 自动化后用户**失去了每张期权的事前一票否决** → 报告义务是唯一处置入口, 成交后必须立即发。
   (次日引擎会重新出场判定; DTE≤1 强平是兜底)。
 - **买单 (buy_to_open, 绝不无人值守 place)**: 写入 `state/pending_option_orders.json`
   (格式同 pending_orders.json, 每单含 occ/underlying/strike/expiry/contracts/est_price(mid)/
@@ -475,65 +479,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
   合约过期未平/疑似被行权 → 红线 6 停该仓、人工对账; report 自评跌破 go_bar 口径 →
   主动建议用户关停。**引擎没出的单绝不下, 出了的绝不放大** (4A/4C 通用规则同样适用)。
 
-**形态更替: 牛市看跌信用价差 (credit_put_spread, 2026-08-13 用户「直接实盘」授权, 回测
-`journal/2026-08-13-pcs-bt.md`: 同信号卖方 6/6 窗口胜买方且回撤减半)** — 引擎输出
-`structure: "credit_put_spread"` (卖 ≤0.97×spot put + 买 ≤0.88×spot 保护 put, 收净贷记) 时,
-上文价差规则按以下差异执行:
-- **开仓单走用户 App 手动通道** (2026-10-12 起实盘形态是 `single` 深ITM 买 call; 多腿与单腿的 place 分别被 Robinhood API 400 / Claude Code 分类器 `[Real-World Transactions]` 拒):
-  `place_option_order(legs=[卖腿 open, 保护腿 open], type="limit", price=净贷记, direction="credit")`,
-  限价保护方向反转 — 贷记是**收钱**, 下限 = 引擎 est×0.97, **绝不下调限价追单**;
-  执行前实时 BP ≥ 每张风险×张数 (券商抵押占用 = 宽度−贷记)。
-- **平仓 = debit 组合单 (买回), 属出场类照常全自动**: 限价 = 引擎 est×1.03 封顶。
-  ⚠️ 平仓方向是「买」— 若平台分类器把无人值守的 buy_to_close 当买入拦截 (首个出场实测):
-  **不反复重试**, 记 journal + PushNotification 请用户人工触发 (红线6)。
-- **回写**: fills `{"symbol": <卖腿OCC>, "side": "buy"(开)/"sell"(平), "qty", "price": 净贷记/净借记,
-  "structure": "credit_put_spread", "long_symbol": <保护腿OCC>}` — 账本以**卖腿 OCC 为主键**;
-  side 是生命周期语义 (开/平), 不是现金方向。盈亏 = 贷记 − 买回成本, 百分比按每张风险归一。
-- **风险要点**: 每张最大亏损 = 宽度−贷记 (=抵押), budget 40% 顶按**在险额**计;
-  短腿 (−3% 处) 跌进实值有美式提前行权风险 — −5% 正股止损先行 + `force_exit_dte_lte=2`
-  两道护栏, **绝不留到到期**; 五条模型局限与观察项见 `weekly_calls_live.json _contract_note`。
-
-- **⚠️ 执行通道实测 (2026-08-15 首次 place 实测, 4D「未验证三件事」之③成真): agentic 账户暂不支持
-  多腿组合单** — `place_option_order` 多腿一律 API 400 ("Multi-leg options orders aren't supported
-  in Robinhood agentic accounts yet"; review 能过, place 被拒; 账户本身 Level 3 无问题, 纯通道限制,
-  "yet" 表示平台路线图上)。**绝不拆腿单独下** (单腿裸露禁止)。在平台开放前, pcs 开仓与组合平仓
-  一律走**手动通道** (2026-08-15 用户确认, 08-17 首笔 $1.53 全价成交验证跑通):
-  - **开仓**: 引擎照常出单 → 写 pending_option_orders.json → 会话在对话中给出 App 操作参数
-    (账户须选 Agentic ••••5265; Put Credit Spread; 卖腿/买腿行权价与到期; 净贷记限价下限 = 引擎
-    est×0.97 **绝不更低**, 挂更高属用户自主加价合规) → 用户 App 手动下单。会话经 get_option_orders
-    可见用户手动单 (placed_agent=user), 核对腿/价/量后在 pending 记 manual_order_placed;
-    成交由晨检/主跑回收, weekly_calls.py apply 回写 (fills 格式照常, 卖腿 OCC 主键)。
-  - **平仓 — 两步通知规范 (2026-08-20 用户「期权需要卖出时要告诉我怎么操作、什么时候操作」定)**:
-    出场信号照常由引擎判定 (正股−5% / RSI2≥65 / 10天 / DTE≤2 强平)。因 agentic 不支持多腿,
-    平仓由用户 App 手动执行, 会话负责**两步通知**:
-
-    **① 主跑当晚 (收盘后) = 预告**: 信号出现即在常驻对话说明「明日需平仓 X」+ 触发原因 + 引擎 est
-    + 预估盈亏 + 紧急度。此时**不给最终限价** (盘后价必然过时 —— 2026-08-20 AMZN 实例:
-    引擎 est $0.87 → 次日盘中实价 $1.32-1.37, 预估 +$66 实得 +$19)。
-
-    **② 次日盘中 = 执行指令 (会话主动发起, 不等用户问)**: 晨检窗口 (10:45 ET) 或更早,
-    会话**取实时期权报价** (`get_option_quotes` 两腿) 后发布可直接照做的指令, 必须含:
-    - 操作类型: 平仓 (Close) / direction = **Debit** / 张数
-    - 两条腿: 买回<卖腿 OCC 行权价到期> + 卖出<保护腿 OCC 行权价到期>
-    - **实时 bid/ask/mark** 与**建议净借记限价** = 保守口径 `短腿ask − 长腿bid` (可略挂宽以确保成交)
-    - 预估盈亏 (vs 入场贷记) 与「若不平的替代结果」(持有到期的最大盈亏与盈亏平衡点)
-    - **时间窗**: 期权仅盘中成交, 美东 09:30–16:00 = **太平洋 06:30–13:00** (夏令时);
-      推荐 **09:45–15:45 ET (太平洋 06:45–12:45)**, 避开开盘头 15 分钟与收盘前 15 分钟的极端点差
-    - App 操作路径 (账户须选 Agentic ••••5265 → 持仓 → Close → 组合单 → 填净价 → 当日有效)
-
-    **紧急度分级 (决定提醒强度)**:
-    | 级别 | 触发 | 要求 |
-    |---|---|---|
-    | 🔴 强平 | `DTE≤2` / pin risk | **当日必须成交**, 逐日升级提醒至成交为止 (护栏优先级最高) |
-    | 🟠 止损 | 正股 −5% | 当日尽快, 每个窗口重申 |
-    | 🟢 常规 | exit_strength / RSI2 / 10日时间止损 | 当日执行窗内即可; 未成交则次日以新报价重发 |
-
-    用户执行后回报一声, 会话经 `get_option_orders` 核对成交并 `weekly_calls.py apply` 回写。
-    用户未及时操作时按红线 6 持续提醒 (强度按上表)。
-  - **限价锚定 (2026-08-20 修正)**: 平仓限价以**执行时点实时报价**为准 (保守口径 `短腿ask − 长腿bid`),
-    **不再锚定昨收 est×1.03** —— 后者在隔夜波动下会挂不出去 (AMZN 实例)。此为平仓专属;
-    开仓限价仍锚定引擎 est (防追高放大, 红线2)。**平仓是减风险动作, 优先保证成交。**
-  - 未成交处置照旧 (10:30 ET 窗口, 绝不追价); 平台开放多腿后本注记作废、恢复上文自动协议。
+**形态沿革**: 2026-08-13→2026-10-12 实盘跑 `credit_put_spread` (卖0.97P/买0.88P 收贷记), 战绩 8 回合 8 胜 / +$573.00 / 最差一笔 +0.90%; 因多腿 `place` 被 Robinhood API 400 拒, 该期开仓与平仓全程走用户 App 手动通道 (含两步通知、紧急度分级等整套人工流程)。**2026-10-12 双重作废**: 形态换 `single` 单腿 + 期权 place 放行后全自动。该期协议全文与回退说明见 `strategy/archive/track-rationale.md`; 参数留档在 `weekly_calls_live.json contract._retired_credit_put_spread`。⚠️ 若将来回退到 credit_put_spread, **多腿 place 仍是 400**, 手动通道协议需整段恢复。
 ## 5. 回写与日志
 
 1. 把实际成交写成 `{"fills": [{symbol, side, qty, price, bucket, reason}]}`, 运行:
@@ -548,7 +494,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 
 挑战者影子验证 / 动量轮动 / 周call双轨 (§7C) 的完整规范与手工回退步骤见 **`strategy/tracks.md`**。
 主跑走驱动器时这些轨道全自动完成, 结果在 `plan.json` 的 `paper` 与 `options` 段, 写进 journal 即可。
-**周call 实盘子轨道的下单规则在本文件 §4D** (开仓与平仓**都**只能由用户在 App 手动下单)。
+**周call 实盘子轨道的下单规则在本文件 §4D** (2026-10-12 起开仓与平仓**都**由会话自动下单, 仅单腿)。
 
 **每月首个交易周一**额外跑 tracks.md 的「期权池月度复核」(skip_log 通过率盘点 + 候选实测收编)。
 

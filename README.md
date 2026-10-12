@@ -53,8 +53,8 @@
 | 出场 / 止损 / 兜底卖单 | ✅ 自动 review → place (一贯如此) |
 | **正股新买入 + 加仓** | ✅ **自动 review → place** (2026-10-12 用户「以后不用我回复执行了, 你直接执行」) |
 | 换仓 / 加速清理卖单 | ✅ 自动 review → place |
-| **期权开仓 (buy_to_open)** | ❌ **仍需用户在 Robinhood App 手动下单** (见下) |
-| 期权出场 (sell_to_close) | 手动 App 通道 (同上) |
+| **期权开仓 (buy_to_open)** | ✅ **自动 review → place** (2026-10-12 用户应用 `autoMode` 改动后实测放行; **仅单腿**) |
+| 期权出场 (sell_to_close) | ✅ 自动 (同上) |
 
 **不因 auto_buys 而改变的约束**: 订单逐字段来自引擎输出, 不得增减缩量 (红线2) ·
 所有上限仍是上限 (红线3) · **防杠杆闸**: 买单以实时 `min(buying_power, cash)` 为上限,
@@ -66,14 +66,15 @@
 📢 **报告义务**: 取消「执行」= 用户失去下单前的一票否决点, 故成交后**必须立即发执行报告**,
 并点名所有旗标项 (新闻红旗 / 同因子敞口 / 财报黑窗失效 / 防御层拦单), 让用户能**事后**处置。
 
-### 期权为什么还要手动
+### 期权只能用单腿
 
-两个**不同**的拦截点, 都已实测:
+| 形态 | place | 说明 |
+|---|---|---|
+| **单腿** | ✅ 通 | 2026-10-12 用户应用 `autoMode` 改动后实测放行 (改完**当场生效**, 不需重启会话) |
+| 多腿价差 | ❌ | **Robinhood API 400** — "Multi-leg options orders aren't supported in Robinhood agentic accounts yet" (2026-08-15 / 08-21 两次实测)。这是平台能力限制, 与授权无关 |
 
-| 形态 | review | place | 拦截方 |
-|---|---|---|---|
-| 多腿价差 | ✅ | ❌ | **Robinhood API 400** — "Multi-leg options orders aren't supported in Robinhood agentic accounts yet" (2026-08-15 / 08-21 两次实测) |
-| 单腿 | ✅ | ❌ | **Claude Code 分类器** `[Real-World Transactions]` (2026-10-12 实测) |
+⚠️ 期权开仓自动化后, **用户失去了每张期权的事前一票否决**, 而
+`contract.max_premium_per_contract_usd` 仍是 `null` (长 call 可亏 100% 权利金) —— 该上限只能由用户定 (红线3)。
 
 ## 用户控制
 

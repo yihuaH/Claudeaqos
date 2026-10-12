@@ -14,14 +14,14 @@
 7. Alpaca 只允许纸面环境 (`paper-api.alpaca.markets`, 已硬编码在 `scripts/paper.py`), 绝不调用 Alpaca 实盘交易接口。paper 账户内股票与期权均可交易、全部持仓均可处置 (用户 2026-07-15 授权, 期权权限 Level 3); 纸面盈亏只用于挑战者/实验验证, 不得直接驱动实盘订单。
 8. 参数自学习边界: 学习器 (`scripts/learn.py` / `scripts/learn_overnight.py`) 只能修改各自 learning 配置列出的 entry/exit 形状参数且必须在边界内; sizing/熔断/宏观/legacy 等风控**永不自学习**。晋级必须先通过 paper 验证期且 evaluate 判 pass; 每次晋级/否决写 journal 并通知用户。
 9. **买入自动执行 (execution.mode=auto_buys, 用户 2026-10-12 指示「以后不用我回复执行了, 你直接执行」, 取代 2026-07-20 起的 semi_auto)**: 实盘正股买单 (`rsi2_entry` / `rsi2_scale_in`) 与配套换仓/加速清理卖单 (funding_rotation / accelerated_liquidation) 由主流程在无人值守窗口**直接 review → place**, 不再写 pending、不再等用户回「执行」。前置事实: 2026-10-12 10:48 ET 无人值守平台层测试 place 未被拦 (`journal/2026-10-12-morning.md`)。
-   - ⚠️ **本次授权只取消了「等用户回执行」这一步, 以下一律照旧**: ① **红线2** — 订单逐字段来自引擎输出, 不得新增/放大/**缩量**/剔除/重排; ② **红线3** — 所有仓位与单量上限、熔断仍是上限不是建议; ③ **防杠杆闸** — 买单一律以执行时实时 `min(buying_power, cash)` 为上限, 超出**整单跳过不缩量**, **绝不动用借来的钱** (动用杠杆仍须用户单独明确授权); ④ **跨轨道资金优先级 = 期权优先**; ⑤ 出场/止损/兜底卖单与纸面轨道照旧全自动; ⑥ **期权开仓 (buy_to_open) 不在本次授权范围** —— agentic 账户根本不支持多腿 `place` (2026-08-15 实测), 属**平台能力限制而非 semi_auto 限制**, 故仍走 `state/pending_option_orders.json` + 用户 App 手动通道 (playbook 4D)。
+   - ⚠️ **本次授权只取消了「等用户回执行」这一步, 以下一律照旧**: ① **红线2** — 订单逐字段来自引擎输出, 不得新增/放大/**缩量**/剔除/重排; ② **红线3** — 所有仓位与单量上限、熔断仍是上限不是建议; ③ **防杠杆闸** — 买单一律以执行时实时 `min(buying_power, cash)` 为上限, 超出**整单跳过不缩量**, **绝不动用借来的钱** (动用杠杆仍须用户单独明确授权); ④ **跨轨道资金优先级 = 期权优先**; ⑤ 出场/止损/兜底卖单与纸面轨道照旧全自动; ⑥ **期权开仓 (buy_to_open) 自 2026-10-12 起同样自动** —— 用户当日在 GitHub 应用 `autoMode` 改动后实测 `place_option_order` 放行 (`journal/2026-10-12-option-channel-unblocked.md`); **仅限单腿**, 多腿价差仍被 Robinhood API 400 拒 (平台能力限制, 与授权无关), 这也是实盘形态必须是 `single` 的原因。
    - 🛟 **fail-safe (必须保留)**: 若 `place` 被平台分类器拦截 → **不重试**, 退回写 `state/pending_orders.json` 并通知用户, 走下方原 4C 协议 (其时效与双模式形态此时仍然适用)。**绝不因为被拦而丢单。** 依据: 2026-10-12 测试 **n=1** 且分类器非确定性 (09-11 LLY 出场卖单首次 place 被拦; 10-10 组合 Bash 被判 `Auto-Mode Bypass`), 且那是一张 $20 远离市价的限价单, **证明不了 $1,039 美元额市价单同样通过**。
    - 📢 **报告义务**: 取消「执行」= 用户失去了下单前的一票否决点, 故主流程**必须在成交后立即发执行报告**, 并点名所有旗标项 (新闻红旗 / 同因子敞口 / 财报黑窗失效 / 防御层拦单等), 让用户能**事后**处置。
    - 📐 **fail-safe 退回 pending 后的执行形态 (两种, 选哪种只看时间)**: **(a) 盘中 09:45–15:55 ET = 单笔 `market`+`regular_hours`+`dollar_amount`** —— 首选, 原生支持分数股, 零额外成本; **(b) 盘外 15:55 → 次一交易日 09:45 (含周末) = 整股限价①腿** —— `limit = 引擎 est_price × 1.010`, `all_day_hours→extended_hours→regular_hours` 逐级降级, `whole==0` 该单整单跳过留次日, **零头不另下单**, 随清单既有顺延机制走次日盘中窗。⚠️ 盘外①腿实测**多付 0.55%** + 盘后点差中位约 2%, 是**有成本的退路, 不是首选**; 且走盘外**必须重做 4C-1B 逐批确认** (形态由美元额市价变为整股限价, 数量不同且可能有单落空)。历史沿革与退役理由见 `strategy/archive/retired-offhours-two-leg.md`。
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
-   - **跨轨道资金优先级 = 期权优先 (常规规则, 2026-08-27 用户定, 此前三次逐次决定同向)**: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单走用户 App 手动通道 (playbook 4D, 平台能力限制)。用户可单日一票推翻, 但**不再逐日询问**。
-   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) **不在 auto_buys 授权范围, 且会话根本下不了单** —— 2026-10-12 实测单腿 `place_option_order` 被平台分类器 `[Real-World Transactions]` 拒、多腿被 Robinhood API 400 拒。故只写 `state/pending_option_orders.json`, 由**用户在 App 手动下限价单** (时效**照抄 plan.json 的 `option_pending_template`**, 两形态: **收盘前产出 = 当日 15:30–15:45 ET** [2026-09-11 用户「期权也可以当日马上执行」; 比股票的 15:55 早 10 分钟收口, 因 15:45 后是 4D 明令避开的收盘前极端点差区]; 收盘后产出 = 次一交易日 10:30 ET, 推荐 09:45–10:30 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。**规模约束 (2026-08-18 用户「不设上限」后)**: `budget.max_open_premium_pct_of_portfolio` 与 `contract.max_premium_per_contract_usd` **均为 null = 不限制**; 唯一硬约束是实时 `min(buying_power, cash)` (红线3 防杠杆闸) 与熔断 (累计已实现亏 ≥ 净值×50%)。⚠️ 2026-10-12 换 single 后长 call 可亏 100% 权利金, 该 null 的含义已变 —— 已向用户索要单张上限, 未给前保持不动 (红线3: 上限只能由用户定)。
+   - **跨轨道资金优先级 = 期权优先 (常规规则, 2026-08-27 用户定, 此前三次逐次决定同向)**: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单自 2026-10-12 起亦由会话自动下单 (playbook 4D, 仅单腿)。用户可单日一票推翻, 但**不再逐日询问**。
+   - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) **自 2026-10-12 起由会话自动下单** (单腿限价; 用户当日应用 autoMode 改动后实测放行)。多腿仍被 Robinhood API 400 拒, 故形态必须 `single`。⚠️ **用户因此失去了每张期权的事前一票否决**, 而单张权利金上限仍是 null —— 该数字优先级显著上升 (红线3) (时效**照抄 plan.json 的 `option_pending_template`**, 两形态: **收盘前产出 = 当日 15:30–15:45 ET** [2026-09-11 用户「期权也可以当日马上执行」; 比股票的 15:55 早 10 分钟收口, 因 15:45 后是 4D 明令避开的收盘前极端点差区]; 收盘后产出 = 次一交易日 10:30 ET, 推荐 09:45–10:30 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。**规模约束 (2026-08-18 用户「不设上限」后)**: `budget.max_open_premium_pct_of_portfolio` 与 `contract.max_premium_per_contract_usd` **均为 null = 不限制**; 唯一硬约束是实时 `min(buying_power, cash)` (红线3 防杠杆闸) 与熔断 (累计已实现亏 ≥ 净值×50%)。⚠️ 2026-10-12 换 single 后长 call 可亏 100% 权利金, 该 null 的含义已变 —— 已向用户索要单张上限, 未给前保持不动 (红线3: 上限只能由用户定)。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
 
@@ -75,7 +75,6 @@
 | 10:45 | 晨间核查 | 残单回收 + **T+1 官方收盘核对** (券商 T 日收盘次日才发布); 只有昨日走了 4B-failsafe 留下 pending 才需用户「执行」, 正常日无事静默 | `trig_01CtgM6KvCBKywWzEtAEkNia` |
 | **13:00 周一** | 周度股票池刷新 | 刷 `universe.json` 100 只 | `trig_01PvM5Mj89pokXgPwkMECZrd` |
 | **15:20** | **收盘前主跑** | 关键路径: 信号 + 出场即时成交 + 当日 pending | `trig_01PqeuvMEsyXbTKJQ7njyVcR` |
-| 15:30–15:45 | (仅期权) | 用户在 App 手动下期权单; **股票无此窗** (auto_buys 当场成交) | — |
 | 17:45 | 收盘后收尾 wrapup **+ 战报** | 纸面轨道 + 行情核对 + journal + 账本回写, **并发当日战报** | `trig_01W1rzTiiZBaRc2taYzV6tKX` |
 
 ⚠️ **周一硬约束 (股票池刷新器必读)**: 刷新 13:00 起跑, **必须在 15:20 主跑前 finalize** (主跑要读
@@ -104,9 +103,9 @@
 
 - 🛟 **双段跑 fail-safe**: 当日无 `state/preclose_status.json` 的 completed 标记 → 17:45 wrapup
   **自动退化为完整主跑** (出场照下, 买单按 fail-safe 形态)。故收盘前挂掉最坏只退回改动前行为。
-- 🔴 **期权实盘仓**: 2026-10-12 换 `single` (深ITM 买 call, moneyness 0.90)。**开仓与平仓都只能由用户
-  在 App 手动下单** —— 多腿被 Robinhood API 400 拒、单腿被 Claude Code 分类器
-  `[Real-World Transactions]` 拒 (均已实测)。**长 put 做不到** (引擎只认 call 且信号单向看多)。
+- 🔴 **期权实盘仓**: 2026-10-12 换 `single` (深ITM 买 call, moneyness 0.90), **同日起开仓/平仓均由会话
+  自动下单** (单腿限价; 用户应用 autoMode 改动后实测放行)。多腿仍被 Robinhood API 400 拒 →
+  形态必须是 `single`。**长 put 做不到** (引擎只认 call 且信号单向看多)。
   budget 与单张权利金上限**均为 null**, 唯一硬约束是实时 `min(buying_power, cash)` + 熔断;
   ⚠️ 换 single 后长 call **可亏 100% 权利金**而上限仍 null, 已向用户索要数字, 未给前不自行设 (红线3)。
   当前账户规模下该形态**近乎零出单** (深ITM call 每张数千美元 vs 千元级现金)。
@@ -155,7 +154,7 @@
 |---|---|
 | `state/positions.json` | **实盘**持仓与净值 (`strategy_positions` / `legacy_positions` / `trades` / `high_water_mark` / `halted`) |
 | `state/pending_orders.json` | auto_buys 下是**执行记录** (`record_kind=execution_log`); 只有 4B-failsafe 才产出真·待执行清单 |
-| `state/pending_option_orders.json` | 期权待执行清单 (**始终**需用户 App 手动执行) |
+| `state/pending_option_orders.json` | 期权执行记录 (2026-10-12 起会话自动下单; 被拦才留待执行) |
 | `state/preclose_status.json` | 收盘前阶段完成标记, wrapup 据此判是否 fail-safe |
 | `state/learning.json` + `paper_positions.json` | 挑战者冠军/挑战者状态 + 纸面账本 |
 | `state/weekly_call_*positions.json` | 周期权双轨账本 (`round_trips` / `skip_log` 是摩擦数据, 勿删) |

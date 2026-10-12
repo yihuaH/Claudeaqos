@@ -160,10 +160,9 @@ python3 scripts/signals.py signal \
      达标者加入双配置 universe (paper+live 对齐), 未达标记录淘汰原因进 journal; commit。
    - 红线合规: 只改"能买什么"不改"何时买/买多少" (同 screen.py 定位, 红线2); 收编标准确定性, 不得凭观点加减名单。
    `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --portfolio-value <get_portfolio total_value> --date <今天> --out state/weekly_call_live_last_orders.json`
-   (输出入库供次日 context) → ⚠️ **2026-08-15 起 sells 也不再是自动的**: agentic 账户的多腿 place
-   被 Robinhood API 400 拒、单腿 place 被 Claude Code 分类器 `[Real-World Transactions]` 拒
-   (2026-10-12 实测), 故 **buys 与 sells 统统写 `state/pending_option_orders.json` + 在对话发 App 参数,
-   由用户手动下单** (§4D); 成交后仍须跑 `weekly_calls.py apply --context` 回写账本; `report --config strategy/weekly_calls_live.json
+   (输出入库供次日 context) → ✅ **2026-10-12 起 buys 与 sells 均由会话自动下单** (单腿限价, §4D;
+   用户当日应用 autoMode 改动后实测放行)。⚠️ **多腿仍被 Robinhood API 400 拒**, 故形态必须 `single`。
+   成交后仍须跑 `weekly_calls.py apply --context` 回写账本; `report --config strategy/weekly_calls_live.json
    --ledger state/weekly_call_live_positions.json` 一并跑, journal 记"实盘周call"小节 (含 skip 原因 —
    ⚠️ 2026-08-18 起 budget=null, 故 `budget_exceeded` 不再出现; 现在最常见的 skip 是
    **`insufficient_buying_power`** —— 2026-10-12 换 single 形态后深ITM call 每张 $2,608~$7,324
