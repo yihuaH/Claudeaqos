@@ -1,5 +1,0 @@
-{
-  "retired": "2026-07-20",
-  "replaced_by": "execution.mode=semi_auto",
-  "note": "逐日预审确认闸门已退役: 买入的最终确认改由用户在有人值守会话按 playbook 4C 亲手触发 (回复「执行」消费 state/pending_orders.json)。本文件不再读写, 仅作退役标记留档。历史内容见 git 历史。"
-}

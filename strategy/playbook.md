@@ -422,30 +422,23 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 **4D. 实盘周call实验仓 (开仓/平仓均走用户 App 手动通道 —— 平台能力限制, 非 semi_auto 遗留; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
 
 订单**只**来自 `weekly_calls.py signal --config strategy/weekly_calls_live.json` (§7C 步骤 7 生成,
-红线 2); 预算硬顶 = **账户净值 × budget.max_open_premium_pct_of_portfolio (50%, 2026-08-04 用户定 40%,
-2026-08-14「都改到50%和5000」上调, 追加投资后自动伸缩)** + 实时 buying_power 双重封顶, 引擎内置。期权只有整张, 无分数股, 4C 的美元额市价单形态不适用 —— 期权一律按**张数 + limit** 下单 (见下)。
+**规模约束**: 2026-08-18 用户「不设上限」后 `budget.max_open_premium_pct_of_portfolio` 与
+`contract.max_premium_per_contract_usd` **均为 null = 不限制**; 唯一硬约束是执行时实时
+`min(buying_power, cash)` (红线3) 与熔断。期权只有整张, 买不起就 skip。
 
-**形态: 牛市价差 (vertical_spread, 2026-08-07 用户「直接部署到实盘」授权, 跳过 paper 验证期)** —
-引擎输出带 `structure: "vertical_spread"` 与 `legs[2]` 时按**多腿组合单**下, 关键规则:
-- **一笔组合单, 不是两笔**: `place_option_order(legs=[买腿, 卖腿], quantity, type="limit", price=<净价>,
-  direction="debit"(开)/"credit"(平"))` — 两腿同生共死, 不存在单腿裸露。
-- **多腿只能 limit** (券商不支持 market), 且**要求 margin 账户** (802095265 已于 2026-08-07 满足)。
-- **价格 = 净价** (每张组合的净借记/净贷记), 不是单腿价; 买入 `price = 引擎 est_price × 1.03` 封顶,
-  平仓 `price = 引擎 est_price × 0.97` 保底。逐字段照抄引擎输出的 legs 顺序与 position_effect。
-- **成交回写**: fills 用 `{"symbol": <买腿OCC>, "side": "buy"/"sell", "qty": 张数, "price": <净价>,
-  "structure": "vertical_spread", "short_symbol": <卖腿OCC>}` — 账本以**买腿 OCC 为仓位主键**。
-- ⚠️ **pin risk (行权价夹心) — 价差比单腿多出来的风险**: 到期时股价落在两腿行权价之间 →
-  买腿被自动行权 (须接 100 股/张), 卖腿作废 → 一个 ~$1.2k 的仓位可能变成数千美元股票债务。
-  **`force_exit_dte_lte=2` 必须严格执行, 绝不留到到期日**; 该护栏优先于任何其他考量。
-  (缓解: 正股 -5% 止损先于最大亏损触发 — 买腿行权价在 -6% 处, 故止损通常在最大亏损前出场。)
-- **未经 paper 验证的三件事** (用户知情选择, 首批实盘单要重点观察并记 journal):
-  ① 组合单真实成交净价 vs 引擎估算 (引擎用最保守的"买腿ask − 卖腿bid", 实盘组合报价通常更好);
-  ② 临到期/波动时平仓难度; ③ 多腿被拒或部分成交的实际表现。任一出现异常 → 红线 6 停轨道、通知用户。
-
-- **出场卖单 (sell_to_close, 无人值守全自动, 同 4A)**: 逐单按 OCC 解析标的/到期/行权价 →
-  `get_option_instruments` 定位合约 → `review_option_order` → 无预期外告警 →
-  `place_option_order` (**limit**, 限价 = 引擎 est_price×0.97 向下保护, time_in_force=gfd;
-  盘中即时成交, 盘后自动排次开 — 期权无盘后交易)。被拒/预期外告警 → 跳过记 journal
+**形态: `single` = 深ITM 买 call** (2026-10-12 用户「期权也只买单腿吧」; moneyness 0.90 / floor 0.85)。
+- **单腿**, 无组合单、无 pin risk、无提前行权风险 (长 call 最大亏损 = 已付权利金)。
+- ⚠️ **长 call 可亏 100% 权利金**而单张上限仍是 null (那个 null 原是为限定风险的 credit 价差设的);
+  已向用户索要数字, 未给前不自行设 (红线3)。
+- ⚠️ **只认 call**: 引擎 `_pick_contract` 硬过滤 `type != "C"`, 且 entry 是单向看多信号 —— 长 put 做不到。
+- 前形态沿革 (vertical_spread 2026-08-07→08-13 共 0 成交 1 skip; credit_put_spread 08-13→10-12
+  共 8 回合 8 胜 +$573.00, 含 pin risk / 提前行权 / 五条未验证风险等完整注记) 见
+  `strategy/archive/track-rationale.md`; credit 参数留档在 `contract._retired_credit_put_spread` 可一键回退。
+- ⚠️ **出场卖单 (sell_to_close) 也不是自动的** (2026-08-15 起): agentic 账户多腿 `place` 被
+  Robinhood API 400 拒、单腿 `place` 被 Claude Code 分类器 `[Real-World Transactions]` 拒
+  (2026-10-12 实测)。故**开仓与平仓统统**写入 `state/pending_option_orders.json` + 在对话发 App 参数,
+  由用户手动下单; 成交后会话跑 `weekly_calls.py apply --context` 回写账本 (**这一步不在任何 Routine 里,
+  靠会话自觉**)。限价仍按引擎: 平仓 `est_price×0.97` 保底, 开仓 `min(est_price×1.03, 执行时 ask)`。
   (次日引擎会重新出场判定; DTE≤1 强平是兜底)。
 - **买单 (buy_to_open, 绝不无人值守 place)**: 写入 `state/pending_option_orders.json`
   (格式同 pending_orders.json, 每单含 occ/underlying/strike/expiry/contracts/est_price(mid)/
@@ -460,8 +453,6 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
   - **`next_session` (收盘后 full/fail-safe 产出)**: 次一交易日 **10:30 ET**, 推荐执行窗
     09:45–10:30 (2026-08-04 用户批准, 等开盘点差收窄)。
 
-  (下文原时效说明保留作背景) 次一交易日 10:30 ET —— 期权专属, 曾比股票买单的 15:55 窄 —
-  期权只能开市成交, 且开盘头 15 分钟点差最宽; **推荐执行窗 09:45–10:30 ET** = 太平洋 06:45–07:30 (用户 2026-09-10 起在洛杉矶),
   等点差收窄后执行, 限价保护照旧封顶)。当日无买单则不生成。
 - **用户「执行」后 (有人值守)**: 校验 status/valid_until → **逐笔明细确认** (同 4C 1B) →
   每单 `review_option_order` → `place_option_order` (**limit**, 限价 = min(引擎 est_price×1.03,
@@ -568,7 +559,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 > **2026-10-12 起 execution.mode=auto_buys**: 正股买单由主流程当场 place, 用户不再需要回「执行」;
 > 否决权从"事前"变为"事后" (看执行报告后指示卖出)。期权开仓仍保留**事前**否决 —— 因为必须由用户
 > 在 App 里按 (平台限制)。更早的"预审确认"闸门 (`state/approval.json`) 2026-07-20 即已退役,
-> 文件保留存档、不再读写 (可删, 见待决清单)。
+> 文件已于 2026-10-12 删除 (内容只剩一行退役标记, 无代码读写; 历史见 git)。
 
 0. **先查资金**: `get_portfolio(802095265)` 取实时 buying_power 与 cash。报告必须以资金段开头,
    并按资金分两层出计划: ①立即可执行层 (现有 **buying_power** 能买什么) ②依赖换仓层 (需卖存量腾资金)。

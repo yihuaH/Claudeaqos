@@ -102,13 +102,17 @@
     "auto_buys_unchanged": "本次授权**只取消「等用户回执行」这一步**, 以下一律照旧: ① 红线2 — 订单逐字段来自引擎输出, 不得新增/放大/缩量/剔除/重排; ② 红线3 — 所有仓位与单量上限、熔断仍是上限不是建议; ③ **防杠杆闸** — 买单一律以执行时实时 min(buying_power, cash) 为上限, 超出**整单跳过不缩量**, 绝不动用借来的钱 (动用杠杆仍须用户单独明确授权); ④ 跨轨道资金优先级 = 期权优先 (期权抵押先留足, 股票 cap = 可用资金 − 期权抵押); ⑤ 出场/止损/兜底卖单与纸面轨道照旧全自动; ⑥ **期权开仓 (buy_to_open) 不在本次授权范围** —— agentic 账户根本不支持多腿 place (2026-08-15 实测), 属平台能力限制而非 semi_auto 限制, 故仍走 state/pending_option_orders.json + 用户 App 手动通道 (playbook 4D)。",
     "auto_buys_failsafe": "若 place 被平台分类器拦截 → **不重试**, 退回写 state/pending_orders.json 并通知用户, 走原 4C 流程 (下方 rule 字段的时效与双模式形态此时仍然适用)。绝不因为被拦而丢单。依据: 2026-10-12 测试 n=1 且分类器非确定性 (2026-09-11 LLY 出场卖单首次 place 被拦; 2026-10-10 组合 Bash 被判 Auto-Mode Bypass), 且那是一张 $20 远离市价的限价单, 证明不了 $1,039 美元额市价单同样通过。",
     "auto_buys_reporting": "取消「执行」= 用户失去下单前的一票否决点, 故主流程**必须在成交后立即发执行报告**, 并在报告中点名所有旗标项 (新闻红旗 / 同因子敞口 / 财报黑窗失效 / 防御层拦单等), 让用户能事后处置 (例如指示卖出)。",
-    "rule": "【2026-10-12 前的 semi_auto 规则, 留档备查 — 买入部分已被上方 auto_buys_* 取代; 其中的时效与双模式执行形态在 fail-safe 退回 pending 时仍然适用】出场/止损/兜底卖单无人值守自动执行; 新买入与 funding_rotation/accelerated_liquidation 换仓/加速清理卖单由主流程写入 state/pending_orders.json, 用户在有人值守会话回复「执行」后按 playbook 4C 原样执行。时效 (2026-09-10 用户批准, 取代原 09:25 盘外两腿方案): 买单与换仓卖单有效至次一交易日 15:55 ET, 执行窗口 09:45-15:55 ET (必须在 09:30 开盘之后 —— 出场回款 09:30 才到账, 原 09:25 截止使引擎算进去的回款结构性拿不到, 实测占出单额 32%), 推荐锚在 10:45 ET 晨检窗口; 形态为单笔 market + regular_hours + dollar_amount (原生支持分数股, 故两腿混合执行/whole==0/24h降级阶梯一并作废); 不设价格闸; 换仓/加速清理卖单同窗口照常执行。隔夜轨道买单仅当日 15:55 ET。approval.json 闸门已退役。【2026-09-25 用户选「3」: 恢复盘外腿, 执行形态改为**双模式**】(a) 盘中 09:45-15:55 ET —— 单笔 market+regular_hours+dollar_amount, 原生分数股, 零额外成本, **首选**; (b) 盘外 15:55 ET 后至次一交易日 09:45 ET (含周末) —— 恢复 2026-09-10 退役的**整股限价①腿** (limit = est_price × 1.010, all_day_hours→extended_hours→regular_hours 降级), 买不下的零头**不再走旧②腿开盘市价单**, 而是随清单既有顺延机制走次日盘中窗 —— 既恢复盘后可执行性, 又不重蹈原 09:25 截止「回款结构性拿不到」的缺陷 (退役理由①已规避)。退役理由②③ (①腿实测多付 0.55%、运维复杂度) 依然成立, 故盘外模式是**有成本的退路而非首选**。触发依据: 5 个交易日内越窗两次 (2026-09-21 / 2026-09-25, 后者跨周末)。",
+    "rule": "【已迁出】2026-10-12 前的 semi_auto 规则原文见 strategy/archive/retired-offhours-two-leg.md。现行规则看上方 auto_buys_* 四个字段; fail-safe 退回 pending 时的执行形态 (盘中单笔市价 / 盘外整股限价①腿) 看 CLAUDE.md 红线9 与 playbook §4B-failsafe。",
     "offhours_leg": {
       "enabled": true,
       "since": "2026-09-25 (用户选「3」)",
-      "limit_multiplier": 1.010,
+      "limit_multiplier": 1.01,
       "limit_basis": "引擎 est_price (确定性, 红线2 — 不得改用实时价)",
-      "market_hours_ladder": ["all_day_hours", "extended_hours", "regular_hours"],
+      "market_hours_ladder": [
+        "all_day_hours",
+        "extended_hours",
+        "regular_hours"
+      ],
       "remainder": "不下②腿; 零头随 pending 既有 exec_day 顺延走次日盘中窗 (09:45-15:55)",
       "whole_zero": "whole==0 (股价 > 单笔金额, 如 EQIX) → 该单盘外整单跳过, 全额留给次日盘中窗",
       "measured_cost": "①腿实测多付 0.55% (中位 +0.59%, n=10, 见 2026-09-10 退役依据); 盘后点差中位约 2% (2026-09-25 实测 1.31~2.97%)",
