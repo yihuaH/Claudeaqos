@@ -13,7 +13,7 @@
 
 四条 Routine 已重建为 **persistent_session 自绑定** —— 每次触发唤醒同一个常驻对话
 `session_01NYPNGq5j25cGqpoLrWiA7t`, 所有主跑/晨检/战报/周度刷新的过程与产出都出现在该对话里,
-用户可直接在里面回复「执行」消费 pending 清单。新窗口模式 (2026-08-13) 的四条触发器停用保留。
+所有过程与产出都出现在该对话里。(⚠️ 2026-10-12 起 execution.mode=auto_buys, 正股买单当场成交, **不再需要用户回「执行」**; 只有 4B-failsafe 退回 pending 时才需要。期权开仓仍需用户在 App 手动下单。) 新窗口模式 (2026-08-13) 的四条触发器停用保留。
 当前触发器清单:
 
 | Routine | cron (UTC) | trigger ID | 状态 |
@@ -109,8 +109,10 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
 
 ## 常驻对话模式的注意点 (2026-08-14 起)
 
-- **用户回复「执行」**: pending 清单存在 Main 上, 与会话无关 — 最顺手的是直接在常驻对话里说
-  「执行」(战报/晨检就在里面), 也可在任意手开的有人值守会话说, 按 playbook 4C/4D 消费。
+- **用户回复「执行」(2026-10-12 后只剩两种场合)**: ① **4B-failsafe** —— 正股买单 place 被平台
+  分类器拦截后退回了 pending 清单; ② **期权开仓** —— 会话根本下不了单 (平台限制), 参数发在对话里
+  由用户在 App 手动执行。正常日的正股买单已在 15:20 主跑当场成交, 无需任何回复。
+  清单存在 Main 上、与会话无关, 在常驻对话或任意有人值守会话里说「执行」皆可, 按 playbook 4C/4D 消费。
 - **跨会话 context**: 虽然常驻对话有连续记忆, 但一切仍以 Main 上的账本/journal/pending 文件
   为准 (既定原则, 对话可能被平台压缩/摘要, `state/weekly_call_*_last_orders.json` 等回收
   context 文件继续存在)。
@@ -144,8 +146,15 @@ Claudeaqos 收盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos 
 硬性红线 + strategy/playbook.md 为准。⚠️ 本窗口时间敏感: 若现在已过 15:40 ET 就**不要开跑**,
 写日志说明并结束 (17:45 的 wrapup 会 fail-safe 退化为完整主跑, 出场照下)。⚠️ 当日实时价必须用
 mcp__cash_printer__get_equity_quotes 的原始输出传 --quotes, 绝不可用 integrations.py quotes
-(延迟 15 分钟)。买单只写 pending 绝不 place (红线9); 通知用户务必写明**两个执行窗**:
-期权 今日 15:30-15:45 ET (窗口更窄, 先发), 股票 今日 15:30-15:55 ET。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
+(延迟 15 分钟)。
+
+⚠️⚠️ **以上是触发器里当前存着的原文, 其中「买单只写 pending 绝不 place」已于 2026-10-12 过期**
+(红线9 改为 auto_buys)。触发器文案无法在线更新, 判据固定为 **仓库 > 唤醒词** (playbook §4 开头
+的优先级说明)。2026-10-12 首跑即按此覆盖、两单当场成交, 见 journal/2026-10-12-preclose.md。
+**建议改法** (需用户批准后由 update_trigger 应用): 把那句换成
+「正股买单按 playbook 4B-auto 直接 review→place; 被分类器拦则退回 4B-failsafe 写 pending 不重试。
+成交后必须立即发执行报告并点名旗标项。期权开仓仍只写 pending_option_orders.json + 发 App 参数
+(今日 15:30-15:45 ET 窗), 会话下不了期权单」。回写 push origin Main; 被拒则 push 工作分支开 PR。若本会话没有
 mcp__cash_printer__* 工具 → 按红线6 不交易、写日志、通知用户。
 ```
 

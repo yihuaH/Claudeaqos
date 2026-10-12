@@ -325,7 +325,7 @@ CHECKLIST = {
             "组合净值/回撤/信号摘要/成交/告警异常",
             "pending_orders (次日 15:55 ET 前有效, **执行窗 09:45-15:55 = 开盘后**, 推荐 10:45 晨检) 与 "
             "pending_option_orders (次日 10:30 ET 前有效, 推荐执行窗 09:45-10:30 ET) 状态; "
-            "待执行则附逐笔明细提醒用户可回复「执行」",
+            "⚠️ auto_buys 下正常日**不产生** pending; 若有清单说明昨日 place 被拦 (4B-failsafe), 附逐笔明细提醒用户可回复「执行」",
             "带 option_alert 时显著提示预警标的与保留额",
             "周call 双轨小节 (实盘持仓盯市/skip 原因/near_signals; paper round_trips/中位点差/verdict)",
             "price_check 结果 (引擎价 vs 券商官方收盘)",

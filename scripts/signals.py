@@ -339,7 +339,7 @@ def cmd_signal(a):
     def accelerated_liquidation():
         # 存量加速清理 (用户 2026-07-21 指示"加速换仓给引擎供血"): 与当日买入需求无关,
         # 每日额外卖出最弱存量最多 N 只, 卖出款 T+1 结算后归入引擎购买力。
-        # semi_auto 下与换仓卖单同走 pending_orders.json 待用户「执行」; VIX 风控不拦卖出。
+        # 2026-10-12 起 (auto_buys) 与换仓卖单一样由主流程当场执行; VIX 风控不拦卖出。
         acc = cfg["legacy"].get("accelerated_liquidation") or {}
         if not acc.get("enabled"):
             return
@@ -367,7 +367,7 @@ def cmd_signal(a):
     # 口径 (与回测一致, 改动即失效): 触发价比**加权均价**; 止损同样比加权均价 (等效把首档止损
     #   外移到 ≈-8.4%, 这是加仓收益的一部分); 时间止损时钟**不因加仓重置**, 仍从首次入场起算。
     # 敞口: 单票上限 = position_pct × max_tranches (红线3 的上限, 只能由用户改)。
-    # 加仓单同属买入, 受 semi_auto (红线9) 与 VIX 风控约束 —— risk_off 时上面已 return, 不会加仓。
+    # 加仓单同属买入, 2026-10-12 起随 auto_buys 自动执行 (红线9); 仍受 VIX 风控 —— risk_off 时上面已 return, 不会加仓。
     si = cfg.get("scale_in") or {}
     adds = []
     if si.get("enabled"):

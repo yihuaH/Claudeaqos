@@ -135,7 +135,7 @@
      **必须逐只完全一致**; 不一致即 `anomalies` + **在 preflight 阶段直接停跑** (早于取 bars)。
      起因是 2026-08-11 MNST 2:1 拆股 —— 引擎日线是拆股调整后的 (`adjustment=split`), 账本
      `entry_price` 不是, 差一步就会算出 −50% 假回撤触发止损, 而**出场卖单是全自动的**
-     (不受 semi_auto 约束) 会无人干预地卖掉没亏的仓位。分类与处置:
+     (任何制度下都全自动) 会无人干预地卖掉没亏的仓位。分类与处置:
      - `split_suspected` (份额比为简单整数比 + 成本基守恒) → **拆股**。按 `suggested_fix` 手工改
        `state/positions.json`: **份额改成券商的、均价 = 原 cost ÷ 新份额、`cost` 不变**
        (美元敞口与 TWR 口径不变); `trades[]` 历史**不动** (如实反映当时成交价); 在账本
@@ -250,12 +250,13 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
   隔夜轨道买单 (state_file=overnight) 因"收盘买/次日收盘卖"的策略性质**仅当日 15:55 ET 前有效**
   (该轨道实盘入场暂停中, 此条现无实际订单)。
 
-- **买单预检 (review, 无人值守允许; 绝不 place)**: 写文件前逐个买单
+- **买单 review (4B-auto 的第 2 步, 必做 —— review 过了就 place)**: 逐个买单
   `review_equity_order(account=802095265, symbol, side=buy, type=market, dollar_amount, market_hours=regular_hours)`:
-  - 取回券商预估价 → 写入该单 `review_est_price` (供用户清单显示券商侧真实预估, 与引擎 est_price 并存);
-  - 预期外告警 (购买力不足/停牌/限制) → 该单加 `review_flag: "<告警摘要>"`, 并在通知里点名提示;
-    购买力不足**此处不下调金额** (下调留到 4C 执行时按实时 BP 处理), 停牌/限制类照写清单但标红待用户判断;
-  - review 调用失败/被拒 → 跳过该单预检, 省略 review_est_price (不阻断清单生成), journal 注明。
+  - 取回券商预估价 → 记入执行记录的 `review_est_price` (券商侧真实预估, 与引擎 est_price 并存);
+  - `order_checks` 为空 → **立即 place 同参数**; 出现**预期外**告警 (停牌/限制等) → **跳过该单**,
+    记 anomalies 并在执行报告里点名, 继续下一单 (不因一单异常中断整批);
+  - 购买力不足**绝不下调金额** —— 超 cap 的单整单跳过不缩量 (红线3);
+  - review 调用本身失败/被拒 → 该单不 place, 记 anomalies, 继续下一单。
   - **限价基准不变**: 4C 盘外整股限价仍以引擎 `est_price` 为基准 (确定性, 红线2); review_est_price 纯信息性,
     不参与限价计算、不改订单金额/标的。
 - **新闻红旗预检 (2026-07-31 用户加, 报告级, 绝不改单)**: 若当日有买单, 对**买单标的**跑
@@ -402,7 +403,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
      **整个价差宽度 × 100 × 张数**, 非净贷记; 借记型按净借记)。逐字段取引擎输出, 不自行估算。
    - 股票 cap = 实时 min(buying_power, cash) − 期权抵押合计; 其余按 2 的规则逐 seq 累计,
      **装不下整单跳过不缩量** (红线2/红线3)。
-   - 期权单本身仍是 semi_auto: 留出的抵押只是**不被股票占用**, 下单仍须用户按 4D 手动执行;
+   - 期权单本身**会话下不了** (平台限制, 见 4D): 留出的抵押只是**不被股票占用**, 下单仍须用户在 App 手动执行;
      用户当日若明确弃掉该期权单, 保留额即刻释放, 股票照原 seq 继续吃。
    - 与 2C 的 `option_alert` 保留额**不叠加**: 已进 `pending_option_orders.json` 的实盘期权单按本条扣
      实际抵押, `option_alert` 只覆盖尚未出信号的预警标的; 同一标的两者都在时只扣本条。
@@ -418,7 +419,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 - 引擎没输出的单**绝不下**; 引擎输出的金额/数量**绝不放大**。
 - 收盘前 5 分钟(15:55 ET)后不再提交新单, 未执行的记入日志顺延。
 
-**4D. 实盘周call实验仓 (semi_auto 买入; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
+**4D. 实盘周call实验仓 (开仓/平仓均走用户 App 手动通道 —— 平台能力限制, 非 semi_auto 遗留; 2026-08-04 用户授权: 「接受全赔」+「先搞出引擎, 多少钱不要管, 后续追加投资」)**
 
 订单**只**来自 `weekly_calls.py signal --config strategy/weekly_calls_live.json` (§7C 步骤 7 生成,
 红线 2); 预算硬顶 = **账户净值 × budget.max_open_premium_pct_of_portfolio (50%, 2026-08-04 用户定 40%,
@@ -487,7 +488,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 `journal/2026-08-13-pcs-bt.md`: 同信号卖方 6/6 窗口胜买方且回撤减半)** — 引擎输出
 `structure: "credit_put_spread"` (卖 ≤0.97×spot put + 买 ≤0.88×spot 保护 put, 收净贷记) 时,
 上文价差规则按以下差异执行:
-- **开仓 = credit 组合单, 仍走 semi_auto** (开仓=风险增加, 与现金方向无关):
+- **开仓单走用户 App 手动通道** (2026-10-12 起实盘形态是 `single` 深ITM 买 call; 多腿与单腿的 place 分别被 Robinhood API 400 / Claude Code 分类器 `[Real-World Transactions]` 拒):
   `place_option_order(legs=[卖腿 open, 保护腿 open], type="limit", price=净贷记, direction="credit")`,
   限价保护方向反转 — 贷记是**收钱**, 下限 = 引擎 est×0.97, **绝不下调限价追单**;
   执行前实时 BP ≥ 每张风险×张数 (券商抵押占用 = 宽度−贷记)。
@@ -556,7 +557,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 
 挑战者影子验证 / 动量轮动 / 周call双轨 (§7C) 的完整规范与手工回退步骤见 **`strategy/tracks.md`**。
 主跑走驱动器时这些轨道全自动完成, 结果在 `plan.json` 的 `paper` 与 `options` 段, 写进 journal 即可。
-**周call 实盘子轨道的下单规则在本文件 §4D** (出场自动 / 买入 semi_auto)。
+**周call 实盘子轨道的下单规则在本文件 §4D** (开仓与平仓**都**只能由用户在 App 手动下单)。
 
 **每月首个交易周一**额外跑 tracks.md 的「期权池月度复核」(skip_log 通过率盘点 + 候选实测收编)。
 
@@ -564,8 +565,10 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 
 > **对话里发的每份报告都要以分界线开头** (CLAUDE.md「报告格式约定」): `════…` + 标题行 (报告类型·日期) + `════…`, 头部之前不写铺垫。
 
-> 2026-07-20 起 execution.mode=semi_auto: 原"预审确认"闸门 (`state/approval.json`) **退役** —
-> 买入的最终确认改由用户按 4C 亲手触发执行承担, 无需每日回复确认。approval.json 保留存档, 不再读写。
+> **2026-10-12 起 execution.mode=auto_buys**: 正股买单由主流程当场 place, 用户不再需要回「执行」;
+> 否决权从"事前"变为"事后" (看执行报告后指示卖出)。期权开仓仍保留**事前**否决 —— 因为必须由用户
+> 在 App 里按 (平台限制)。更早的"预审确认"闸门 (`state/approval.json`) 2026-07-20 即已退役,
+> 文件保留存档、不再读写 (可删, 见待决清单)。
 
 0. **先查资金**: `get_portfolio(802095265)` 取实时 buying_power 与 cash。报告必须以资金段开头,
    并按资金分两层出计划: ①立即可执行层 (现有 **buying_power** 能买什么) ②依赖换仓层 (需卖存量腾资金)。
@@ -579,7 +582,7 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 1. 用当日收盘数据对两个实盘引擎做次日 dry-run (隔夜引擎用 max_new_entries 放大到 10 取扩展候选)。
 2. 生成用户报告文档 `<scratchpad>/daily_report_<日期>.md` (当日成交/五轨状态/系统事件/次日预览), 用 SendUserFile 发送给用户。报告为信息性质, 不需要用户回复。
    报告的换仓层需列明次日**加速清理**计划 (config.json legacy.accelerated_liquidation: 最弱存量最多3只);
-   实际卖单由次日主流程写入 4B 待执行清单, 用户回复「执行」后生效。
+   实际卖单由次日主流程按 4B-auto **当场执行** (auto_buys), 无需用户回复。
 3. **宏观环境段 (2026-07-31 用户加, 报告级)**: 展示 macro.json 的 `vix` + `context` (收益率曲线倒挂?信用利差走阔?) 作环境提示;
    **仅信息, 不驱动任何交易** (引擎只用 vix 门控)。
 4. **新闻旗标段 (2026-07-31 用户加, 报告级)**: 若当日有买单且 §4B 已产出 news.json, 列出被红旗的买入标的 + 命中关键词/标题;

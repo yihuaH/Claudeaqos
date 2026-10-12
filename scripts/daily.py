@@ -288,7 +288,7 @@ def phase_preflight(a, R, plan):
 
     # 持仓一致性闸 (2026-08-11 用户「做」批准, 起因 MNST 2:1 拆股):
     # 引擎日线是拆股调整后的 (integrations.py adjustment=split), 账本 entry_price 不是 —
-    # 两者不同步时引擎会算出巨额假回撤并触发止损, 而出场卖单是全自动的 (不受 semi_auto 约束),
+    # 两者不同步时引擎会算出巨额假回撤并触发止损, 而出场卖单在任何制度下都是全自动的,
     # 会在无人干预下卖掉实际没亏的仓位。故放在 preflight 末尾: 早于昂贵的 bars 阶段就停住。
     # 复用主跑已有的 --positions 输入, 不额外调 MCP。
     if a.positions:

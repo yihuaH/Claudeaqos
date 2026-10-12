@@ -72,7 +72,7 @@
     "max_open_premium_pct_of_portfolio": null,
     "_note": "2026-08-18 用户「不设上限」: 单张风险上限 (contract.max_premium_per_contract_usd) 与 期权总在险额预算 (本字段) 均置 null = 不限制。仍生效的约束: 实时 buying_power 双封顶 (红线3 防杠杆闸, 绝不用借来的钱)、circuit_breaker 熔断 (累计已实现亏损 ≥ 净值×50%)、点差闸、DTE 闸、21 只白名单、注码 position_pct_of_portfolio。"
   },
-  "_budget_note": "未平仓**在险额**总额硬顶 = 账户净值 × 50% (2026-08-04 用户定百分比制 40%; 2026-08-14 用户「都改到50%和5000」上调至 50%, 熔断同步; 2026-08-13 起 credit 形态在险额 = 每张(宽度−贷记) = 占用抵押, debit 遗留仓 = 已付权利金; 追加投资后自动伸缩, 无需手调)。机会主义运行 (用户定调: 有合适的期权就买, 没有就不买): 每日扫 universe, 同时过 [信号+点差gate+权利金≤min(40%净值-已占用, 实时BP)] 才出买单 (semi_auto 待「执行」), 否则 skip 记原因。40% 的依据: 期权整张交易, 低于 ~33% 在当前账户规模 (~$2.2k) 下连最便宜合格合约 (XLF ~$700) 都容不下; 用户已接受该桶全损。改百分比只能由用户定 (红线3)。",
+  "_budget_note": "⚠️ **本段是 2026-08-18 之前的历史口径, 已失效, 留作沿革** —— 当时 budget = 账户净值 × 50% (2026-08-04 定 40% 百分比制, 2026-08-14 用户「都改到50%和5000」上调至 50%)。**2026-08-18 用户「不设上限」把 budget.max_open_premium_pct_of_portfolio 与 contract.max_premium_per_contract_usd 一并置 null = 不限制** (见 budget._note)。现行唯一的规模硬约束是**实时 min(buying_power, cash)** (红线3 防杠杆闸) 与熔断 (累计已实现亏 ≥ 净值×50%)。机会主义运行不变 (用户定调: 有合适就买, 没有就不买): 每日扫白名单, 过 [信号 + 点差闸 + DTE闸 + 公允价边际闸 + 权利金 ≤ 实时BP] 才出买单, 否则 skip 记原因。⚠️ 2026-10-12 换 single (深ITM 买 call) 后, **长 call 可亏 100% 权利金**, 而 max_premium_per_contract_usd 仍是 null —— 该 null 原本是为限定风险的 credit 价差设的, 已向用户索要新数字, 未给前不自行设 (红线3)。改百分比/上限只能由用户定。",
   "circuit_breaker": {
     "max_cumulative_realized_loss_pct_of_portfolio": 50
   },

@@ -153,17 +153,21 @@ python3 scripts/signals.py signal \
    白名单是静态的, 本步是它唯一的更新通道。两部分, 全确定性:
    - **① 在册通过率盘点**: 统计两账本 skip_log 近 30 天各标的 spread gate 拦截/通过次数;
      30 天内被拦 ≥3 次且 0 通过 → journal 标注「休眠」(不移除名单, 仅供用户参考)。
-   - **② 候选实测收编**: 候选 = strategy/universe.json 内 [现价 ≤ 当前期权预算÷0.105 (深ITM权利金≈10.5%现价)
+   - **② 候选实测收编**: 候选 = strategy/universe.json 内 [现价 ≤ 实时 min(buying_power, cash) ÷ 0.105 (深ITM权利金≈10.5%现价; ⚠️ 2026-08-18 起 budget=null 不设上限, 故门槛改用**实时可用资金**而非已废的「期权预算」)
      且不在白名单] 的个股 + 主流行业/资产 ETF 板凳 (XLI/XLV/XLU/SLV/GDX 等, 限回测家族同类);
      逐个 `integrations.py chains --dte-max 17` 实测深ITM (0.85-0.92×spot) 点差 →
-     **收编标准 (与 2026-08-04 TLT/BAC 同口径): ≥1 档同时满足 spread ≤2% 且权利金 ≤ 当前预算** →
+     **收编标准 (与 2026-08-04 TLT/BAC 同口径): ≥1 档同时满足 spread ≤2% 且权利金 ≤ 实时可用资金** →
      达标者加入双配置 universe (paper+live 对齐), 未达标记录淘汰原因进 journal; commit。
    - 红线合规: 只改"能买什么"不改"何时买/买多少" (同 screen.py 定位, 红线2); 收编标准确定性, 不得凭观点加减名单。
    `python3 scripts/weekly_calls.py signal --config strategy/weekly_calls_live.json --ledger state/weekly_call_live_positions.json --bars <wc_bars> --quotes <wc_quotes> --chains <wc_chains> --earnings <earnings.json> --buying-power <get_portfolio 实时BP> --portfolio-value <get_portfolio total_value> --date <今天> --out state/weekly_call_live_last_orders.json`
-   (输出入库供次日 context) → **sells 按 §4D 自动执行并 apply 回写; buys 写
-   `state/pending_option_orders.json` 待用户「执行」(§4D)**; `report --config strategy/weekly_calls_live.json
+   (输出入库供次日 context) → ⚠️ **2026-08-15 起 sells 也不再是自动的**: agentic 账户的多腿 place
+   被 Robinhood API 400 拒、单腿 place 被 Claude Code 分类器 `[Real-World Transactions]` 拒
+   (2026-10-12 实测), 故 **buys 与 sells 统统写 `state/pending_option_orders.json` + 在对话发 App 参数,
+   由用户手动下单** (§4D); 成交后仍须跑 `weekly_calls.py apply --context` 回写账本; `report --config strategy/weekly_calls_live.json
    --ledger state/weekly_call_live_positions.json` 一并跑, journal 记"实盘周call"小节 (含 skip 原因 —
-   budget_exceeded 属预期, 表示待用户追加投资/上调 budget)。回收昨日排队/成交: 晨检或本步开头
+   ⚠️ 2026-08-18 起 budget=null, 故 `budget_exceeded` 不再出现; 现在最常见的 skip 是
+   **`insufficient_buying_power`** —— 2026-10-12 换 single 形态后深ITM call 每张 $2,608~$7,324
+   而现金仅千元级, 该轨道当前近乎零出单, 属预期)。回收昨日排队/成交: 晨检或本步开头
    `get_option_orders` 核对后 `apply --context state/weekly_call_live_last_orders.json`。
    **near_signals (期权预警) 处理 (2026-08-05 用户批准)**: signal 输出的 `near_signals` 非空 →
    按 §4B option_alert 格式写进当日 state/pending_orders.json (无股票买单时也生成仅含 option_alert
