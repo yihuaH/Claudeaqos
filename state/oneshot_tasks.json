@@ -12,6 +12,16 @@
    "authorized_by": "用户 2026-10-09 「做一次平台层测试」",
    "done_at": "2026-10-12 10:48 ET",
    "result": "place **未被拦截** — order 6accf31f-3ee4-44ea-9437-3c90d3555a2f, state unconfirmed → cancelled, cumulative_quantity 0, 零成交零费用, 存活 6.8 秒。详见 journal/2026-10-12-morning.md"
+  },
+  {
+   "id": "earnings-input-every-run-2026-10",
+   "title": "每次主跑必须喂 --earnings (财报黑窗静默失效的真正根因 = 取数漏做, 不是代码缺陷)",
+   "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
+   "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
+   "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
+   "status": "pending",
+   "created": "2026-10-12",
+   "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
   }
  ]
 }

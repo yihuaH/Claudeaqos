@@ -12,11 +12,11 @@
       "tranches": 1
     },
     "DE": {
-      "qty": 5.0,
-      "entry_price": 655.14,
+      "qty": 11.0,
+      "entry_price": 638.8773,
       "entry_date": "2026-10-08",
-      "cost": 3275.7,
-      "tranches": 1
+      "cost": 7027.65,
+      "tranches": 2
     },
     "RVMD": {
       "qty": 20.0,
@@ -37,6 +37,20 @@
       "entry_price": 518.114286,
       "entry_date": "2026-10-09",
       "cost": 3626.8,
+      "tranches": 1
+    },
+    "TSM": {
+      "qty": 8.0,
+      "entry_price": 451.00625,
+      "entry_date": "2026-10-12",
+      "cost": 3608.05,
+      "tranches": 1
+    },
+    "NVDA": {
+      "qty": 16.0,
+      "entry_price": 228.48,
+      "entry_date": "2026-10-12",
+      "cost": 3655.68,
       "tranches": 1
     }
   },
@@ -282,6 +296,33 @@
       "side": "buy",
       "qty": 7.0,
       "price": 518.114286,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "DE",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 625.325,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "TSM",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 451.00625,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-12",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 16.0,
+      "price": 228.48,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

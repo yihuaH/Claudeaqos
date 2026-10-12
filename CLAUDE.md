@@ -164,11 +164,31 @@
 
 ### 已知未修的问题 (影响日常, 勿当成新发现)
 
-1. **纸面 stale-fills**: `daily.py` 的 `wc.paper.run` 无单可下时不重写 `wc_fills.json`,
-   `wc.paper.apply` 会重放上一次的旧成交 (已连续多日复现)。最小修法: run 前 `unlink`。
+1. **纸面 stale-fills**: `wc.paper.run` 无单可下时不重写 `wc_fills.json`, `wc.paper.apply`
+   会重放旧成交。**只在 preclose 阶段触发** (wrapup 不跑 `wc.*`); 后果仅是
+   `trades[]` 多一行重复流水 (`positions[occ]=rec` 是幂等的), 不影响仓位与 round_trips。
+   最小修法: run 前 `unlink` —— `daily.py:495` 已有 `{"fills": []}` 兜底, **安全**。
 2. **`signals.py` 部分卖出不更新 `cost`**: 实盘代码路径共用; `state/momentum_positions.json`
    的 QQQ 已失真 18.46×。
-3. **财报黑窗静默失效**: 引擎每日告警「无财报日数据」, 该保护实际是关的。
+3. **财报黑窗静默失效 —— 根因是取数漏做, 不是代码缺陷**: `daily.py` 只要拿到 `--earnings`
+   就会往下传 (401/479/508/566 行), 但主跑取数时没准备这个文件 → `allow_unknown_earnings=true`
+   放行 → `earnings_blackout_days=7` 与 `earnings_exit_days=1` 两道保护全关。
+   **已造成实际损害** (2026-10-12 补全财报数据后查出): DAL 2026-10-08 在财报前 1 日入场、
+   TSM 2026-10-09 在 6 日黑窗内入场。⚠️ **每个主跑窗口都必须逐只 `get_earnings_results`
+   并传 `--earnings`** (已进 `state/oneshot_tasks.json` 高亮)。
 4. **同因子敞口无闸**: `defense.max_per_sector=3` 盖不住 ETF+个股混合 (AMAT 被数据源归在
-   Producer Manufacturing, SOXQ 是 ETF 不计数) —— 2026-10-12 半导体实际敞口已达净值 41%。
+   Producer Manufacturing, SOXQ 是 ETF 不计数) —— 2026-10-12 半导体实际敞口已达净值 40~41%。
 5. **挑战者 edge 口径污染** (见轨道表告警)。
+
+### journal 完成标记的硬约定 (2026-10-12 查出闸门假阴性后固定)
+
+幂等闸正则 (`daily.py:276` / `session.py:139`) 是 `^\s*(status|preclose):\s*completed\s*$`,
+**只认独立裸行**。
+
+- **主跑 journal** (preclose / wrapup / full): 标记必须是**裸行** `status: completed`
+  或 `preclose: completed`, **不加 `- ` 列表符号**。
+- **侧记 journal** (morning / screen / 研究 / 测试): 一律写成 `- status: completed`,
+  它的"匹配不上"**正是我们要的** —— 闸门扫当日全部 `journal/<date>*.md`, 侧记若被匹配上
+  会把当晚主跑整天挡掉 (2026-09-03 假阳性事故)。
+- ⚠️ 因此**绝不要把正则放宽成允许 bullet**。
+- 沿革: 2026-09-21 → 10-09 我把主跑标记写成了 bullet, 闸门假阴性 16 个交易日 (未发生重复下单)。
