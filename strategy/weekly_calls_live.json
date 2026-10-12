@@ -55,8 +55,8 @@
       "max_far_leg_spread_pct": 24.0,
       "max_far_leg_spread_abs": 0.1
     },
-    "max_premium_per_contract_usd": null,
-    "_premium_cap_note": "⚠️ **这个 null 是为 credit_put_spread 设的 (2026-08-18 用户「不设上限」), 该形态每张风险 = 宽度−贷记, 天然有界。换成 single 之后长 call 可亏掉 100% 权利金, 这个 null 的含义就变了。** 2026-10-12 已向用户点明并索要一个单张权利金上限的数字, 用户未给前**保持 null 不动** (红线3: 风控上限只能由用户定, 会话不得自行设)。当前实际约束: 注码 position_pct_of_portfolio=20% + 实时 min(buying_power,cash) + 期权开仓仍走手动 App 通道 (用户逐单过目, 保留下单前一票否决)。参考: paper 轨道同形态设的是 max_premium_per_contract_usd=5000。",
+    "max_premium_per_contract_usd": 5000,
+    "_premium_cap_note": "**单张权利金上限 = $5,000 (用户 2026-10-12 定, 答复「5000」)**。背景: 2026-08-18 用户「不设上限」把本字段置 null, 但那是为 **credit_put_spread** 设的 —— 该形态每张风险 = 宽度−贷记, **天然有界**。2026-10-12 换 `single` 后长 call **可亏 100% 权利金**, 且同日期权 place 放行、开仓不再经用户事前过目, 故会话向用户索要新上限, 用户定 5000 (与 paper 轨道 weekly_calls.json 同值)。生效点: `weekly_calls.py:_pick_contract` —— `mid×100 > 5000` 即 skip 并记 `premium_too_large(...)`。实测影响: 深ITM call 每张 $2,608(NVDA) ~ $7,324(SMH), 故本闸会**实际拦住贵档标的** (SMH/AMD/META/QQQ 等), 不只是摆设。仍并行生效: 实时 min(buying_power, cash) 防杠杆闸 (红线3)、熔断、点差闸、DTE 闸、公允价边际闸、白名单。改这个数只能由用户定 (红线3)。",
     "min_est_vs_model_pct": 90.0,
     "_min_est_note": "换 single 后该闸**方向自动翻转, 数值无需改**: 公允价边际闸按方向对称 — credit 要 est ≥ model×0.90, debit (单腿买 call) 要 est ≤ model÷0.90 = model×1.111, 即「不得比参考公允价贵过 11%」。对买方正是想要的方向。",
     "model_edge_reference": "flat",
@@ -70,9 +70,9 @@
   },
   "budget": {
     "max_open_premium_pct_of_portfolio": null,
-    "_note": "2026-08-18 用户「不设上限」: 单张风险上限 (contract.max_premium_per_contract_usd) 与 期权总在险额预算 (本字段) 均置 null = 不限制。仍生效的约束: 实时 buying_power 双封顶 (红线3 防杠杆闸, 绝不用借来的钱)、circuit_breaker 熔断 (累计已实现亏损 ≥ 净值×50%)、点差闸、DTE 闸、21 只白名单、注码 position_pct_of_portfolio。"
+    "_note": "2026-08-18 用户「不设上限」把两者置 null; **2026-10-12 用户重新定下单张上限 contract.max_premium_per_contract_usd = $5,000** (换 single 后长 call 可亏 100% 权利金), 本字段 (总在险额预算) 仍为 null = 不限制。仍生效的约束: 实时 buying_power 双封顶 (红线3 防杠杆闸, 绝不用借来的钱)、circuit_breaker 熔断 (累计已实现亏损 ≥ 净值×50%)、点差闸、DTE 闸、21 只白名单、注码 position_pct_of_portfolio。"
   },
-  "_budget_note": "⚠️ **本段是 2026-08-18 之前的历史口径, 已失效, 留作沿革** —— 当时 budget = 账户净值 × 50% (2026-08-04 定 40% 百分比制, 2026-08-14 用户「都改到50%和5000」上调至 50%)。**2026-08-18 用户「不设上限」把 budget.max_open_premium_pct_of_portfolio 与 contract.max_premium_per_contract_usd 一并置 null = 不限制** (见 budget._note)。现行唯一的规模硬约束是**实时 min(buying_power, cash)** (红线3 防杠杆闸) 与熔断 (累计已实现亏 ≥ 净值×50%)。机会主义运行不变 (用户定调: 有合适就买, 没有就不买): 每日扫白名单, 过 [信号 + 点差闸 + DTE闸 + 公允价边际闸 + 权利金 ≤ 实时BP] 才出买单, 否则 skip 记原因。⚠️ 2026-10-12 换 single (深ITM 买 call) 后, **长 call 可亏 100% 权利金**, 而 max_premium_per_contract_usd 仍是 null —— 该 null 原本是为限定风险的 credit 价差设的, 已向用户索要新数字, 未给前不自行设 (红线3)。改百分比/上限只能由用户定。",
+  "_budget_note": "⚠️ **本段是 2026-08-18 之前的历史口径, 已失效, 留作沿革** —— 当时 budget = 账户净值 × 50% (2026-08-04 定 40% 百分比制, 2026-08-14 用户「都改到50%和5000」上调至 50%)。**2026-08-18 用户「不设上限」把 budget.max_open_premium_pct_of_portfolio 与 contract.max_premium_per_contract_usd 一并置 null = 不限制** (见 budget._note)。现行唯一的规模硬约束是**实时 min(buying_power, cash)** (红线3 防杠杆闸) 与熔断 (累计已实现亏 ≥ 净值×50%)。机会主义运行不变 (用户定调: 有合适就买, 没有就不买): 每日扫白名单, 过 [信号 + 点差闸 + DTE闸 + 公允价边际闸 + 权利金 ≤ 实时BP] 才出买单, 否则 skip 记原因。⚠️ 2026-10-12 换 single 后长 call **可亏 100% 权利金**, 故用户当日定下 contract.max_premium_per_contract_usd = **$5,000** (答复「5000」, 与 paper 同值) —— 这是现在唯一的单笔规模闸, 实测会真拦住贵档 (SMH/TSM 的 premium_too_large)。budget 总额仍为 null。改这两个数只能由用户定 (红线3)。",
   "circuit_breaker": {
     "max_cumulative_realized_loss_pct_of_portfolio": 50
   },
@@ -105,5 +105,5 @@
     }
   },
   "_exit_note": " force_exit_dte_lte 1→2 (2026-08-06 用户提案「提前两天监控/卖出」+回测: 每笔仅-0.13%期望换取到期前整一天执行余量 — T-2晚触发/T-1晨成交/T-0全天重试/券商强平四层)。",
-  "_contract_note": "**现行形态 `single` = 深ITM 买 call** (2026-10-12 用户「期权也只买单腿吧」; moneyness 0.90 / floor 0.85 / max_spread_pct 2.0 逐字段照抄 paper 轨道, 非自选)。⚠️ 只认 call —— `_pick_contract` 硬过滤 `type != \"C\"`, 且 entry 是单向看多信号 (close > SMA200 且 rsi2 < 10), **长 put 无信号可驱动, 要做须改引擎+造看空信号 = 红线2 禁区**。⚠️ **长 call 可亏 100% 权利金**, 而 contract.max_premium_per_contract_usd 仍是 null (那个 null 是为限定风险的 credit 价差设的) —— 已向用户索要单张上限, 未给前不自行设 (红线3)。⚠️ **2026-10-12 起开仓与平仓均由会话自动下单** (单腿限价; 用户当日应用 .claude/settings.json 的 autoMode 改动后实测放行, 见 journal/2026-10-12-option-channel-unblocked.md)。多腿价差仍被 Robinhood API 400 拒 —— 这是形态必须 single 的原因。⚠️ 自动化后用户失去了每张期权的**事前**一票否决, 故 max_premium_per_contract_usd 这个 null 的优先级显著上升。前形态 credit_put_spread (2026-08-13→2026-10-12, 8 回合 8 胜 / +$573.00) 的参数留档在 contract._retired_credit_put_spread, 回测依据与五条未验证风险见 strategy/archive/track-rationale.md。"
+  "_contract_note": "**现行形态 `single` = 深ITM 买 call** (2026-10-12 用户「期权也只买单腿吧」; moneyness 0.90 / floor 0.85 / max_spread_pct 2.0 逐字段照抄 paper 轨道, 非自选)。⚠️ 只认 call —— `_pick_contract` 硬过滤 `type != \"C\"`, 且 entry 是单向看多信号 (close > SMA200 且 rsi2 < 10), **长 put 无信号可驱动, 要做须改引擎+造看空信号 = 红线2 禁区**。⚠️ **长 call 可亏 100% 权利金**, 故单张权利金上限已由用户 2026-10-12 定为 **$5,000** (contract.max_premium_per_contract_usd; 此前的 null 是为限定风险的 credit 价差设的)。⚠️ **2026-10-12 起开仓与平仓均由会话自动下单** (单腿限价; 用户当日应用 .claude/settings.json 的 autoMode 改动后实测放行, 见 journal/2026-10-12-option-channel-unblocked.md)。多腿价差仍被 Robinhood API 400 拒 —— 这是形态必须 single 的原因。⚠️ 自动化后用户失去了每张期权的**事前**一票否决, 故 max_premium_per_contract_usd 这个 null 的优先级显著上升。前形态 credit_put_spread (2026-08-13→2026-10-12, 8 回合 8 胜 / +$573.00) 的参数留档在 contract._retired_credit_put_spread, 回测依据与五条未验证风险见 strategy/archive/track-rationale.md。"
 }

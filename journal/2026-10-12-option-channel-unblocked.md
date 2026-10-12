@@ -75,3 +75,52 @@
 
 短期缓冲: 现金 $5.00 + 深ITM call 每张 $2,608~$7,324 → 该轨道**近乎零出单** (今日实测 0 买单),
 所以第 1 条还有时间慢慢定。但 BNY 明日强制出场会释放约 $2,020, 缓冲在变薄。
+
+---
+
+## ⑦ 追记: 单张权利金上限已定 $5,000 (用户同日答复「5000」)
+
+上节 ⑥ 提的那个数字, 用户当日即给出。已写入并验证。
+
+| 项 | 值 |
+|---|---|
+| 字段 | `strategy/weekly_calls_live.json` → `contract.max_premium_per_contract_usd` |
+| 原值 | `null` (2026-08-18 用户「不设上限」, 为 **credit_put_spread** 设 —— 该形态每张风险 = 宽度−贷记, 天然有界) |
+| **新值** | **5000** (与 paper 轨道 `weekly_calls.json` 同值) |
+| 生效点 | `weekly_calls.py:_pick_contract` —— `mid×100 > 5000` 即 skip 并记 `premium_too_large(...)` |
+
+### 冒烟验证: 这个闸**不是摆设**
+
+为把权利金闸与购买力闸分开看, 用 10-09 的 bars/quotes/chains + **人为把 `--buying-power` 抬到 $99,999** 实跑:
+
+```
+buys:  1   NVDA261023C00200000  est 27.27 → 每张 $2,727  ✅ 过闸 (≤5000)
+skips: 3   SMH  premium_too_large(8122)   ← 被新闸拦下
+           TSM  premium_too_large(6700)   ← 被新闸拦下
+           AMD  spread_too_wide(best=3.09%)  (另一道闸)
+```
+
+**深ITM call 每张 $2,727~$8,122, 故 $5,000 这条线正好落在这个区间中间** —— 贵档 (SMH/TSM, 以及
+按昨日数据的 AMD/META/QQQ) 会被实际拦住, 便宜档 (NVDA 约 $2.7k) 放行。
+对照: 若仍是 null, SMH 那张 $8,122 在购买力够的日子里就会直接下出去。
+
+### 现在期权轨道的闸门全貌
+
+| 闸 | 值 | 谁能改 |
+|---|---|---|
+| 单张权利金上限 | **$5,000** | 仅用户 (红线3) |
+| 总在险额预算 `budget.max_open_premium_pct_of_portfolio` | `null` 不限 | 仅用户 (红线3) |
+| 实时资金 | `min(buying_power, cash)` 防杠杆闸 | 不可改 (红线3) |
+| 熔断 | 累计已实现亏 ≥ 净值×50% | 仅用户 |
+| 点差闸 | `max_spread_pct 2.0` | 仅用户 |
+| DTE 闸 | 8–17 日历日 | 仅用户 |
+| 公允价边际闸 | `min_est_vs_model_pct 90` (debit 向: est ≤ model×1.111) | 仅用户 |
+| 白名单 | 21 只 | 月度复核 (tracks.md 6B) |
+
+**事前否决点已从"用户逐张过目"换成"$5,000 硬闸"** —— 这是今日期权自动化的代价与补偿。
+
+### 同步更新的文档
+
+`CLAUDE.md` (红线9 规模约束 + 轨道告警) · `README.md` · `strategy/playbook.md` §4D ·
+`strategy/weekly_calls_live.json` (`_premium_cap_note` 重写 + `_budget_note` + `_contract_note`
++ `budget._note`)。全仓已无"上限仍是 null / 已向用户索要"的残留表述。

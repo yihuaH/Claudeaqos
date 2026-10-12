@@ -428,8 +428,9 @@ reason=`funding_rotation` / `accelerated_liquidation` 的换仓与加速清理�
 
 **形态: `single` = 深ITM 买 call** (2026-10-12 用户「期权也只买单腿吧」; moneyness 0.90 / floor 0.85)。
 - **单腿**, 无组合单、无 pin risk、无提前行权风险 (长 call 最大亏损 = 已付权利金)。
-- ⚠️ **长 call 可亏 100% 权利金**而单张上限仍是 null (那个 null 原是为限定风险的 credit 价差设的);
-  已向用户索要数字, 未给前不自行设 (红线3)。
+- ⚠️ **长 call 可亏 100% 权利金** → 单张权利金上限 **$5,000** (用户 2026-10-12 定, 与 paper 同值;
+  此前的 null 是为限定风险的 credit 价差设的)。生效点 `_pick_contract`: `mid×100 > 5000` 即 skip
+  并记 `premium_too_large(...)`。**实测会真拦住贵档** (深ITM call 每张 $2,727~$8,122)。
 - ⚠️ **只认 call**: 引擎 `_pick_contract` 硬过滤 `type != "C"`, 且 entry 是单向看多信号 —— 长 put 做不到。
 - 前形态沿革 (vertical_spread 2026-08-07→08-13 共 0 成交 1 skip; credit_put_spread 08-13→10-12
   共 8 回合 8 胜 +$573.00, 含 pin risk / 提前行权 / 五条未验证风险等完整注记) 见

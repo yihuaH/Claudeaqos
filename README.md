@@ -73,8 +73,9 @@
 | **单腿** | ✅ 通 | 2026-10-12 用户应用 `autoMode` 改动后实测放行 (改完**当场生效**, 不需重启会话) |
 | 多腿价差 | ❌ | **Robinhood API 400** — "Multi-leg options orders aren't supported in Robinhood agentic accounts yet" (2026-08-15 / 08-21 两次实测)。这是平台能力限制, 与授权无关 |
 
-⚠️ 期权开仓自动化后, **用户失去了每张期权的事前一票否决**, 而
-`contract.max_premium_per_contract_usd` 仍是 `null` (长 call 可亏 100% 权利金) —— 该上限只能由用户定 (红线3)。
+⚠️ 期权开仓自动化后用户**失去了每张期权的事前一票否决**, 故 2026-10-12 用户定下
+`contract.max_premium_per_contract_usd` = **$5,000** (长 call 可亏 100% 权利金, 这是唯一的单笔规模闸)。
+该上限只能由用户改 (红线3)。
 
 ## 用户控制
 
