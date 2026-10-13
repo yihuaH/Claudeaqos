@@ -1,68 +1,39 @@
 {
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
-      "symbol": "SMH",
-      "reason": "insufficient_buying_power(cost=6944,bp_left=1119)",
-      "rsi2": 1.92,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 69.44,
-        "model_flat": 68.7267,
-        "model_surface": 69.3784,
-        "ratio_flat_pct": 99.0,
-        "ratio_surface_pct": 99.9
-      }
-    },
-    {
       "symbol": "TSM",
-      "reason": "insufficient_buying_power(cost=6700,bp_left=1119)",
-      "rsi2": 4.1,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 67.005,
-        "model_flat": 65.8328,
-        "model_surface": 66.1409,
-        "ratio_flat_pct": 98.3,
-        "ratio_surface_pct": 98.7
-      }
+      "reason": "earnings_blackout(dte=2)",
+      "rsi2": 3.4
     },
     {
-      "symbol": "AMD",
-      "reason": "spread_too_wide(best=3.09%)",
-      "rsi2": 4.5,
-      "spot": 590.64
-    },
-    {
-      "symbol": "NVDA",
-      "reason": "insufficient_buying_power(cost=2728,bp_left=1119)",
-      "rsi2": 4.53,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 27.275,
-        "model_flat": 26.7855,
-        "model_surface": 27.0274,
-        "ratio_flat_pct": 98.2,
-        "ratio_surface_pct": 99.1
-      }
+      "symbol": "SMH",
+      "reason": "premium_too_large(8688)",
+      "rsi2": 1.33,
+      "spot": 586.07
     }
   ],
   "warnings": [],
   "near_signals": [
     {
       "symbol": "QQQ",
-      "rsi2_now": 21.78,
+      "rsi2_now": 14.79,
       "scenario": "1d_-1%",
-      "spot": 745.38,
+      "spot": 743.09,
       "structure": "single",
-      "est_premium_usd": 7546
+      "est_premium_usd": 7523
+    },
+    {
+      "symbol": "SPY",
+      "rsi2_now": 67.69,
+      "scenario": "1d_-1%",
+      "spot": 778.29,
+      "structure": "single",
+      "est_premium_usd": 7879
     }
   ],
-  "suggested_reserve_usd": 391.71
+  "suggested_reserve_usd": 1.75
 }

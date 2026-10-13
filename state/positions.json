@@ -2,13 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "BNY": {
-      "qty": 14.171384,
-      "entry_price": 144.729,
-      "entry_date": "2026-09-29",
-      "cost": 2051.01,
-      "tranches": 2
-    },
     "DE": {
       "qty": 3.243085,
       "entry_price": 640.4828,
@@ -2488,6 +2481,15 @@
       "price": 226.478,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-13",
+      "symbol": "BNY",
+      "side": "sell",
+      "qty": 14.171384,
+      "price": 140.9401,
+      "bucket": "strategy",
+      "reason": "time_stop"
     }
   ],
   "corporate_actions": [

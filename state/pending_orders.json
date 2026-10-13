@@ -1,98 +1,178 @@
 {
- "trade_date": "2026-10-12",
+ "trade_date": "2026-10-13",
  "generated_by": "scripts/daily.py --phase preclose",
- "record_kind": "execution_log",
- "_kind_note": "⚠️ 自 2026-10-12 execution.mode=auto_buys 起, 本文件**不再是「待执行清单」而是执行记录** —— 买单由主流程当场 place, 不等用户回「执行」。保留同一文件名与结构是为了审计连续性与 session.py brief 的显示。只有 4B-failsafe (place 被分类器拦) 才会重新产出 status=awaiting_execution 的真·待执行清单。",
- "status": "executed",
- "valid_until": "不适用 (auto_buys: 当场成交)",
- "exec_window_et": "不适用 (auto_buys)",
- "exec_day": "auto_executed",
- "buying_power_at_execution": 1119.16,
- "cash_at_execution": 1119.16,
+ "record_kind": "failsafe_pending",
+ "_kind_note": "⚠️ 本文件今日是**真·待执行清单** (不是 auto_buys 执行记录): 走了红线9 的 🛟 fail-safe —— place 被 Claude Code auto mode 分类器拦截, 按**不重试**纪律退回写 pending。消费需用户明确说「执行」。",
+ "status": "awaiting_execution",
+ "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+ "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
+ "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+ "exec_day": "same_day_then_next_session",
+ "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
+ "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
+ "_template_source": "逐字段照抄 plan.json 的 to_pending.pending_template (红线: 不得凭记忆组装)",
+
+ "failsafe_event": {
+  "what": "4A 出场卖单与 4B-auto 买单的 place 被 Claude Code auto mode 分类器拦截",
+  "sequence_et": [
+   "15:25:51  BNY sell (time_stop)  → place **通过**, 15:25:52 全额成交 @140.9401",
+   "15:25:5x  DE  sell (exit_strength) → place **被拦**, 理由 [Real-World Transactions]",
+   "15:26:4x  AMAT sell (stop_loss)   → place **被拦**, 理由未给出 (分类器未说明)"
+  ],
+  "discipline": "按 CLAUDE.md 红线9 🛟 fail-safe 与 playbook「不重试纪律」: **三张单都没有重试**, 买单一律不再尝试 place, 全部退回本清单。绝不因被拦而丢单。",
+  "buys_not_attempted": "买单本窗口**一次都没有尝试 place** —— 连续两张卖单被拦后继续试探分类器违背不重试纪律的用意; 且买单依赖的出场回款只到了 BNY 一笔 (约 $1,997 而非预期约 $5,050), 资金前提已变。",
+  "precedent": "2026-09-11 LLY 出场卖单首次 place 亦曾被拦 (当时重试后通过)。分类器非确定性这一点今日第三次被证实 (10-10 组合 Bash [Auto-Mode Bypass] / 10-12 两买单全通 / 今日三卖单 1 通 2 拦)。"
+ },
+
+ "blocked_exits_NEED_USER": {
+  "_what": "⚠️ 这不是待执行买单, 是**两张被拦的出场卖单**。playbook §4A 没有 pending 退路 (出场类本应全自动), 故在此留档并点名要用户处置。引擎逐字段输出, 会话不得改量改价 (红线2)。",
+  "orders": [
+   {
+    "symbol": "DE",
+    "side": "sell",
+    "qty": 3.243085,
+    "type": "market",
+    "market_hours": "regular_hours",
+    "bucket": "strategy",
+    "reason": "exit_strength",
+    "est_price": 648.685,
+    "review_quote_et": "15:25 bid 648.91 / ask 649.28 / last 649.095",
+    "avg_entry_price": 640.4828,
+    "unrealized_pct_at_signal": 1.28,
+    "note": "盈利出场 (收盘 > SMA5)。未卖出 = 继续持有, 浮盈可能回吐。"
+   },
+   {
+    "symbol": "AMAT",
+    "side": "sell",
+    "qty": 2.052471,
+    "type": "market",
+    "market_hours": "regular_hours",
+    "bucket": "strategy",
+    "reason": "stop_loss",
+    "est_price": 461.99,
+    "review_quote_et": "15:26 bid 463.19 / ask 463.38 / last 463.285",
+    "avg_entry_price": 507.8512,
+    "stop_trigger_price": 472.3016,
+    "unrealized_pct_at_signal": -9.03,
+    "note": "⚠️ **这是 −7% 止损单, 风控性质最强的一张**。未卖出 = 账户继续持有已跌破止损线的 AMAT, 止损保护本窗口事实上失效。"
+   }
+  ]
+ },
+
+ "buying_power_at_generation": 5.0,
+ "cash_at_generation": 5.0,
+ "cash_after_bny_fill_est": 2002.37,
+ "_cash_note": "引擎按 portfolio_value 10211.51 / buying_power 5.00 出单, 单仓额 = 净值×10% = $1,021.15。买单总额 $5,049.56 原本靠三张出场回款 (约 $5,050) 支撑; 实际只回款 BNY 一笔 $1,997.32 (扣 $0.05 费)。⚠️ **执行时必须重取实时 min(buying_power, cash)**, 按 seq 顺序逐单判 cap, 超 cap 整单跳过不缩量 (红线9 ③)。",
+
  "cross_track_funding": {
   "rule": "期权优先 (2026-08-27 常规规则)",
   "option_buy_orders_today": 0,
   "option_collateral_reserved": 0.0,
-  "stock_cap": 1119.16,
-  "stock_used": 1114.16,
-  "stock_headroom": 5.0,
-  "note": "今日引擎无期权买单 (期权轨道换 single 后被购买力闸拦, 0 买单)。cap = min(BP,cash) = $1,119.16, 用掉 $1114.16, 余 $5.00 = config.sizing.min_cash_reserve_usd 的 $5.00。"
+  "note": "今日引擎 0 期权买单 (near_signals 仅 QQQ/SPY, est 权利金 $7,523/$7,879, 远超现金且 QQQ 未触发)。故股票 cap = 全部可用资金。"
  },
+
  "option_alert": {
   "source": "plan.json to_pending.near_signals",
-  "near_signals_count": 1,
+  "near_signals_count": 2,
   "near_signals": [
-   {
-    "symbol": "QQQ",
-    "rsi2_now": 21.78,
-    "scenario": "1d_-1%",
-    "spot": 745.38,
-    "structure": "single",
-    "est_premium_usd": 7546
-   }
+   {"symbol": "QQQ", "rsi2_now": 14.79, "scenario": "1d_-1%", "spot": 743.09, "structure": "single", "est_premium_usd": 7523},
+   {"symbol": "SPY", "rsi2_now": 67.69, "scenario": "1d_-1%", "spot": 778.29, "structure": "single", "est_premium_usd": 7879}
   ],
-  "note": "仅 QQQ 一只接近 (rsi2 21.78), 未触发; 期权仓位空。"
+  "note": "均未触发; 期权仓位空; 单张权利金 $7,523/$7,879 均 > max_premium_per_contract_usd $5,000, 即便触发也会被 premium_too_large 拦。"
  },
- "execution_summary": {
-  "trigger": "auto_buys 自动执行 (无用户「执行」指令) —— **首次**",
-  "orders": 2,
-  "filled": 2,
-  "total_usd": 1114.16,
-  "weighted_slippage_vs_est_pct": 0.0324,
-  "fees_usd": 0.0,
-  "cap_refetched_et": "2026-10-12 15:21",
-  "cap_usd": 1119.16,
-  "classifier_note": "两单 place 均**未被平台分类器拦截**, 尽管 .claude/settings.json 的 autoMode 文本当时仍是旧 semi_auto 口径 (会话自行修改被 [Self-Modification] 拒, 已把改好文本交用户手工应用)。与 10:48 XLU 测试一致: 分类器不是严格规则引擎。",
-  "window_note": "15:23:12-15:23:33 ET 成交。auto_buys 下不再有「首选窗 15:30-15:55」概念 —— 主跑产出即执行, 比原协议更早也更简单。"
- },
+
  "orders": [
   {
    "seq": 1,
    "action": "buy",
    "symbol": "KLAC",
-   "dollar_amount": 1034.03,
+   "dollar_amount": 1021.15,
    "bucket": "strategy",
-   "reason": "rsi2_entry",
-   "est_price": 189.99,
-   "rsi2": 2.3,
+   "reason": "rsi2_scale_in",
+   "est_price": 183.61,
+   "rsi2": 0.81,
+   "tranche": 2,
+   "avg_entry_price": 190.0599,
+   "drawdown_pct": -3.39,
    "state_file": "state/positions.json",
-   "status": "executed",
-   "cap_projection": "within_cap",
-   "execution": {
-    "placed_et": "2026-10-12 15:23:12",
-    "form": "market + regular_hours + dollar_amount",
-    "filled_qty": 5.440547,
-    "fill_price": 190.0599,
-    "fill_amount": 1034.03,
-    "fees": 0.0,
-    "order_id": "6acd33a0-0cff-4752-b83d-b40e806a4061",
-    "state": "filled",
-    "slippage_vs_est_pct": 0.0368
-   }
+   "status": "awaiting_execution",
+   "cap_projection": "fits_if_bny_proceeds_available (1021.15 ≤ 约 2002)",
+   "note": "加仓第 2 档 → KLAC 满档, 单票敞口达净值 20% 上限。加仓单排在新开仓单前吃现金 (scale_in._invariants), 执行时不得重排。"
   },
   {
    "seq": 2,
    "action": "buy",
-   "symbol": "NVDA",
-   "dollar_amount": 80.13,
+   "symbol": "SOXQ",
+   "dollar_amount": 1021.15,
+   "bucket": "strategy",
+   "reason": "rsi2_scale_in",
+   "est_price": 95.63,
+   "rsi2": 1.57,
+   "tranche": 2,
+   "avg_entry_price": 99.1877,
+   "drawdown_pct": -3.59,
+   "state_file": "state/positions.json",
+   "status": "awaiting_execution",
+   "cap_projection": "likely_over_cap (累计 2042.30 > 约 2002) → 整单跳过不缩量",
+   "note": "加仓第 2 档 → SOXQ 满档。ETF, 豁免财报/异动过滤。"
+  },
+  {
+   "seq": 3,
+   "action": "buy",
+   "symbol": "AMAT",
+   "dollar_amount": 1021.15,
    "bucket": "strategy",
    "reason": "rsi2_entry",
-   "est_price": 226.534,
-   "rsi2": 4.53,
+   "est_price": 461.99,
+   "rsi2": 0.5,
    "state_file": "state/positions.json",
-   "status": "executed",
-   "cap_projection": "within_cap",
-   "execution": {
-    "placed_et": "2026-10-12 15:23:33",
-    "form": "market + regular_hours + dollar_amount",
-    "filled_qty": 0.353809,
-    "fill_price": 226.478,
-    "fill_amount": 80.13,
-    "fees": 0.0,
-    "order_id": "6acd33b5-6939-405e-bb6a-9596f8201c56",
-    "state": "filled",
-    "slippage_vs_est_pct": -0.0247
-   }
+   "status": "blocked_wash_conflict",
+   "cap_projection": "n/a",
+   "note": "🚫 **同日既有 stop_loss 卖单又有 rsi2_entry 买单 → 同标的同日卖+买冲突**。按仓库既定规则 (scripts/paper.py:_wash_conflicts, 2026-08-21 实现并沿用至今) **保留卖单、跳过买单 (出场优先)**。这不是会话的市场判断, 是本仓库对该冲突的既有处置规则。⚠️ 该规则的 docstring 写着「实盘无此形态」—— 今日被证伪, 实盘首次出现。根因: signals.py:324 `held = set(strat) − {策略卖单}`, 被卖出的标的当轮即从 held 移出, 于是同一根 bar 上可作为新入场候选复买, 把止损抵消掉。"
+  },
+  {
+   "seq": 4,
+   "action": "buy",
+   "symbol": "CDNS",
+   "dollar_amount": 1021.15,
+   "bucket": "strategy",
+   "reason": "rsi2_entry",
+   "est_price": 335.8,
+   "rsi2": 7.66,
+   "state_file": "state/positions.json",
+   "status": "awaiting_execution",
+   "cap_projection": "over_cap → 整单跳过不缩量",
+   "earnings_next": null,
+   "note": "⚠️ **CDNS 不在今日 earnings.json 覆盖范围内** (昨日取数只覆盖持仓 + 10-12 候选)。allow_unknown_earnings=true 故引擎放行, 但财报黑窗对本单**未实际生效** —— 执行前须补取 get_earnings_results(CDNS) 核对 7 日黑窗。行业 Electronic Technology。"
+  },
+  {
+   "seq": 5,
+   "action": "buy",
+   "symbol": "VRTX",
+   "dollar_amount": 964.96,
+   "bucket": "strategy",
+   "reason": "rsi2_entry",
+   "est_price": 488.4,
+   "rsi2": 8.53,
+   "state_file": "state/positions.json",
+   "status": "awaiting_execution",
+   "cap_projection": "over_cap → 整单跳过不缩量",
+   "earnings_next": null,
+   "note": "⚠️ 同上, **VRTX 不在 earnings.json 覆盖范围内**, 财报黑窗未实际生效, 执行前须补取核对。金额 $964.96 < 单仓额 $1,021.15 是引擎按剩余资金算出的尾单。行业 Health Technology。"
   }
+ ],
+
+ "defense_blocks_today": {
+  "_what": "报告义务 (红线9 📢): 防御层与板块闸今日拦下的标的逐条点名",
+  "note": "本窗口 plan.json 未单列 skip 明细; 已知静默失效项见下。"
+ },
+
+ "flags_for_user": [
+  "🚫 **AMAT −7% 止损单被分类器拦住未成交** —— 风控性质最强的一张单落空, 账户仍持有跌破止损线的 AMAT (现价约 463 vs 止损线 472.30)。",
+  "🚫 **DE 盈利出场单被拦** —— 继续持有, 浮盈 +1.28% 可能回吐。",
+  "⚠️ **AMAT 同日卖+买冲突**: 引擎同时要卖 (止损) 和买 (入场) 同一只票。按仓库既定规则保留卖单跳过买单。这暴露了 signals.py 的一个设计漏洞 (止损可被同根 bar 的再入场抵消), 且 paper.py 里「实盘无此形态」的注释已被证伪。",
+  "⚠️ **半导体同因子敞口**: KLAC/SOXQ 两张加仓单都是半导体。若全部成交, 半导体敞口会进一步上升, 而 defense.max_per_sector=3 仍不会拦 (待决项 #2)。",
+  "⚠️ **CDNS / VRTX 财报日未知**: 今日 earnings.json 只覆盖持仓与 10-12 候选, 这两只新面孔不在内; allow_unknown_earnings=true 放行, 财报黑窗对它们未生效。",
+  "⚠️ **财报黑窗今日对持仓生效了**: 喂了 --earnings 后 TSM (10-15 财报) 在 10-14 会自动触发 earnings_exit。本窗口未产出 TSM 卖单是正确的 (距财报 2 天 > earnings_exit_days=1)。"
  ]
 }

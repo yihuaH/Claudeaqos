@@ -918,6 +918,19 @@
       "reason": "spread_too_wide(best=3.09%)",
       "rsi2": 4.5,
       "spot": 590.64
+    },
+    {
+      "date": "2026-10-13",
+      "symbol": "TSM",
+      "reason": "earnings_blackout(dte=2)",
+      "rsi2": 3.4
+    },
+    {
+      "date": "2026-10-13",
+      "symbol": "SMH",
+      "reason": "premium_too_large(8688)",
+      "rsi2": 1.33,
+      "spot": 586.07
     }
   ],
   "assignments": [
