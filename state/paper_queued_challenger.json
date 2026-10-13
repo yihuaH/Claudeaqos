@@ -1,32 +1,45 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "coid_prefix": "cq",
-  "next_open": "2026-10-13T09:30:00-04:00",
-  "skipped": [],
+  "next_open": "2026-10-14T09:30:00-04:00",
+  "skipped": [
+    "CDNS buy: 排队限价下买不起 1 整股, 跳过"
+  ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-12-AMAT-buy",
-      "order_id": "743fa240-c66d-44f3-a962-26451dfdd1b3",
-      "symbol": "AMAT",
-      "side": "buy",
+      "coid": "cq-2026-10-13-DE-sell",
+      "order_id": "ccfd2d64-2d9b-49f0-bc1b-1cf3e1861462",
+      "symbol": "DE",
+      "side": "sell",
       "status": "accepted",
-      "limit_price": "512.46",
-      "qty": "7",
+      "limit_price": "630.5",
+      "qty": "11",
       "bucket": "strategy",
-      "reason": "rsi2_scale_in"
+      "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-10-12-SOXQ-buy",
-      "order_id": "2bb98bf3-eb05-4cc7-a910-4bfd238250ad",
-      "symbol": "SOXQ",
+      "coid": "cq-2026-10-13-KLAC-buy",
+      "order_id": "e2aea7f1-b232-4b45-aa78-28624edd26bc",
+      "symbol": "KLAC",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "99.19",
-      "qty": "5",
+      "limit_price": "189.52",
+      "qty": "20",
       "bucket": "strategy",
-      "reason": "rsi2_scale_in"
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-13-DAL-buy",
+      "order_id": "a4c07acf-71b9-4de8-a502-116e9277a68d",
+      "symbol": "DAL",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "81.96",
+      "qty": "46",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

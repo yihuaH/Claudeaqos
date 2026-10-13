@@ -26,18 +26,18 @@
       "tranches": 1
     },
     "SOXQ": {
-      "qty": 38.0,
-      "entry_price": 100.756053,
+      "qty": 43.0,
+      "entry_price": 99.9442,
       "entry_date": "2026-10-09",
-      "cost": 3828.73,
-      "tranches": 1
+      "cost": 4297.6,
+      "tranches": 2
     },
     "AMAT": {
-      "qty": 7.0,
-      "entry_price": 518.114286,
+      "qty": 14.0,
+      "entry_price": 498.82,
       "entry_date": "2026-10-09",
-      "cost": 3626.8,
-      "tranches": 1
+      "cost": 6983.48,
+      "tranches": 2
     },
     "TSM": {
       "qty": 8.0,
@@ -325,6 +325,24 @@
       "price": 228.48,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-13",
+      "symbol": "AMAT",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 479.525714,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-13",
+      "symbol": "SOXQ",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 93.774,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ]
 }
