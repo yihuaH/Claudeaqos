@@ -11,13 +11,6 @@
       "cost": 9277.64,
       "tranches": 1
     },
-    "DE": {
-      "qty": 11.0,
-      "entry_price": 638.8773,
-      "entry_date": "2026-10-08",
-      "cost": 7027.65,
-      "tranches": 2
-    },
     "RVMD": {
       "qty": 20.0,
       "entry_price": 187.879501,
@@ -51,6 +44,20 @@
       "entry_price": 228.48,
       "entry_date": "2026-10-12",
       "cost": 3655.68,
+      "tranches": 1
+    },
+    "KLAC": {
+      "qty": 20.0,
+      "entry_price": 182.3855,
+      "entry_date": "2026-10-14",
+      "cost": 3647.71,
+      "tranches": 1
+    },
+    "DAL": {
+      "qty": 46.0,
+      "entry_price": 78.22,
+      "entry_date": "2026-10-14",
+      "cost": 3598.12,
       "tranches": 1
     }
   },
@@ -343,6 +350,33 @@
       "price": 93.774,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "DE",
+      "side": "sell",
+      "qty": 11.0,
+      "price": 648.355455,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "KLAC",
+      "side": "buy",
+      "qty": 20.0,
+      "price": 182.3855,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 46.0,
+      "price": 78.22,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }
