@@ -2,20 +2,6 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "DE": {
-      "qty": 3.243085,
-      "entry_price": 640.4828,
-      "entry_date": "2026-10-07",
-      "cost": 2077.14,
-      "tranches": 2
-    },
-    "RVMD": {
-      "qty": 5.498801,
-      "entry_price": 189.5595,
-      "entry_date": "2026-10-08",
-      "cost": 1042.35,
-      "tranches": 1
-    },
     "SOXQ": {
       "qty": 10.508863,
       "entry_price": 99.1877,
@@ -31,31 +17,59 @@
       "tranches": 1
     },
     "DAL": {
-      "qty": 12.786432,
-      "entry_price": 81.52,
+      "qty": 25.952434,
+      "entry_price": 78.993,
       "entry_date": "2026-10-08",
-      "cost": 1042.35,
-      "tranches": 1
-    },
-    "TSM": {
-      "qty": 2.298151,
-      "entry_price": 452.2199,
-      "entry_date": "2026-10-09",
-      "cost": 1039.27,
-      "tranches": 1
+      "cost": 2050.06,
+      "tranches": 2
     },
     "KLAC": {
-      "qty": 5.440547,
-      "entry_price": 190.0599,
+      "qty": 11.088354,
+      "entry_price": 184.1337,
       "entry_date": "2026-10-12",
-      "cost": 1034.03,
-      "tranches": 1
+      "cost": 2041.74,
+      "tranches": 2
     },
     "NVDA": {
       "qty": 0.353809,
       "entry_price": 226.478,
       "entry_date": "2026-10-12",
       "cost": 80.13,
+      "tranches": 1
+    },
+    "STT": {
+      "qty": 6.06999,
+      "entry_price": 166.0151,
+      "entry_date": "2026-10-14",
+      "cost": 1007.71,
+      "tranches": 1
+    },
+    "XLK": {
+      "qty": 5.287595,
+      "entry_price": 190.58,
+      "entry_date": "2026-10-14",
+      "cost": 1007.71,
+      "tranches": 1
+    },
+    "QQQM": {
+      "qty": 3.357522,
+      "entry_price": 300.135,
+      "entry_date": "2026-10-14",
+      "cost": 1007.71,
+      "tranches": 1
+    },
+    "CDNS": {
+      "qty": 3.079243,
+      "entry_price": 327.259,
+      "entry_date": "2026-10-14",
+      "cost": 1007.71,
+      "tranches": 1
+    },
+    "ANET": {
+      "qty": 0.580356,
+      "entry_price": 195.1215,
+      "entry_date": "2026-10-14",
+      "cost": 113.24,
       "tranches": 1
     }
   },
@@ -2490,6 +2504,96 @@
       "price": 140.9401,
       "bucket": "strategy",
       "reason": "time_stop"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "DE",
+      "side": "sell",
+      "qty": 3.243085,
+      "price": 651.78,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "RVMD",
+      "side": "sell",
+      "qty": 5.498801,
+      "price": 192.605,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "TSM",
+      "side": "sell",
+      "qty": 2.298151,
+      "price": 430.3435,
+      "bucket": "strategy",
+      "reason": "earnings_exit"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 13.166002,
+      "price": 76.5388,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "KLAC",
+      "side": "buy",
+      "qty": 5.647807,
+      "price": 178.425,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "STT",
+      "side": "buy",
+      "qty": 6.06999,
+      "price": 166.0151,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 5.287595,
+      "price": 190.58,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "QQQM",
+      "side": "buy",
+      "qty": 3.357522,
+      "price": 300.135,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "CDNS",
+      "side": "buy",
+      "qty": 3.079243,
+      "price": 327.259,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-14",
+      "symbol": "ANET",
+      "side": "buy",
+      "qty": 0.580356,
+      "price": 195.1215,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
