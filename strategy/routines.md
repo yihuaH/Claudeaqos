@@ -149,9 +149,22 @@ Claudeaqos 收盘前主跑 (关键路径)。先执行: cd /home/user/Claudeaqos 
 mcp__cash_printer__get_equity_quotes 的原始输出传 --quotes, 绝不可用 integrations.py quotes
 (延迟 15 分钟)。
 
-⚠️⚠️ **以上是触发器里当前存着的原文, 其中「买单只写 pending 绝不 place」已于 2026-10-12 过期**
-(红线9 改为 auto_buys)。触发器文案无法在线更新, 判据固定为 **仓库 > 唤醒词** (playbook §4 开头
-的优先级说明)。2026-10-12 首跑即按此覆盖、两单当场成交, 见 journal/2026-10-12-preclose.md。
+✅ **2026-10-14 已在线更新** (用户当日授权会话调 `update_trigger`)。上方是旧存档文本, 其中
+「买单只写 pending 绝不 place」与「期权走手动 App 通道」均已过期。新文本的改动:
+- 买单/加仓单 → **auto_buys 直接 review → place**, 不再写 pending 不再等「执行」
+- 单腿期权开仓 → **同样自动 place** (多腿被 Robinhood API 400 拒, 故形态必须 single)
+- 🛟 fail-safe 明确写了 **「被拦」≠「停止下单」**: 只有被拦那张退回 pending, 其余未尝试过的
+  仍须逐张 place (2026-10-13 曾把两者混为一谈, 漏掉一张本可成交的买单)
+- 新增**三个必传输入**: `--quotes` (券商实时价) · `--positions` (否则 position_check 静默
+  降级成 skipped, 10-13 踩过) · `--earnings state/earnings_cache.json`
+- journal 标记强调**裸行** `preclose: completed` (带 bullet 会让幂等闸匹配不上)
+- 报告格式: ════ 分界线开头, **需要用户动作的清单放最后**
+- 删掉了已失效的「首次跑请额外记录」观察项段落
+- 开头加了一句 **「仓库 > 唤醒词」**, 以后再出现冲突判据仍然清楚
+
+⚠️ 更新后已核对: 连接器 `cash-printer` 仍在、cron `20 19 * * 1-5` 未变、
+`persistent_session_id` 仍指向常驻对话、`next_run_at` 2026-10-14T19:20:00Z 正常。
+**三条其余 Routine (10:45 晨检 / 17:45 收尾 / 周一 13:00 刷池) 本次未改**, 它们的文案没有过期内容。
 **建议改法** (需用户批准后由 update_trigger 应用): 把那句换成
 「正股买单按 playbook 4B-auto 直接 review→place; 被分类器拦则退回 4B-failsafe 写 pending 不重试。
 成交后必须立即发执行报告并点名旗标项。期权开仓仍只写 pending_option_orders.json + 发 App 参数

@@ -38,7 +38,9 @@
       "GLDM",
       "TLT"
     ],
-    "note": "个股防御层 (与纸面实验同参); exempt_symbols=ETF 池, 豁免财报/异动过滤; sectors 运行时由 universe.json 提供。earnings_gap_up_exempt (2026-08-17 用户「直接上实盘」): 近20日异动闸对**财报日上涨跳空**豁免 (下跌异动与非财报异动照拦), 需 earnings 传新格式带 past 历史财报日, 缺 past 则自动失效; 依据 journal/2026-08-14-research-defense-move-filter.md。"
+    "note": "个股防御层 (与纸面实验同参); exempt_symbols=ETF 池, 豁免财报/异动过滤; sectors 运行时由 universe.json 提供。earnings_gap_up_exempt (2026-08-17 用户「直接上实盘」): 近20日异动闸对**财报日上涨跳空**豁免 (下跌异动与非财报异动照拦), 需 earnings 传新格式带 past 历史财报日, 缺 past 则自动失效; 依据 journal/2026-08-14-research-defense-move-filter.md。",
+    "same_factor_exposure_cap_pct": null,
+    "_same_factor_note": "同因子敞口上限: **用户 2026-10-14 明确答复「不设」**。背景: max_per_sector=3 只数个股行业字段, 盖不住 ETF+个股混合 —— AMAT 被数据源归在 Producer Manufacturing、SOXQ 是 ETF 不计数, 故 2026-10-12 半导体实际敞口达净值 41.0% (其后 40.3% / 39.7% / 39.5%) 而板块闸认为一切正常。会话连续四日点名, 用户决定**不加这道闸**。=> 此后不再就该敞口反复询问; 仍按红线9 报告义务在战报里**陈述**当日同因子敞口数字, 但不作为需要用户动作的事项。改回有上限只能由用户发话 (红线3)。"
   },
   "entry": {
     "rsi2_max": 10.0,

@@ -110,8 +110,9 @@
   `min(buying_power, cash)` + 熔断。长 call 可亏 100% 权利金, 故该上限是唯一的单笔规模闸。
   当前账户规模下该形态**近乎零出单** (深ITM call 每张数千美元 vs 千元级现金)。
   前形态 credit_put_spread 战绩 8 回合 8 胜 / +$573.00, 参数留档在 `contract._retired_credit_put_spread`, 一键可回退。
-- ⚠️ **挑战者 edge 口径污染未解**: 仓位按 Alpaca 真实权益算 (约 3.8×账本 `start_capital`),
-  edge 已摆到 −1.12%。**该指标目前不能用于任何晋级判断** (红线8)。
+- ⚠️ **挑战者 edge 仍不可用于晋级** (红线8), 但**不是**原先写的"分母按 3.8×账本 start_capital"
+  —— evaluate 用的是 TWR, 分母已与各自 sizing 基准一致 (2026-10-14 查实)。真正的不可比是
+  **实盘现金部署率远低于纸面** (受 cap 整单跳过) + **纸面整股向下取整**, 详见「已知未修的问题」第 5 条。
 - ⚠️ **期权链是 `feed=indicative`** (OPRA 需签协议): 点差闸读的不是交易所真实 NBBO。
 
 ## 结构
@@ -170,15 +171,39 @@
    最小修法: run 前 `unlink` —— `daily.py:495` 已有 `{"fills": []}` 兜底, **安全**。
 2. **`signals.py` 部分卖出不更新 `cost`**: 实盘代码路径共用; `state/momentum_positions.json`
    的 QQQ 已失真 18.46×。
-3. **财报黑窗静默失效 —— 根因是取数漏做, 不是代码缺陷**: `daily.py` 只要拿到 `--earnings`
-   就会往下传 (401/479/508/566 行), 但主跑取数时没准备这个文件 → `allow_unknown_earnings=true`
-   放行 → `earnings_blackout_days=7` 与 `earnings_exit_days=1` 两道保护全关。
-   **已造成实际损害** (2026-10-12 补全财报数据后查出): DAL 2026-10-08 在财报前 1 日入场、
-   TSM 2026-10-09 在 6 日黑窗内入场。⚠️ **每个主跑窗口都必须逐只 `get_earnings_results`
-   并传 `--earnings`** (已进 `state/oneshot_tasks.json` 高亮)。
-4. **同因子敞口无闸**: `defense.max_per_sector=3` 盖不住 ETF+个股混合 (AMAT 被数据源归在
-   Producer Manufacturing, SOXQ 是 ETF 不计数) —— 2026-10-12 半导体实际敞口已达净值 40~41%。
-5. **挑战者 edge 口径污染** (见轨道表告警)。
+3. **财报黑窗 —— 2026-10-14 起已落地, 保留为纪律条目**: 根因是**取数漏做**而非代码缺陷
+   (`daily.py` 拿到 `--earnings` 就会往下传, 401/479/508/566 行)。造成过实际损害:
+   DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。
+   现行做法: 财报日缓存持久化在 **`state/earnings_cache.json`** (2026-10-14 建, 起因是 scratchpad
+   被容器回收清空、两天累积的 17 只全丢), 每个主跑窗口 `--earnings state/earnings_cache.json`。
+   ⚠️ **`next` 日期一过必须重取**, 否则 `days_to_earnings` 返回负数 → 闸门 fail-open 且不报错。
+   已验证生效: 10-13 周call skip_log 出现 `TSM earnings_blackout(dte=2)`; 10-14 实盘出场链产出
+   `TSM earnings_exit`。
+4. **同因子敞口无闸 —— 用户 2026-10-14 决定「不设」, 已结案**: `defense.max_per_sector=3`
+   只数个股行业字段, 盖不住 ETF+个股混合 (AMAT 被数据源归在 Producer Manufacturing,
+   SOXQ 是 ETF 不计数), 半导体实际敞口在 39~41% 徘徊而板块闸认为一切正常。
+   **用户明确答复不加这道闸** (`config.json defense.same_factor_exposure_cap_pct = null`)。
+   => **不再反复询问**; 战报里仍按报告义务**陈述**当日同因子敞口数字, 但不作为待用户动作项。
+5. **挑战者 edge 不可用于晋级 —— 但原「口径污染」诊断 2026-10-14 已证明不准**:
+   `learn.py` 的 evaluate 实际用的是**时间加权收益 (TWR)**, 对 live 与 paper **各自的真实权益曲线**
+   逐段链接并剔除外部现金流 (`equity_history` + `live_flow`), 分母与各自的 sizing 基准**本来就一致**,
+   不存在「按 3.8×账本 start_capital 算」那种分母错配。`paper_positions.json` 的
+   `start_capital=10218.49` 确实与 Alpaca 真实权益 ($38.4k) 不符, 但 **evaluate 根本不读它**。
+   真正残留的不可比是另一回事: ① **现金部署率不对称** —— 实盘受现金约束常整单跳过买单
+   (2026-10-13 五张买单因 cap 只能成交一张, 闲置现金 19.5%), 纸面几乎满仓 (闲置 1.6%),
+   闲置现金拖累实盘收益; ② **纸面是整股、实盘是零股美元额** (Alpaca 下整股会向下取整, 系统性少部署)。
+   两条都使 edge 偏向"纸面更好", 方向与原诊断相反。**结论不变: edge 仍不能用于任何晋级判断 (红线8)**,
+   但原因要按这里的说法理解。
+
+### 已修复 / 已结案 (勿当成未决项)
+
+- ✅ **同日卖+买冲突** (2026-10-13 发现, 10-14 用户选修法2 后修): `signals.py` 入场候选筛选
+  现在排除 `sym in exiting` —— 当日正在出场的标的不得同轮作为新入场候选。
+  修前漏洞: `held = set(strat) − {策略卖单}` 把被卖出的标的当轮移出 held, 入场筛选只看 held,
+  于是刚被止损砍掉的票可按原价立刻买回, **止损被整个抵消** (只剩: 实现一笔亏损 + 成本基重置
+  + 时间止损时钟重置)。A/B 实测 (2026-10-14 当日真实数据): 修前买单含 **AMAT + SOXQ 两张,
+  恰好抵消当日两张 stop_loss**; 修后两者从买单消失、出场清单一字不变, 腾出的额度由 FCX 等
+  真正的新标的接手。与纸面轨道 `paper.py:_wash_conflicts`「出场优先」口径统一。
 
 ### journal 完成标记的硬约定 (2026-10-12 查出闸门假阴性后固定)
 

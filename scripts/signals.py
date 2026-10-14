@@ -393,7 +393,18 @@ def cmd_signal(a):
     cands = []
     for sym in universe:
         i = ind.get(sym)
-        if not i or sym in held or i["sma200"] is None or i["rsi2"] is None:
+        # `sym in exiting` (2026-10-14 用户选修法2): **当日正在出场的标的不得同轮作为新入场候选**。
+        # 起因 2026-10-13: AMAT 同时出现在出场清单 (stop_loss, 收盘跌破 -7%) 与入场清单
+        # (rsi2_entry, rsi2=0.50)。因为上面 `held = set(strat) − {策略卖单}` 把被卖出的标的当轮
+        # 就从 held 移出, 入场筛选只看 held 不看 exiting, 于是同一根 bar 上刚被止损砍掉的票可以
+        # 立刻按原价买回 —— **止损被整个抵消**, 只剩三样副作用: 实现一笔亏损、成本基重置到更低价
+        # (止损线随之下移)、**时间止损时钟重置**。
+        # stop_loss 最容易撞 (急跌同时把 rsi2 砸到个位数, 正好满足入场闸); exit_strength 自带
+        # 高 rsi2 进不了入场闸、earnings_exit 自带财报黑窗, 两者本就撞不上 —— 故按标的无条件排除
+        # 最简单, 且与纸面轨道 `paper.py:_wash_conflicts` 的「同标的同日卖+买冲突 → 保留卖单跳过
+        # 买单 (出场优先)」口径完全一致 (该函数注释原写「实盘无此形态」, 2026-10-13 被证伪)。
+        # 注: `exiting` 同时含策略仓与存量仓出场, 换仓/加速清理卖出的标的当轮也不会被买回。
+        if not i or sym in held or sym in exiting or i["sma200"] is None or i["rsi2"] is None:
             continue
         if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
             continue
