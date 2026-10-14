@@ -241,8 +241,61 @@ def cmd_signal(a):
             return False
         return broker.get(sym, {}).get("intraday", 0.0) > 0
 
+    def entry_signal_ok(sym, quiet=False):
+        """该标的今日是否满足**入场信号 + 标的级防御层** (不含槽位/行业上限/现金 —— 那些属分配阶段)。
+
+        被两处共用: ① 下方「有卖有买就不卖」的冲突判定; ② 再下方的入场候选筛选。
+        抽成函数是为了两处口径**必然一致** —— 复制粘贴两份判定迟早会漂移。
+        quiet=True 时不写 warnings (冲突判定阶段不该污染入场相关的告警文案)。
+        """
+        i = ind.get(sym)
+        if not i or i["sma200"] is None or i["rsi2"] is None:
+            return False
+        if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
+            return False
+        if defense is None or sym in exempt_syms:
+            return True
+        if no_earnings_data and not allow_unknown_earnings:
+            return False
+        if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
+            if not quiet:
+                warnings.append(f"{sym}: 财报日未知, 防御性跳过入场")
+            return False
+        ed = days_to_earnings(sym)
+        if ed is not None and 0 <= ed <= int(defense.get("earnings_blackout_days", 10)):
+            return False
+        look = int(defense.get("move_lookback_days", 20))
+        thr = float(defense.get("max_daily_move_pct", 8.0))
+        # 财报上涨跳空豁免 (2026-08-17 用户「直接上实盘」授权, 依据
+        # journal/2026-08-14-research-defense-move-filter.md: 财报**上涨**跳空后的信号
+        # 均值 +1.01%/胜率 66.7% 不输基准 (+0.45%/66.3%), 而财报**下跌**跳空后为 -0.44%/53.3%
+        # 明确负期望 —— 故只豁免上涨方向, 下跌异动与非财报异动一律照拦)。
+        # 判定用真实财报日 (回测用跳空占比代理, 实盘用 earnings.past 更准), 无 past 数据则自动失效。
+        exempt_gap_up = bool(defense.get("earnings_gap_up_exempt"))
+        er_days = earnings_reaction_days(sym) if exempt_gap_up else set()
+        dts = series[sym][0][-(look + 1):]
+        w = series[sym][1][-(look + 1):]
+        for j in range(1, len(w)):
+            if not w[j - 1]:
+                continue
+            chg = (w[j] / w[j - 1] - 1) * 100.0
+            if abs(chg) < thr:
+                continue
+            if chg > 0 and dts[j] in er_days:
+                continue        # 财报上涨跳空 → 豁免
+            if not quiet:
+                warnings.append(f"{sym}: 近{look}日有单日异动 ≥{thr}% "
+                                f"({dts[j]} {chg:+.1f}%), 防御性跳过入场")
+            return False
+        return True
+
     # --- 卖出: 策略仓位出场 ---
     exiting = set()
+    # 「有卖有买就不卖」命中的标的: 出场被取消, 且**同时不加仓** —— 用户说的是「不卖」,
+    # 不是「买更多」。若放任加仓分支触发, 一只刚跌破 -7% 止损线的票会被补到单票 20% 敞口,
+    # 且加仓把止损基准换成加权均价 (等效止损外移到 ≈-8.4%), 风险是叠加而非持平 —— 那是
+    # 用户没有批准过的组合效果 (红线3)。故本集合在加仓分支里被跳过, 该标的当日**零动作**。
+    conflict_held = set()
     for sym, pos in strat.items():
         i = ind.get(sym)
         if not i or i["rsi2"] is None:
@@ -260,6 +313,23 @@ def cmd_signal(a):
             reason = "exit_strength"
         elif trading_days_since(series[sym][0], pos["entry_date"]) >= cfg["exit"]["max_holding_days"]:
             reason = "time_stop"
+        # 「有卖有买就不卖」(2026-10-14 用户指示, 取代同日 10:xx 刚上线的「出场优先」):
+        # 同一标的同日既触发出场、又满足入场信号 → **两边都不做, 原仓位继续持有**。
+        # 经济含义: 以几乎同一价格卖出再买回本就是一场空转 (实现一笔亏损 + 付两次点差 +
+        # 成本基与时间止损时钟重置), 既然引擎当日仍然"想拥有"这只票, 直接不动最干净。
+        # ⚠️ 这条规则的代价必须写明: **它会让 -7% 止损在"超卖但仍在 SMA200 之上"的标的上失效** ——
+        # 而急跌砸出止损的票往往正好 rsi2 极低, 所以这不是边角情形。用户已知并选择如此 (红线3:
+        # 风控口径由用户定)。time_stop 同样会被抵消, 理论上可出现"持仓天数到期却天天被取消"的长持。
+        # 判定口径: "有买" = `entry_signal_ok` (入场信号 + 标的级防御层), **不含**槽位/行业上限/
+        # 现金可用性 —— 那些是分配阶段的"有没有位子", 不代表引擎不想要这只票。
+        # 作用范围: 仅**策略仓**。存量仓 (legacy) 的保护性止损/止盈/换仓照旧卖出 —— 它们还承担
+        # 给引擎供血的职责, 取消会反过来饿死买入侧 (当前 legacy_positions 为空, 暂无实际影响)。
+        if reason and entry_signal_ok(sym, quiet=True):
+            conflict_held.add(sym)
+            warnings.append(
+                f"{sym}: 同日既触发 {reason} 又满足入场信号 (rsi2={i['rsi2']:.2f}) → "
+                f"按「有卖有买就不卖」取消本次出场, 原仓位**原样继续持有** (同时不加仓)")
+            continue
         if reason:
             qty = broker_qty(sym, float(pos["qty"]))
             if qty > 0:
@@ -374,6 +444,8 @@ def cmd_signal(a):
         drop = float(si["trigger_drop_pct"]) / 100.0
         max_tr = int(si["max_tranches"])
         for sym in sorted(held):
+            if sym in conflict_held:
+                continue        # 「有卖有买就不卖」命中 → 当日零动作, 不卖也不加
             pos = strat[sym]
             i = ind.get(sym)
             if not i or i["close"] is None or i["rsi2"] is None:
@@ -392,57 +464,16 @@ def cmd_signal(a):
 
     cands = []
     for sym in universe:
+        # `sym in held`: 已持仓不重复开新仓 (加仓走上面的 scale_in 分支)。
+        # `sym in exiting`: 当日**存量仓**出场 (保护性止损/止盈/换仓/加速清理) 的标的不同轮买回。
+        #   策略仓不会落到这里 —— 它若同时满足入场信号, 上面的「有卖有买就不卖」已经取消了它的
+        #   出场, 于是它仍在 held 里, 本行第一个条件就把它挡住了。
+        # 入场信号与标的级防御层统一走 `entry_signal_ok` (与出场侧的冲突判定同一份口径)。
+        if sym in held or sym in exiting:
+            continue
         i = ind.get(sym)
-        # `sym in exiting` (2026-10-14 用户选修法2): **当日正在出场的标的不得同轮作为新入场候选**。
-        # 起因 2026-10-13: AMAT 同时出现在出场清单 (stop_loss, 收盘跌破 -7%) 与入场清单
-        # (rsi2_entry, rsi2=0.50)。因为上面 `held = set(strat) − {策略卖单}` 把被卖出的标的当轮
-        # 就从 held 移出, 入场筛选只看 held 不看 exiting, 于是同一根 bar 上刚被止损砍掉的票可以
-        # 立刻按原价买回 —— **止损被整个抵消**, 只剩三样副作用: 实现一笔亏损、成本基重置到更低价
-        # (止损线随之下移)、**时间止损时钟重置**。
-        # stop_loss 最容易撞 (急跌同时把 rsi2 砸到个位数, 正好满足入场闸); exit_strength 自带
-        # 高 rsi2 进不了入场闸、earnings_exit 自带财报黑窗, 两者本就撞不上 —— 故按标的无条件排除
-        # 最简单, 且与纸面轨道 `paper.py:_wash_conflicts` 的「同标的同日卖+买冲突 → 保留卖单跳过
-        # 买单 (出场优先)」口径完全一致 (该函数注释原写「实盘无此形态」, 2026-10-13 被证伪)。
-        # 注: `exiting` 同时含策略仓与存量仓出场, 换仓/加速清理卖出的标的当轮也不会被买回。
-        if not i or sym in held or sym in exiting or i["sma200"] is None or i["rsi2"] is None:
+        if not i or not entry_signal_ok(sym):
             continue
-        if not (i["close"] > i["sma200"] and i["rsi2"] < cfg["entry"]["rsi2_max"]):
-            continue
-        if defense is not None and sym not in exempt_syms:
-            if no_earnings_data and not allow_unknown_earnings:
-                continue
-            if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
-                warnings.append(f"{sym}: 财报日未知, 防御性跳过入场")
-                continue
-            ed = days_to_earnings(sym)
-            if ed is not None and 0 <= ed <= int(defense.get("earnings_blackout_days", 10)):
-                continue
-            look = int(defense.get("move_lookback_days", 20))
-            thr = float(defense.get("max_daily_move_pct", 8.0))
-            # 财报上涨跳空豁免 (2026-08-17 用户「直接上实盘」授权, 依据
-            # journal/2026-08-14-research-defense-move-filter.md: 财报**上涨**跳空后的信号
-            # 均值 +1.01%/胜率 66.7% 不输基准 (+0.45%/66.3%), 而财报**下跌**跳空后为 -0.44%/53.3%
-            # 明确负期望 —— 故只豁免上涨方向, 下跌异动与非财报异动一律照拦)。
-            # 判定用真实财报日 (回测用跳空占比代理, 实盘用 earnings.past 更准), 无 past 数据则自动失效。
-            exempt_gap_up = bool(defense.get("earnings_gap_up_exempt"))
-            er_days = earnings_reaction_days(sym) if exempt_gap_up else set()
-            dts = series[sym][0][-(look + 1):]
-            w = series[sym][1][-(look + 1):]
-            hit = None
-            for j in range(1, len(w)):
-                if not w[j - 1]:
-                    continue
-                chg = (w[j] / w[j - 1] - 1) * 100.0
-                if abs(chg) < thr:
-                    continue
-                if chg > 0 and dts[j] in er_days:
-                    continue        # 财报上涨跳空 → 豁免
-                hit = (dts[j], chg)
-                break
-            if hit:
-                warnings.append(f"{sym}: 近{look}日有单日异动 ≥{thr}% "
-                                f"({hit[0]} {hit[1]:+.1f}%), 防御性跳过入场")
-                continue
         cands.append((i["rsi2"], sym))
     cands.sort()
 
