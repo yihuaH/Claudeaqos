@@ -4,20 +4,6 @@
   "high_water_mark": 10218.49,
   "halted": false,
   "strategy_positions": {
-    "BNY": {
-      "qty": 64.0,
-      "entry_price": 144.963125,
-      "entry_date": "2026-10-02",
-      "cost": 9277.64,
-      "tranches": 1
-    },
-    "RVMD": {
-      "qty": 20.0,
-      "entry_price": 187.879501,
-      "entry_date": "2026-10-09",
-      "cost": 3757.59,
-      "tranches": 1
-    },
     "SOXQ": {
       "qty": 43.0,
       "entry_price": 99.9442,
@@ -32,19 +18,12 @@
       "cost": 6983.48,
       "tranches": 2
     },
-    "TSM": {
-      "qty": 8.0,
-      "entry_price": 451.00625,
-      "entry_date": "2026-10-12",
-      "cost": 3608.05,
-      "tranches": 1
-    },
     "NVDA": {
-      "qty": 16.0,
-      "entry_price": 228.48,
+      "qty": 32.0,
+      "entry_price": 221.6875,
       "entry_date": "2026-10-12",
-      "cost": 3655.68,
-      "tranches": 1
+      "cost": 7094.0,
+      "tranches": 2
     },
     "KLAC": {
       "qty": 20.0,
@@ -58,6 +37,34 @@
       "entry_price": 78.22,
       "entry_date": "2026-10-14",
       "cost": 3598.12,
+      "tranches": 1
+    },
+    "STT": {
+      "qty": 21.0,
+      "entry_price": 167.26,
+      "entry_date": "2026-10-15",
+      "cost": 3512.46,
+      "tranches": 1
+    },
+    "XLK": {
+      "qty": 19.0,
+      "entry_price": 186.27,
+      "entry_date": "2026-10-15",
+      "cost": 3539.13,
+      "tranches": 1
+    },
+    "QQQM": {
+      "qty": 12.0,
+      "entry_price": 295.433333,
+      "entry_date": "2026-10-15",
+      "cost": 3545.2,
+      "tranches": 1
+    },
+    "CDNS": {
+      "qty": 4.0,
+      "entry_price": 324.0625,
+      "entry_date": "2026-10-15",
+      "cost": 1296.25,
       "tranches": 1
     }
   },
@@ -375,6 +382,78 @@
       "side": "buy",
       "qty": 46.0,
       "price": 78.22,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "BNY",
+      "side": "sell",
+      "qty": 64.0,
+      "price": 137.2125,
+      "bucket": "strategy",
+      "reason": "earnings_exit"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "RVMD",
+      "side": "sell",
+      "qty": 20.0,
+      "price": 190.94,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "TSM",
+      "side": "sell",
+      "qty": 8.0,
+      "price": 417.20125,
+      "bucket": "strategy",
+      "reason": "earnings_exit"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 16.0,
+      "price": 214.895,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "STT",
+      "side": "buy",
+      "qty": 21.0,
+      "price": 167.26,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 19.0,
+      "price": 186.27,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "QQQM",
+      "side": "buy",
+      "qty": 12.0,
+      "price": 295.433333,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "CDNS",
+      "side": "buy",
+      "qty": 4.0,
+      "price": 324.0625,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

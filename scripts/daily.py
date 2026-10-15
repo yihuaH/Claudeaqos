@@ -301,14 +301,34 @@ def phase_preflight(a, R, plan):
                                   ("verdict", "compared", "matched", "mismatched",
                                    "kinds", "note")}
         plan["position_check"]["anomalies"] = pk.get("anomalies", [])
+        # ⚠️ 闸门"瞎掉但不拦"必须看得见 (2026-10-15 加)。critical=False 意味着本脚本
+        #   **崩溃**时只记 anomaly、verdict 留 None —— 一个 null 看起来跟"没事"一样,
+        #   而会话是照 plan.json 写战报的。崩溃当晚 (wrapup) 无单可下所以无害, 但同样的崩溃
+        #   发生在 15:20 收盘前窗, 主跑会在闸门**从未真正跑过**的情况下继续下单。
+        #   这里只把状态写明 (verdict=error / not_run), **不改"拦不拦"的行为** ——
+        #   让崩溃变成硬停会反过来挡住出场/止损单 (那是用户的保护), 属用户决定, 不自行改。
+        if out is None or not pk:
+            plan["position_check"]["verdict"] = "error"
+            plan["position_check"]["note"] = (
+                "position_check 未产出可解析结果 (崩溃或输入格式不对) → **本次持仓一致性闸实际没有跑**。"
+                "主跑按现行设计仍会继续 (critical=False), 故会话必须自行判断是否停手。")
         if pk.get("verdict") == "fail":
             R.anomalies.append(f"券商持仓与账本不一致: {pk.get('note')} "
                                f"明细 {json.dumps(pk.get('anomalies'), ensure_ascii=False)}")
             if not a.force:
                 raise RuntimeError("券商持仓与账本不一致, 按红线6 停止 (--force 可强制继续)")
     else:
-        plan["position_check"] = {"verdict": "skipped",
-                                  "note": "未提供 --positions, 本次未做持仓一致性核对"}
+        # 2026-10-13 我漏传 --positions, 当时这里只写 verdict=skipped 且**不记 anomaly** ——
+        # 整整一轮主跑在闸门从未跑过的情况下下了单, 事后才发现。记成 anomaly 后,
+        # plan.json 的 anomalies 非空会直接触发会话的红线6 检查, 不再需要靠人留意一个字段。
+        plan["position_check"] = {
+            "verdict": "not_run",
+            "note": "未提供 --positions → **持仓一致性闸本次没有跑**。拆股/漏回写导致的假回撤"
+                    "不会被拦住, 而出场卖单是全自动的。",
+            "anomalies": []}
+        R.anomalies.append(
+            "持仓一致性闸未运行 (未提供 --positions) —— 拆股或漏回写造成的假回撤无人把关, "
+            "而出场/止损卖单全自动。查明并补跑 position_check.py 后再交易 (红线6)")
 
 
 def phase_data(a, R, plan, allsyms):
