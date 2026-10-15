@@ -958,6 +958,26 @@
       "reason": "premium_too_large(9833)",
       "rsi2": 6.82,
       "spot": 768.7
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "TSM",
+      "reason": "earnings_blackout(dte=0)",
+      "rsi2": 1.66
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "SMH",
+      "reason": "spread_too_wide(best=2.57%)",
+      "rsi2": 0.25,
+      "spot": 560.1
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "QQQ",
+      "reason": "premium_too_large(10426)",
+      "rsi2": 3.18,
+      "spot": 728.7
     }
   ],
   "assignments": [

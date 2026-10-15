@@ -9,13 +9,6 @@
       "cost": 1042.35,
       "tranches": 1
     },
-    "AMAT": {
-      "qty": 2.052471,
-      "entry_price": 507.8512,
-      "entry_date": "2026-10-08",
-      "cost": 1042.35,
-      "tranches": 1
-    },
     "DAL": {
       "qty": 25.952434,
       "entry_price": 78.993,
@@ -66,11 +59,11 @@
       "tranches": 1
     },
     "ANET": {
-      "qty": 0.580356,
-      "entry_price": 195.1215,
+      "qty": 5.364735,
+      "entry_price": 186.8797,
       "entry_date": "2026-10-14",
-      "cost": 113.24,
-      "tranches": 1
+      "cost": 1002.56,
+      "tranches": 2
     }
   },
   "legacy_positions": {},
@@ -2594,6 +2587,24 @@
       "price": 195.1215,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 2.052471,
+      "price": 433.6201,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "ANET",
+      "side": "buy",
+      "qty": 4.784379,
+      "price": 185.8799,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ],
   "corporate_actions": [

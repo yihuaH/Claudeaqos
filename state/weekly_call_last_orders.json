@@ -1,75 +1,37 @@
 {
-  "date": "2026-10-14",
+  "date": "2026-10-15",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "TSM",
-      "reason": "earnings_blackout(dte=1)",
-      "rsi2": 2.74
+      "reason": "earnings_blackout(dte=0)",
+      "rsi2": 1.66
     },
     {
       "symbol": "SMH",
-      "reason": "premium_too_large(7733)",
-      "rsi2": 0.35,
-      "spot": 566.06
+      "reason": "spread_too_wide(best=2.57%)",
+      "rsi2": 0.25,
+      "spot": 560.1
     },
     {
       "symbol": "QQQ",
-      "reason": "premium_too_large(8910)",
-      "rsi2": 3.24,
-      "spot": 728.76
-    },
-    {
-      "symbol": "SPY",
-      "reason": "premium_too_large(9833)",
-      "rsi2": 6.82,
-      "spot": 768.7
+      "reason": "premium_too_large(10426)",
+      "rsi2": 3.18,
+      "spot": 728.7
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "XLF",
-      "rsi2_now": 24.81,
-      "scenario": "1d_-1%",
-      "spot": 54.41,
-      "structure": "single",
-      "est_premium_usd": 551
-    },
-    {
-      "symbol": "AMZN",
-      "rsi2_now": 16.13,
-      "scenario": "1d_-1%",
-      "spot": 253.64,
-      "structure": "single",
-      "est_premium_usd": 2583
-    },
-    {
-      "symbol": "GOOGL",
-      "rsi2_now": 18.3,
-      "scenario": "1d_-1%",
-      "spot": 347.81,
-      "structure": "single",
-      "est_premium_usd": 3529
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 32.36,
-      "scenario": "1d_-1%",
-      "spot": 514.87,
-      "structure": "single",
-      "est_premium_usd": 5212
-    },
-    {
       "symbol": "AMD",
-      "rsi2_now": 12.63,
-      "scenario": "2d_-1%x2",
-      "spot": 570.73,
+      "rsi2_now": 10.48,
+      "scenario": "1d_-1%",
+      "spot": 565.89,
       "structure": "single",
-      "est_premium_usd": 6523
+      "est_premium_usd": 6337
     }
   ],
-  "suggested_reserve_usd": 551.0
+  "suggested_reserve_usd": 6337.0
 }

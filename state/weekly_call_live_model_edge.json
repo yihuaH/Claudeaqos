@@ -448,6 +448,22 @@
       "model_surface": 27.0274,
       "ratio_flat_pct": 98.2,
       "ratio_surface_pct": 99.1
+    },
+    {
+      "date": "2026-10-15",
+      "symbol": "NVDA",
+      "outcome": "skip",
+      "reason": "insufficient_buying_power(cost=2462,bp_left=5)",
+      "est_price": null,
+      "spot": null,
+      "rsi2": 7.27,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 24.62,
+      "model_flat": 23.6451,
+      "model_surface": 24.1488,
+      "ratio_flat_pct": 96.0,
+      "ratio_surface_pct": 98.1
     }
   ]
 }
