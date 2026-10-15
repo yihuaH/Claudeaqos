@@ -179,6 +179,10 @@
    ⚠️ **`next` 日期一过必须重取**, 否则 `days_to_earnings` 返回负数 → 闸门 fail-open 且不报错。
    已验证生效: 10-13 周call skip_log 出现 `TSM earnings_blackout(dte=2)`; 10-14 实盘出场链产出
    `TSM earnings_exit`。
+   ✅ **2026-10-15 缓存已灌满**: universe 100/100 + ETF 池 8/8, 文件内 124 个标的键 (22 只 `next=null`)。
+   ⚠️ **同日首次实际命中「过期即静默失效」**: BNY/TSM 的 `next` 都是 10-15 (当日盘前发财报),
+   明日起 `days_to_earnings` 返回负数 → 闸门 fail-open 不报错 —— 已当场重取。
+   **覆盖率 ≠ 新鲜度**, 每个主跑窗口必须按 `_refresh_policy` 第②步扫一遍到期标的。
 4. **同因子敞口无闸 —— 用户 2026-10-14 决定「不设」, 已结案**: `defense.max_per_sector=3`
    只数个股行业字段, 盖不住 ETF+个股混合 (AMAT 被数据源归在 Producer Manufacturing,
    SOXQ 是 ETF 不计数), 半导体实际敞口在 39~41% 徘徊而板块闸认为一切正常。
@@ -194,6 +198,16 @@
    闲置现金拖累实盘收益; ② **纸面是整股、实盘是零股美元额** (Alpaca 下整股会向下取整, 系统性少部署)。
    两条都使 edge 偏向"纸面更好", 方向与原诊断相反。**结论不变: edge 仍不能用于任何晋级判断 (红线8)**,
    但原因要按这里的说法理解。
+
+6. **`daily.py` 曾静默截断引擎告警 —— 代码 2026-10-15 已修, 但历史报告受影响**:
+   `daily.py:409` 原先 `warnings[:12]` / `candidates[:15]` 硬截断且**不留痕**, 而 `journal_facts`
+   里根本没有 warnings 字段 —— 会话写战报/执行记录照 plan.json 写, 于是**凡当日告警 >12 条就漏报**。
+   2026-10-15 实跑 17 条被丢 5 条 (SOXQ 加仓 + TT/JCI/FTNT/PANW 入场, 全是"有信号但资金不足"),
+   candidates 实为 23 条。**订单从未受影响** (买卖读 `place_now`/`to_pending` = 引擎完整输出),
+   受损的只有用户 2026-10-12 定的报告义务 —— 而取消下单前一票否决后, 事后点名是用户唯一的处置入口。
+   现已放宽上限并输出 `warnings_total` / `candidates_total` / `*_truncated`, 截断不可能再隐身。
+   ⚠️ **2026-10-15 之前的 journal/战报, 其"引擎跳过 N 条"可能偏少**, 审计时以当日
+   `orders.json` (scratchpad, 可能已被容器回收) 或重跑为准, 不要把 plan.json 当完整记录。
 
 ### 已修复 / 已结案 (勿当成未决项)
 

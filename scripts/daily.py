@@ -402,15 +402,27 @@ def phase_stock_signal(a, R, plan):
         args += ["--earnings", a.earnings]
     R.run(args, "signals.signal")
     o = load(f"{W}/orders.json")
+    _w_keep = [w for w in o.get("warnings", []) if "无实时报价" not in w]
+    _cands = sorted(
+        [(round(v["rsi2"], 2), sy) for sy, v in (o.get("indicators") or {}).items()
+         if v.get("rsi2") is not None and v.get("sma200") and v.get("close")
+         and v["rsi2"] < 10 and v["close"] > v["sma200"]])
     plan["stock"] = {
         "halted": o.get("halted"), "circuit_breaker": o.get("circuit_breaker_triggered"),
         "drawdown_pct": o.get("drawdown_pct"), "high_water_mark": o.get("high_water_mark"),
         "note": o.get("note"),
-        "warnings": [w for w in o.get("warnings", []) if "无实时报价" not in w][:12],
-        "candidates": sorted(
-            [(round(v["rsi2"], 2), s) for s, v in (o.get("indicators") or {}).items()
-             if v.get("rsi2") is not None and v.get("sma200") and v.get("close")
-             and v["rsi2"] < 10 and v["close"] > v["sma200"]])[:15],
+        # ⚠️ 截断必须可见: 原先硬切 [:12] 且不留痕, 2026-10-15 实跑 17 条被悄悄丢掉 5 条,
+        #   而会话的战报/执行记录是照 plan.json 写的 → 直接漏报了 SOXQ 加仓信号与 TT/JCI/FTNT/PANW
+        #   四条入场信号 (全部"有信号但资金不足")。订单不受影响 (买卖来自 place_now/to_pending,
+        #   读的是引擎完整输出), 但用户定的报告义务被破坏。故: 上限放宽, 并把总数与截断标记一起写出,
+        #   让会话**不可能再看不见**有东西被截掉。
+        "warnings": _w_keep[:60],
+        "warnings_total": len(_w_keep),
+        "warnings_truncated": max(0, len(_w_keep) - 60),
+        # 同上: 原先硬切 [:15] 不留痕 (2026-10-15 实为 23 条, 被悄悄丢 8 条)。
+        "candidates": _cands[:30],
+        "candidates_total": len(_cands),
+        "candidates_truncated": max(0, len(_cands) - 30),
     }
     exitish = {"funding_rotation", "accelerated_liquidation"}
     plan["place_now"] = {"equity_sells": [s for s in o.get("sells", [])
@@ -755,6 +767,12 @@ def main():
     plan["journal_facts"] = {
         "vix": plan.get("macro_vix"),
         "candidates": (plan.get("stock") or {}).get("candidates"),
+        "candidates_total": (plan.get("stock") or {}).get("candidates_total"),
+        # warnings 原先根本不在 journal_facts 里 —— 会话只能去 plan["stock"] 捞, 而那里是截断过的。
+        # 报告义务要求点名全部旗标项, 故这里把引擎 warnings 与总数一起带出来 (2026-10-15 加)。
+        "warnings": (plan.get("stock") or {}).get("warnings"),
+        "warnings_total": (plan.get("stock") or {}).get("warnings_total"),
+        "warnings_truncated": (plan.get("stock") or {}).get("warnings_truncated"),
         "equity_sells": plan["place_now"].get("equity_sells", []),
         "equity_buys": plan["to_pending"].get("equity_buys", []),
         "option_buys": plan["to_pending"].get("option_buys", []),

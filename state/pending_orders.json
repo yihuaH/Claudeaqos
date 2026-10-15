@@ -49,7 +49,7 @@
     "consecutive_day": 2,
     "scale_in_also_skipped": false,
     "scale_in_funded": false,
-    "scale_in_note": "SOXQ 现价低于加仓线 5.12%, 但本次引擎未给它排加仓单 —— 加仓额度先被 ANET 吃掉, 剩余可用资金 $-0.00 (同 NVDA)。"
+    "scale_in_note": "⚠️ 更正: 引擎**确实给 SOXQ 排了加仓信号** (现价低于加仓线 5.12%), 只是在资金分配阶段 被 ANET 先吃掉额度后余 $-0.00 → 以「有加仓信号但可用资金不足」跳过。首版误写成「引擎未给它排加仓单」, 根因是 plan.json 的 warnings 被截断 (见 _engine_skipped_correction)。规则侧无误: conflict_held 没有抑制加仓 (已读 signals.py:450 确认)。"
    }
   ],
   "_note": "SOXQ 的止损**连续第二日**被取消。AMAT 则相反: 本日冲突消失 (已不满足入场信号) → 止损恢复生效并实际卖出, 这正是 10-15 晨检描述的「逃生口」首次兑现。"
@@ -90,17 +90,86 @@
   }
  ],
  "engine_skipped": [
-  {"symbol": "NVDA", "reason": "有加仓信号但可用资金不足 ($-0.00), 引擎跳过", "kind": "scale_in"},
-  {"symbol": "MRVL", "reason": "近20日单日异动 ≥8% (10-14 -8.7%)", "kind": "defense"},
-  {"symbol": "INTC", "reason": "近20日单日异动 ≥8% (09-21 +12.1%)", "kind": "defense"},
-  {"symbol": "HPE", "reason": "近20日单日异动 ≥8% (10-14 -8.3%)", "kind": "defense"},
-  {"symbol": "NET", "reason": "近20日单日异动 ≥8% (09-21 +8.7%)", "kind": "defense"},
-  {"symbol": "P", "reason": "近20日单日异动 ≥8% (09-21 +9.1%)", "kind": "defense"},
-  {"symbol": "SMTC", "reason": "近20日单日异动 ≥8% (10-12 -10.2%)", "kind": "defense"},
-  {"symbol": "KEYS", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
-  {"symbol": "APH", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
-  {"symbol": "CSCO", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
-  {"symbol": "NTAP", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"}
+  {
+   "symbol": "NVDA",
+   "reason": "有加仓信号但可用资金不足 ($-0.00), 引擎跳过",
+   "kind": "scale_in"
+  },
+  {
+   "symbol": "SOXQ",
+   "reason": "有加仓信号但可用资金不足 ($-0.00), 引擎跳过 (现价低于加仓线 5.12%)",
+   "kind": "scale_in"
+  },
+  {
+   "symbol": "TT",
+   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=4.40)",
+   "kind": "entry"
+  },
+  {
+   "symbol": "JCI",
+   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=5.72)",
+   "kind": "entry"
+  },
+  {
+   "symbol": "FTNT",
+   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=6.01)",
+   "kind": "entry"
+  },
+  {
+   "symbol": "PANW",
+   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=6.39)",
+   "kind": "entry"
+  },
+  {
+   "symbol": "MRVL",
+   "reason": "近20日单日异动 ≥8% (10-14 -8.7%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "INTC",
+   "reason": "近20日单日异动 ≥8% (09-21 +12.1%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "HPE",
+   "reason": "近20日单日异动 ≥8% (10-14 -8.3%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "NET",
+   "reason": "近20日单日异动 ≥8% (09-21 +8.7%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "P",
+   "reason": "近20日单日异动 ≥8% (09-21 +9.1%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "SMTC",
+   "reason": "近20日单日异动 ≥8% (10-12 -10.2%)",
+   "kind": "defense"
+  },
+  {
+   "symbol": "KEYS",
+   "reason": "行业 Electronic Technology 已达持仓上限 3",
+   "kind": "sector_cap"
+  },
+  {
+   "symbol": "APH",
+   "reason": "行业 Electronic Technology 已达持仓上限 3",
+   "kind": "sector_cap"
+  },
+  {
+   "symbol": "CSCO",
+   "reason": "行业 Electronic Technology 已达持仓上限 3",
+   "kind": "sector_cap"
+  },
+  {
+   "symbol": "NTAP",
+   "reason": "行业 Electronic Technology 已达持仓上限 3",
+   "kind": "sector_cap"
+  }
  ],
  "flags_for_user": {
   "news_red_flags": [],
@@ -109,5 +178,6 @@
   "defense_blocked_orders": "11 条 (见 engine_skipped), 其中 NVDA 是资金不足而非防御层。",
   "leverage_gate": "未触发 (unleveraged_buying_power == buying_power == $894.53, 账户无借贷额度)。",
   "circuit_breaker": "未触发。回撤 (HWM $10,438.52 → 净值 $10,017.25) = -4.04%, 熔断线 -10%。"
- }
+ },
+ "_engine_skipped_correction": "⚠️ **本节 2026-10-15 盘后更正**: 首版只列了 11 条, 因为会话照 plan.json 的 stock.warnings 写, 而 `daily.py:409` 把引擎 warnings 硬截到 12 条且不留痕 —— 实际引擎输出 17 条, 被静默丢掉 5 条 (SOXQ 加仓 + TT/JCI/FTNT/PANW 入场, 全部「有信号但资金不足」)。plan.json 的 candidates 同样被 [:15] 截断 (实为 23 条)。**订单不受影响** —— 买卖来自 place_now/to_pending, 读的是引擎完整输出; 受影响的只有报告完整性 (用户定的报告义务)。已修 daily.py: 上限放宽并输出 warnings_total / candidates_total / *_truncated, 使截断不可能再隐身。"
 }
