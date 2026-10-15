@@ -214,5 +214,86 @@
    "2026-08-04"
   ]
  },
- "_coverage_progress": "⚠️ **灌满中, 尚未完成** (用户 2026-10-14「100 只一次性灌满缓存」)。目标 = strategy/universe.json 的 100 只个股 + ETF 池 8 只。当前已覆盖见本文件键数; 未覆盖的标的仍走 allow_unknown_earnings=true 放行 (与改造前同样 fail-open, 无新增风险)。剩余部分在 17:45 收尾窗之前/期间补完。"
+ "_coverage_progress": "⚠️ **灌满中, 尚未完成** (用户 2026-10-14「100 只一次性灌满缓存」)。目标 = strategy/universe.json 的 100 只个股 + ETF 池 8 只。当前已覆盖见本文件键数; 未覆盖的标的仍走 allow_unknown_earnings=true 放行 (与改造前同样 fail-open, 无新增风险)。剩余部分在 17:45 收尾窗之前/期间补完。",
+ "QQQM": {
+  "next": null,
+  "past": []
+ },
+ "IWM": {
+  "next": null,
+  "past": []
+ },
+ "XLK": {
+  "next": null,
+  "past": []
+ },
+ "XLF": {
+  "next": null,
+  "past": []
+ },
+ "XLE": {
+  "next": null,
+  "past": []
+ },
+ "GLDM": {
+  "next": null,
+  "past": []
+ },
+ "TLT": {
+  "next": null,
+  "past": []
+ },
+ "GLD": {
+  "next": null,
+  "past": []
+ },
+ "QQQ": {
+  "next": null,
+  "past": []
+ },
+ "SPY": {
+  "next": null,
+  "past": []
+ },
+ "DIA": {
+  "next": null,
+  "past": []
+ },
+ "EEM": {
+  "next": null,
+  "past": []
+ },
+ "EFA": {
+  "next": null,
+  "past": []
+ },
+ "IEF": {
+  "next": null,
+  "past": []
+ },
+ "XLB": {
+  "next": null,
+  "past": []
+ },
+ "XLI": {
+  "next": null,
+  "past": []
+ },
+ "XLP": {
+  "next": null,
+  "past": []
+ },
+ "XLU": {
+  "next": null,
+  "past": []
+ },
+ "XLV": {
+  "next": null,
+  "past": []
+ },
+ "XLY": {
+  "next": null,
+  "past": []
+ },
+ "_etf_note": "ETF/指数基金没有财报, 一律 next=null / past=[]; defense.exempt_symbols 本来也豁免它们。这些不需要 MCP 取数, 直接写死。覆盖了 ETF 池 8 只 + 期权白名单与动量轨道用到的指数 ETF。"
 }
