@@ -1,5 +1,5 @@
 {
- "trade_date": "2026-10-15",
+ "trade_date": "2026-10-16",
  "generated_by": "scripts/daily.py --phase preclose",
  "record_kind": "execution_log",
  "_kind_note": "auto_buys 下本文件是**执行记录**, 不是待执行清单。只有 4B-failsafe (place 被分类器拦) 才会产出 status=awaiting_execution 的真·待执行清单。",
@@ -7,32 +7,32 @@
  "valid_until": "不适用 (auto_buys: 当场成交)",
  "exec_window_et": "不适用 (auto_buys)",
  "exec_day": "auto_executed",
- "buying_power_at_execution": 894.53,
- "cash_at_execution": 894.53,
- "_cap_note": "AMAT 出场成交后重取 cap = min(buying_power, cash) = $894.53; unleveraged_buying_power == buying_power, 无借贷额度, 防杠杆闸未动用。唯一买单 ANET $889.32 ≤ cap, 放得下, 余 $5.21。",
+ "buying_power_at_execution": 1860.74,
+ "cash_at_execution": 1860.74,
+ "_cap_note": "KLAC 出场成交后重取 cap = min(buying_power, cash) = $1,860.74; unleveraged_buying_power == buying_power, 无借贷额度, 防杠杆闸未动用。两张买单按引擎顺序逐单判 cap: NVDA $970.78 (累计 970.78) → SOXQ $887.51 (累计 1,858.29), 均 ≤ cap, 余 $2.45。",
  "cross_track_funding": {
   "rule": "期权优先 (2026-08-27 常规规则)",
   "option_buy_orders_today": 0,
   "option_collateral_reserved": 0.0,
-  "stock_cap": 894.53,
-  "stock_used": 889.32,
-  "stock_headroom": 5.21,
-  "note": "今日实盘期权 0 买单。引擎在 bp=$5 下把 NVDA 单腿 call 判为 insufficient_buying_power(cost=2462); 即便按出场回款后的 $894.53 重算, $2,462 仍远超可用资金, 故期权优先规则**今日不构成约束** (不是我跳过了期权去买股票)。"
+  "stock_cap": 1860.74,
+  "stock_used": 1858.29,
+  "stock_headroom": 2.45,
+  "note": "实盘期权 0 买单。引擎把 NVDA 单腿 call 判 insufficient_buying_power(cost=2556, bp_left=5); 即便按 KLAC 回款后的 $1,860.74 重算, $2,556 仍超出, 故期权优先规则今日不构成约束。"
  },
  "execution_summary": {
   "trigger": "auto_buys 自动执行",
   "sell_orders": 1,
-  "buy_orders": 1,
-  "filled": 2,
+  "buy_orders": 2,
+  "filled": 3,
   "blocked_by_classifier": 0,
-  "sells_usd": 889.99,
-  "buys_usd": 889.32,
-  "slippage_sell_pct": 0.0266,
-  "slippage_buy_pct": 0.1184,
-  "fees_usd": 0.02,
-  "realized_pnl_usd": -152.36,
-  "window_et": "15:23:09-15:26:14",
-  "classifier_note": "2 单全部 place 成功, **零拦截** (10-14 亦零拦截; 10-13 为 1 通 2 拦)。"
+  "sells_usd": 1855.57,
+  "buys_usd": 1858.29,
+  "slippage_sell_pct": -0.1350,
+  "slippage_buys_pct": -0.1261,
+  "fees_usd": 0.04,
+  "realized_pnl_usd": -186.17,
+  "window_et": "15:22:48-15:23:14",
+  "classifier_note": "3 单全部 place 成功, **零拦截** (10-14 10/10 零拦截, 10-15 2/2 零拦截, 10-13 为 1 通 2 拦)。"
  },
  "conflict_cancelled_exits": {
   "_rule": "「有卖有买就不卖」(用户 2026-10-14 定) —— 同日既触发出场又满足入场信号 → 不卖, 继续持有; 加仓照常判定 (用户同日订正)。",
@@ -40,144 +40,100 @@
    {
     "symbol": "SOXQ",
     "cancelled_reason": "stop_loss",
-    "rsi2": 0.32,
-    "avg_entry_price": 99.1877,
-    "price_at_signal": 91.28,
-    "pct_vs_avg": -7.97,
-    "stop_line": 92.2446,
-    "pct_vs_stop": -1.04,
-    "consecutive_day": 2,
+    "rsi2": 0.12,
+    "avg_entry_price_before": 99.1877,
+    "price_at_signal": 88.33,
+    "pct_vs_avg": -10.95,
+    "stop_line_before": 92.2446,
+    "pct_vs_stop": -4.24,
+    "consecutive_day": 3,
     "scale_in_also_skipped": false,
-    "scale_in_funded": false,
-    "scale_in_note": "⚠️ 更正: 引擎**确实给 SOXQ 排了加仓信号** (现价低于加仓线 5.12%), 只是在资金分配阶段 被 ANET 先吃掉额度后余 $-0.00 → 以「有加仓信号但可用资金不足」跳过。首版误写成「引擎未给它排加仓单」, 根因是 plan.json 的 warnings 被截断 (见 _engine_skipped_correction)。规则侧无误: conflict_held 没有抑制加仓 (已读 signals.py:450 确认)。"
+    "scale_in_funded": true,
+    "scale_in_note": "本次加仓**真的成交了** ($887.51 @ 88.1999, 档 2) —— 即「越跌越买且止损线跟着下移」的组合效果首次完整兑现: 加权均价 99.1877 → 93.8130, 止损线 92.24 → 87.25, 等效把首档止损由 -7% 外移到 -12.0%。单票敞口升至净值 18.7%。CLAUDE.md 已记此代价, 用户 2026-10-14 已知并选择如此。"
    }
   ],
-  "_note": "SOXQ 的止损**连续第二日**被取消。AMAT 则相反: 本日冲突消失 (已不满足入场信号) → 止损恢复生效并实际卖出, 这正是 10-15 晨检描述的「逃生口」首次兑现。"
+  "_note": "KLAC 则相反: 跌破 SMA200 → 入场信号不成立 → 冲突规则不适用 → stop_loss 直接生效卖出。这是 2026-10-16 晨检预先告知用户的那条路径, 当日兑现。"
  },
  "orders": [
   {
    "seq": 0,
    "action": "sell",
-   "symbol": "AMAT",
-   "qty": 2.052471,
+   "symbol": "KLAC",
+   "qty": 11.088354,
    "reason": "stop_loss",
-   "est_price": 433.505,
-   "fill_price": 433.6201,
-   "slippage_pct": 0.0266,
-   "realized_usd": -152.36,
-   "realized_pct": -14.62,
+   "est_price": 167.57,
+   "fill_price": 167.3438,
+   "slippage_pct": -0.1350,
+   "realized_usd": -186.17,
+   "realized_pct": -9.12,
    "status": "filled",
-   "order_id": "6ad1281d-5974-456c-8484-93042f0a709d",
-   "fees": 0.02,
-   "note": "持有 2026-10-08 → 10-15。10-13/10-14 两日止损被「有卖有买就不卖」取消, 本日跌破入场信号 → 冲突消失 → 止损恢复生效。"
+   "order_id": "6ad27988-bc51-41f0-b6d6-49539820522a",
+   "fees": 0.04,
+   "note": "持有 2026-10-12 → 10-16, 2 档。10-15 收盘已跌破 SMA200 3.13% → 入场信号不成立 → 冲突规则不适用。晨检已预先告知用户。"
   },
   {
    "seq": 1,
    "action": "buy",
-   "symbol": "ANET",
-   "dollar_amount": 889.32,
+   "symbol": "NVDA",
+   "dollar_amount": 970.78,
    "reason": "rsi2_scale_in",
    "tranche": 2,
-   "rsi2": 2.56,
-   "est_price": 185.66,
-   "fill_price": 185.8799,
-   "filled_qty": 4.784379,
-   "slippage_pct": 0.1184,
+   "rsi2": 4.32,
+   "est_price": 214.97,
+   "fill_price": 214.7443,
+   "filled_qty": 4.520632,
+   "slippage_pct": -0.1050,
    "status": "filled",
-   "order_id": "6ad128d5-c1a0-429c-add7-e9d302046406",
+   "order_id": "6ad2799d-544f-4006-991a-78d212cda940",
    "news_red_flag": false,
-   "note": "引擎自己把金额压到 $889.32 (< 净值×10%), 因为可用资金 = $4.56 + AMAT 预估回款。会话**逐字段照下未改金额** (红线2)。加仓后加权均价 195.1215 → 186.8797, entry_date 仍为 2026-10-14 (时间止损时钟未重置)。"
+   "note": "加权均价 226.478 → 215.596; entry_date 仍 2026-10-12 (时间止损时钟未重置)。"
+  },
+  {
+   "seq": 2,
+   "action": "buy",
+   "symbol": "SOXQ",
+   "dollar_amount": 887.51,
+   "reason": "rsi2_scale_in",
+   "tranche": 2,
+   "rsi2": 0.12,
+   "est_price": 88.33,
+   "fill_price": 88.1999,
+   "filled_qty": 10.062483,
+   "slippage_pct": -0.1473,
+   "status": "filled",
+   "order_id": "6ad279a2-0fec-4608-aecf-57c7c98b8a7c",
+   "news_red_flag": false,
+   "note": "同日止损被冲突规则取消、同时补第 2 档 —— 见 conflict_cancelled_exits。加权均价 99.1877 → 93.8130; entry_date 仍 2026-10-08。"
   }
  ],
  "engine_skipped": [
-  {
-   "symbol": "NVDA",
-   "reason": "有加仓信号但可用资金不足 ($-0.00), 引擎跳过",
-   "kind": "scale_in"
-  },
-  {
-   "symbol": "SOXQ",
-   "reason": "有加仓信号但可用资金不足 ($-0.00), 引擎跳过 (现价低于加仓线 5.12%)",
-   "kind": "scale_in"
-  },
-  {
-   "symbol": "TT",
-   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=4.40)",
-   "kind": "entry"
-  },
-  {
-   "symbol": "JCI",
-   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=5.72)",
-   "kind": "entry"
-  },
-  {
-   "symbol": "FTNT",
-   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=6.01)",
-   "kind": "entry"
-  },
-  {
-   "symbol": "PANW",
-   "reason": "有入场信号但可用资金不足 ($-0.00), 引擎跳过 (rsi2=6.39)",
-   "kind": "entry"
-  },
-  {
-   "symbol": "MRVL",
-   "reason": "近20日单日异动 ≥8% (10-14 -8.7%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "INTC",
-   "reason": "近20日单日异动 ≥8% (09-21 +12.1%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "HPE",
-   "reason": "近20日单日异动 ≥8% (10-14 -8.3%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "NET",
-   "reason": "近20日单日异动 ≥8% (09-21 +8.7%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "P",
-   "reason": "近20日单日异动 ≥8% (09-21 +9.1%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "SMTC",
-   "reason": "近20日单日异动 ≥8% (10-12 -10.2%)",
-   "kind": "defense"
-  },
-  {
-   "symbol": "KEYS",
-   "reason": "行业 Electronic Technology 已达持仓上限 3",
-   "kind": "sector_cap"
-  },
-  {
-   "symbol": "APH",
-   "reason": "行业 Electronic Technology 已达持仓上限 3",
-   "kind": "sector_cap"
-  },
-  {
-   "symbol": "CSCO",
-   "reason": "行业 Electronic Technology 已达持仓上限 3",
-   "kind": "sector_cap"
-  },
-  {
-   "symbol": "NTAP",
-   "reason": "行业 Electronic Technology 已达持仓上限 3",
-   "kind": "sector_cap"
-  }
+  {"symbol": "XLK", "reason": "有加仓信号但可用资金不足 ($-0.00)", "kind": "scale_in"},
+  {"symbol": "TSM", "reason": "有入场信号但可用资金不足 ($-0.00), rsi2=0.79", "kind": "entry"},
+  {"symbol": "FTNT", "reason": "有入场信号但可用资金不足 ($-0.00), rsi2=1.31", "kind": "entry"},
+  {"symbol": "PANW", "reason": "有入场信号但可用资金不足 ($-0.00), rsi2=1.83", "kind": "entry"},
+  {"symbol": "JCI", "reason": "有入场信号但可用资金不足 ($-0.00)", "kind": "entry"},
+  {"symbol": "ILMN", "reason": "有入场信号但可用资金不足 ($-0.00)", "kind": "entry"},
+  {"symbol": "MRVL", "reason": "近20日单日异动 ≥8% (10-14 -8.7%)", "kind": "defense"},
+  {"symbol": "AMD", "reason": "近20日单日异动 ≥8% (09-21 +9.9%)", "kind": "defense"},
+  {"symbol": "INTC", "reason": "近20日单日异动 ≥8% (09-21 +12.1%)", "kind": "defense"},
+  {"symbol": "HPE", "reason": "近20日单日异动 ≥8% (10-14 -8.3%)", "kind": "defense"},
+  {"symbol": "NET", "reason": "近20日单日异动 ≥8% (09-21 +8.7%)", "kind": "defense"},
+  {"symbol": "P", "reason": "近20日单日异动 ≥8% (09-21 +9.1%)", "kind": "defense"},
+  {"symbol": "SMTC", "reason": "近20日单日异动 ≥8% (10-12 -10.2%)", "kind": "defense"},
+  {"symbol": "KEYS", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
+  {"symbol": "APH", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
+  {"symbol": "NTAP", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
+  {"symbol": "CSCO", "reason": "行业 Electronic Technology 已达持仓上限 3", "kind": "sector_cap"},
+  {"symbol": "DT", "reason": "行业 Technology Services 已达持仓上限 3", "kind": "sector_cap"}
  ],
+ "_skipped_completeness_note": "本节 18 条 = 引擎 19 条 warnings 减去 SOXQ 冲突说明 (那条已在 conflict_cancelled_exits)。plan.json 的 warnings_total=19 / warnings_truncated=0, candidates_total=27 / candidates_truncated=0 —— 2026-10-15 新加的截断留痕字段首次在正常窗口生效, 确认无漏报。",
  "flags_for_user": {
   "news_red_flags": [],
-  "earnings_blackout_coverage": "本次唯一买单 ANET 在 earnings_cache.json 内 (next=2026-11-03, dte=19) → 财报黑窗**实际生效且通过**。缓存覆盖仍为 40/108, 未覆盖标的 fail-open (与改造前同样行为)。",
-  "same_factor_exposure": "半导体相关 (KLAC+NVDA+SOXQ+CDNS) 市值 $3,975.26 = 净值 39.68%; 另 XLK+QQQM 宽基科技 $2,003.68 = 20.00%。板块闸 (max_per_sector=3) 认为正常。用户 2026-10-14 明确「不设」同因子敞口闸 → 仅陈述, 非待动作项。",
-  "defense_blocked_orders": "11 条 (见 engine_skipped), 其中 NVDA 是资金不足而非防御层。",
-  "leverage_gate": "未触发 (unleveraged_buying_power == buying_power == $894.53, 账户无借贷额度)。",
-  "circuit_breaker": "未触发。回撤 (HWM $10,438.52 → 净值 $10,017.25) = -4.04%, 熔断线 -10%。"
- },
- "_engine_skipped_correction": "⚠️ **本节 2026-10-15 盘后更正**: 首版只列了 11 条, 因为会话照 plan.json 的 stock.warnings 写, 而 `daily.py:409` 把引擎 warnings 硬截到 12 条且不留痕 —— 实际引擎输出 17 条, 被静默丢掉 5 条 (SOXQ 加仓 + TT/JCI/FTNT/PANW 入场, 全部「有信号但资金不足」)。plan.json 的 candidates 同样被 [:15] 截断 (实为 23 条)。**订单不受影响** —— 买卖来自 place_now/to_pending, 读的是引擎完整输出; 受影响的只有报告完整性 (用户定的报告义务)。已修 daily.py: 上限放宽并输出 warnings_total / candidates_total / *_truncated, 使截断不可能再隐身。"
+  "earnings_blackout_coverage": "两张买单标的 NVDA (next 2026-11-17) / SOXQ (ETF, next=null) 均在缓存内, 闸门实际生效且通过。实盘期权侧 META 被 earnings_blackout(dte=5) 拦下 —— 财报闸今日在期权轨道再次生效。缓存 universe 100/100, 0 条过期。",
+  "same_factor_exposure": "半导体相关 (NVDA+SOXQ+CDNS) $3,841.34 = 净值 39.57%; 另 XLK+QQQM 宽基科技 $1,954.28 = 20.13%。⚠️ 其中 SOXQ 单票已达净值 18.7% (加仓到 2 档所致)。板块闸认为正常; 用户 2026-10-14 明确「不设」同因子闸 → 仅陈述。",
+  "defense_blocked_orders": "18 条 (见 engine_skipped), 其中 6 条是资金不足而非风控。",
+  "leverage_gate": "未触发 (unleveraged_buying_power == buying_power 全程相等)。",
+  "circuit_breaker": "⚠️ **未触发但已显著接近**: 回撤 -7.01% (HWM $10,438.52 → 净值 $9,706.47), 熔断线 -10%。昨日收盘为 -4.02%, 一日恶化 2.99 个百分点。",
+  "drawdown_escalation": "⚠️ 当日 -3.12% ($-312.89)。熔断口径请注意: config 的熔断是**累计已实现亏 ≥ 净值×50%**, 与这里的 -10% 回撤线是两道不同的闸 —— 详见 strategy/config.json。"
+ }
 }

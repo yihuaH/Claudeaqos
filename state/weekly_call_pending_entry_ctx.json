@@ -30,7 +30,37 @@
         "mid": 27.275,
         "spread_pct": 1.283
       }
+    },
+    "NVDA261030C00190000": {
+      "symbol": "NVDA261030C00190000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 25.56,
+      "underlying": "NVDA",
+      "strike": 190.0,
+      "expiry": "2026-10-30",
+      "dte": 14,
+      "spot": 214.97,
+      "rsi2": 4.32,
+      "model_price": 25.3316,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 25.565,
+        "model_flat": 25.3316,
+        "model_surface": 25.7341,
+        "ratio_flat_pct": 99.1,
+        "ratio_surface_pct": 100.7
+      },
+      "entry_quote": {
+        "bid": 25.49,
+        "ask": 25.64,
+        "mid": 25.565,
+        "spread_pct": 0.587
+      }
     }
   },
-  "updated": "2026-10-15"
+  "updated": "2026-10-16"
 }

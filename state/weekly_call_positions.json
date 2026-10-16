@@ -3,22 +3,22 @@
   "halted": false,
   "started": "2026-08-04",
   "positions": {
-    "NVDA261023C00200000": {
+    "NVDA261030C00190000": {
       "underlying": "NVDA",
-      "strike": 200.0,
-      "expiry": "2026-10-23",
+      "strike": 190.0,
+      "expiry": "2026-10-30",
       "contracts": 1,
-      "entry_premium": 27.15,
-      "entry_date": "2026-10-12",
-      "entry_underlying": 226.534,
-      "entry_rsi2": 4.53,
+      "entry_premium": 25.95,
+      "entry_date": "2026-10-16",
+      "entry_underlying": 214.97,
+      "entry_rsi2": 4.32,
       "entry_quote": {
-        "bid": 27.1,
-        "ask": 27.45,
-        "mid": 27.275,
-        "spread_pct": 1.283
+        "bid": 25.49,
+        "ask": 25.64,
+        "mid": 25.565,
+        "spread_pct": 0.587
       },
-      "model_price": 26.7855
+      "model_price": 25.3316
     }
   },
   "trades": [
@@ -329,6 +329,24 @@
       "price": 27.15,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "NVDA261023C00200000",
+      "side": "sell",
+      "qty": 1,
+      "price": 15.45,
+      "bucket": "weekly_calls",
+      "reason": "underlying_stop"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "NVDA261030C00190000",
+      "side": "buy",
+      "qty": 1,
+      "price": 25.95,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -636,6 +654,25 @@
       "entry_mid": 6.69,
       "exit_mid": 5.92,
       "model_price": 6.6981
+    },
+    {
+      "occ": "NVDA261023C00200000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "NVDA",
+      "entry_date": "2026-10-12",
+      "exit_date": "2026-10-16",
+      "entry_premium": 27.15,
+      "exit_premium": 15.45,
+      "pnl_pct": -43.09,
+      "pnl_usd": -1170.0,
+      "reason": "underlying_stop",
+      "entry_spread_pct": 1.283,
+      "exit_spread_pct": 1.813,
+      "entry_mid": 27.275,
+      "exit_mid": 15.44,
+      "model_price": 26.7855
     }
   ],
   "skip_log": [
@@ -978,6 +1015,47 @@
       "reason": "premium_too_large(10426)",
       "rsi2": 3.18,
       "spot": 728.7
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "META",
+      "reason": "earnings_blackout(dte=5)",
+      "rsi2": 9.49
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "SMH",
+      "reason": "premium_too_large(7983)",
+      "rsi2": 0.1,
+      "spot": 543.16
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "QQQ",
+      "reason": "premium_too_large(8632)",
+      "rsi2": 0.66,
+      "spot": 710.26
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "TSM",
+      "reason": "spread_too_wide(best=2.76%)",
+      "rsi2": 0.79,
+      "spot": 413.61
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "AMD",
+      "reason": "spread_too_wide(best=3.92%)",
+      "rsi2": 3.35,
+      "spot": 533.58
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "AMZN",
+      "reason": "spread_too_wide(best=5.11%)",
+      "rsi2": 9.22,
+      "spot": 249.84
     }
   ],
   "assignments": [

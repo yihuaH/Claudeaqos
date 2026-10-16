@@ -3,11 +3,11 @@
   "halted": false,
   "strategy_positions": {
     "SOXQ": {
-      "qty": 10.508863,
-      "entry_price": 99.1877,
+      "qty": 20.571346,
+      "entry_price": 93.813,
       "entry_date": "2026-10-08",
-      "cost": 1042.35,
-      "tranches": 1
+      "cost": 1929.86,
+      "tranches": 2
     },
     "DAL": {
       "qty": 25.952434,
@@ -16,19 +16,12 @@
       "cost": 2050.06,
       "tranches": 2
     },
-    "KLAC": {
-      "qty": 11.088354,
-      "entry_price": 184.1337,
-      "entry_date": "2026-10-12",
-      "cost": 2041.74,
-      "tranches": 2
-    },
     "NVDA": {
-      "qty": 0.353809,
-      "entry_price": 226.478,
+      "qty": 4.874441,
+      "entry_price": 215.596,
       "entry_date": "2026-10-12",
-      "cost": 80.13,
-      "tranches": 1
+      "cost": 1050.91,
+      "tranches": 2
     },
     "STT": {
       "qty": 6.06999,
@@ -2603,6 +2596,33 @@
       "side": "buy",
       "qty": 4.784379,
       "price": 185.8799,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "KLAC",
+      "side": "sell",
+      "qty": 11.088354,
+      "price": 167.3438,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 4.520632,
+      "price": 214.7443,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "SOXQ",
+      "side": "buy",
+      "qty": 10.062483,
+      "price": 88.1999,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
     }
