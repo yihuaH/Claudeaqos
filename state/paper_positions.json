@@ -11,13 +11,6 @@
       "cost": 4297.6,
       "tranches": 2
     },
-    "AMAT": {
-      "qty": 14.0,
-      "entry_price": 498.82,
-      "entry_date": "2026-10-09",
-      "cost": 6983.48,
-      "tranches": 2
-    },
     "NVDA": {
       "qty": 32.0,
       "entry_price": 221.6875,
@@ -26,11 +19,11 @@
       "tranches": 2
     },
     "KLAC": {
-      "qty": 20.0,
-      "entry_price": 182.3855,
+      "qty": 40.0,
+      "entry_price": 176.1378,
       "entry_date": "2026-10-14",
-      "cost": 3647.71,
-      "tranches": 1
+      "cost": 7045.51,
+      "tranches": 2
     },
     "DAL": {
       "qty": 46.0,
@@ -65,6 +58,13 @@
       "entry_price": 324.0625,
       "entry_date": "2026-10-15",
       "cost": 1296.25,
+      "tranches": 1
+    },
+    "TSM": {
+      "qty": 7.0,
+      "entry_price": 416.865714,
+      "entry_date": "2026-10-16",
+      "cost": 2918.06,
       "tranches": 1
     }
   },
@@ -454,6 +454,33 @@
       "side": "buy",
       "qty": 4.0,
       "price": 324.0625,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 14.0,
+      "price": 422.520715,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "KLAC",
+      "side": "buy",
+      "qty": 20.0,
+      "price": 169.89,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-16",
+      "symbol": "TSM",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 416.865714,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
