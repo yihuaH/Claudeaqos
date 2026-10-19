@@ -166,10 +166,20 @@
 
 ### 已知未修的问题 (影响日常, 勿当成新发现)
 
-1. **纸面 stale-fills**: `wc.paper.run` 无单可下时不重写 `wc_fills.json`, `wc.paper.apply`
-   会重放旧成交。**只在 preclose 阶段触发** (wrapup 不跑 `wc.*`); 后果仅是
-   `trades[]` 多一行重复流水 (`positions[occ]=rec` 是幂等的), 不影响仓位与 round_trips。
-   最小修法: run 前 `unlink` —— `daily.py:495` 已有 `{"fills": []}` 兜底, **安全**。
+1. **纸面 stale-fills —— 2026-10-19 实测复现, 原记载的后果与"安全"结论都偏轻, 已更正**:
+   `wc.paper.run` 无单可下时不重写 `wc_fills.json` (`daily.py:519` 的
+   `if o.get("buys") or o.get("sells")` 不成立 → run 整步跳过), `wc.paper.apply` 重放旧成交。
+   **只在 preclose 阶段触发** (wrapup 不跑 `wc.*`)。
+   - ⚠️ **后果不止"多一行重复流水"**: 当陈旧成交里含**已平合约的卖出**时,
+     `apply` 直接 **rc=1 失败并产出 anomaly**, 一行都没写进去。2026-10-19 实测:
+     重放 10-16 的卖 `NVDA261023C00200000`, 而该合约 10-16 已平进 round_trips
+     → `卖出无持仓的合约` → 主跑多一条 anomaly。
+   - ⚠️ **`daily.py:525` 的兜底无效**: 它是 `if not os.path.exists(fills)`,
+     **只防文件缺失, 不防文件陈旧**。scratchpad 未被回收时文件就在, 兜底不触发。
+     原文"已有 `{"fills": []}` 兜底, 安全"的说法**不成立**。
+   - ✅ **账本不会被污染** (2026-10-19 核对: apply 失败前未写入, `trades` 无新增、
+     `round_trips` 与 `positions` 均未变), 故不紧急; 但**每个 preclose 都会复现**。
+   - 最小修法仍是 **run 前 `unlink`** (或把兜底改成"陈旧即重写"), 属改引擎, 待用户发话。
 2. **`signals.py` 部分卖出不更新 `cost`**: 实盘代码路径共用; `state/momentum_positions.json`
    的 QQQ 已失真 18.46×。
 3. **财报黑窗 —— 2026-10-14 起已落地, 保留为纪律条目**: 根因是**取数漏做**而非代码缺陷
