@@ -1,109 +1,16 @@
 {
-  "date": "2026-10-16",
+  "date": "2026-10-19",
   "halted": false,
-  "sells": [
-    {
-      "symbol": "NVDA261023C00200000",
-      "qty": 1,
-      "position_intent": "sell_to_close",
-      "bucket": "weekly_calls",
-      "reason": "underlying_stop",
-      "est_price": 15.44,
-      "exit_quote": {
-        "bid": 15.3,
-        "ask": 15.58,
-        "mid": 15.44,
-        "spread_pct": 1.813
-      }
-    }
-  ],
-  "buys": [
-    {
-      "symbol": "NVDA261030C00190000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 25.56,
-      "underlying": "NVDA",
-      "strike": 190.0,
-      "expiry": "2026-10-30",
-      "dte": 14,
-      "spot": 214.97,
-      "rsi2": 4.32,
-      "model_price": 25.3316,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 25.565,
-        "model_flat": 25.3316,
-        "model_surface": 25.7341,
-        "ratio_flat_pct": 99.1,
-        "ratio_surface_pct": 100.7
-      },
-      "entry_quote": {
-        "bid": 25.49,
-        "ask": 25.64,
-        "mid": 25.565,
-        "spread_pct": 0.587
-      }
-    }
-  ],
+  "sells": [],
+  "buys": [],
   "skips": [
     {
       "symbol": "META",
-      "reason": "earnings_blackout(dte=5)",
-      "rsi2": 9.49
-    },
-    {
-      "symbol": "SMH",
-      "reason": "premium_too_large(7983)",
-      "rsi2": 0.1,
-      "spot": 543.16
-    },
-    {
-      "symbol": "QQQ",
-      "reason": "premium_too_large(8632)",
-      "rsi2": 0.66,
-      "spot": 710.26
-    },
-    {
-      "symbol": "TSM",
-      "reason": "spread_too_wide(best=2.76%)",
-      "rsi2": 0.79,
-      "spot": 413.61
-    },
-    {
-      "symbol": "AMD",
-      "reason": "spread_too_wide(best=3.92%)",
-      "rsi2": 3.35,
-      "spot": 533.58
-    },
-    {
-      "symbol": "AMZN",
-      "reason": "spread_too_wide(best=5.11%)",
-      "rsi2": 9.22,
-      "spot": 249.84
+      "reason": "earnings_blackout(dte=2)",
+      "rsi2": 8.44
     }
   ],
   "warnings": [],
-  "near_signals": [
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 20.19,
-      "scenario": "2d_-1%x2",
-      "spot": 526.29,
-      "structure": "single",
-      "est_premium_usd": 5347
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 10.38,
-      "scenario": "1d_-1%",
-      "spot": 763.0,
-      "structure": "single",
-      "est_premium_usd": 7724
-    }
-  ],
-  "suggested_reserve_usd": 5347.0
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }

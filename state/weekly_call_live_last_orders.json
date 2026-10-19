@@ -1,77 +1,16 @@
 {
-  "date": "2026-10-16",
+  "date": "2026-10-19",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "META",
-      "reason": "earnings_blackout(dte=5)",
-      "rsi2": 9.49
-    },
-    {
-      "symbol": "SMH",
-      "reason": "premium_too_large(7983)",
-      "rsi2": 0.1,
-      "spot": 543.16
-    },
-    {
-      "symbol": "QQQ",
-      "reason": "premium_too_large(8632)",
-      "rsi2": 0.66,
-      "spot": 710.26
-    },
-    {
-      "symbol": "TSM",
-      "reason": "spread_too_wide(best=2.76%)",
-      "rsi2": 0.79,
-      "spot": 413.61
-    },
-    {
-      "symbol": "AMD",
-      "reason": "spread_too_wide(best=3.92%)",
-      "rsi2": 3.35,
-      "spot": 533.58
-    },
-    {
-      "symbol": "NVDA",
-      "reason": "insufficient_buying_power(cost=2556,bp_left=5)",
-      "rsi2": 4.32,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 25.565,
-        "model_flat": 25.3316,
-        "model_surface": 25.7341,
-        "ratio_flat_pct": 99.1,
-        "ratio_surface_pct": 100.7
-      }
-    },
-    {
-      "symbol": "AMZN",
-      "reason": "spread_too_wide(best=5.11%)",
-      "rsi2": 9.22,
-      "spot": 249.84
+      "reason": "earnings_blackout(dte=2)",
+      "rsi2": 8.44
     }
   ],
   "warnings": [],
-  "near_signals": [
-    {
-      "symbol": "MSFT",
-      "rsi2_now": 20.19,
-      "scenario": "2d_-1%x2",
-      "spot": 526.29,
-      "structure": "single",
-      "est_premium_usd": 5347
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 10.38,
-      "scenario": "1d_-1%",
-      "spot": 763.0,
-      "structure": "single",
-      "est_premium_usd": 7724
-    }
-  ],
-  "suggested_reserve_usd": 1.82
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }
