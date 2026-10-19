@@ -132,6 +132,7 @@
 | `strategy/tracks.md` | 驱动器已接管轨道的**手工回退**完整命令 (平时不用) |
 | `strategy/routines.md` | Routine 唤醒词原文与注意点 |
 | `strategy/archive/` | 已停用轨道 / 已退役协议 / 轨道沿革 |
+| `strategy/proposals/` | **构想中但未实现**的轨道设计稿 —— 无 config、无引擎改动、**无下单能力**。与 `archive/` 的区别: archive 是曾经跑过的, proposals 是**还没跑过的**。当前: `qqq-leap-call.md` (用户 2026-10-19 构想, 当日选择「只写设计不写代码」) |
 
 ### 脚本 (确定性引擎 + 闸门, 红线2: 只出信号不含会话判断)
 
