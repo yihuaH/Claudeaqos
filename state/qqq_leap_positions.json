@@ -1,0 +1,11 @@
+{
+  "track": "qqq_leap",
+  "start_capital": null,
+  "halted": false,
+  "positions": {},
+  "trades": [],
+  "round_trips": [],
+  "skip_log": [],
+  "updated": null,
+  "_note": "QQQ LEAP call 轨道账本 (实盘)。引擎 scripts/qqq_leap.py, 参数 strategy/qqq_leap.json。round_trips/skip_log 是摩擦与战绩数据, 勿删。会话不得手工改仓位数据 (CLAUDE.md)。"
+}
