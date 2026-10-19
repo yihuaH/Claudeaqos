@@ -445,12 +445,110 @@ def phase_stock_signal(a, R, plan):
         "candidates_truncated": max(0, len(_cands) - 30),
     }
     exitish = {"funding_rotation", "accelerated_liquidation"}
-    plan["place_now"] = {"equity_sells": [s for s in o.get("sells", [])
-                                          if s.get("reason") not in exitish]}
-    plan["to_pending"] = {"equity_buys": o.get("buys", []),
-                          "equity_rotation_sells": [s for s in o.get("sells", [])
-                                                    if s.get("reason") in exitish]}
+    # ⚠️ 必须 update 不能整体赋值: QQQ LEAP 轨道 (funding_priority=1) 跑在本阶段**之前**,
+    #    它已经往 place_now 写了 leap_option_sells / leap_option_buys —— 整体赋值会把它们悄悄清掉
+    #    (2026-10-19 接线时实测踩到: plan 里 leap 订单桶凭空消失)。
+    plan["place_now"].update({"equity_sells": [s for s in o.get("sells", [])
+                                               if s.get("reason") not in exitish]})
+    plan["to_pending"].update({"equity_buys": o.get("buys", []),
+                               "equity_rotation_sells": [s for s in o.get("sells", [])
+                                                         if s.get("reason") in exitish]})
     return o
+
+
+def phase_qqq_leap(a, R, plan):
+    """QQQ LEAP call 轨道 (实盘; `strategy/qqq_leap.json`, 引擎 `scripts/qqq_leap.py`)。
+
+    **两段式, 这是设计而不是将就**:
+      · `window` **永远跑** —— 纯本地无网络, 判当日有无入场信号 + 列出需要取报价的合约区间。
+      · `signal` **只在会话已把链取好并用 `--leap-chain` 传进来时跑** —— 选档要**券商 delta**
+        (`integrations.py chains` 只落 {bid, ask}, 没有 delta), 而 MCP 取数只有会话能做。
+        取数归会话、**选哪一张仍归引擎** (红线2)。
+
+    绝大多数交易日 (无持仓且无信号) `window` 一跑就结束, 不给会话加任何活。
+    """
+    W = a.workdir
+    cfg = load(f"{REPO}/strategy/qqq_leap.json", {})
+    if not cfg.get("enabled"):
+        plan["qqq_leap"] = {"skipped": "qqq_leap.json enabled=false"}
+        return
+    led_path = "state/qqq_leap_positions.json"
+    led = load(f"{REPO}/{led_path}", {})
+    # --plan-only: 与周call 同约定 —— 信号产出改写 workdir, 绝不碰 state/ (干跑不留痕)
+    leap_ctx = (f"{W}/leap_last_orders.json" if a.plan_only
+                else "state/qqq_leap_last_orders.json")
+    base = ["--config", "strategy/qqq_leap.json", "--ledger", led_path,
+            "--historicals", f"{W}/bars.json", "--quotes", f"{W}/quotes.json",
+            "--date", a.date]
+    out = R.run(["scripts/qqq_leap.py", "window"] + base + ["--out", f"{W}/leap_window.json"],
+                "leap.window", critical=False)
+    if out is None:
+        plan["qqq_leap"] = {"error": "window 失败, 见 anomalies; 本轨道今日不出单"}
+        return
+    win = load(f"{W}/leap_window.json", {})
+    held = win.get("held_occs") or []
+    ql = {"funding_priority": cfg.get("funding_priority"), "halted": bool(led.get("halted")),
+          "entry_signal": win.get("entry_signal"),
+          "entry_block_reasons": win.get("entry_block_reasons"),
+          "spot": win.get("price"), "day_return_pct": win.get("day_return_pct"),
+          "sma200": win.get("sma200"), "above_sma200": win.get("above_sma200"),
+          "held_occs": held, "need_chain": win.get("need_chain")}
+
+    if not a.leap_chain and not (held or win.get("entry_signal")):
+        ql["resolved"] = "no_action"
+        ql["_note"] = "无持仓且无入场信号 → 既不需要取链也不需要出单 (本轨道今日彻底无事)"
+        plan["qqq_leap"] = ql
+        return
+
+    if not a.leap_chain:
+        ql["resolved"] = "needs_session_chain"
+        ql["session_action_required"] = {
+            "step1": ("会话取**券商**期权报价 (get_option_instruments → get_option_quotes, "
+                      "**必须含 delta**): 持仓合约 " + (", ".join(held) or "(无)") +
+                      ("; 入场候选见 need_chain 区间" if win.get("entry_signal") else "")),
+            "step2": ('原样落盘为 {"QQQ": {OCC: {bid, ask, delta, ...}}} 后跑: '
+                      "python3 scripts/qqq_leap.py signal --chain <该文件> "
+                      "--historicals <bars> --quotes <quotes> --date " + a.date +
+                      " --portfolio-value <PV> --buying-power <BP> --cash <CASH> "
+                      "--out state/qqq_leap_last_orders.json"),
+            "step3": ("按输出 place: sells (出场类, 全自动) 与 buys (单腿开仓, 2026-10-12 起自动) "
+                      "均直接 review → place; 成交后 qqq_leap.py apply --context "
+                      "state/qqq_leap_last_orders.json 回写"),
+            "_why_not_automatic": ("选档要券商 delta, 而 MCP 取数驱动器碰不到 —— 与正股"
+                                   "「当日决策价必须走券商」同一条纪律"),
+        }
+        if held:
+            ql["warning"] = ("⚠️ 有持仓但本次没传 --leap-chain → **本轨道的止盈/时间止损本次没有判定**。"
+                             "缺报价会让时间止损静默失效 (红线6), 必须补链重跑 signal。")
+            R.anomalies.append(
+                f"QQQ LEAP 轨道有 {len(held)} 个持仓但未提供 --leap-chain: "
+                "本次未判定止盈/时间止损, 补券商期权报价后跑 qqq_leap.py signal")
+        plan["qqq_leap"] = ql
+        return
+
+    args = ["scripts/qqq_leap.py", "signal"] + base + [
+        "--chain", a.leap_chain, "--portfolio-value", str(a.portfolio_value),
+        "--buying-power", str(a.buying_power), "--out", leap_ctx]
+    if a.cash is not None:
+        args += ["--cash", str(a.cash)]
+    if R.run(args, "leap.signal", critical=False) is None:
+        ql["resolved"] = "signal_failed"
+        plan["qqq_leap"] = ql
+        return
+    o = load(leap_ctx if leap_ctx.startswith("/") else f"{REPO}/{leap_ctx}", {})
+    # 独立订单桶: 与周call 不共用 —— 两条轨道的 apply 引擎与账本都不同 (§7.3 同理)
+    plan["place_now"]["leap_option_sells"] = o.get("sells", [])
+    plan["place_now"]["leap_option_buys"] = o.get("buys", [])
+    ql.update({"resolved": "signaled",
+               "buys": len(o.get("buys", [])), "sells": len(o.get("sells", [])),
+               "skips": o.get("skips", []), "warnings": o.get("warnings", []),
+               "chain_diag": o.get("chain_diag"), "funding_gate": o.get("funding_gate"),
+               "reserve_usd": round(sum(float(b["total_cost_usd"]) for b in o.get("buys", [])), 2),
+               "_apply": ("成交后: python3 scripts/qqq_leap.py apply --fills <fills> "
+                          "--context " + leap_ctx + " --date " + a.date)})
+    for w in o.get("warnings", []):
+        R.anomalies.append(f"QQQ LEAP: {w}")
+    plan["qqq_leap"] = ql
 
 
 def phase_options(a, R, plan):
@@ -668,6 +766,11 @@ def main():
     p.add_argument("--buying-power", required=True, type=float, help="实时 buying_power (非 cash)")
     p.add_argument("--positions", help="券商持仓映射 JSON (get_equity_positions 整理)")
     p.add_argument("--earnings", help="财报日映射 JSON")
+    p.add_argument("--leap-chain",
+                   help="QQQ LEAP 轨道的券商期权报价 (**必须含 delta**); 不传则只跑 window, "
+                        "有持仓时会记 anomaly 提示补链")
+    p.add_argument("--cash", type=float,
+                   help="实时现金; 传了则 LEAP 防杠杆闸用 min(buying_power, cash), 缺省同 buying-power")
     p.add_argument("--broker-closes",
                    help='券商官方收盘价 JSON (会话从 get_equity_quotes 的 close 字段整理): '
                         '{"SYM": {"date": "YYYY-MM-DD", "price": 0.0, "source": "..."}}; '
@@ -747,6 +850,13 @@ def main():
                 phase_paper(a, R, plan)
         else:
             phase_data(a, R, plan, allsyms)
+            # QQQ LEAP 轨道排在最前: funding_priority=1 (用户 2026-10-19「优先级最高」),
+            # 它的占用是周call 与正股 cap 的扣减项。失败不得拖垮正股 → 整段 try 包住。
+            try:
+                phase_qqq_leap(a, R, plan)
+            except Exception as e:
+                R.anomalies.append(f"QQQ LEAP 轨道失败 (正股与周call 不受影响): {e}")
+                plan["qqq_leap"] = {"error": str(e)}
             o = phase_stock_signal(a, R, plan)
             if o.get("halted") or o.get("circuit_breaker_triggered"):
                 plan["stopped"] = "halted/熔断触发 — 只读结束, 通知用户"

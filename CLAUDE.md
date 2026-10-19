@@ -20,7 +20,7 @@
    - 📐 **fail-safe 退回 pending 后的执行形态 (两种, 选哪种只看时间)**: **(a) 盘中 09:45–15:55 ET = 单笔 `market`+`regular_hours`+`dollar_amount`** —— 首选, 原生支持分数股, 零额外成本; **(b) 盘外 15:55 → 次一交易日 09:45 (含周末) = 整股限价①腿** —— `limit = 引擎 est_price × 1.010`, `all_day_hours→extended_hours→regular_hours` 逐级降级, `whole==0` 该单整单跳过留次日, **零头不另下单**, 随清单既有顺延机制走次日盘中窗。⚠️ 盘外①腿实测**多付 0.55%** + 盘后点差中位约 2%, 是**有成本的退路, 不是首选**; 且走盘外**必须重做 4C-1B 逐批确认** (形态由美元额市价变为整股限价, 数量不同且可能有单落空)。历史沿革与退役理由见 `strategy/archive/retired-offhours-two-leg.md`。
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
-   - **跨轨道资金优先级 = 期权优先 (常规规则, 2026-08-27 用户定, 此前三次逐次决定同向)**: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单自 2026-10-12 起亦由会话自动下单 (playbook 4D, 仅单腿)。用户可单日一票推翻, 但**不再逐日询问**。
+   - **跨轨道资金优先级 (2026-10-19 用户「优先级最高」把 QQQ LEAP 插到最前)**: 现行次序 = **① QQQ LEAP (`qqq_leap.json funding_priority:1`) → ② 实盘周期权 → ③ RSI-2 正股**。LEAP 单张约占净值 23%且无单笔规模闸, 故它一次出单即可让当日其余两轨全部零成交 (信号 8.4 次/年)。`daily.py` 里 `phase_qqq_leap` 排在 `phase_stock_signal` 与 `phase_options` 之前, 其 `reserve_usd` 是后两者 cap 的扣减项。以下原「期权优先」规则在 ②③ 之间照旧: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单自 2026-10-12 起亦由会话自动下单 (playbook 4D, 仅单腿)。用户可单日一票推翻, 但**不再逐日询问**。
    - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) **自 2026-10-12 起由会话自动下单** (单腿限价; 用户当日应用 autoMode 改动后实测放行)。多腿仍被 Robinhood API 400 拒, 故形态必须 `single`。⚠️ **用户因此失去了每张期权的事前一票否决**, 而单张权利金上限仍是 null —— 该数字优先级显著上升 (红线3) (时效**照抄 plan.json 的 `option_pending_template`**, 两形态: **收盘前产出 = 当日 15:30–15:45 ET** [2026-09-11 用户「期权也可以当日马上执行」; 比股票的 15:55 早 10 分钟收口, 因 15:45 后是 4D 明令避开的收盘前极端点差区]; 收盘后产出 = 次一交易日 10:30 ET, 推荐 09:45–10:30 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。**规模约束 = 没有单笔规模闸** (用户 2026-10-19「取消5000上限 不设上线」): `contract.max_premium_per_contract_usd` 与 `budget.max_open_premium_pct_of_portfolio` 与 `sizing.max_single_position_pct_of_portfolio` **三者全为 null**。沿革: 10-12 曾定 $5,000 (换 single 后长 call 可亏 100% 权利金), 实测确实拦住贵档 (SMH/TSM 的 `premium_too_large`), 10-19 用户取消。⚠️ **后果**: per_cost > 净值×20% 的贵档走 tier_cap=inf 例外**强制给 1 张**, 故单张规模上限退化为**仅剩实时 `min(buying_power, cash)`** —— 一张深ITM call 可吃掉当日几乎全部可用现金, 且期权优先于股票拿资金, 同日 RSI-2 买单会被整单跳过。仍并行生效: 实时 `min(buying_power, cash)` 防杠杆闸 (红线3) + 熔断 (累计已实现亏 ≥ 净值×50%) + 点差/DTE/公允价边际闸。改这个数只能由用户定。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
@@ -92,6 +92,7 @@
 | 隔夜均值回归 — **入场** | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (暂停只停入场) | 同上 |
 | **周度期权实盘实验仓** | 实盘 | ✅ active·机会主义 | `weekly_calls_live.json enabled` |
+| **QQQ LEAP call** (跌≥2% 买 1 年期 delta 0.30) | 实盘 | ✅ active·**资金优先级最高** | `qqq_leap.json enabled` + `funding_priority:1` |
 | 挑战者影子验证 | paper | ⚠️ validating 但**指标不可用** (见下) | `learning.json enabled` |
 | 周call 摩擦实测 (深ITM 买call) | paper | ✅ active | `weekly_calls.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
@@ -127,12 +128,13 @@
 | `strategy/config.json` | 主策略与风控参数 (入场/出场/仓位/加仓/防御/宏观/熔断/`execution`) |
 | `strategy/screen.json` + `universe.json` | 个股池筛选标准 + 筛选产出的当前 100 股池 |
 | `strategy/weekly_calls.json` / `weekly_calls_live.json` | 周期权 paper 摩擦实测 / 实盘实验仓 |
+| `strategy/qqq_leap.json` | **QQQ LEAP call 轨道 (实盘)**: 入场跌≥2%+牛市过滤 / ~1年期 delta 0.30 带[0.25,0.40] / 止盈 +20% (bid ≥ 入场ask×1.20) / 20 交易日时间止损 / 不设价格止损 / 不设并持上限 / `funding_priority:1`。每字段的回测来源见文件内注释与 `strategy/proposals/qqq-leap-call.md` |
 | `strategy/learning.json` / `learning_overnight.json` | 自学习边界、搜索网格、晋级标准 |
 | `strategy/momentum.json` / `options.json` / `stocks.json` / `overnight.json` | 各实验轨道参数 |
 | `strategy/tracks.md` | 驱动器已接管轨道的**手工回退**完整命令 (平时不用) |
 | `strategy/routines.md` | Routine 唤醒词原文与注意点 |
 | `strategy/archive/` | 已停用轨道 / 已退役协议 / 轨道沿革 |
-| `strategy/proposals/` | **构想中但未实现**的轨道设计稿 —— 无 config、无引擎改动、**无下单能力**。与 `archive/` 的区别: archive 是曾经跑过的, proposals 是**还没跑过的**。当前: `qqq-leap-call.md` (用户 2026-10-19 构想, 当日选择「只写设计不写代码」) |
+| `strategy/proposals/` | **构想中但未实现**的轨道设计稿 —— 无 config、无引擎改动、**无下单能力**。与 `archive/` 的区别: archive 是曾经跑过的, proposals 是**还没跑过的**。当前: `qqq-leap-call.md` —— ⚠️ **该设计稿已于 2026-10-19 实现并上实盘** (用户「20% 加入实盘」), 配置 `strategy/qqq_leap.json` + 引擎 `scripts/qqq_leap.py`; 文档留在 proposals 下作为**回测与参数来源的唯一出处** (§7 出场 / §12.6 阈值 / §15 载体 / §16 delta / §17 并持 / §18 止盈四档), 不再是「未实现」 |
 
 ### 脚本 (确定性引擎 + 闸门, 红线2: 只出信号不含会话判断)
 
@@ -146,6 +148,7 @@
 | `screen.py` | 个股池确定性筛选 (pool/rank/finalize) | 只决定"能买什么", 买卖时机仍由引擎定 |
 | `integrations.py` | 外部数据源 (Alpaca paper / FRED)、历史日线、宏观、新闻红旗 | ⚠️ **`quotes` 是 `delayed_sip` 延迟 15 分钟, 当日决策价必须走券商 `get_equity_quotes`**; 历史日线 `EQUITY_FEED=sip` |
 | `weekly_calls.py` | 周期权引擎, 支持 `single`/`vertical_spread`/`credit_put_spread` | 实盘现行 `single`; **只认 call** (`_pick_contract` 硬过滤 `type != "C"`) |
+| `qqq_leap.py` | **QQQ LEAP 轨道引擎** (`window`/`signal`/`apply`) | **两段式**: `window` 纯本地判信号+列出该取哪些合约; `signal` 需会话用 `--leap-chain` 传入**含 delta 的券商期权报价** (`integrations.py chains` 只落 {bid,ask} 无 delta)。**取数归会话、选档归引擎** (红线2)。止盈线在 `apply` 里按**实际成交价**重算 |
 | `paper.py` | Alpaca 纸面执行器 (**仅 paper 环境**, 红线7) | 下单被拒逐单捕获**绝不中断整批**; 排队清单 `try/finally` 无论如何落盘; 同日卖+买冲突**保留卖单**; `_clamp_sell_qty` 防转空闸 |
 | `overnight.py` / `momentum.py` / `options_overlay.py` | 隔夜 / 动量轮动 / 备兑开仓引擎 | 后两者仅 paper |
 | `learn.py` / `learn_overnight.py` | 参数学习器 (搜索/验证/晋级) | 红线8 边界内才可动 |
@@ -160,6 +163,7 @@
 | `state/preclose_status.json` | 收盘前阶段完成标记, wrapup 据此判是否 fail-safe |
 | `state/learning.json` + `paper_positions.json` | 挑战者冠军/挑战者状态 + 纸面账本 |
 | `state/weekly_call_*positions.json` | 周期权双轨账本 (`round_trips` / `skip_log` 是摩擦数据, 勿删) |
+| `state/qqq_leap_positions.json` | **QQQ LEAP 轨道账本** (`positions` / `trades` / `round_trips` / `skip_log`); 当日信号产出在 `state/qqq_leap_last_orders.json` (`apply --context` 要用它) |
 | `state/momentum_positions.json` / `overnight_positions.json` / `stock_positions.json` | 各轨道独立账本 |
 | `state/oneshot_tasks.json` | 一次性任务队列, `session.py brief` 会高亮 pending 项 |
 | `journal/` | 每日运行日志 (git 记录, **即完整审计链**) |
@@ -180,9 +184,17 @@
    - ✅ **账本不会被污染** (2026-10-19 核对: apply 失败前未写入, `trades` 无新增、
      `round_trips` 与 `positions` 均未变), 故不紧急; 但**每个 preclose 都会复现**。
    - 最小修法仍是 **run 前 `unlink`** (或把兜底改成"陈旧即重写"), 属改引擎, 待用户发话。
-2. **`signals.py` 部分卖出不更新 `cost`**: 实盘代码路径共用; `state/momentum_positions.json`
+2. **`--plan-only` 并非零副作用 (2026-10-19 接线时两次实测确认, 确定性复现)**:
+   `weekly_calls.py:_shadow_append` 的落盘路径**由账本路径派生**
+   (`..._positions.json` → `..._model_edge.json`), 而账本路径在 `--plan-only` 下**不改写**,
+   于是干跑也会往 `state/weekly_call_live_model_edge.json` 追加影子样本。
+   其 docstring 写着「路径由账本路径派生, 故无需改 daily.py 或加 CLI 参数」—— 作者是有意派生的,
+   但**没考虑 `--plan-only`**。影响: 纯追加的审计数据, **不碰任何账本、不参与任何判定**, 对交易无害;
+   但「干跑不留痕」这个预期不成立, 干跑后 `git status` 会脏一个文件。
+   修法: `_shadow_append` 增一个 dry-run 开关, 或由 daily.py 在 `--plan-only` 时把路径改到 workdir。**未修。**
+3. **`signals.py` 部分卖出不更新 `cost`**: 实盘代码路径共用; `state/momentum_positions.json`
    的 QQQ 已失真 18.46×。
-3. **财报黑窗 —— 2026-10-14 起已落地, 保留为纪律条目**: 根因是**取数漏做**而非代码缺陷
+4. **财报黑窗 —— 2026-10-14 起已落地, 保留为纪律条目**: 根因是**取数漏做**而非代码缺陷
    (`daily.py` 拿到 `--earnings` 就会往下传, 401/479/508/566 行)。造成过实际损害:
    DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。
    现行做法: 财报日缓存持久化在 **`state/earnings_cache.json`** (2026-10-14 建, 起因是 scratchpad
@@ -194,12 +206,12 @@
    ⚠️ **同日首次实际命中「过期即静默失效」**: BNY/TSM 的 `next` 都是 10-15 (当日盘前发财报),
    明日起 `days_to_earnings` 返回负数 → 闸门 fail-open 不报错 —— 已当场重取。
    **覆盖率 ≠ 新鲜度**, 每个主跑窗口必须按 `_refresh_policy` 第②步扫一遍到期标的。
-4. **同因子敞口无闸 —— 用户 2026-10-14 决定「不设」, 已结案**: `defense.max_per_sector=3`
+5. **同因子敞口无闸 —— 用户 2026-10-14 决定「不设」, 已结案**: `defense.max_per_sector=3`
    只数个股行业字段, 盖不住 ETF+个股混合 (AMAT 被数据源归在 Producer Manufacturing,
    SOXQ 是 ETF 不计数), 半导体实际敞口在 39~41% 徘徊而板块闸认为一切正常。
    **用户明确答复不加这道闸** (`config.json defense.same_factor_exposure_cap_pct = null`)。
    => **不再反复询问**; 战报里仍按报告义务**陈述**当日同因子敞口数字, 但不作为待用户动作项。
-5. **挑战者 edge 不可用于晋级 —— 但原「口径污染」诊断 2026-10-14 已证明不准**:
+6. **挑战者 edge 不可用于晋级 —— 但原「口径污染」诊断 2026-10-14 已证明不准**:
    `learn.py` 的 evaluate 实际用的是**时间加权收益 (TWR)**, 对 live 与 paper **各自的真实权益曲线**
    逐段链接并剔除外部现金流 (`equity_history` + `live_flow`), 分母与各自的 sizing 基准**本来就一致**,
    不存在「按 3.8×账本 start_capital 算」那种分母错配。`paper_positions.json` 的
@@ -210,7 +222,7 @@
    两条都使 edge 偏向"纸面更好", 方向与原诊断相反。**结论不变: edge 仍不能用于任何晋级判断 (红线8)**,
    但原因要按这里的说法理解。
 
-6. **`daily.py` 曾静默截断引擎告警 —— 代码 2026-10-15 已修, 但历史报告受影响**:
+7. **`daily.py` 曾静默截断引擎告警 —— 代码 2026-10-15 已修, 但历史报告受影响**:
    `daily.py:409` 原先 `warnings[:12]` / `candidates[:15]` 硬截断且**不留痕**, 而 `journal_facts`
    里根本没有 warnings 字段 —— 会话写战报/执行记录照 plan.json 写, 于是**凡当日告警 >12 条就漏报**。
    2026-10-15 实跑 17 条被丢 5 条 (SOXQ 加仓 + TT/JCI/FTNT/PANW 入场, 全是"有信号但资金不足"),

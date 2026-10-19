@@ -726,3 +726,69 @@ QQQ 今日 **718.63 vs 前收 709.80 = +1.24%**, 远不到 ≤ −2.0% 的入场
 **接线前它仍然产生不了任何订单** —— `grep -rn qqq_leap scripts/daily.py` 目前为 0。
 
 - status: completed
+
+---
+
+## 追加 — `daily.py` 接线完成, LEAP 轨道正式在主跑链路上
+
+### 接法
+
+新增 `phase_qqq_leap(a, R, plan)`, **排在 `phase_stock_signal` 与 `phase_options` 之前**
+(funding_priority=1), 整段被 `try/except` 包住 + 内部全 `critical=False` ——
+**新代码不具备中断主跑的能力**。新增两个 CLI 参数: `--leap-chain` 与 `--cash`。
+
+三条路径实测:
+
+| 情形 | `qqq_leap.resolved` | 行为 |
+|---|---|---|
+| 无持仓 + 无信号 (今日真实数据) | `no_action` | `window` 一跑就结束, 不给会话加活 |
+| 有信号 + 已传链 | `signaled` | 跑 `signal`, 订单进 `place_now.leap_option_*` |
+| **有持仓 + 没传链** | `needs_session_chain` | 写 `warning` + **升 anomaly**, 并逐步列出会话该做什么 |
+
+第三条最要紧: 有持仓却没链时**不静默**, 而是明确报「止盈/时间止损本次没有判定, 缺报价会让
+时间止损静默失效 (红线6)」, 且 `step1` 直接点名要取哪个 OCC。
+
+### 🔴 接线时踩到并修掉的一个真 bug (我自己引入的)
+
+`phase_stock_signal` 第 448 行原本是**整体赋值** `plan["place_now"] = {...}`。
+LEAP 跑在它之前并已写入 `leap_option_sells` / `leap_option_buys` → **被整体赋值悄悄清空**。
+干跑实测: plan 里 leap 订单桶凭空消失 (`{}`)。
+已改成 `plan["place_now"].update({...})` / `plan["to_pending"].update({...})` 并就地写明原因。
+修后 `place_now` 四个键齐全: `equity_sells` / `option_sells` / `leap_option_buys` / `leap_option_sells`。
+
+⚠️ 这个 bug 的性质值得记: 它**不会报错、不会进 anomalies**, 只会让 LEAP 的单子静静消失。
+如果没做"传链 → 看 plan 里桶在不在"这一步干跑, 它会一直潜伏到第一个真实信号日。
+
+### 🔴 顺带确认一个**仓库原有**的问题: `--plan-only` 并非零副作用
+
+两次干跑都确定性地把 `state/weekly_call_live_model_edge.json` 写脏。
+根因: `weekly_calls.py:_shadow_append` 的落盘路径**由账本路径派生**
+(`..._positions.json` → `..._model_edge.json`), 而账本路径在 `--plan-only` 下不改写。
+它的 docstring 明写「路径由账本路径派生, 故无需改 daily.py 或加 CLI 参数」——
+作者是有意派生的, 但**没考虑 `--plan-only`**。
+影响: 纯追加的审计数据, 不碰账本、不参与判定, **对交易无害**; 但"干跑不留痕"的预期不成立。
+已写进 CLAUDE.md「已知未修的问题」第 2 条 (后续编号顺延), **未修** —— 它不是我这次改动引入的,
+且修它要动 `weekly_calls.py` 的签名。本次每轮干跑后都 `git checkout` 还原了该文件。
+
+### 最终回归 (今日真实数据)
+
+`command_log` 次序: `… quotes[override] → **leap.window** → signals.signal → option.chains →
+wc.live.signal → wc.live.report` —— LEAP 确实排在正股与周call 之前。
+`fatal: None` · LEAP 无 anomaly · 正股与周call 产出均不受影响 · `state/` 零残留。
+
+### CLAUDE.md 已更新
+
+轨道表 (+LEAP 行, 标注"资金优先级最高") · **跨轨道资金优先级改写为三级次序**
+① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 · 契约表 (+`qqq_leap.json`) ·
+脚本表 (+`qqq_leap.py`, 写明两段式与"取数归会话、选档归引擎") ·
+账本表 (+`qqq_leap_positions.json`) · proposals 行标注该设计稿**已实现并上实盘**,
+文档留作回测与参数来源的唯一出处 · 已知问题第 2 条 (`--plan-only` 副作用)。
+
+### 轨道现在的真实状态
+
+**已在主跑链路上, 每个 preclose 窗口都会跑 `window`。** 今日 QQQ +1.244% 无信号故
+`no_action`; 现金 $2.45 而单张 $2,283, 即便有信号也会被防杠杆闸整单跳过。
+**第一个真实出单日需要会话按 `session_action_required` 取券商期权链** —— 那一步还没在
+真实信号日跑过, 是本轨道唯一未经实战的环节。
+
+- status: completed
