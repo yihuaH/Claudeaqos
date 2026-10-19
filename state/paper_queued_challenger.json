@@ -1,21 +1,34 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-16",
+  "date": "2026-10-19",
   "coid_prefix": "cq",
-  "next_open": "2026-10-19T09:30:00-04:00",
-  "skipped": [],
+  "next_open": "2026-10-20T09:30:00-04:00",
+  "skipped": [
+    "NET buy: 排队限价下买不起 1 整股, 跳过"
+  ],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-16-DAL-buy",
-      "order_id": "ebfe3f73-2492-4ace-9f4d-3ced6fe20df5",
-      "symbol": "DAL",
+      "coid": "cq-2026-10-19-SOXQ-sell",
+      "order_id": "23f08cb6-6fa3-43ba-9b9a-2cc3dd3e0a7f",
+      "symbol": "SOXQ",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "86.39",
+      "qty": "43",
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "coid": "cq-2026-10-19-CSCO-buy",
+      "order_id": "30c40854-7d13-4476-ab4f-b2067659e5a6",
+      "symbol": "CSCO",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "77.63",
-      "qty": "8",
+      "limit_price": "109.7",
+      "qty": "33",
       "bucket": "strategy",
-      "reason": "rsi2_scale_in"
+      "reason": "rsi2_entry"
     }
   ]
 }

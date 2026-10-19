@@ -26,11 +26,11 @@
       "tranches": 2
     },
     "DAL": {
-      "qty": 46.0,
-      "entry_price": 78.22,
+      "qty": 54.0,
+      "entry_price": 77.9681,
       "entry_date": "2026-10-14",
-      "cost": 3598.12,
-      "tranches": 1
+      "cost": 4210.28,
+      "tranches": 2
     },
     "STT": {
       "qty": 21.0,
@@ -483,6 +483,15 @@
       "price": 416.865714,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-19",
+      "symbol": "DAL",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 76.52,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ]
 }
