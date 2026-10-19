@@ -1,13 +1,4 @@
 {
- "_what": "财报日缓存, 直接作为 daily.py 的 `--earnings` 输入。格式即引擎要求的新格式 {\"SYM\": {\"next\": \"YYYY-MM-DD\"|null, \"past\": [已发生财报日...]}}。",
- "_why": "2026-10-14 晨检发现 scratchpad 被整目录清空 (容器回收), 两天累积的 17 只财报日**全部丢失**。财报黑窗 (earnings_blackout_days=7) 与财报出场 (earnings_exit_days=1) 是用户设定的两道保护, 缺数据就静默失效 (allow_unknown_earnings=true 放行) —— 把它放在只存 scratchpad 里太脆。移到仓库后随 git 持久化, 容器回收也不丢。",
- "_no_code_change": "driver 的 `--earnings` 接受任意路径, 故本文件不需要改任何代码: 主跑传 `--earnings state/earnings_cache.json` 即可。",
- "_source": "mcp__cash_printer__get_earnings_results 逐只取回。next = 最近一条 eps.actual 为 null 的 report.date; past = 所有 eps.actual 非 null 的 report.date。ETF 无财报, 记 next=null/past=[]。",
- "_refresh_policy": "⚠️ **每只标的的 `next` 日期一过就必须重取**, 否则 days_to_earnings 返回负数 → `0 <= ed` 判false → 闸门**失效但不报错** (与缺数据同样是 fail-open)。每个主跑窗口的做法: ① 先 `--plan-only` 看 plan.json 的 stock.candidates; ② 本文件里缺的标的、以及 `next` 已过期的标的, 逐只 get_earnings_results 补齐; ③ 其余直接复用。**不要因为文件存在就当它一定新鲜。**",
- "_verify_note": "2026-10-14 首版由会话从同一会话内早先的取数结果重建 (scratchpad 已被清空)。2026-10-15 的 109 只 (84 只 universe 个股 + TSM/BNY 重取 + 之前批次) 逐只由 get_earnings_results 实时取回并当场落盘, `next` = 最早一条 eps.actual 为 null 的 report.date, `past` = 全部 eps.actual 非 null 的 report.date。转录风险低但非零; 任何一只用于实际拦单前, 若其 next 在 7 日内, 建议当场重取确认。",
- "_next_dates_expiring_soon": "按 2026-10-15 收盘核查, **无一只 next 已过期** (当日发财报的 TSM/BNY 已当场重取, 推进到 2027-01)。最近到期序列 (到期即重取): TRV 10-16 · CB 10-20 · CSX/DHR/ELV/META/PM/SAP/TMO/TXN 10-21 · PG/UNP/VLO 10-22 · ABBV/CVX/XOM 10-30。每个主跑窗口按 _refresh_policy 第②步扫一遍即可。",
- "_coverage_progress": "✅ **已灌满** (2026-10-15 收盘前主跑后完成; 用户 2026-10-14「100 只一次性灌满缓存」)。覆盖 = strategy/universe.json 全部 100 只个股 + ETF 池 8 只 + 期权白名单/动量轨道用到的指数 ETF 与已清仓但仍在白名单的个股, 共 124 个标的键 (其中 22 只 next=null 为 ETF/指数)。⚠️ 覆盖率≠新鲜度: 见 _refresh_policy, `next` 一过期就必须重取, 否则 days_to_earnings 变负数 → 闸门 fail-open 且不报错。",
- "_etf_note": "ETF/指数基金没有财报, 一律 next=null / past=[]; defense.exempt_symbols 本来也豁免它们。这些不需要 MCP 取数, 直接写死。覆盖了 ETF 池 8 只 + 期权白名单与动量轨道用到的指数 ETF。",
  "A": {
   "next": "2026-11-23",
   "past": [
@@ -107,6 +98,10 @@
    "2026-08-04"
   ]
  },
+ "AMZN": {
+  "next": "2026-10-29",
+  "past": []
+ },
  "ANET": {
   "next": "2026-11-03",
   "past": [
@@ -129,6 +124,10 @@
    "2026-07-29"
   ]
  },
+ "AVGO": {
+  "next": null,
+  "past": []
+ },
  "BAC": {
   "next": "2027-01-15",
   "past": [
@@ -140,6 +139,10 @@
    "2026-07-14",
    "2026-10-14"
   ]
+ },
+ "BIIB": {
+  "next": "2026-10-28",
+  "past": []
  },
  "BLK": {
   "next": "2027-01-14",
@@ -165,6 +168,10 @@
    "2026-10-15"
   ]
  },
+ "BP": {
+  "next": "2026-10-30",
+  "past": []
+ },
  "C": {
   "next": "2027-01-14",
   "past": [
@@ -176,6 +183,10 @@
    "2026-07-14",
    "2026-10-13"
   ]
+ },
+ "CAH": {
+  "next": null,
+  "past": []
  },
  "CB": {
   "next": "2026-10-20",
@@ -198,6 +209,10 @@
    "2026-04-27",
    "2026-07-27"
   ]
+ },
+ "CL": {
+  "next": "2026-10-30",
+  "past": []
  },
  "COP": {
   "next": "2026-11-05",
@@ -325,6 +340,10 @@
    "2026-08-05"
   ]
  },
+ "DVN": {
+  "next": null,
+  "past": []
+ },
  "DXCM": {
   "next": "2026-10-29",
   "past": [
@@ -377,6 +396,10 @@
    "2026-08-04"
   ]
  },
+ "EOG": {
+  "next": null,
+  "past": []
+ },
  "FAST": {
   "next": "2027-01-19",
   "past": [
@@ -410,6 +433,10 @@
    "2026-05-06",
    "2026-07-29"
   ]
+ },
+ "GE": {
+  "next": "2026-10-20",
+  "past": []
  },
  "GEV": {
   "next": "2026-10-28",
@@ -506,6 +533,10 @@
    "2026-05-27",
    "2026-08-26"
   ]
+ },
+ "HUM": {
+  "next": null,
+  "past": []
  },
  "IEF": {
   "next": null,
@@ -671,6 +702,10 @@
    "2026-08-05"
   ]
  },
+ "MDLZ": {
+  "next": "2026-10-29",
+  "past": []
+ },
  "MDT": {
   "next": "2026-11-17",
   "past": [
@@ -703,6 +738,10 @@
    "2026-04-29",
    "2026-07-29"
   ]
+ },
+ "MNST": {
+  "next": null,
+  "past": []
  },
  "MO": {
   "next": "2026-10-29",
@@ -737,6 +776,10 @@
    "2026-08-04"
   ]
  },
+ "MRSH": {
+  "next": null,
+  "past": []
+ },
  "MRVL": {
   "next": "2026-12-01",
   "past": [
@@ -748,6 +791,10 @@
    "2026-08-27"
   ]
  },
+ "MSFT": {
+  "next": "2026-10-28",
+  "past": []
+ },
  "MSI": {
   "next": "2026-10-29",
   "past": [
@@ -758,6 +805,10 @@
    "2026-05-07",
    "2026-08-05"
   ]
+ },
+ "MTD": {
+  "next": null,
+  "past": []
  },
  "NET": {
   "next": "2026-11-05",
@@ -802,6 +853,10 @@
    "2026-05-20",
    "2026-08-26"
   ]
+ },
+ "OXY": {
+  "next": null,
+  "past": []
  },
  "P": {
   "next": "2026-11-19",
@@ -933,6 +988,10 @@
    "2026-08-06"
   ]
  },
+ "ROST": {
+  "next": null,
+  "past": []
+ },
  "RVMD": {
   "next": "2026-11-04",
   "past": [
@@ -954,6 +1013,10 @@
    "2026-04-23",
    "2026-07-23"
   ]
+ },
+ "SBUX": {
+  "next": "2026-10-29",
+  "past": []
  },
  "SMH": {
   "next": null,
@@ -990,6 +1053,14 @@
    "2026-10-14"
   ]
  },
+ "SU": {
+  "next": null,
+  "past": []
+ },
+ "SWKS": {
+  "next": null,
+  "past": []
+ },
  "TECH": {
   "next": "2026-11-04",
   "past": [
@@ -1011,6 +1082,10 @@
    "2026-05-20",
    "2026-08-19"
   ]
+ },
+ "TJX": {
+  "next": null,
+  "past": []
  },
  "TLT": {
   "next": null,
@@ -1049,6 +1124,10 @@
    "2026-07-17",
    "2026-10-16"
   ]
+ },
+ "TSLA": {
+  "next": "2026-10-21",
+  "past": []
  },
  "TSM": {
   "next": "2027-01-14",
@@ -1151,6 +1230,10 @@
    "2026-08-03"
   ]
  },
+ "WAT": {
+  "next": null,
+  "past": []
+ },
  "WELL": {
   "next": "2026-10-26",
   "past": [
@@ -1230,5 +1313,14 @@
    "2026-05-01",
    "2026-07-31"
   ]
- }
+ },
+ "_coverage_progress": "2026-10-19 15:45 ET: 补齐周一新股池 19 只 + 期权白名单 AMZN/AVGO/MSFT/TSLA 共 23 只, 数据源 get_earnings_calendar(start=2026-10-19, days=14, high_market_cap)。其中 9 只窗口内有财报 (GE 10-20 / TSLA 10-21 / MSFT 10-28 / BIIB 10-28 / AMZN 10-29 / MDLZ 10-29 / SBUX 10-29 / BP 10-30 / CL 10-30); 另 14 只 (AVGO CAH DVN EOG HUM MNST MRSH MTD OXY ROST SU SWKS TJX WAT) 经 14 日窗口确认**至 2026-11-01 无财报**, next 记 null 表示'窗口外未知'而非'未取数'。",
+ "_etf_note": "ETF/指数基金没有财报, 一律 next=null / past=[]; defense.exempt_symbols 本来也豁免它们。这些不需要 MCP 取数, 直接写死。覆盖了 ETF 池 8 只 + 期权白名单与动量轨道用到的指数 ETF。",
+ "_next_dates_expiring_soon": "按 2026-10-15 收盘核查, **无一只 next 已过期** (当日发财报的 TSM/BNY 已当场重取, 推进到 2027-01)。最近到期序列 (到期即重取): TRV 10-16 · CB 10-20 · CSX/DHR/ELV/META/PM/SAP/TMO/TXN 10-21 · PG/UNP/VLO 10-22 · ABBV/CVX/XOM 10-30。每个主跑窗口按 _refresh_policy 第②步扫一遍即可。",
+ "_no_code_change": "driver 的 `--earnings` 接受任意路径, 故本文件不需要改任何代码: 主跑传 `--earnings state/earnings_cache.json` 即可。",
+ "_refresh_policy": "⚠️ **每只标的的 `next` 日期一过就必须重取**, 否则 days_to_earnings 返回负数 → `0 <= ed` 判false → 闸门**失效但不报错** (与缺数据同样是 fail-open)。每个主跑窗口的做法: ① 先 `--plan-only` 看 plan.json 的 stock.candidates; ② 本文件里缺的标的、以及 `next` 已过期的标的, 逐只 get_earnings_results 补齐; ③ 其余直接复用。**不要因为文件存在就当它一定新鲜。**",
+ "_source": "mcp__cash_printer__get_earnings_results 逐只取回。next = 最近一条 eps.actual 为 null 的 report.date; past = 所有 eps.actual 非 null 的 report.date。ETF 无财报, 记 next=null/past=[]。",
+ "_verify_note": "⚠️ 上面那 14 只的 next=null 是**有限期结论**: 只验证到 2026-11-01。2026-11-01 之后必须重取, 否则退化成真正的'未知'→ allow_unknown_earnings 放行 → 闸门静默失效。⚠️ 2026-10-19 踩到一次解析坑: get_earnings_calendar 的日期在 `report.date` 子字段里, 不在顶层 `report_date`/`date`; 按顶层取会得到'全部无财报'的假阴性 —— 当时差一步就让 GE (次日财报) 进入可入场集合, 与 DAL 2026-10-08 同类事故。",
+ "_what": "财报日缓存, 直接作为 daily.py 的 `--earnings` 输入。格式即引擎要求的新格式 {\"SYM\": {\"next\": \"YYYY-MM-DD\"|null, \"past\": [已发生财报日...]}}。",
+ "_why": "2026-10-14 晨检发现 scratchpad 被整目录清空 (容器回收), 两天累积的 17 只财报日**全部丢失**。财报黑窗 (earnings_blackout_days=7) 与财报出场 (earnings_exit_days=1) 是用户设定的两道保护, 缺数据就静默失效 (allow_unknown_earnings=true 放行) —— 把它放在只存 scratchpad 里太脆。移到仓库后随 git 持久化, 容器回收也不丢。"
 }
