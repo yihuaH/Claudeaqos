@@ -224,3 +224,55 @@ IV ±10% × 半点差 1.0~3.5% 全组合下均值 +37.1~43.0% → 对假设不�
 - `strategy/*.json` · `scripts/*.py` · `state/*` 全部未改
 - 未调用任何 `place_*` / `review_*`
 - 新增: `strategy/proposals/qqq-leap-backtest.py` (研究脚本, 不在交易路径) + 设计稿 §12 + 本追加
+
+---
+
+## 追加 (13:3x ET) — 用户取消实盘周call的单张权利金上限
+
+用户原话: **「取消5000上限 不设上线」**。
+
+### 改了什么
+
+`strategy/weekly_calls_live.json`: `contract.max_premium_per_contract_usd` **5000 → null**。
+paper 轨道 (`strategy/weekly_calls.json`) 的同名字段**保持 5000 未动** —— 那条轨道是摩擦实测,
+16 回合的样本靠参数不变才可比; 若用户也要一并取消, 说一声即可改。
+
+同步改了四处已经说错的留档说明 (`_premium_cap_note` / `budget._note` / `_budget_note` /
+`_contract_note` / `sizing._note`) 与 `CLAUDE.md` 的两处, 它们原先都写着「$5,000 是现在唯一的
+单笔规模闸」。
+
+### 这一步的真实后果 (必须写清, 因为开仓已无用户事前一票否决)
+
+`weekly_calls.py:599-624` 的张数逻辑:
+
+```
+target = 净值 × sizing.position_pct_of_portfolio(=20%)
+qty = int(target // per_cost)
+若 qty < 1:                     # 贵档
+    tier_pct = sizing.max_single_position_pct_of_portfolio   # 本就是 null
+    tier_cap = inf              # null 经 _UNSET sentinel 判为不限制
+    if per_cost <= tier_cap: qty = 1     # => 恒成立, 强制给 1 张
+```
+
+所以 `max_premium_per_contract_usd` 是三道规模闸里**唯一还按金额拦单的那道**;
+它置 null 之后:
+
+1. **单张期权的规模上限退化为仅剩实时 `min(buying_power, cash)`** (红线3 防杠杆闸)。
+   一张深ITM call 可以吃掉当日几乎全部可用现金。
+2. **跨轨道资金优先级 = 期权优先** (CLAUDE.md, 2026-08-27 用户定), 故同一天的 RSI-2
+   股票买单会按「可用资金 − 期权抵押」算 cap, 超 cap 的**整单跳过不缩量**。
+   即一张大额期权可以让当日股票轨道一单不成。
+3. 长 call **可亏 100% 权利金**, 而 2026-10-12 起开仓由会话自动下单, 用户没有事前否决点
+   → 事后执行报告是唯一处置入口 (报告义务)。
+
+仍然并行生效、没有被这次改动动到的: 实时 `min(buying_power, cash)` 防杠杆闸、熔断
+(累计已实现亏 ≥ 净值×50%)、点差闸、DTE 闸 (8~17 日)、公允价边际闸、21 只白名单、
+`position_pct_of_portfolio = 20%` 的注码。
+
+### 当下会不会立刻出大单
+
+**不会。** 高水位 `high_water_mark = 10438.52`, 可用现金是千元级, 而深ITM call 每张
+$2,608(NVDA)~$8,122(SMH)。取消 $5,000 这一步**当下不改变出单与否** (该拦的改由
+`insufficient_buying_power` 拦), 改变的是**一旦现金够了, 单笔可以有多大** —— 没有上界。
+
+- status: completed
