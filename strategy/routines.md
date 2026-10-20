@@ -136,6 +136,19 @@ Robinhood 连接器, 请在 Routines 界面为本 Routine 添加)」。
 
 ## ④ 收盘前主跑 (~15:20 ET / 19:20 UTC, 交易日) — 2026-09-11 已创建 `trig_01PqeuvMEsyXbTKJQ7njyVcR`
 
+> ### ⚠️ 2026-10-19 起 `daily.py` 多了两个参数, **唤醒词原文里没有, 别照抄漏掉**
+>
+> QQQ LEAP 轨道接线 (`phase_qqq_leap`, `funding_priority:1`) 引入:
+>
+> | 参数 | 什么时候要传 | 漏传的后果 |
+> |---|---|---|
+> | `--cash <实时 cash>` | **每次都传** | 不传则 LEAP 的防杠杆闸退化为只看 `buying_power`。当前账户 `buying_power == cash` 所以看不出差别, **一旦券商开放借贷就会变成"可以动用借来的钱"** (红线3 明令禁止) |
+> | `--leap-chain <含 delta 的券商期权报价>` | 只在 `leap.window` 说需要时 (有持仓 或 当日有入场信号) | 有持仓却不传 → `qqq_leap.resolved=needs_session_chain` 并升 anomaly, **当日止盈/时间止损没判定**。驱动器会明确报出来, 不会静默 |
+>
+> 即正常日 (无持仓无信号) 只需补 `--cash`; `--leap-chain` 由 `plan.json` 的
+> `qqq_leap.session_action_required` 逐步告诉你怎么取、取完跑什么。
+
+
 **背景**: 4C 执行协议 2026-09-10 换代后, 实测收益全在「不跨夜进场」这一项 (+0.42 pp/笔,
 研究见 `journal/2026-09-10-preclose-research.md`)。故把**时间敏感的关键路径**移到收盘前,
 纸面轨道/行情核对/journal 留在 17:45 的 `--phase wrapup`。

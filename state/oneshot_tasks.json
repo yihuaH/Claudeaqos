@@ -22,6 +22,16 @@
    "status": "pending",
    "created": "2026-10-12",
    "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
+  },
+  {
+   "id": "qqq-leap-first-live-run-2026-10",
+   "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
+   "window": "**2026-10-20 的 15:20 收盘前窗 + 17:45 收尾窗**; 之后若仍未出过真实信号日则顺延, 直到首个 entry_signal=true 的日子跑完再标 done",
+   "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
+   "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
+   "status": "pending",
+   "created": "2026-10-20",
+   "authorized_by": "用户 2026-10-20「明天盯着跑」"
   }
  ]
 }
