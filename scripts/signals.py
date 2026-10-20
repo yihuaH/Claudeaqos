@@ -256,6 +256,9 @@ def cmd_signal(a):
         if defense is None or sym in exempt_syms:
             return True
         if no_earnings_data and not allow_unknown_earnings:
+            # 本分支不记 warning 是**对的**: 该条件已由 :142-146 在进循环前无条件通报一次
+            # (「防御: 无财报日数据, 今日跳过全部新入场 (出场照常)」)。在这里再记一遍只会重复,
+            # 且 universe 有多少只就会刷多少遍。2026-10-20 核对过, 勿再往这里加。
             return False
         if not no_earnings_data and sym not in earnings and not allow_unknown_earnings:
             if not quiet:
@@ -263,6 +266,12 @@ def cmd_signal(a):
             return False
         ed = days_to_earnings(sym)
         if ed is not None and 0 <= ed <= int(defense.get("earnings_blackout_days", 10)):
+            # 2026-10-20 查出: 这一条原先静默 → `warnings_total=0` 并不等于没有标的被拦。
+            # 当日 META (rsi2 3.59, dte=1) 被正确拦下却无任何痕迹, 只能靠「candidates 有它 /
+            # buys 没它」反推。auto_buys 取消了下单前一票否决后, 事后点名是用户唯一的处置入口,
+            # 故拦单必须留痕。写法与下方加仓分支 (`触发加仓但 N 天后财报`) 对齐。
+            if not quiet:
+                warnings.append(f"{sym}: 入场信号成立但 {ed} 天后财报, 防御性跳过入场")
             return False
         look = int(defense.get("move_lookback_days", 20))
         thr = float(defense.get("max_daily_move_pct", 8.0))
