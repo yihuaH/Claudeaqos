@@ -9,26 +9,12 @@
       "cost": 1929.86,
       "tranches": 2
     },
-    "DAL": {
-      "qty": 25.952434,
-      "entry_price": 78.993,
-      "entry_date": "2026-10-08",
-      "cost": 2050.06,
-      "tranches": 2
-    },
     "NVDA": {
       "qty": 4.874441,
       "entry_price": 215.596,
       "entry_date": "2026-10-12",
       "cost": 1050.91,
       "tranches": 2
-    },
-    "STT": {
-      "qty": 6.06999,
-      "entry_price": 166.0151,
-      "entry_date": "2026-10-14",
-      "cost": 1007.71,
-      "tranches": 1
     },
     "XLK": {
       "qty": 5.287595,
@@ -57,6 +43,20 @@
       "entry_date": "2026-10-14",
       "cost": 1002.56,
       "tranches": 2
+    },
+    "CSCO": {
+      "qty": 9.240992,
+      "entry_price": 106.4799,
+      "entry_date": "2026-10-20",
+      "cost": 983.98,
+      "tranches": 1
+    },
+    "NET": {
+      "qty": 3.368646,
+      "entry_price": 292.0995,
+      "entry_date": "2026-10-20",
+      "cost": 983.98,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2625,6 +2625,42 @@
       "price": 88.1999,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 25.952434,
+      "price": 76.7501,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "STT",
+      "side": "sell",
+      "qty": 6.06999,
+      "price": 166.4001,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "CSCO",
+      "side": "buy",
+      "qty": 9.240992,
+      "price": 106.4799,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "NET",
+      "side": "buy",
+      "qty": 3.368646,
+      "price": 292.0995,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [

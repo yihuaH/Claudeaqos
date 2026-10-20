@@ -1,16 +1,25 @@
 {
-  "date": "2026-10-19",
+  "date": "2026-10-20",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
       "symbol": "META",
-      "reason": "earnings_blackout(dte=2)",
-      "rsi2": 8.44
+      "reason": "earnings_blackout(dte=1)",
+      "rsi2": 3.59
     }
   ],
   "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "near_signals": [
+    {
+      "symbol": "AAPL",
+      "rsi2_now": 11.56,
+      "scenario": "1d_-1%",
+      "spot": 338.99,
+      "structure": "single",
+      "est_premium_usd": 3432
+    }
+  ],
+  "suggested_reserve_usd": 3432.0
 }

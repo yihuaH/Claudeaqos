@@ -1056,6 +1056,12 @@
       "reason": "spread_too_wide(best=5.11%)",
       "rsi2": 9.22,
       "spot": 249.84
+    },
+    {
+      "date": "2026-10-19",
+      "symbol": "META",
+      "reason": "earnings_blackout(dte=2)",
+      "rsi2": 8.44
     }
   ],
   "assignments": [
