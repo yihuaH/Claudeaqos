@@ -4,13 +4,6 @@
   "high_water_mark": 10218.49,
   "halted": false,
   "strategy_positions": {
-    "SOXQ": {
-      "qty": 43.0,
-      "entry_price": 99.9442,
-      "entry_date": "2026-10-09",
-      "cost": 4297.6,
-      "tranches": 2
-    },
     "NVDA": {
       "qty": 32.0,
       "entry_price": 221.6875,
@@ -65,6 +58,13 @@
       "entry_price": 416.865714,
       "entry_date": "2026-10-16",
       "cost": 2918.06,
+      "tranches": 1
+    },
+    "CSCO": {
+      "qty": 33.0,
+      "entry_price": 105.97,
+      "entry_date": "2026-10-20",
+      "cost": 3497.01,
       "tranches": 1
     }
   },
@@ -492,6 +492,24 @@
       "price": 76.52,
       "bucket": "strategy",
       "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "SOXQ",
+      "side": "sell",
+      "qty": 43.0,
+      "price": 87.873721,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "CSCO",
+      "side": "buy",
+      "qty": 33.0,
+      "price": 105.97,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

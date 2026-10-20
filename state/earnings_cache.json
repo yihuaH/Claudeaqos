@@ -189,14 +189,15 @@
   "past": []
  },
  "CB": {
-  "next": "2026-10-20",
+  "next": "2027-02-02",
   "past": [
    "2025-04-22",
    "2025-07-22",
    "2025-10-21",
    "2026-02-03",
    "2026-04-21",
-   "2026-07-21"
+   "2026-07-21",
+   "2026-10-20"
   ]
  },
  "CDNS": {
@@ -435,8 +436,16 @@
   ]
  },
  "GE": {
-  "next": "2026-10-20",
-  "past": []
+  "next": "2027-01-21",
+  "past": [
+   "2025-04-22",
+   "2025-07-17",
+   "2025-10-21",
+   "2026-01-22",
+   "2026-04-21",
+   "2026-07-16",
+   "2026-10-20"
+  ]
  },
  "GEV": {
   "next": "2026-10-28",
@@ -535,8 +544,15 @@
   ]
  },
  "HUM": {
-  "next": null,
-  "past": []
+  "next": "2026-11-06",
+  "past": [
+   "2025-04-30",
+   "2025-07-30",
+   "2025-11-05",
+   "2026-02-11",
+   "2026-04-29",
+   "2026-07-29"
+  ]
  },
  "IEF": {
   "next": null,
@@ -1316,11 +1332,12 @@
  },
  "_coverage_progress": "2026-10-19 15:45 ET: 补齐周一新股池 19 只 + 期权白名单 AMZN/AVGO/MSFT/TSLA 共 23 只, 数据源 get_earnings_calendar(start=2026-10-19, days=14, high_market_cap)。其中 9 只窗口内有财报 (GE 10-20 / TSLA 10-21 / MSFT 10-28 / BIIB 10-28 / AMZN 10-29 / MDLZ 10-29 / SBUX 10-29 / BP 10-30 / CL 10-30); 另 14 只 (AVGO CAH DVN EOG HUM MNST MRSH MTD OXY ROST SU SWKS TJX WAT) 经 14 日窗口确认**至 2026-11-01 无财报**, next 记 null 表示'窗口外未知'而非'未取数'。",
  "_etf_note": "ETF/指数基金没有财报, 一律 next=null / past=[]; defense.exempt_symbols 本来也豁免它们。这些不需要 MCP 取数, 直接写死。覆盖了 ETF 池 8 只 + 期权白名单与动量轨道用到的指数 ETF。",
- "_next_dates_expiring_soon": "按 2026-10-15 收盘核查, **无一只 next 已过期** (当日发财报的 TSM/BNY 已当场重取, 推进到 2027-01)。最近到期序列 (到期即重取): TRV 10-16 · CB 10-20 · CSX/DHR/ELV/META/PM/SAP/TMO/TXN 10-21 · PG/UNP/VLO 10-22 · ABBV/CVX/XOM 10-30。每个主跑窗口按 _refresh_policy 第②步扫一遍即可。",
+ "_next_dates_expiring_soon": "2026-10-20 17:50 ET 刷新: CB/GE 的 next 原为 2026-10-20 (当日发布) → 已重取为 2027-02-02 / 2027-01-21 (均 verified=false 暂定), past 各 +2026-10-20。下一批到期: 2026-10-21 的 CSX/DHR/ELV/META/PM/SAP/TMO/TSLA/TXN (9 只, 明日主跑后需重取)、2026-10-22 的 PG/UNP/VLO。⚠️ 持仓里 CDNS next=2026-10-26 (dte=6) 已进入黑窗, earnings_exit_days=1 → 预计 10-26 触发 earnings_exit。",
  "_no_code_change": "driver 的 `--earnings` 接受任意路径, 故本文件不需要改任何代码: 主跑传 `--earnings state/earnings_cache.json` 即可。",
  "_refresh_policy": "⚠️ **每只标的的 `next` 日期一过就必须重取**, 否则 days_to_earnings 返回负数 → `0 <= ed` 判false → 闸门**失效但不报错** (与缺数据同样是 fail-open)。每个主跑窗口的做法: ① 先 `--plan-only` 看 plan.json 的 stock.candidates; ② 本文件里缺的标的、以及 `next` 已过期的标的, 逐只 get_earnings_results 补齐; ③ 其余直接复用。**不要因为文件存在就当它一定新鲜。**",
  "_source": "mcp__cash_printer__get_earnings_results 逐只取回。next = 最近一条 eps.actual 为 null 的 report.date; past = 所有 eps.actual 非 null 的 report.date。ETF 无财报, 记 next=null/past=[]。",
  "_verify_note": "⚠️ 上面那 14 只的 next=null 是**有限期结论**: 只验证到 2026-11-01。2026-11-01 之后必须重取, 否则退化成真正的'未知'→ allow_unknown_earnings 放行 → 闸门静默失效。⚠️ 2026-10-19 踩到一次解析坑: get_earnings_calendar 的日期在 `report.date` 子字段里, 不在顶层 `report_date`/`date`; 按顶层取会得到'全部无财报'的假阴性 —— 当时差一步就让 GE (次日财报) 进入可入场集合, 与 DAL 2026-10-08 同类事故。",
  "_what": "财报日缓存, 直接作为 daily.py 的 `--earnings` 输入。格式即引擎要求的新格式 {\"SYM\": {\"next\": \"YYYY-MM-DD\"|null, \"past\": [已发生财报日...]}}。",
- "_why": "2026-10-14 晨检发现 scratchpad 被整目录清空 (容器回收), 两天累积的 17 只财报日**全部丢失**。财报黑窗 (earnings_blackout_days=7) 与财报出场 (earnings_exit_days=1) 是用户设定的两道保护, 缺数据就静默失效 (allow_unknown_earnings=true 放行) —— 把它放在只存 scratchpad 里太脆。移到仓库后随 git 持久化, 容器回收也不丢。"
+ "_why": "2026-10-14 晨检发现 scratchpad 被整目录清空 (容器回收), 两天累积的 17 只财报日**全部丢失**。财报黑窗 (earnings_blackout_days=7) 与财报出场 (earnings_exit_days=1) 是用户设定的两道保护, 缺数据就静默失效 (allow_unknown_earnings=true 放行) —— 把它放在只存 scratchpad 里太脆。移到仓库后随 git 持久化, 容器回收也不丢。",
+ "_past_coverage_gap": "2026-10-20 审计: 147 键里 44 个 past 为空 = ETF 22 只 (正常, 本无财报) + **个股 22 只**。个股名单: AMZN AVGO BIIB BP CAH CL DVN EOG HUM MDLZ MNST MRSH MSFT MTD OXY ROST SBUX SU SWKS TJX TSLA WAT —— 其中 18 只正是 10-19 周度刷新新进池的标的 (BIIB BP CAH CL DVN EOG HUM MDLZ MNST MRSH MTD OXY ROST SBUX SU SWKS TJX WAT), 根因: 新进池时只用 get_earnings_calendar 抓了 next, 没有逐只 get_earnings_results 抓 past。后果: 对这些标的 defense.earnings_gap_up_exempt (财报**上涨**跳空豁免) **静默失效** → 近20日异动闸会把本该豁免的财报跳空也当普通异动拦掉。方向是**更保守** (少入场, 不是多入场), 无风险敞口。✅ 当日实测影响 = 0: 22 只里近20日只有 HUM 有 ≥8% 异动 (2026-10-09 +11.6%), 而 HUM 的财报日是 2026-07-29 / 2026-11-06, 该异动**不是**财报反应 → 即便 past 齐全也不豁免, 拦得正确。HUM 的 past 已于本次补齐; 余 21 只待逐只 get_earnings_results 补 (纯取数, 不改任何参数)。"
 }

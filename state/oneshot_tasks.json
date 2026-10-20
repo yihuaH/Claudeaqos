@@ -26,12 +26,13 @@
   {
    "id": "qqq-leap-first-live-run-2026-10",
    "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
-   "window": "**2026-10-20 的 15:20 收盘前窗 + 17:45 收尾窗**; 之后若仍未出过真实信号日则顺延, 直到首个 entry_signal=true 的日子跑完再标 done",
+   "window": "**顺延中**: 原定 2026-10-20 两窗已跑完 (见 progress_2026_10_20), 但未遇真实信号日 → 继续顺延到首个 entry_signal=true 的交易日, 届时盯完 window → 取链 → signal → place → apply 全链路再标 done",
    "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
    "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
    "status": "pending",
    "created": "2026-10-20",
-   "authorized_by": "用户 2026-10-20「明天盯着跑」"
+   "authorized_by": "用户 2026-10-20「明天盯着跑」",
+   "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。"
   }
  ]
 }

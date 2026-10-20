@@ -1,32 +1,63 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-19",
+  "date": "2026-10-20",
   "coid_prefix": "cq",
-  "next_open": "2026-10-20T09:30:00-04:00",
-  "skipped": [
-    "NET buy: 排队限价下买不起 1 整股, 跳过"
-  ],
+  "next_open": "2026-10-21T09:30:00-04:00",
+  "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-19-SOXQ-sell",
-      "order_id": "23f08cb6-6fa3-43ba-9b9a-2cc3dd3e0a7f",
-      "symbol": "SOXQ",
+      "coid": "cq-2026-10-20-KLAC-sell",
+      "order_id": "2d0cfd37-e908-4ab1-bbb2-42ffd0affd88",
+      "symbol": "KLAC",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "86.39",
-      "qty": "43",
+      "limit_price": "156.89",
+      "qty": "40",
       "bucket": "strategy",
       "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-10-19-CSCO-buy",
-      "order_id": "30c40854-7d13-4476-ab4f-b2067659e5a6",
-      "symbol": "CSCO",
+      "coid": "cq-2026-10-20-DAL-sell",
+      "order_id": "b8747eed-5041-4f0f-98f5-306579216601",
+      "symbol": "DAL",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "74.36",
+      "qty": "54",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-20-STT-sell",
+      "order_id": "1f215d03-23ed-4f44-997b-1c76a7010a44",
+      "symbol": "STT",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "161.58",
+      "qty": "21",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-20-TSM-sell",
+      "order_id": "2a3328a1-49ee-4bfa-a8f5-6a27ffcaa40a",
+      "symbol": "TSM",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "412.33",
+      "qty": "7",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-20-NET-buy",
+      "order_id": "dbff9f67-c536-4475-9009-26417840ace7",
+      "symbol": "NET",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "109.7",
-      "qty": "33",
+      "limit_price": "300.44",
+      "qty": "12",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
