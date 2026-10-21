@@ -2,58 +2,9 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "SOXQ": {
-      "qty": 20.571346,
-      "entry_price": 93.813,
-      "entry_date": "2026-10-08",
-      "cost": 1929.86,
-      "tranches": 2
-    },
-    "NVDA": {
-      "qty": 4.874441,
-      "entry_price": 215.596,
-      "entry_date": "2026-10-12",
-      "cost": 1050.91,
-      "tranches": 2
-    },
-    "XLK": {
-      "qty": 5.287595,
-      "entry_price": 190.58,
-      "entry_date": "2026-10-14",
-      "cost": 1007.71,
-      "tranches": 1
-    },
-    "QQQM": {
-      "qty": 3.357522,
-      "entry_price": 300.135,
-      "entry_date": "2026-10-14",
-      "cost": 1007.71,
-      "tranches": 1
-    },
-    "CDNS": {
-      "qty": 3.079243,
-      "entry_price": 327.259,
-      "entry_date": "2026-10-14",
-      "cost": 1007.71,
-      "tranches": 1
-    },
-    "ANET": {
-      "qty": 5.364735,
-      "entry_price": 186.8797,
-      "entry_date": "2026-10-14",
-      "cost": 1002.56,
-      "tranches": 2
-    },
     "CSCO": {
       "qty": 9.240992,
       "entry_price": 106.4799,
-      "entry_date": "2026-10-20",
-      "cost": 983.98,
-      "tranches": 1
-    },
-    "NET": {
-      "qty": 3.368646,
-      "entry_price": 292.0995,
       "entry_date": "2026-10-20",
       "cost": 983.98,
       "tranches": 1
@@ -2661,6 +2612,69 @@
       "price": 292.0995,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "SOXQ",
+      "side": "sell",
+      "qty": 20.571346,
+      "price": 90.5401,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "NVDA",
+      "side": "sell",
+      "qty": 4.874441,
+      "price": 221.0701,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "XLK",
+      "side": "sell",
+      "qty": 5.287595,
+      "price": 188.535,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "QQQM",
+      "side": "sell",
+      "qty": 3.357522,
+      "price": 298.8501,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "CDNS",
+      "side": "sell",
+      "qty": 3.079243,
+      "price": 328.942,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "ANET",
+      "side": "sell",
+      "qty": 5.364735,
+      "price": 183.96,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "NET",
+      "side": "sell",
+      "qty": 3.368646,
+      "price": 308.26,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
