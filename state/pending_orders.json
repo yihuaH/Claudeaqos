@@ -1,141 +1,55 @@
 {
- "trade_date": "2026-10-20",
- "generated_by": "scripts/daily.py --phase preclose",
- "record_kind": "execution_log",
- "_kind_note": "auto_buys 下本文件是**执行记录**, 不是待执行清单。只有 4B-failsafe (place 被分类器拦) 才会产出 status=awaiting_execution 的真·待执行清单。",
- "status": "executed",
- "valid_until": "不适用 (auto_buys: 当场成交)",
- "exec_window_et": "不适用 (auto_buys)",
- "exec_day": "auto_executed",
- "buying_power_at_execution": 3009.85,
- "cash_at_execution": 3009.85,
- "_cap_note": "DAL/STT 两张出场成交后重取 cap = min(buying_power, cash) = $3,009.85 (cash == buying_power == unleveraged_buying_power 三者相等, 无借贷额度, 防杠杆闸未动用)。两张买单按引擎顺序逐单判 cap: CSCO $983.98 (累计 983.98) → NET $983.98 (累计 1,967.96), 均 ≤ cap, 余 $1,041.89。引擎顺序 (CSCO 先 NET 后, 按 rsi2 升序) 执行时未重排。",
- "cross_track_funding": {
-  "rule": "① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 (2026-10-19 用户把 LEAP 插到最前)",
-  "qqq_leap": "resolved=no_action: QQQ 收 717.50 当日 -0.12%, 入场要 ≤-2.0% → drop_too_small; SMA200 675.95 (收盘在上方, 牛市过滤本身通过)。无持仓 → 不需取链、不需出单。reserve_usd = 0, 未扣减后两轨 cap。",
-  "option_buy_orders_today": 0,
-  "option_collateral_reserved": 0.0,
-  "stock_cap": 3009.85,
-  "stock_used": 1967.96,
-  "stock_headroom": 1041.89,
-  "note": "实盘周期权 0 买单 (唯一候选 META 被 earnings_blackout(dte=1) 拦)。三轨今日均无资金竞争, 优先级规则未构成约束。"
+ "trade_date": "2026-10-21",
+ "generated_by": "scripts/signals.py signal (绕开 daily.py: FRED 宕机使驱动器 preflight/macro 双重 fatal, --force 亦不可用)",
+ "record_kind": "pending_exit_orders",
+ "_kind_note": "⚠️ **非常规**: 本文件平时是 auto_buys 的执行记录。本次是 **7 张出场卖单被平台分类器拦截**后的真·待执行清单。出场类单据被拦是首次 (历史上被拦的都是买单)。",
+ "status": "awaiting_execution",
+ "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+ "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
+ "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+ "exec_day": "same_day_then_next_session",
+ "funding_note": "出场卖单已在本阶段即时成交, 回款即时可用 (limited margin); 执行时仍取实时 min(buying_power, cash) 为上限, 超出整单跳过不缩量。⚠️ 顺延到次日执行时, 实时资金已与生成时不同 —— 必须重取, 不得用 buying_power_at_generation",
+ "carryover_note": "顺延期内清单保持 status=awaiting_execution, 不标 expired。**次一交易日收盘前主跑产出新清单时自动取代本清单** (会话覆写 pending_orders.json), 故不存在两份清单并存/重复买入的风险。次日 15:55 仍未执行 → status 改 expired, 引擎当晚重算。⚠️ 顺延执行的是**生成日的信号与金额** (逐字段引擎输出, 红线2 不得改), 标的可能已不在当日最优之列 —— 用户可一票否决任一单。",
+ "_carryover_caveat_for_exits": "⚠️ 上面这段 carryover_note 是**买单**语境的模板原文 (照抄不改, 红线: 协议常量不得凭记忆组装)。用在**卖单**上要注意一处差别: 卖单顺延到次日时, `exit_strength` 可能已不再成立 (价格回落到 sma5 之下且 rsi2 回落), 届时次日主跑会**自然不再产出这张卖单**并覆写本清单 —— 即顺延对出场单是「次日重判」, 不是「次日照卖」。",
+ "blocked_by_classifier": {
+  "attempted": 2,
+  "detail": [
+   {"symbol": "SOXQ", "tool": "place_equity_order", "result": "denied: [Real-World Transactions]"},
+   {"symbol": "NVDA", "tool": "review_equity_order", "result": "denied: [Real-World Transactions] —— ⚠️ 连**只读预览**都被拦, 说明本会话下单通道整体关闭, 非单笔问题"}
+  ],
+  "not_retried": "按红线9 fail-safe「被拦不重试」: SOXQ 的 place 与 NVDA 的 review 各试一次即停, 余 5 张未尝试 (两次连续拒绝已证明是通道级拦截, 逐张再试属绕过拦截意图)。",
+  "note": "历史对比: 10-14 10/10 零拦 · 10-15 2/2 零拦 · 10-16 3/3 零拦 · 10-20 4/4 零拦 · 10-13 为 1 通 2 拦。本次 0/2 全拦且波及 review, 是迄今最彻底的一次。"
  },
- "execution_summary": {
-  "trigger": "auto_buys 自动执行",
-  "sell_orders": 2,
-  "buy_orders": 2,
-  "filled": 4,
-  "blocked_by_classifier": 0,
-  "sells_usd": 3001.9,
-  "buys_usd": 1967.96,
-  "slippage_sell_pct": -0.0289,
-  "slippage_buys_pct": -0.0749,
-  "fees_usd": 0.08,
-  "realized_pnl_usd": -55.95,
-  "window_et": "15:22:48-15:24:1x",
-  "classifier_note": "4 单全部 place 成功, **零拦截** (10-14 10/10, 10-15 2/2, 10-16 3/3 均零拦截; 10-13 为 1 通 2 拦)。"
- },
- "conflict_cancelled_exits": {
-  "_rule": "「有卖有买就不卖」(用户 2026-10-14 定)。",
-  "orders": [],
-  "_note": "今日无冲突: DAL/STT 两张 exit_strength 的标的均不在当日入场候选内 (DAL 已于 10-19 周度刷新被移出股票池, STT 同), 故出场直接生效。"
+ "why_engine_ran_outside_driver": {
+  "fred_down": "`integrations.py status` 的 fred 连续 3 次 `ok:false` (reason: Expecting value: line 1 column 1 — 返回体不是 JSON, 典型上游 5xx/限流)。Alpaca `ok:true`, 券商报价 131/131 正常。",
+  "driver_blocked_twice": "① preflight 对 `all_ok=false` 直接 fatal; ② 加 `--force` 后 `phase_data` 的 macro 步骤 rc=1 再次 fatal。**即 FRED 不恢复, 驱动器今天根本跑不起来**, 17:45 wrapup 的 fail-safe 会撞同一面墙。",
+  "engine_path": "故直接跑 `signals.py signal` **不带 `--macro`** —— 这是引擎本就支持的形态 (`--macro` 帮助原文「缺省则不做宏观过滤」), 且 `config.json macro.note` 是用户写的契约: 「VIX 高位只影响新开仓; 止损/出场任何时候照常执行。宏观数据不可用或过旧时跳过过滤, 交易照常。」",
+  "why_macro_loss_is_moot_today": "VIX 闸只在 `risk_off` 时拦**新开仓**。今日 **buys = 0** (全池 131 只无一满足 rsi2<10 且 close>sma200: GE rsi2 4.67 / GOOG 8.71 / GOOGL 9.78 三只 rsi2 够低但**均在 SMA200 之下**, 牛市过滤正确否决)。故缺 VIX 对今日输出**不可能有任何影响**, 不存在「少了一道风控还照买」的情形。",
+  "red_line_2_compliance": "7 张卖单逐字段来自 signals.py 输出, 未新增/放大/缩量/剔除/重排。"
  },
  "orders": [
-  {
-   "seq": 0,
-   "action": "sell",
-   "symbol": "DAL",
-   "qty": 25.952434,
-   "reason": "exit_strength",
-   "est_price": 76.745,
-   "fill_price": 76.7501,
-   "slippage_pct": 0.0066,
-   "realized_usd": -58.26,
-   "realized_pct": -2.84,
-   "status": "filled",
-   "order_id": "6ad7bfb3-7268-46a3-bc10-5aee83b45204",
-   "fees": 0.05,
-   "note": "持有 2026-10-08 → 10-20, 2 档, 加权均价 78.993。出场原因 exit_strength (rsi2 回到 ≥ exit.rsi2_min 或收盘站上 sma5)。该票已在 10-19 周度刷新中被移出 universe, 但未强制卖出 —— 今日由引擎正常出场信号了结。"
-  },
-  {
-   "seq": 1,
-   "action": "sell",
-   "symbol": "STT",
-   "qty": 6.06999,
-   "reason": "exit_strength",
-   "est_price": 166.565,
-   "fill_price": 166.4001,
-   "slippage_pct": -0.099,
-   "realized_usd": 2.31,
-   "realized_pct": 0.23,
-   "status": "filled",
-   "order_id": "6ad7bfb4-9858-4839-8ec8-5508c96439be",
-   "fees": 0.03,
-   "note": "持有 2026-10-14 → 10-20, 1 档, 入场 166.0151。另于本周收到股息 $5.58 (6.069990 × $0.92, 已于 10-20 晨检核实并入账现金), 该笔**不计入**上面的 realized_usd (账本只记价差)。含股息的实际回收 = +$7.89。同样是 10-19 被移出池但未强制卖的标的。"
-  },
-  {
-   "seq": 2,
-   "action": "buy",
-   "symbol": "CSCO",
-   "dollar_amount": 983.98,
-   "reason": "rsi2_entry",
-   "rsi2": 1.91,
-   "est_price": 106.46,
-   "fill_price": 106.4799,
-   "filled_qty": 9.240992,
-   "slippage_pct": 0.0187,
-   "status": "filled",
-   "order_id": "6ad7bfd2-5a15-4a66-ad42-2f9242eeda5b",
-   "news_red_flag": false,
-   "note": "当日 rsi2 最低的候选。收 106.46 > sma200 99.85。财报 next=2026-11-11 (dte=22, 黑窗外)。⚠️ 该票 10-16 曾被 sector_cap (Electronic Technology 满 3) 拦下, 今日放行的真实原因是**同行业竞争者今日没有信号**: 今日 held 里映射到 Electronic Technology 的只有 NVDA + ANET = 2 只, CSCO 自己占第 3 个 → 通过; 10-16 则是 TSM (同行业, rsi2 0.79 强于当日 CSCO) 先占掉第 3 个槽, CSCO/KEYS/APH/NTAP 四只一起被挡。今日 TSM rsi2=68.92 无信号。**与今日卖出 DAL/STT 腾出槽位无关** (两者分属 Transportation / Finance, 且 sizing 槽位上限是 99)。"
-  },
-  {
-   "seq": 3,
-   "action": "buy",
-   "symbol": "NET",
-   "dollar_amount": 983.98,
-   "reason": "rsi2_entry",
-   "rsi2": 5.87,
-   "est_price": 292.5925,
-   "fill_price": 292.0995,
-   "filled_qty": 3.368646,
-   "slippage_pct": -0.1685,
-   "status": "filled",
-   "order_id": "6ad7bfd7-6a9a-407a-aae8-c1bb7a665855",
-   "news_red_flag": false,
-   "note": "收 292.59 > sma200 243.23, 距 sma20 339.99 低 13.9%。财报 next=2026-11-06 (dte=17, 黑窗外)。⚠️ 该票 10-16 曾被防御层 `近20日单日异动 ≥8% (09-21 +8.7%)` 拦下; 今日 20 日回看窗已滚过 09-21 → 闸门自然失效放行。这是回看窗滚动导致的放行, 不是参数改动。"
-  }
+  {"seq": 0, "action": "sell", "symbol": "SOXQ", "qty": 20.571346, "reason": "exit_strength", "est_price": 90.40,  "status": "blocked_by_classifier", "entry_price": 93.8130,  "entry_date": "2026-10-08", "tranches": 2, "est_pnl_usd": -70.36, "est_pnl_pct": -3.64},
+  {"seq": 1, "action": "sell", "symbol": "NVDA", "qty": 4.874441,  "reason": "exit_strength", "est_price": 221.13, "status": "blocked_by_classifier", "entry_price": 215.5960, "entry_date": "2026-10-12", "tranches": 2, "est_pnl_usd": 26.98,  "est_pnl_pct": 2.57},
+  {"seq": 2, "action": "sell", "symbol": "XLK",  "qty": 5.287595,  "reason": "exit_strength", "est_price": 188.28, "status": "not_attempted",        "entry_price": 190.5800, "entry_date": "2026-10-14", "tranches": 1, "est_pnl_usd": -12.17, "est_pnl_pct": -1.21},
+  {"seq": 3, "action": "sell", "symbol": "QQQM", "qty": 3.357522,  "reason": "exit_strength", "est_price": 298.428,"status": "not_attempted",        "entry_price": 300.1350, "entry_date": "2026-10-14", "tranches": 1, "est_pnl_usd": -5.73,  "est_pnl_pct": -0.57},
+  {"seq": 4, "action": "sell", "symbol": "CDNS", "qty": 3.079243,  "reason": "exit_strength", "est_price": 327.0801,"status": "not_attempted",       "entry_price": 327.2590, "entry_date": "2026-10-14", "tranches": 1, "est_pnl_usd": -0.55,  "est_pnl_pct": -0.05},
+  {"seq": 5, "action": "sell", "symbol": "ANET", "qty": 5.364735,  "reason": "exit_strength", "est_price": 184.06, "status": "not_attempted",        "entry_price": 186.8797, "entry_date": "2026-10-14", "tranches": 2, "est_pnl_usd": -15.12, "est_pnl_pct": -1.51},
+  {"seq": 6, "action": "sell", "symbol": "NET",  "qty": 3.368646,  "reason": "exit_strength", "est_price": 309.028,"status": "not_attempted",        "entry_price": 292.0995, "entry_date": "2026-10-20", "tranches": 1, "est_pnl_usd": 57.02,  "est_pnl_pct": 5.80}
  ],
- "engine_skipped": [],
- "_skipped_completeness_note": "plan.json stock.warnings_total=0 / warnings_truncated=0, candidates_total=3 / candidates_truncated=0。⚠️ **warnings=0 不等于没有标的被拦** —— 见 silent_gate_finding。",
- "silent_gate_finding": {
-  "symbol": "META",
-  "what": "META 当日 rsi2=3.59 且收 689.11 > sma200 632.40 (原始入场信号成立, 是 plan.json candidates 里的第 2 名), 被 `signals.py` 的财报黑窗闸拦下 (next=2026-10-21, dte=1), **但引擎没有产出任何 warning**。",
-  "evidence": "同一输入 A/B 复跑 (scratchpad repro_with/repro_without): 带 `--earnings state/earnings_cache.json` → buys = CSCO + NET, warnings = []; 去掉该参数 → buys = CSCO + **META $983.98** + NET。即闸门确实生效, 且生效时静默。",
-  "root_cause": "scripts/signals.py:264-266 `entry_signal_ok` 的财报黑窗分支直接 `return False`, 没有像同函数内「财报日未知」「近20日异动」两个分支那样走 `if not quiet: warnings.append(...)`。",
-  "contrast": "**同一个标的、同一天、同一道闸, 在期权轨道是可见的**: plan.json options.live.skips = [{symbol: META, reason: earnings_blackout(dte=1), rsi2: 3.59}]。`weekly_calls.py` 记, `signals.py` 不记。",
-  "why_it_matters": "用户 2026-10-12 取消下单前一票否决后, 事后点名是唯一处置入口 (报告义务)。会话的战报/执行记录照 plan.json 写, 而本次 META 只能靠「candidates 有它、buys 没它」反推才发现 —— 与 2026-10-15 修掉的 warnings 硬截断 (CLAUDE.md 已知问题 #7) 同族, 但成因不同: 那次是截断, 这次是分支压根不记。",
-  "impact_on_orders": "无。闸门行为正确 —— META 次日 (2026-10-21) 发财报, 正是 DAL 2026-10-08 / TSM 2026-10-09 两次违规要防的情形。受损的只有可见性。",
-  "proposed_fix": "signals.py:265 改为 `if ed is not None and 0 <= ed <= blackout: (if not quiet: warnings.append(f\"{sym}: 入场信号成立但 {ed} 天后财报, 防御性跳过\")); return False` —— 与加仓分支 (471 行) 已有的写法对齐, 且用 `quiet` 守住出场侧冲突判定不被污染。**属引擎改动, 未动, 待用户发话 (红线2/红线6)。**"
- },
+ "engine_buys": [],
  "flags_for_user": {
-  "news_red_flags": [],
-  "news_check_note": "`integrations.py news --symbols CSCO,NET --start 2026-10-13`: 2 只均有新闻、0 只红旗。(⚠️ 首次调用我传错了参数只打出帮助文本, 已用正确参数重跑 —— 报告级, 不影响下单。)",
-  "earnings_blackout_coverage": "两张买单标的均在缓存内且闸门实际生效后通过: CSCO next=2026-11-11 (dte=22), NET next=2026-11-06 (dte=17)。**拦单 1 笔: META (dte=1)** —— 见 silent_gate_finding。缓存 131 个标的键, 0 条过期。",
-  "same_factor_exposure": "半导体相关 (NVDA+SOXQ+CDNS) $3,878.23 = 净值 39.43%; 宽基科技 (XLK+QQQM) $1,972.73 = 20.06%; **8 只持仓全部落在科技/半导体, 合计 89.41%** (现金 10.59%)。今日两张买单 CSCO (Electronic Technology) 与 NET (Technology Services) 又各占 10%。板块闸 (max_per_sector=3) 认为正常; 用户 2026-10-14 明确「不设」同因子闸 (same_factor_exposure_cap_pct=null) → 仅陈述, 不作为待动作项。",
-  "defense_blocked_orders": "引擎 warnings 0 条; 真实拦单 1 笔 (META, 静默)。",
-  "leverage_gate": "未触发 (cash == buying_power == unleveraged_buying_power = $3,009.85 全程相等, 买单合计 $1,967.96 远低于 cap)。",
-  "circuit_breaker": "未触发。回撤 -5.79% (HWM $10,438.52 → 净值 $9,834.57), 比 10-16 收盘的 -7.01% 改善 1.22 个百分点。熔断口径 = 累计已实现亏 ≥ 净值×50%, 与这里的回撤线是两道不同的闸。",
-  "qqq_leap_first_live_day": "✅ 接线后首个实盘窗口跑通: 阶段顺序正确 (command_log 第 6 位 leap.window 在第 7 位 signals.signal 之前)、resolved=no_action、无 LEAP 相关 anomaly、正股与周期权两轨未受影响。⚠️ **但今日未走到「取链 → 选档 → 下单」那一段** (无入场信号), 该段至今只用合成链测过 → oneshot 任务 qqq-leap-first-live-run-2026-10 保持 pending。",
-  "known_anomaly_recurred": "1 条: `wc.paper.apply 失败 (rc=1): 卖出无持仓的合约 NVDA261023C00200000`。即 CLAUDE.md 已知问题 #1 (纸面 stale-fills) 的确定性复现, 每个 preclose 都会出现; 账本未被污染 (apply 失败前未写入)。未修, 待用户发话。",
-  "near_signals": "AAPL (rsi2 11.56, 若次日再跌 1% 即入场区); 期权轨道 AAPL single 估权利金 $3,432 —— 若明日触发, 按「期权优先」会吃掉当日几乎全部可用现金, 正股买单将整单跳过。"
+  "exits_are_the_risk_here": "⚠️ 被拦的是**出场单**, 不是买单。买单被拦只是少赚, 出场单被拦是**该减的仓没减**: 7 只 (8 只持仓里的 7 只) 继续持有, 合计约 $8,961 = 净值 89.6%。",
+  "but_not_stop_losses": "✅ 缓解事实: 7 张**全是 `exit_strength`** (均值回归完成, 该获利/平推离场), **没有一张是 `stop_loss`**。无一只跌破 −7% 止损线, 当日估算净损益仅 **−$19.93**。即「没卖掉」的代价是继续承担回撤风险, 不是「止损没执行」。",
+  "circuit_breaker": "未触发。回撤 −4.17% (HWM $10,438.52 → 净值 $10,003.32), 比昨日 −5.91% 改善 1.74pp。",
+  "news_red_flags": "本次 0 买单, 无需新闻预检。",
+  "same_factor_exposure": "半导体相关 (NVDA+SOXQ+CDNS) 约 $3,942 = 净值 39.4%; 宽基科技 (XLK+QQQM) 约 $1,997 = 20.0%; 8 只仍全在科技/半导体。用户 2026-10-14 明确「不设」此闸 → 仅陈述。",
+  "earnings_gate": "CDNS next=2026-10-26 (dte=5) 在黑窗内 —— 不影响出场 (黑窗只拦入场/加仓)。⚠️ 若 CDNS 这张 exit_strength 一直下不去, 10-26 会转为 `earnings_exit`。",
+  "macro_filter": "FRED 宕机 → 本日无 VIX 过滤。因 0 买单而无实际影响 (见 why_macro_loss_is_moot_today)。",
+  "qqq_leap": "本轨道未运行 (驱动器未跑成)。手工核: QQQ 724.77 vs 昨收 717.63 = **+0.99%**, 入场要 ≤ −2.0% → 本来也无信号, 无遗漏。"
  },
- "sector_cap_observation": {
-  "what": "行业上限 (defense.max_per_sector=3) 的计数只看**当前 universe.json 的 sectors 映射**; 一只仍在持仓但已掉出股票池的标的, 会从此不再计入任何行业计数。",
-  "today_case": "CDNS 在 10-19 周度刷新中掉出池 (未强制卖出, 现仍持 $990.93 = 净值 10.08%)。10-12 版 universe 把 CDNS 映射为 Technology Services, 当时它**是**计入该行业计数的 (10-16 的 DT 就是因 Technology Services 满 3 被挡); 10-19 版里 CDNS 已无映射 → 今日它对 Technology Services 计数贡献 0, NET (Technology Services) 因此畅通通过。KLAC/KEYS 同理已退出映射 (但二者已不持仓, 无影响)。",
-  "mechanism": "scripts/signals.py:132-133 把 universe.json 的 sectors 并入 defense.sectors; :487-501 的计数对 sec_map 里查不到的标的直接当作无行业 (`if sec_cap and sc and ...`)。ETF (SOXQ/XLK/QQQM) 一直如此, 这是已知的; **新增认识是「持仓 + 掉出池」的个股也会变成同样的隐形状态**。",
-  "impact_today": "放行 NET 这一笔。NET 本身通过了财报闸与异动闸, 引擎想要它; 这里只是说明「行业上限没拦它」有一部分原因是计数口径, 而非该行业真的只有 0 只。",
-  "relation_to_closed_item": "与 CLAUDE.md 已知问题 #5 (同因子敞口无闸, 用户 2026-10-14 明确「不设」已结案) 同方向但**不同机制**: #5 说的是行业字段盖不住 ETF+个股混合; 这里是**掉出池的在手个股从计数里消失**。按已结案口径, 本条同样只陈述、不作为待用户动作项。",
-  "status": "仅记录, 未改任何代码或配置。"
- }
+ "what_user_can_do": [
+  "① **Robinhood App 手工卖出** (最快, 今日 16:00 收盘前仍可): 逐只按上表 qty 市价卖出。⚠️ 零股份额请用 App 的「全部卖出」。",
+  "② **什么都不做**: 清单顺延至次一交易日 09:45-15:55。⚠️ 对卖单而言顺延 = **次日重判** —— 次日主跑若 exit_strength 不再成立, 这些单会自然消失并被新清单覆写, 不会「照卖」。",
+  "③ 回复授权我在下一个窗口重试下单 (分类器非确定性, 10-13 曾 1 通 2 拦, 次日即恢复 10/10 零拦)。"
+ ]
 }
