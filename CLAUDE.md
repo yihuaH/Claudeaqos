@@ -202,10 +202,33 @@
    ⚠️ **`next` 日期一过必须重取**, 否则 `days_to_earnings` 返回负数 → 闸门 fail-open 且不报错。
    已验证生效: 10-13 周call skip_log 出现 `TSM earnings_blackout(dte=2)`; 10-14 实盘出场链产出
    `TSM earnings_exit`。
-   ✅ **2026-10-15 缓存已灌满**: universe 100/100 + ETF 池 8/8, 文件内 124 个标的键 (22 只 `next=null`)。
-   ⚠️ **同日首次实际命中「过期即静默失效」**: BNY/TSM 的 `next` 都是 10-15 (当日盘前发财报),
-   明日起 `days_to_earnings` 返回负数 → 闸门 fail-open 不报错 —— 已当场重取。
-   **覆盖率 ≠ 新鲜度**, 每个主跑窗口必须按 `_refresh_policy` 第②步扫一遍到期标的。
+   ✅ **2026-10-21 现状**: universe **100/100 有有效 next, 零 null 零缺失**, 147 个标的键。
+   ⚠️ **「过期」= `next` < 运行日, 不是 `<=`** (2026-10-21 固定): `next == 今天` 时 dte=0 仍在黑窗内、
+   本就该拦 (它今天发财报); 提前推进到下一季反而会**在财报当天放行**。10-15 的 BNY/TSM 与 10-20 的
+   CB/GE 都属真过期 (次日起 dte 转负), 已各自当场重取。
+   🔴 **第二种 fail-open: 个股 `next=null` (2026-10-21 查出当日修掉, 零实际损害但只差 4 个交易日)**:
+   `signals.py` **分不出**「null = 本无财报 (ETF)」与「null = 窗口外未知 (个股)」—— 两者都让
+   `days_to_earnings` 返回 `None` → 黑窗检查 `if ed is not None and ...` **整段跳过**; 且 **null 不带
+   到期日**, 所以 `_refresh_policy` 的过期扫描**永远抓不到它**。
+   - 怎么埋进去的: 10-19 周度刷新用 `get_earnings_calendar(days=14)` 给 19 只新进池标的取财报日,
+     窗口外的 14 只记成 `next=null`, 并自认为「表示窗口外未知而非未取数」是安全的 —— **该判断是错的**。
+     其中 **12 只在 100 股池内** (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 对它们
+     财报黑窗闸**整段失效**。
+   - 📐 **窗口制从原理上就不够**: 黑窗须在财报**前 7 天**闭合, 该闭合点可能落在窗口**之内**, 故
+     「窗口内无财报」**不蕴含**「黑窗期内无需闭合」。实测 11 只里 **8 只**的闭合点落在那个 14 日窗口内;
+     真实财报日 SU/SWKS/WAT 11-03、CAH/DVN/EOG/MNST/MTD 11-05 → 最早出事日 **2026-10-27**。
+   - ✅ 零实际损害 (10-19→10-21 两个交易日内 12 只均未进 candidates、未成交、不在持仓, 逐只核对过)。
+   - 🔒 **已立的规矩**: 新进池标的一律**逐只 `get_earnings_results`** 取 next+past, **禁用
+     `get_earnings_calendar`**; 写进 `strategy/screen.json _post_finalize_required`、
+     `state/earnings_cache.json` 的 `_new_pool_entrant_rule` / `_null_next_incident` / 重写的
+     `_refresh_policy`, 外加 oneshot `pool-entrant-earnings-2026-10` 让 `session.py brief` 每周一高亮。
+   **覆盖率 ≠ 新鲜度, 新鲜度 ≠ 非空**: 每个主跑窗口按 `_refresh_policy` 扫三类 —— 缺失、过期([A])、
+   **个股 null([B])**。
+   ✅ **`past` 覆盖 (2026-10-21 用户授权补齐 17 只池内标的)**: `defense.earnings_gap_up_exempt`
+   需要 `past` 才生效, 缺则**静默失效**(方向偏保守, 无风险敞口)。补完后实测过去一年 16 次 ≥8%
+   上涨异动里 **10 次命中豁免** (BIIB/CAH×2/MNST/OXY/ROST×3/SBUX/WAT), 每次解锁约 20 个交易日
+   → 约 **200 个「标的·日」/年** 的入场资格找回。仍空的 26 个 = ETF 22 (正常) + AMZN/AVGO/MSFT/TSLA
+   (非池内, 期权轨道只用 next, 用户选择跳过)。
 5. **同因子敞口无闸 —— 用户 2026-10-14 决定「不设」, 已结案**: `defense.max_per_sector=3`
    只数个股行业字段, 盖不住 ETF+个股混合 (AMAT 被数据源归在 Producer Manufacturing,
    SOXQ 是 ETF 不计数), 半导体实际敞口在 39~41% 徘徊而板块闸认为一切正常。

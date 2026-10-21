@@ -33,6 +33,16 @@
    "created": "2026-10-20",
    "authorized_by": "用户 2026-10-20「明天盯着跑」",
    "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。"
+  },
+  {
+   "id": "pool-entrant-earnings-2026-10",
+   "title": "周度股票池刷新 finalize 后: 新进池标的逐只 get_earnings_results 取 next+past",
+   "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
+   "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
+   "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
+   "status": "pending",
+   "created": "2026-10-21",
+   "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
   }
  ]
 }
