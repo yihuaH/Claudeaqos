@@ -1062,6 +1062,25 @@
       "symbol": "META",
       "reason": "earnings_blackout(dte=2)",
       "rsi2": 8.44
+    },
+    {
+      "date": "2026-10-20",
+      "symbol": "META",
+      "reason": "earnings_blackout(dte=1)",
+      "rsi2": 3.59
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "MSFT",
+      "reason": "earnings_blackout(dte=6)",
+      "rsi2": 9.53
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "META",
+      "reason": "spread_too_wide(best=3.27%)",
+      "rsi2": 2.92,
+      "spot": 640.36
     }
   ],
   "assignments": [

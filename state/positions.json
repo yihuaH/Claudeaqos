@@ -8,6 +8,13 @@
       "entry_date": "2026-10-20",
       "cost": 983.98,
       "tranches": 1
+    },
+    "MPC": {
+      "qty": 2.141303,
+      "entry_price": 458.9028,
+      "entry_date": "2026-10-22",
+      "cost": 982.65,
+      "tranches": 1
     }
   },
   "legacy_positions": {},
@@ -2675,6 +2682,15 @@
       "price": 308.26,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "MPC",
+      "side": "buy",
+      "qty": 2.141303,
+      "price": 458.9028,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ],
   "corporate_actions": [
