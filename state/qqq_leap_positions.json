@@ -18,6 +18,38 @@
       "entry_day_return_pct": -2.696,
       "take_profit_line": 29.688,
       "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)"
+    },
+    "QQQ270115C00755000": {
+      "underlying": "QQQ",
+      "strike": 755.0,
+      "expiry": "2027-01-15",
+      "contracts": 1,
+      "entry_date": "2026-10-22",
+      "entry_fill_price": 12.11,
+      "entry_cost_usd": 1211.0,
+      "entry_delta": 0.29366,
+      "entry_dte": 85,
+      "entry_spread_pct": 0.745,
+      "entry_spot": 705.28,
+      "entry_day_return_pct": -2.747,
+      "take_profit_line": 14.532,
+      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)"
+    },
+    "QQQ270319C00775000": {
+      "underlying": "QQQ",
+      "strike": 775.0,
+      "expiry": "2027-03-19",
+      "contracts": 1,
+      "entry_date": "2026-10-22",
+      "entry_fill_price": 16.2,
+      "entry_cost_usd": 1620.0,
+      "entry_delta": 0.299203,
+      "entry_dte": 148,
+      "entry_spread_pct": 0.929,
+      "entry_spot": 705.28,
+      "entry_day_return_pct": -2.747,
+      "take_profit_line": 19.44,
+      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)"
     }
   },
   "trades": [
@@ -27,6 +59,24 @@
       "side": "buy",
       "qty": 1,
       "price": 24.74,
+      "bucket": "qqq_leap",
+      "reason": "rsi2_none"
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "QQQ270115C00755000",
+      "side": "buy",
+      "qty": 1,
+      "price": 12.11,
+      "bucket": "qqq_leap",
+      "reason": "rsi2_none"
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "QQQ270319C00775000",
+      "side": "buy",
+      "qty": 1,
+      "price": 16.2,
       "bucket": "qqq_leap",
       "reason": "rsi2_none"
     }
