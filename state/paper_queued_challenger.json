@@ -1,63 +1,41 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-20",
+  "date": "2026-10-22",
   "coid_prefix": "cq",
-  "next_open": "2026-10-21T09:30:00-04:00",
+  "next_open": "2026-10-23T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-20-KLAC-sell",
-      "order_id": "2d0cfd37-e908-4ab1-bbb2-42ffd0affd88",
-      "symbol": "KLAC",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "156.89",
-      "qty": "40",
-      "bucket": "strategy",
-      "reason": "stop_loss"
-    },
-    {
-      "coid": "cq-2026-10-20-DAL-sell",
-      "order_id": "b8747eed-5041-4f0f-98f5-306579216601",
-      "symbol": "DAL",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "74.36",
-      "qty": "54",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-20-STT-sell",
-      "order_id": "1f215d03-23ed-4f44-997b-1c76a7010a44",
-      "symbol": "STT",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "161.58",
-      "qty": "21",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-20-TSM-sell",
-      "order_id": "2a3328a1-49ee-4bfa-a8f5-6a27ffcaa40a",
-      "symbol": "TSM",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "412.33",
-      "qty": "7",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-20-NET-buy",
-      "order_id": "dbff9f67-c536-4475-9009-26417840ace7",
+      "coid": "cq-2026-10-22-NET-sell",
+      "order_id": "52c8b26e-e3b5-4d06-b4d7-858459516a8d",
       "symbol": "NET",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "294.5",
+      "qty": "12",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-10-22-META-buy",
+      "order_id": "e122ca65-b981-4bab-9885-d93c8c6f36b1",
+      "symbol": "META",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "300.44",
-      "qty": "12",
+      "limit_price": "668.32",
+      "qty": "5",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-22-MPC-buy",
+      "order_id": "c13deefe-a822-464b-b6ed-9f2ecf1295a4",
+      "symbol": "MPC",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "473.06",
+      "qty": "7",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

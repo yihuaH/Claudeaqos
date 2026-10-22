@@ -11,27 +11,6 @@
       "cost": 7094.0,
       "tranches": 2
     },
-    "KLAC": {
-      "qty": 40.0,
-      "entry_price": 176.1378,
-      "entry_date": "2026-10-14",
-      "cost": 7045.51,
-      "tranches": 2
-    },
-    "DAL": {
-      "qty": 54.0,
-      "entry_price": 77.9681,
-      "entry_date": "2026-10-14",
-      "cost": 4210.28,
-      "tranches": 2
-    },
-    "STT": {
-      "qty": 21.0,
-      "entry_price": 167.26,
-      "entry_date": "2026-10-15",
-      "cost": 3512.46,
-      "tranches": 1
-    },
     "XLK": {
       "qty": 19.0,
       "entry_price": 186.27,
@@ -53,18 +32,18 @@
       "cost": 1296.25,
       "tranches": 1
     },
-    "TSM": {
-      "qty": 7.0,
-      "entry_price": 416.865714,
-      "entry_date": "2026-10-16",
-      "cost": 2918.06,
-      "tranches": 1
-    },
     "CSCO": {
       "qty": 33.0,
       "entry_price": 105.97,
       "entry_date": "2026-10-20",
       "cost": 3497.01,
+      "tranches": 1
+    },
+    "NET": {
+      "qty": 12.0,
+      "entry_price": 299.8025,
+      "entry_date": "2026-10-21",
+      "cost": 3597.63,
       "tranches": 1
     }
   },
@@ -508,6 +487,51 @@
       "side": "buy",
       "qty": 33.0,
       "price": 105.97,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "KLAC",
+      "side": "sell",
+      "qty": 40.0,
+      "price": 163.1115,
+      "bucket": "strategy",
+      "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "DAL",
+      "side": "sell",
+      "qty": 54.0,
+      "price": 76.496296,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "STT",
+      "side": "sell",
+      "qty": 21.0,
+      "price": 167.71,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "TSM",
+      "side": "sell",
+      "qty": 7.0,
+      "price": 433.941429,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-21",
+      "symbol": "NET",
+      "side": "buy",
+      "qty": 12.0,
+      "price": 299.8025,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
