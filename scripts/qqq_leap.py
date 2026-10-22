@@ -471,23 +471,68 @@ def cmd_apply(a):
                                                                                     "rsi2_none")})
         if side == "buy":
             c = ctx_buys.get(occ, {})
-            positions[occ] = {
-                "underlying": meta["underlying"], "strike": meta["strike"],
-                "expiry": meta["expiry"], "contracts": qty,
-                "entry_date": today, "entry_fill_price": price,
-                "entry_cost_usd": round(price * 100.0 * qty, 2),
-                "entry_delta": c.get("delta"), "entry_dte": c.get("dte"),
-                "entry_spread_pct": c.get("spread_pct"),
-                "entry_spot": c.get("entry_spot"),
-                "entry_day_return_pct": c.get("entry_day_return_pct"),
-                "take_profit_line": round(price * float(load_json(a.config)["exit"]["take_profit_mult"]), 4)
-                if a.config else None,
-                "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
-            }
+            ex = load_json(a.config)["exit"] if a.config else {}
+            tp_mult = float(ex["take_profit_mult"]) if ex else None
+            old = positions.get(occ)
+            if old is None:
+                positions[occ] = {
+                    "underlying": meta["underlying"], "strike": meta["strike"],
+                    "expiry": meta["expiry"], "contracts": qty,
+                    "entry_date": today, "entry_fill_price": price,
+                    "entry_cost_usd": round(price * 100.0 * qty, 2),
+                    "entry_delta": c.get("delta"), "entry_dte": c.get("dte"),
+                    "entry_spread_pct": c.get("spread_pct"),
+                    "entry_spot": c.get("entry_spot"),
+                    "entry_day_return_pct": c.get("entry_day_return_pct"),
+                    "take_profit_line": round(price * tp_mult, 4) if tp_mult else None,
+                    "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
+                    "_lots": [{"date": today, "contracts": qty, "fill_price": price}],
+                }
+            else:
+                # 同一 OCC 再次买入 → **合并, 不覆写** (用户 2026-10-22 选方案 C)。
+                # 原先这里是 `positions[occ] = {...}` 直接赋值, 既不合并也没守卫:
+                # 当日实盘撞上同键 (QQQ270917C00830000 早上 @24.74 + 收盘前 @24.39),
+                # 照跑会把账本从 2 张变 1 张并丢掉 $2,474 那个成本基准。
+                # 详见 journal/2026-10-22-preclose.md §3。
+                # ⚠️ **这是语义改动, 不是纯 bug 修复**: 止盈基准从「单笔实际成交价」
+                # 变成「加权均价」。用户 2026-10-22 在知情下选择如此。
+                n0, n1 = int(old["contracts"]), qty
+                p0 = float(old["entry_fill_price"])
+                avg = (p0 * n0 + price * n1) / (n0 + n1)
+                old["contracts"] = n0 + n1
+                old["entry_fill_price"] = round(avg, 6)
+                old["entry_cost_usd"] = round(
+                    float(old["entry_cost_usd"]) + price * 100.0 * n1, 2)
+                old["take_profit_line"] = round(avg * tp_mult, 4) if tp_mult else None
+                old.setdefault(
+                    "_lots", [{"date": old["entry_date"], "contracts": n0,
+                               "fill_price": p0}]).append(
+                    {"date": today, "contracts": n1, "fill_price": price})
+                old["_tp_note"] = (
+                    "⚠️ 本仓位含多笔成交, 止盈线按**加权均价**算 (用户 2026-10-22 选 C); "
+                    "逐笔明细见 _lots 与 trades[]。")
+                # entry_date / entry_* 快照一律**不动**:
+                #   · entry_date 不动 => 20 交易日时间止损时钟**不因加仓重置**
+                #     (config exit.holding_clock_resets=false, 与 RSI-2 轨道同一纪律);
+                #     设成 true 才按本次成交日重置。
+                #   · entry_delta/dte/spread/spot/day_return 是**开仓时**的快照,
+                #     加仓不改写它们; 想看第二笔的那组数去 trades[] 与当日 journal。
+                if ex.get("holding_clock_resets"):
+                    old["entry_date"] = today
         else:
-            pos = positions.pop(occ, None)
+            pos = positions.get(occ)
             if pos is None:
                 raise SystemExit(f"卖出无持仓的合约: {occ} (人工对账)")
+            held = int(pos["contracts"])
+            if qty != held:
+                # 合并后仓位可以 >1 张, 于是「卖的张数 != 持有张数」第一次变成现实风险。
+                # 原代码无条件 pop, 会让账本静默丢掉剩下那几张。
+                raise SystemExit(
+                    f"部分卖出未实现: {occ} 持 {held} 张但本次卖 {qty} 张。\n"
+                    "引擎出场一律整仓卖 (signal 的 sells 用 contracts=持仓张数), "
+                    "故这里不相等就是对账出了问题 —— 人工核对后再跑, "
+                    "不要让账本静默丢掉剩下的张数。")
+            positions.pop(occ)
             ep = float(pos["entry_fill_price"])
             rts.append({
                 "occ": occ, "underlying": pos["underlying"], "structure": "single",

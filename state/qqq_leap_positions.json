@@ -7,17 +7,29 @@
       "underlying": "QQQ",
       "strike": 830.0,
       "expiry": "2027-09-17",
-      "contracts": 1,
+      "contracts": 2,
       "entry_date": "2026-10-22",
-      "entry_fill_price": 24.74,
-      "entry_cost_usd": 2474.0,
+      "entry_fill_price": 24.565,
+      "entry_cost_usd": 4913.0,
       "entry_delta": 0.301,
       "entry_dte": 330,
       "entry_spread_pct": 6.454,
       "entry_spot": 705.65,
       "entry_day_return_pct": -2.696,
-      "take_profit_line": 29.688,
-      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)"
+      "take_profit_line": 29.478,
+      "_tp_note": "⚠️ 本仓位含多笔成交, 止盈线按**加权均价**算 (用户 2026-10-22 选 C); 逐笔明细见 _lots 与 trades[]。",
+      "_lots": [
+        {
+          "date": "2026-10-22",
+          "contracts": 1,
+          "fill_price": 24.74
+        },
+        {
+          "date": "2026-10-22",
+          "contracts": 1,
+          "fill_price": 24.39
+        }
+      ]
     },
     "QQQ270115C00755000": {
       "underlying": "QQQ",
@@ -77,6 +89,15 @@
       "side": "buy",
       "qty": 1,
       "price": 16.2,
+      "bucket": "qqq_leap",
+      "reason": "rsi2_none"
+    },
+    {
+      "date": "2026-10-22",
+      "symbol": "QQQ270917C00830000",
+      "side": "buy",
+      "qty": 1,
+      "price": 24.39,
       "bucket": "qqq_leap",
       "reason": "rsi2_none"
     }
