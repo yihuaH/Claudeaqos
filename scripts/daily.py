@@ -456,6 +456,55 @@ def phase_stock_signal(a, R, plan):
     return o
 
 
+def phase_spread_probe(a, R, plan):
+    """期权点差/IV 采样 —— **纯取数留痕, 不参与任何交易判定** (红线2)。
+
+    为什么在 wrapup 而不在 preclose: 本步对交易**零影响**, 但 preclose 是关键路径
+    (25 分钟执行窗), 不该为一件纯研究的事承担任何风险。wrapup 不限时, 失败也只是少一天样本。
+
+    为什么要它: 2026-10-22 的 DTE 扫描发现 §16.1 的点差拟合 (n=3, 只在一年期档标定) 把
+    30 日档往返点差**高估 17 倍**; 换实测点差后 91~273 日档全部显著优于现行 365 日。
+    但那个结论挂在 **n=5 单时点**测量上, 太薄不足以改 `dte_target_calendar`。本步就是去攒样本。
+
+    ⚠️ **两段式**: 这里只跑 `plan` (纯本地), 取报价仍归会话 (MCP 驱动器碰不到) ——
+    与 LEAP 取链、正股"当日决策价必须走券商"同一条纪律。
+    """
+    W = a.workdir
+    out = R.run(["scripts/spread_probe.py", "plan",
+                 "--store", "state/option_spread_samples.json",
+                 "--date", a.date, "--underlying", "QQQ",
+                 "--quotes", f"{W}/quotes.json", "--historicals", f"{W}/bars.json",
+                 "--out", f"{W}/spread_probe_plan.json"],
+                "spread_probe.plan", critical=False)
+    if out is None:
+        plan["spread_probe"] = {"error": "plan 失败 (见 anomalies); 纯取数步骤, 对交易无影响"}
+        return
+    pl = load(f"{W}/spread_probe_plan.json", {})
+    if pl.get("skipped"):
+        plan["spread_probe"] = {"skipped": pl["skipped"]}
+        return
+    plan["spread_probe"] = {
+        "spot": pl.get("spot"), "spot_source": pl.get("spot_source"),
+        "need": pl.get("need"),
+        "session_action_required": {
+            "step1": ("每个 dte_bucket 取 expiry_candidates 里**第一个存在的**到期: "
+                      "get_option_instruments(chain_symbol=QQQ, type=call, "
+                      "expiration_dates=<候选逗号分隔>, strike_price=<逐个>) —— "
+                      "返回哪个到期就是哪个挂了 (QQQ 并不挂满每个标准月)"),
+            "step2": "对全部 option_id 调 get_option_quotes (**必须含 delta**)",
+            "step3": ("python3 scripts/spread_probe.py record "
+                      "--store state/option_spread_samples.json "
+                      "--quotes <get_option_quotes 原始输出> "
+                      "--instruments <get_option_instruments 原始输出> "
+                      f"--spot <QQQ现价> --day-return-pct <当日%> --date {a.date} --window wrapup"),
+            "_cost": "每档 1 张 × 4 档 = 约 2 次 MCP 调用/日",
+            "_no_trade": ("⚠️ 纯取数。产出 state/option_spread_samples.json **不被任何交易判定读取** "
+                          "(qqq_leap.py / signals.py / weekly_calls.py 都不读它)。"
+                          "漏做只是少一天样本, 不影响任何订单。"),
+        },
+    }
+
+
 def phase_qqq_leap(a, R, plan):
     """QQQ LEAP call 轨道 (实盘; `strategy/qqq_leap.json`, 引擎 `scripts/qqq_leap.py`)。
 
@@ -848,6 +897,8 @@ def main():
             phase_data(a, R, plan, allsyms)
             if not a.skip_paper:
                 phase_paper(a, R, plan)
+            # 点差采样: 纯取数, 排在最后 —— 它失败绝不能影响上面任何一步 (critical=False)
+            phase_spread_probe(a, R, plan)
         else:
             phase_data(a, R, plan, allsyms)
             # QQQ LEAP 轨道排在最前: funding_priority=1 (用户 2026-10-19「优先级最高」),
@@ -871,6 +922,8 @@ def main():
                     R.anomalies.append(f"收盘前期权信号失败 (正股不受影响, 期权今日不出单): {e}")
                 if eff == "full" and not a.skip_paper:
                     phase_paper(a, R, plan)
+                if eff == "full":
+                    phase_spread_probe(a, R, plan)
                 # preclose 的纸面轨道留到 wrapup (最慢且完全不敏感)
     except SystemExit:
         raise

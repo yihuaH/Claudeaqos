@@ -65,36 +65,77 @@ def third_friday(y, m):
     return d + dt.timedelta(days=14)
 
 
-def monthly_near(target_date):
-    """离 target_date 最近的标准月 (第三个周五)。"""
+def monthlies_near(target_date, k=3):
+    """离 target_date 最近的 k 个标准月 (第三个周五), 由近到远。
+
+    ⚠️ 为什么给多个而不是一个 (2026-10-22 实测踩到): QQQ **并不挂满每个标准月的长期档** ——
+    2027-04-16 与 2027-10-15 都不存在, 带内只有 2027-03-19 / 2027-06-17 / 2027-09-17。
+    让 plan 只给一个到期, 会把会话送去查一个不存在的合约。给候选集 + 由会话一次查出哪个
+    存在, 把"哪些到期挂了"这个问题整个从本阶段移走。
+    """
     cands = []
-    for off in (-1, 0, 1, 2):
+    for off in (-2, -1, 0, 1, 2, 3):
         y, m = target_date.year, target_date.month + off
         while m < 1:  y, m = y - 1, m + 12
         while m > 12: y, m = y + 1, m - 12
         cands.append(third_friday(y, m))
-    return min(cands, key=lambda d: abs((d - target_date).days))
+    cands.sort(key=lambda d: abs((d - target_date).days))
+    return cands[:k]
+
+
+def _spot_from(a):
+    """现货优先级: --spot > --quotes 里的券商报价 > --historicals 最后一根收盘。
+    让 daily.py 只需把两个现成文件传进来, 不必自己解析。"""
+    if a.spot:
+        return float(a.spot), 'arg'
+    q = load(a.quotes, {}) if getattr(a, 'quotes', None) else {}
+    if isinstance(q, dict):
+        if a.underlying in q and isinstance(q[a.underlying], (int, float)):
+            return float(q[a.underlying]), 'quotes'
+        for r in (q.get('data', q) or {}).get('results', []) or []:
+            qq = r.get('quote', r)
+            if qq.get('symbol') == a.underlying and qq.get('last_trade_price'):
+                return float(qq['last_trade_price']), 'quotes'
+    b = load(a.historicals, {}) if getattr(a, 'historicals', None) else {}
+    for e in ((b.get('data', b) or {}).get('results', []) or []):
+        if e.get('symbol') == a.underlying and e.get('bars'):
+            return float(e['bars'][-1]['close_price']), 'bars'
+    return None, None
 
 
 def cmd_plan(a):
     store = load(a.store, {})
+    spot, src = _spot_from(a)
+    if spot is None:
+        print(json.dumps({"skipped": f"拿不到 {a.underlying} 现货 (--spot / --quotes / --historicals 都没给出)",
+                          "_no_trade": "纯取数, 跳过无任何后果"}, ensure_ascii=False))
+        return
+    a.spot, a.spot_source = spot, src
     ivs = store.get('_last_iv_by_bucket', {})
     today = dt.date.fromisoformat(a.date)
     want, seen = [], store.get('_option_id_cache', {})
     for b in DTE_BUCKETS:
-        exp = monthly_near(today + dt.timedelta(days=b))
-        dte = (exp - today).days
+        exps = monthlies_near(today + dt.timedelta(days=b))
         sig = float(ivs.get(str(b), DEFAULT_IV))
-        k0 = strike_for_delta(a.spot, dte / 365.0, sig)
-        ks = [k0 + (i - BRACKET // 2) * STRIKE_STEP for i in range(BRACKET)]
-        want.append({"dte_bucket": b, "expiry": exp.isoformat(), "actual_dte": dte,
-                     "iv_used": sig, "strikes": ks,
-                     "cached_ids": {f"{k:.4f}": seen.get(f"{exp.isoformat()}|{k:.4f}")
-                                    for k in ks if seen.get(f"{exp.isoformat()}|{k:.4f}")}})
-    out = {"date": a.date, "underlying": a.underlying, "spot": a.spot, "need": want,
-           "_session_action": ("对 need 里每个 (expiry, strikes) 调 get_option_instruments "
-                              "(cached_ids 里已有的可跳过), 再对全部 option_id 调 "
-                              "get_option_quotes (必须含 delta), 两个原始输出都传给 record。"),
+        per = []
+        for exp in exps:
+            dte = (exp - today).days
+            if dte <= 0: continue
+            k0 = strike_for_delta(a.spot, dte / 365.0, sig)
+            ks = [k0 + (i - BRACKET // 2) * STRIKE_STEP for i in range(BRACKET)]
+            per.append({"expiry": exp.isoformat(), "actual_dte": dte, "strikes": ks,
+                        "cached_ids": {f"{k:.4f}": seen[f"{exp.isoformat()}|{k:.4f}"]
+                                       for k in ks if f"{exp.isoformat()}|{k:.4f}" in seen}})
+        want.append({"dte_bucket": b, "iv_used": sig, "expiry_candidates": per,
+                     "_pick": "会话取**第一个存在的**到期即可; 其余候选是 QQQ 可能没挂该月的兜底"})
+    out = {"date": a.date, "underlying": a.underlying, "spot": a.spot,
+           "spot_source": getattr(a, 'spot_source', 'arg'), "need": want,
+           "_session_action": ("① 每个 dte_bucket 取 expiry_candidates 里**第一个存在的**到期 —— "
+                              "一次 get_option_instruments 可同时传多个 expiration_dates + 一个 "
+                              "strike_price, 返回哪个就是哪个存在; cached_ids 里已有的可跳过。"
+                              "② 对全部 option_id 调 get_option_quotes (**必须含 delta**)。"
+                              "③ 两个原始输出都传给 record —— record 按实际 DTE 自行归档, "
+                              "不要求与 dte_bucket 精确相等。"),
            "_no_trade": "纯取数。本文件与 record 的产出都不被任何交易判定读取 (红线2)。"}
     s = json.dumps(out, ensure_ascii=False, indent=1)
     if a.out: save(a.out, out)
@@ -204,9 +245,13 @@ def main():
         s.add_argument('--underlying', default='QQQ')
         if name != 'report':
             s.add_argument('--date', required=True)
-            s.add_argument('--spot', type=float, required=True)
         if name == 'plan':
+            s.add_argument('--spot', type=float)          # 可选: 缺则从 quotes/historicals 推
+            s.add_argument('--quotes')
+            s.add_argument('--historicals')
             s.add_argument('--out')
+        if name == 'record':
+            s.add_argument('--spot', type=float, required=True)
         if name == 'record':
             s.add_argument('--quotes', required=True)
             s.add_argument('--instruments')
