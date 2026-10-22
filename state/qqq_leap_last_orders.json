@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-22",
+  "track": "qqq_leap",
+  "underlying": "QQQ",
+  "enabled": true,
+  "halted": false,
+  "funding_priority": 1,
+  "buys": [
+    {
+      "occ": "QQQ270917C00820000",
+      "action": "buy_to_open",
+      "structure": "single",
+      "contracts": 1,
+      "underlying": "QQQ",
+      "strike": 820.0,
+      "expiry": "2027-09-17",
+      "delta": 0.3247,
+      "dte": 330,
+      "spread_pct": 5.973,
+      "bid": 26.15,
+      "ask": 27.76,
+      "mid": 26.955,
+      "per_contract_usd": 2776.0,
+      "total_cost_usd": 2776.0,
+      "pct_of_portfolio": 27.8,
+      "order_type": "limit",
+      "time_in_force": "gfd",
+      "est_price": 27.76,
+      "limit_price": 27.76,
+      "_limit_note": "limit = ask × 1.0 (单腿; 多腿被 Robinhood API 400 拒)",
+      "take_profit_line": 33.312,
+      "_tp_note": "止盈判定口径 = **当前 bid ≥ 入场 ask 成交价 × 1.2**, 双边点差已扣的净口径, **不是 mid 对 mid**",
+      "entry_spot": 705.16,
+      "entry_day_return_pct": -2.763,
+      "sizing_note": "贵档例外: max_single_position_pct_of_portfolio=null → 不限制, 给 1 张"
+    }
+  ],
+  "sells": [],
+  "skips": [],
+  "warnings": [],
+  "spot": 705.16,
+  "day_return_pct": -2.763,
+  "sma200": 676.8968,
+  "above_sma200": true,
+  "entry_signal": true,
+  "chain_diag": {
+    "n_call": 16,
+    "in_dte": 16,
+    "in_delta": 13,
+    "has_quote": 13,
+    "pass_spread": 2
+  },
+  "funding_gate": {
+    "buying_power": 9020.34,
+    "cash": 9020.34,
+    "reserved_usd": 0.0,
+    "available": 9020.34,
+    "order_cost": 2776.0,
+    "_note": "cap = min(buying_power, cash) − reserved; 超 cap **整单跳过不缩量**, 绝不动用借来的钱"
+  }
+}
