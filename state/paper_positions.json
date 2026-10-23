@@ -39,11 +39,18 @@
       "cost": 3497.01,
       "tranches": 1
     },
-    "NET": {
-      "qty": 12.0,
-      "entry_price": 299.8025,
-      "entry_date": "2026-10-21",
-      "cost": 3597.63,
+    "META": {
+      "qty": 5.0,
+      "entry_price": 640.61,
+      "entry_date": "2026-10-23",
+      "cost": 3203.05,
+      "tranches": 1
+    },
+    "MPC": {
+      "qty": 7.0,
+      "entry_price": 461.95,
+      "entry_date": "2026-10-23",
+      "cost": 3233.65,
       "tranches": 1
     }
   },
@@ -532,6 +539,33 @@
       "side": "buy",
       "qty": 12.0,
       "price": 299.8025,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "NET",
+      "side": "sell",
+      "qty": 12.0,
+      "price": 303.466667,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "META",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 640.61,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "MPC",
+      "side": "buy",
+      "qty": 7.0,
+      "price": 461.95,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

@@ -468,14 +468,14 @@ def main():
         print()
         print("  " + "!" * 74)
         print("  ⚡ 一次性任务 (state/oneshot_tasks.json) —— 本窗口须先处理:")
-        for t in todo:
-            print(f"    - [{t.get('id')}] {t.get('title')}")
-            if t.get("window"):
-                print(f"      适用窗口: {t['window']}")
-            if t.get("runbook"):
-                print(f"      步骤详见: {t['runbook']}")
-            if t.get("note"):
-                print(f"      {t['note']}")
+        for task in todo:
+            print(f"    - [{task.get('id')}] {task.get('title')}")
+            if task.get("window"):
+                print(f"      适用窗口: {task['window']}")
+            if task.get("runbook"):
+                print(f"      步骤详见: {task['runbook']}")
+            if task.get("note"):
+                print(f"      {task['note']}")
         print("  " + "!" * 74)
 
     print()

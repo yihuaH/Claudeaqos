@@ -1,41 +1,30 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-22",
+  "date": "2026-10-23",
   "coid_prefix": "cq",
-  "next_open": "2026-10-23T09:30:00-04:00",
+  "next_open": "2026-10-26T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-22-NET-sell",
-      "order_id": "52c8b26e-e3b5-4d06-b4d7-858459516a8d",
-      "symbol": "NET",
+      "coid": "cq-2026-10-23-CSCO-sell",
+      "order_id": "fbd4fccc-2a2b-458f-899a-9ef7855fd9c5",
+      "symbol": "CSCO",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "294.5",
-      "qty": "12",
+      "limit_price": "103.3",
+      "qty": "33",
       "bucket": "strategy",
       "reason": "exit_strength"
     },
     {
-      "coid": "cq-2026-10-22-META-buy",
-      "order_id": "e122ca65-b981-4bab-9885-d93c8c6f36b1",
-      "symbol": "META",
+      "coid": "cq-2026-10-23-VLO-buy",
+      "order_id": "e1e30482-327b-43bb-8839-11c67c54b0bf",
+      "symbol": "VLO",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "668.32",
-      "qty": "5",
-      "bucket": "strategy",
-      "reason": "rsi2_entry"
-    },
-    {
-      "coid": "cq-2026-10-22-MPC-buy",
-      "order_id": "c13deefe-a822-464b-b6ed-9f2ecf1295a4",
-      "symbol": "MPC",
-      "side": "buy",
-      "status": "accepted",
-      "limit_price": "473.06",
-      "qty": "7",
+      "limit_price": "431.86",
+      "qty": "8",
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
