@@ -151,26 +151,39 @@ def cmd_window(a):
         iv = 0.20
         if d["rv20"] and d["rv60"]:
             iv = max(0.08, min(0.80, 0.5 * d["rv20"] + 0.5 * d["rv60"]))
-        T = ((lo_d + hi_d) / 2.0) / 365.0
         S = d["price"]
-        ks = []
-        k = math.floor(S * 1.00 / 5) * 5
-        while k <= S * 1.60:
-            if k > 0 and 0.20 <= _bs_delta(S, k, T, iv) <= 0.50:
-                ks.append(k)
-            k += 5
-        k_lo = max(math.floor(S * 1.02 / 5) * 5, min(ks) - 25) if ks else math.floor(S * 1.05 / 5) * 5
-        k_hi = min(math.ceil(S * 1.50 / 5) * 5, max(ks) + 25) if ks else math.ceil(S * 1.35 / 5) * 5
-        out["need_chain"] = {
-            "type": "call",
-            "expiry_date_gte": _date.fromordinal(t0.toordinal() + lo_d).isoformat(),
-            "expiry_date_lte": _date.fromordinal(t0.toordinal() + hi_d).isoformat(),
-            "strike_min": k_lo, "strike_max": k_hi, "strike_step": 5,
-            "iv_used_for_window": round(iv, 4),
-            "_note": ("会话取这个区间内**全部** QQQ call 的券商报价 (get_option_instruments → "
-                      "get_option_quotes, 必须带 delta), 原样落盘给 signal --chain。"
-                      "区间是超集, 选档由 signal 用券商 delta 确定性决定 (红线2)。"),
-        }
+        rungs = cc.get("ladder") or [None]
+        needs = []
+        for rung in rungs:
+            r_lo, r_hi = (rung["dte_band_calendar"] if rung else cc["dte_band_calendar"])
+            T = ((r_lo + r_hi) / 2.0) / 365.0
+            ks = []
+            k = math.floor(S * 1.00 / 5) * 5
+            while k <= S * 1.60:
+                if k > 0 and 0.20 <= _bs_delta(S, k, T, iv) <= 0.50:
+                    ks.append(k)
+                k += 5
+            k_lo = (max(math.floor(S * 1.02 / 5) * 5, min(ks) - 25) if ks
+                    else math.floor(S * 1.05 / 5) * 5)
+            k_hi = (min(math.ceil(S * 1.50 / 5) * 5, max(ks) + 25) if ks
+                    else math.ceil(S * 1.35 / 5) * 5)
+            needs.append({
+                "rung": (f"dte~{rung['target_dte_calendar']}" if rung else "single"),
+                "type": "call",
+                "expiry_date_gte": _date.fromordinal(t0.toordinal() + r_lo).isoformat(),
+                "expiry_date_lte": _date.fromordinal(t0.toordinal() + r_hi).isoformat(),
+                "strike_min": k_lo, "strike_max": k_hi, "strike_step": 5,
+                "iv_used_for_window": round(iv, 4),
+            })
+        out["need_chain"] = needs if cc.get("ladder") else needs[0]
+        out["_need_chain_note"] = (
+            "会话取这些区间内**全部** QQQ call 的券商报价 (get_option_instruments → "
+            "get_option_quotes, 必须带 delta), 原样落盘给 signal --chain。"
+            "区间是超集, 选档由 signal 用券商 delta 确定性决定 (红线2)。"
+            + ("\n⚠️ **梯子模式**: need_chain 是**数组**, 每档一个区间, 三档的报价**全部**"
+               "落进同一个 chain 文件即可 (signal 自己按各档 dte_band 分开选)。"
+               if cc.get("ladder") else "")
+        )
     _emit(out, a.out)
     print(json.dumps({k: out[k] for k in
                       ("date", "entry_signal", "day_return_pct", "above_sma200", "held_occs")},
@@ -194,8 +207,11 @@ def _is_standard_monthly(expiry):
     return len(fridays) >= 3 and dd == fridays[2]
 
 
-def _pick(chain, cfg, spot, today):
+def _pick(chain, cfg, spot, today, rung=None):
     """确定性选档: 只认 call, dte 在带内, **delta 在带内**, 点差/最小买价合规。
+
+    `rung` 非空时用该档自己的 `target_dte_calendar` / `dte_band_calendar` 覆盖全局值
+    (梯子模式, 用户 2026-10-23「3 个期限各 1 张」); delta 带、点差闸、min_bid 仍是全局的。
     排序键 (全部确定性, 无会话判断):
       ① |delta − target| 最小  ② 标准月度优先 (prefer_standard_monthly, §4 点差更紧)
       ③ 点差更窄            ④ dte 更接近目标  ⑤ OCC 字典序 (兜底保证可复现)
@@ -203,7 +219,8 @@ def _pick(chain, cfg, spot, today):
     cc = cfg["contract"]
     dlo, dhi = cc["delta_band"]
     tgt = float(cc["delta_target"])
-    lo_d, hi_d = cc["dte_band_calendar"]
+    lo_d, hi_d = (rung["dte_band_calendar"] if rung else cc["dte_band_calendar"])
+    dte_tgt = int(rung["target_dte_calendar"] if rung else cc["dte_target_calendar"])
     cands, diag = [], {"n_call": 0, "in_dte": 0, "in_delta": 0, "has_quote": 0, "pass_spread": 0}
     best_spread = None
     for occ, q in chain.items():
@@ -234,7 +251,7 @@ def _pick(chain, cfg, spot, today):
         monthly_rank = 0 if (cc.get("prefer_standard_monthly")
                              and _is_standard_monthly(meta["expiry"])) else 1
         cands.append((round(abs(dl - tgt), 6), monthly_rank, sp,
-                      abs(d - int(cc["dte_target_calendar"])), occ, meta, q, dl, m))
+                      abs(d - dte_tgt), occ, meta, q, dl, m))
     if not cands:
         if diag["in_delta"] and best_spread is not None:
             return None, f"spread_too_wide(best={best_spread:.2f}%>{cc['max_spread_pct']}%)", diag
@@ -344,94 +361,128 @@ def cmd_signal(a):
                           "entry_signal": False}, ensure_ascii=False))
         return 0
 
-    pick, skip, diag = _pick(chain, cfg, d["price"], today)
-    out["chain_diag"] = diag
-    if pick is None:
-        out["skips"].append({"stage": "entry", "reason": skip, "chain_diag": diag,
-                             "_why": "有入场信号但选不出合规合约; **不放宽带宽** (§7.1③)"})
-        _emit(out, a.out)
-        print(json.dumps({"buys": 0, "sells": len(out["sells"]), "skip": skip},
-                         ensure_ascii=False))
-        return 0
+    # ---------- 选档 + 定量 + 资金闸 ----------
+    # 梯子 (用户 2026-10-23「以后qqq跌了 买三个期权」, 当日澄清为「3 个期限各 1 张」):
+    # `contract.ladder` 非空时**每档各选 1 张、各自成一张独立订单**, 按列表顺序逐档过资金闸。
+    # ⚠️ **独立订单是这条设计的关键**: 红线9 的「整单跳过不缩量」是按**单笔**判的, 所以 cap
+    #    不足时结果是「能买几张买几张」; 若把三张合成一张 3 contracts 的单, 凑不出全额就会
+    #    **一张都不买** —— 那等于把原本成功的买入变成不买。
+    # ⚠️ 列表顺序 = 资金优先级, **由 config 声明, 不是引擎自己排的** (红线2)。
+    rungs = cfg["contract"].get("ladder") or [None]
+    laddered = bool(cfg["contract"].get("ladder"))
 
-    sz = cfg["sizing"]
-    per = pick["per_contract_usd"]
-    pcap = sz.get("max_premium_per_contract_usd")
-    if pcap is not None and per > float(pcap):
-        out["skips"].append({"stage": "entry", "reason": f"premium_too_large({per:.0f}>{pcap})",
-                             "occ": pick["occ"]})
-        _emit(out, a.out)
-        print(json.dumps({"buys": 0, "sells": len(out["sells"]),
-                          "skip": "premium_too_large"}, ensure_ascii=False))
-        return 0
-
-    pv = float(a.portfolio_value)
-    target = pv * float(sz["position_pct_of_portfolio"]) / 100.0
-    qty = int(target // per)
-    tier_note = None
-    if qty < 1:
-        tier = sz.get("max_single_position_pct_of_portfolio", "__UNSET__")
-        if tier is None:
-            tier_cap, tier_note = float("inf"), "贵档例外: max_single_position_pct_of_portfolio=null → 不限制, 给 1 张"
-        elif tier == "__UNSET__":
-            tier_cap, tier_note = 2 * target, "贵档例外: 字段缺失 → 回落 2×目标仓"
-        else:
-            tier_cap = pv * float(tier) / 100.0
-            tier_note = f"贵档例外: 单仓上限 {tier}% 净值 = ${tier_cap:.0f}"
-        if per <= tier_cap:
-            qty = 1
-        else:
-            out["skips"].append({"stage": "entry", "occ": pick["occ"],
-                                 "reason": f"premium_exceeds_position_cap(per={per:.0f},target={target:.0f})"})
-            _emit(out, a.out)
-            print(json.dumps({"buys": 0, "sells": len(out["sells"]),
-                              "skip": "premium_exceeds_position_cap"}, ensure_ascii=False))
-            return 0
-
-    # --- 防杠杆闸 (红线3): 实时 min(buying_power, cash) 为上限, 超出**整单跳过不缩量** ---
     bp = float(a.buying_power)
     cash = float(a.cash) if a.cash is not None else bp
-    avail = min(bp, cash) - float(a.reserved_usd or 0)
-    cost = qty * per
-    gate = {"buying_power": bp, "cash": cash, "reserved_usd": float(a.reserved_usd or 0),
-            "available": round(avail, 2), "order_cost": round(cost, 2),
-            "_note": "cap = min(buying_power, cash) − reserved; 超 cap **整单跳过不缩量**, 绝不动用借来的钱"}
-    out["funding_gate"] = gate
-    if cost > avail:
-        out["skips"].append({"stage": "entry", "occ": pick["occ"],
-                             "reason": f"insufficient_buying_power(cost={cost:.0f},avail={avail:.0f})",
-                             "funding_gate": gate,
-                             "_why": "红线3/红线9③: 超出实时 min(buying_power, cash) → 整单跳过, **不缩量**"})
-        _emit(out, a.out)
-        print(json.dumps({"buys": 0, "sells": len(out["sells"]),
-                          "skip": "insufficient_buying_power"}, ensure_ascii=False))
-        return 0
-
+    avail0 = min(bp, cash) - float(a.reserved_usd or 0)
+    avail = avail0
+    out["funding_gate"] = {
+        "buying_power": bp, "cash": cash, "reserved_usd": float(a.reserved_usd or 0),
+        "available": round(avail0, 2),
+        "_note": "cap = min(buying_power, cash) − reserved; **每档单笔**超 cap 则该档整单跳过"
+                 "不缩量, 绝不动用借来的钱; 已出单的档会扣减后续档的 cap",
+        "_ladder_order_note": ("列表顺序即资金优先级, 由 contract.ladder 声明"
+                               if laddered else None),
+    }
+    pv = float(a.portfolio_value)
+    sz = cfg["sizing"]
     buy_factor = float(cfg["contract"].get("buy_limit_factor", 1.0))
-    out["buys"].append({
-        "occ": pick["occ"], "action": "buy_to_open", "structure": "single",
-        "contracts": qty, "underlying": u,
-        "strike": pick["meta"]["strike"], "expiry": pick["meta"]["expiry"],
-        "delta": pick["delta"], "dte": pick["dte"],
-        "spread_pct": pick["spread_pct"],
-        "bid": pick["bid"], "ask": pick["ask"], "mid": round(pick["mid"], 4),
-        "per_contract_usd": per, "total_cost_usd": round(cost, 2),
-        "pct_of_portfolio": round(cost / pv * 100, 2),
-        "order_type": "limit", "time_in_force": "gfd",
-        "est_price": round(pick["ask"], 2),
-        "limit_price": round(pick["ask"] * buy_factor, 2),
-        "_limit_note": f"limit = ask × {buy_factor} (单腿; 多腿被 Robinhood API 400 拒)",
-        "take_profit_line": round(pick["ask"] * float(ex["take_profit_mult"]), 4),
-        "_tp_note": ("止盈判定口径 = **当前 bid ≥ 入场 ask 成交价 × "
-                     f"{ex['take_profit_mult']}**, 双边点差已扣的净口径, **不是 mid 对 mid**"),
-        "entry_spot": round(d["price"], 4),
-        "entry_day_return_pct": round(d["day_return_pct"], 3),
-        "sizing_note": tier_note,
-    })
+    diags, taken = {}, set()
+
+    for rung in rungs:
+        tag = (f"dte~{rung['target_dte_calendar']}" if rung else "single")
+        pick, skip, diag = _pick(chain, cfg, d["price"], today, rung)
+        diags[tag] = diag
+        if pick is None:
+            out["skips"].append({"stage": "entry", "rung": tag, "reason": skip,
+                                 "chain_diag": diag,
+                                 "_why": "有入场信号但该档选不出合规合约; **不放宽带宽** (§7.1③)"})
+            continue
+        if pick["occ"] in taken:
+            # 两档 dte_band 重叠时可能选到同一张。必须拦: apply 的同键合并会把它们并成一仓,
+            # 于是「3 个期限各 1 张」静默退化成「某一期限 2 张」—— 与用户要的不是一回事。
+            out["skips"].append({"stage": "entry", "rung": tag, "occ": pick["occ"],
+                                 "reason": "duplicate_occ_across_rungs",
+                                 "_why": "本档选到了前档已取的同一合约 (dte_band 重叠)。跳过, "
+                                         "不重复买。要真正并排三个期限, 把 ladder 各档的 "
+                                         "dte_band_calendar 调成互不重叠"})
+            continue
+
+        per = pick["per_contract_usd"]
+        pcap = sz.get("max_premium_per_contract_usd")
+        if pcap is not None and per > float(pcap):
+            out["skips"].append({"stage": "entry", "rung": tag, "occ": pick["occ"],
+                                 "reason": f"premium_too_large({per:.0f}>{pcap})"})
+            continue
+
+        tier_note = None
+        if laddered:
+            # 梯子模式每档固定 1 张 —— 用户要的就是「各 1 张」, 故不走 position_pct 的 floor 逻辑。
+            qty = 1
+            tier_note = ("梯子模式: 本档固定 1 张 (用户 2026-10-23「3 个期限各 1 张」); "
+                         "**sizing.position_pct_of_portfolio 在本模式下不参与定量**")
+        else:
+            target = pv * float(sz["position_pct_of_portfolio"]) / 100.0
+            qty = int(target // per)
+            if qty < 1:
+                tier = sz.get("max_single_position_pct_of_portfolio", "__UNSET__")
+                if tier is None:
+                    tier_cap, tier_note = float("inf"), "贵档例外: max_single_position_pct_of_portfolio=null → 不限制, 给 1 张"
+                elif tier == "__UNSET__":
+                    tier_cap, tier_note = 2 * target, "贵档例外: 字段缺失 → 回落 2×目标仓"
+                else:
+                    tier_cap = pv * float(tier) / 100.0
+                    tier_note = f"贵档例外: 单仓上限 {tier}% 净值 = ${tier_cap:.0f}"
+                if per <= tier_cap:
+                    qty = 1
+                else:
+                    out["skips"].append({"stage": "entry", "rung": tag, "occ": pick["occ"],
+                                         "reason": f"premium_exceeds_position_cap(per={per:.0f},target={target:.0f})"})
+                    continue
+
+        # --- 防杠杆闸 (红线3 / 红线9③): 本档单笔超 cap → 该档整单跳过**不缩量** ---
+        cost = qty * per
+        if cost > avail:
+            out["skips"].append({
+                "stage": "entry", "rung": tag, "occ": pick["occ"],
+                "reason": f"insufficient_buying_power(cost={cost:.0f},avail={avail:.0f})",
+                "funding_gate": dict(out["funding_gate"], available_at_this_rung=round(avail, 2)),
+                "_why": "红线3/红线9③: 超出本档可用 cap → 整单跳过, **不缩量**。"
+                        "梯子模式下后续档仍各自判 cap (能买几张买几张)"})
+            continue
+
+        taken.add(pick["occ"])
+        avail -= cost
+        out["buys"].append({
+            "occ": pick["occ"], "action": "buy_to_open", "structure": "single",
+            "rung": tag, "contracts": qty, "underlying": u,
+            "strike": pick["meta"]["strike"], "expiry": pick["meta"]["expiry"],
+            "delta": pick["delta"], "dte": pick["dte"],
+            "spread_pct": pick["spread_pct"],
+            "bid": pick["bid"], "ask": pick["ask"], "mid": round(pick["mid"], 4),
+            "per_contract_usd": per, "total_cost_usd": round(cost, 2),
+            "pct_of_portfolio": round(cost / pv * 100, 2),
+            "order_type": "limit", "time_in_force": "gfd",
+            "est_price": round(pick["ask"], 2),
+            "limit_price": round(pick["ask"] * buy_factor, 2),
+            "_limit_note": f"limit = ask × {buy_factor} (单腿; 多腿被 Robinhood API 400 拒)",
+            "take_profit_line": round(pick["ask"] * float(ex["take_profit_mult"]), 4),
+            "_tp_note": ("止盈判定口径 = **当前 bid ≥ 入场 ask 成交价 × "
+                         f"{ex['take_profit_mult']}**, 双边点差已扣的净口径, **不是 mid 对 mid**"),
+            "entry_spot": round(d["price"], 4),
+            "entry_day_return_pct": round(d["day_return_pct"], 3),
+            "sizing_note": tier_note,
+            "cap_remaining_after": round(avail, 2),
+        })
+
+    out["chain_diag"] = diags if laddered else diags.get("single")
     _emit(out, a.out)
     print(json.dumps({"buys": len(out["buys"]), "sells": len(out["sells"]),
-                      "occ": pick["occ"], "contracts": qty,
-                      "per_contract_usd": per, "delta": pick["delta"]}, ensure_ascii=False))
+                      "ladder": laddered,
+                      "occs": [b["occ"] for b in out["buys"]],
+                      "contracts_total": sum(b["contracts"] for b in out["buys"]),
+                      "total_cost_usd": round(sum(b["total_cost_usd"] for b in out["buys"]), 2),
+                      "cap_left": round(avail, 2),
+                      "skips": len(out["skips"])}, ensure_ascii=False))
     return 0
 
 

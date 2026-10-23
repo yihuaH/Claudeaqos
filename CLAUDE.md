@@ -20,7 +20,7 @@
    - 📐 **fail-safe 退回 pending 后的执行形态 (两种, 选哪种只看时间)**: **(a) 盘中 09:45–15:55 ET = 单笔 `market`+`regular_hours`+`dollar_amount`** —— 首选, 原生支持分数股, 零额外成本; **(b) 盘外 15:55 → 次一交易日 09:45 (含周末) = 整股限价①腿** —— `limit = 引擎 est_price × 1.010`, `all_day_hours→extended_hours→regular_hours` 逐级降级, `whole==0` 该单整单跳过留次日, **零头不另下单**, 随清单既有顺延机制走次日盘中窗。⚠️ 盘外①腿实测**多付 0.55%** + 盘后点差中位约 2%, 是**有成本的退路, 不是首选**; 且走盘外**必须重做 4C-1B 逐批确认** (形态由美元额市价变为整股限价, 数量不同且可能有单落空)。历史沿革与退役理由见 `strategy/archive/retired-offhours-two-leg.md`。
    - **结算与杠杆规则 (2026-08-07 用户升级 limited margin 后重写; 原 07-31「现金账户 T+1 铁律」作废)**: 账户 802095265 现为 **`type=margin` (limited margin)** — 卖出款**即时可用**、`buying_power` 已含未结算款、**GFV (善意违规) 风险消失**。⚠️ **防杠杆闸**: 该账户目前**无借贷额度** (`unleveraged_buying_power == buying_power`); 4C/4D 执行买单**一律以实时 `min(buying_power, cash)` 为上限**, 超出**整单跳过不缩量** — 若某日 `buying_power > cash` 说明券商开放了借贷, 系统**绝不自动使用借来的钱**, 动用杠杆须用户明确授权 (红线3)。
    - **新闻旗标 + 宏观环境 (报告级, 2026-07-31 用户加)**: `integrations.py news` 对买单标的做确定性红旗分类、`macro` 的 FRED `context` 段, **均仅提示/展示, 绝不改引擎选股或金额** (红线2); 红旗只在 pending/战报点名, 由用户 4C 一票否决。
-   - **跨轨道资金优先级 (2026-10-19 用户「优先级最高」把 QQQ LEAP 插到最前)**: 现行次序 = **① QQQ LEAP (`qqq_leap.json funding_priority:1`) → ② 实盘周期权 → ③ RSI-2 正股**。LEAP 单张约占净值 23%且无单笔规模闸, 故它一次出单即可让当日其余两轨全部零成交 (信号 8.4 次/年)。`daily.py` 里 `phase_qqq_leap` 排在 `phase_stock_signal` 与 `phase_options` 之前, 其 `reserve_usd` 是后两者 cap 的扣减项。以下原「期权优先」规则在 ②③ 之间照旧: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单自 2026-10-12 起亦由会话自动下单 (playbook 4D, 仅单腿)。用户可单日一票推翻, 但**不再逐日询问**。
+   - **跨轨道资金优先级 (2026-10-19 用户「优先级最高」把 QQQ LEAP 插到最前)**: 现行次序 = **① QQQ LEAP (`qqq_leap.json funding_priority:1`) → ② 实盘周期权 → ③ RSI-2 正股**。LEAP **自 2026-10-23 起是三档梯子 (148/85/330 DTE 各 1 张)**, 一次信号合计约占净值 **53%** (当日实测 $5,228/$9,816), 且无单笔规模闸, 故它一次出单即可让当日其余两轨全部零成交 (信号 8.4 次/年)。⚠️ 三档是**三张独立订单**, 故 cap 不足时是「能买几张买几张」(按 `contract.ladder` 列表顺序 148→85→330 逐档判), 不是三张一起归零 —— 这正是不把它做成一张 3 contracts 单的原因。`daily.py` 里 `phase_qqq_leap` 排在 `phase_stock_signal` 与 `phase_options` 之前, 其 `reserve_usd` 是后两者 cap 的扣减项。以下原「期权优先」规则在 ②③ 之间照旧: 同日实盘股票买单与实盘周期权买单合计超过实时 `min(buying_power, cash)` 时, 先按期权单的**最大在险额** (credit_put_spread = 价差宽度×100×张数, 券商实扣) 留足抵押, 股票 cap = 可用资金 − 期权抵押, 超 cap 的股票单**整单跳过不缩量**; 期权单自 2026-10-12 起亦由会话自动下单 (playbook 4D, 仅单腿)。用户可单日一票推翻, 但**不再逐日询问**。
    - **实盘周call实验仓 (2026-08-04 用户授权)**: 期权买入 (buy_to_open) **自 2026-10-12 起由会话自动下单** (单腿限价; 用户当日应用 autoMode 改动后实测放行)。多腿仍被 Robinhood API 400 拒, 故形态必须 `single`。⚠️ **用户因此失去了每张期权的事前一票否决**, 而单张权利金上限仍是 null —— 该数字优先级显著上升 (红线3) (时效**照抄 plan.json 的 `option_pending_template`**, 两形态: **收盘前产出 = 当日 15:30–15:45 ET** [2026-09-11 用户「期权也可以当日马上执行」; 比股票的 15:55 早 10 分钟收口, 因 15:45 后是 4D 明令避开的收盘前极端点差区]; 收盘后产出 = 次一交易日 10:30 ET, 推荐 09:45–10:30 等开盘点差收窄, 2026-08-04 用户批准); 期权出场卖单 (sell_to_close) 属出场类, 照常全自动。**规模约束 = 没有单笔规模闸** (用户 2026-10-19「取消5000上限 不设上线」): `contract.max_premium_per_contract_usd` 与 `budget.max_open_premium_pct_of_portfolio` 与 `sizing.max_single_position_pct_of_portfolio` **三者全为 null**。沿革: 10-12 曾定 $5,000 (换 single 后长 call 可亏 100% 权利金), 实测确实拦住贵档 (SMH/TSM 的 `premium_too_large`), 10-19 用户取消。⚠️ **后果**: per_cost > 净值×20% 的贵档走 tier_cap=inf 例外**强制给 1 张**, 故单张规模上限退化为**仅剩实时 `min(buying_power, cash)`** —— 一张深ITM call 可吃掉当日几乎全部可用现金, 且期权优先于股票拿资金, 同日 RSI-2 买单会被整单跳过。仍并行生效: 实时 `min(buying_power, cash)` 防杠杆闸 (红线3) + 熔断 (累计已实现亏 ≥ 净值×50%) + 点差/DTE/公允价边际闸。改这个数只能由用户定。
 
 ## 分支约定 (系统级, 优先于 Routine 唤醒词)
@@ -92,7 +92,7 @@
 | 隔夜均值回归 — **入场** | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (暂停只停入场) | 同上 |
 | **周度期权实盘实验仓** | 实盘 | ✅ active·机会主义 | `weekly_calls_live.json enabled` |
-| **QQQ LEAP call** (跌≥2% 买 1 年期 delta 0.30) | 实盘 | ✅ active·**资金优先级最高** | `qqq_leap.json enabled` + `funding_priority:1` |
+| **QQQ LEAP call 梯子** (跌≥2% → **148/85/330 DTE 各买 1 张** delta 0.30) | 实盘 | ✅ active·**资金优先级最高** | `qqq_leap.json enabled` + `funding_priority:1` + `contract.ladder` |
 | 挑战者影子验证 | paper | ⚠️ validating 但**指标不可用** (见下) | `learning.json enabled` |
 | 周call 摩擦实测 (深ITM 买call) | paper | ✅ active | `weekly_calls.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
@@ -128,7 +128,7 @@
 | `strategy/config.json` | 主策略与风控参数 (入场/出场/仓位/加仓/防御/宏观/熔断/`execution`) |
 | `strategy/screen.json` + `universe.json` | 个股池筛选标准 + 筛选产出的当前 100 股池 |
 | `strategy/weekly_calls.json` / `weekly_calls_live.json` | 周期权 paper 摩擦实测 / 实盘实验仓 |
-| `strategy/qqq_leap.json` | **QQQ LEAP call 轨道 (实盘)**: 入场跌≥2%+牛市过滤 / ~1年期 delta 0.30 带[0.25,0.40] / 止盈 +20% (bid ≥ 入场ask×1.20) / 20 交易日时间止损 / 不设价格止损 / 不设并持上限 / `funding_priority:1`。每字段的回测来源见文件内注释与 `strategy/proposals/qqq-leap-call.md` |
+| `strategy/qqq_leap.json` | **QQQ LEAP call 轨道 (实盘)**: 入场跌≥2%+牛市过滤 / **三档梯子 `contract.ladder` = 148/85/330 DTE 各 1 张** (列表顺序即资金优先级, 用户可重排; 空则回落单档) / delta 0.30 带[0.25,0.40] / 止盈 +20% (bid ≥ 入场ask×1.20) / 20 交易日时间止损 / 不设价格止损 / 不设并持上限 / `funding_priority:1`。每字段的回测来源见文件内注释与 `strategy/proposals/qqq-leap-call.md` |
 | `strategy/learning.json` / `learning_overnight.json` | 自学习边界、搜索网格、晋级标准 |
 | `strategy/momentum.json` / `options.json` / `stocks.json` / `overnight.json` | 各实验轨道参数 |
 | `strategy/tracks.md` | 驱动器已接管轨道的**手工回退**完整命令 (平时不用) |
@@ -264,6 +264,30 @@
    用户 2026-10-14 已决定不加同因子闸 => **不再询问**, 战报里仅陈述数字。
 
 ### 已修复 / 已结案 (勿当成未决项)
+
+- ✅ **QQQ LEAP 改为三档梯子 (2026-10-23 用户「以后qqq跌了 买三个期权」)**: 该指令有三种读法
+  (3 张同一合约 / 3 个期限各 1 张 / 并持上限 3), 当日问清为**「3 个期限各 1 张」**。
+  配置 `contract.ladder` = `[148, 85, 330]` DTE 各一档, 带宽 `[120,190] / [60,110] / [300,400]`
+  (互不重叠, 191~299 的空档是故意的)。
+  - 📐 **三张独立订单, 不是一张 3 contracts 的单** —— 这是本设计的要点: 红线9 的「整单跳过
+    不缩量」按**单笔**判。独立单 → cap 不足时「能买几张买几张」; 合成一张 → 凑不出全额就
+    **一张都不买**, 等于把原本成功的买入变成不买。当日现金仅 $293.53 / 净值 $9,816 而三档
+    合计约 $5,240 = 53.4%, 这个问题不是理论上的。
+  - 📐 **列表顺序 = 资金优先级, 由 config 声明不是引擎自排** (红线2)。148→85→330 的依据是
+    10-22 的 `qqq-leap-dte-verdict.py` (148 是唯一在两种实测摩擦下都显著优于 330 的档) 与
+    10-23 的 `qqq-leap-tp-85-148.py` (85 档止盈对下行的影响比 148 大 4.5 倍)。**用户可重排。**
+  - ⚠️ **本模式下 `sizing.position_pct_of_portfolio` 不参与定量** (每档固定 1 张), 故每信号
+    总规模从原先的「净值 20% 目标仓 → 常退化成 1 张」变为「三档单价之和 ≈ 净值 53%」。
+    这是**用户知情选择的 sizing 放大**, 不是自学习 (红线8)。
+  - 止盈仍是 +20% (10-23 扫描结论: 两档都维持, 往下调有显著证据反对、往上调是噪声形态)。
+  - 引擎: `_pick` 加 `rung` 覆盖 target_dte/dte_band; `cmd_window` 的 `need_chain` 变成**数组**
+    (每档一个区间, 三档报价落进同一个 chain 文件即可); `cmd_signal` 逐档循环并加
+    `duplicate_occ_across_rungs` 守卫 (带宽重叠会让两档选到同一张, 而 apply 的同键合并会把
+    「3 个期限各 1 张」静默变成「某期限 2 张」)。`ladder` 空/缺失则完整回落单档模式。
+  - 验证 6 组全 PASS: window 出 3 档区间 / 现金充裕出 3 张 ($5,228 = 53.3% 净值, 点差
+    148→0.94% · 85→1.10% · 330→7.26%) / **cash $2,000 → 只买 148 一张, 85 与 330 各自记
+    insufficient_buying_power (证明不归零)** / cash $293.53 → 0 张 3 档各记原因 /
+    去掉 ladder 回落单档 (`ladder:false`) / 带宽重叠时守卫触发。
 
 - ✅ **QQQ LEAP 账本同 OCC 覆写 → 2026-10-22 当日查出当日修掉** (用户同日选方案 C「同键合并」):
   `qqq_leap.py` 的 `apply` 买入分支原先是 `positions[occ] = {...}` **直接赋值**, 既不合并 lot
