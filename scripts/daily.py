@@ -131,6 +131,13 @@ def collect_symbols(cfg, uni, plan):
         L = load(f"{REPO}/state/{led}", {})
         opt += [p["underlying"] for p in (L.get("positions") or {}).values()]
     groups["option"] = sorted(set(opt))
+    # SQQQ 短期看跌轨道 (paper, 2026-10-23): 它的标的必须进 allsyms, 否则 bars 与 quotes
+    # 都拿不到 SQQQ, 引擎只会报 no_bars/no_quote 空转。持仓也并进来 (出场要报价)。
+    sq = load(f"{REPO}/strategy/sqqq_short.json", {})
+    sqled = load(f"{REPO}/state/sqqq_short_positions.json", {})
+    groups["sqqq_short"] = (sorted(set(sq.get("universe", []))
+                                   | set(sqled.get("strategy_positions") or {}))
+                            if sq.get("enabled") else [])
 
     allsyms = sorted({s for g in groups.values() for s in g})
     plan["symbol_groups"] = {k: len(v) for k, v in groups.items()}
@@ -704,6 +711,80 @@ def phase_options(a, R, plan):
             plan["options"]["live_report"] = parse_json_out(out)
 
 
+def phase_sqqq_short(a, R, plan):
+    """SQQQ 短期看跌 QQQ 轨道 (**仅 paper**, 红线7)。用户 2026-10-23 选「paper 先跑验证」。
+
+    ⚠️ **为什么排在 preclose 而不是 wrapup** (与其它 paper 轨道不同):
+       本轨道口径是「收盘买 → 次日收盘卖」, 必须在**开市中**下单。17:45 的 wrapup 已收盘,
+       paper.py 只能 --allow-queue 排到次日开盘, 那就变成「开盘买」—— 1 日持有变成
+       开盘→次日收盘, 是另一笔交易, 口径全错。
+    ⚠️ 失败绝不能影响实盘关键路径 → 全段 critical=False, 调用点另有 try 包住。
+    """
+    cfg = load(f"{REPO}/strategy/sqqq_short.json", {})
+    if not cfg.get("enabled"):
+        return
+    if cfg.get("environment") != "paper_only":
+        R.anomalies.append("sqqq_short.json 的 environment 不是 paper_only → 本轨道拒跑 (红线7)")
+        plan["sqqq_short"] = {"error": "environment_not_paper_only"}
+        return
+    W = a.workdir
+    led = "state/sqqq_short_positions.json"
+    st = load(f"{REPO}/{led}", {}) or {}
+    sz = cfg.get("sizing", {})
+    cap = float(st.get("start_capital", sz.get("start_capital", 10000)))
+    pl = plan.setdefault("sqqq_short", {})
+    pl["environment"] = "paper_only"
+    pl["halted"] = bool(st.get("halted"))
+    # --plan-only: 照 phase_options 的模式 —— **仍跑信号** (便于验证接线与看当日是否触发),
+    # 但**绝不下纸面单、绝不写账本**。⚠️ R.run 是无条件执行的, --plan-only 不是全局开关,
+    # 每个 phase 必须自己挡 (2026-10-23 接线时查出我第一版没挡, 干跑会真下纸面单)。
+    po = a.plan_only
+    pl["plan_only"] = po
+
+    # 回收上一窗排队单 (只在退化到盘后下过单时才会有)
+    q = f"{REPO}/state/paper_queued_sqqq.json"
+    if not po and os.path.exists(q):
+        if R.run(["scripts/paper.py", "sync", "--queued", q,
+                  "--escalate-unfilled-sells", "--date", a.date,
+                  "--fills-out", f"{W}/sq_sync.json"], "sq.sync", critical=False) is not None:
+            if os.path.exists(f"{W}/sq_sync.json"):
+                R.run(["scripts/signals.py", "apply", "--state", led,
+                       "--fills", f"{W}/sq_sync.json", "--date", a.date],
+                      "sq.apply_sync", critical=False)
+
+    if R.run(["scripts/sqqq_short.py", "signal", "--config", "strategy/sqqq_short.json",
+              "--state", led, "--bars", f"{W}/bars.json", "--quotes", f"{W}/quotes.json",
+              "--date", a.date, "--portfolio-value", str(cap), "--buying-power", str(cap),
+              "--out", f"{W}/sq_orders.json"], "sq.signal", critical=False) is None:
+        pl["error"] = "signal 失败, 见 anomalies"
+        return
+    so = load(f"{W}/sq_orders.json", {})
+    pl["signal_ctx"] = so.get("signal_ctx")
+    pl["orders"] = {"sells": [x["symbol"] for x in so.get("sells", [])],
+                    "buys": [x["symbol"] for x in so.get("buys", [])]}
+    pl["skips"] = [x.get("reason") for x in so.get("skips", [])]
+    if so.get("warnings"):
+        pl["warnings"] = so["warnings"]
+    if not (so.get("sells") or so.get("buys")):
+        return
+    if po:
+        pl["skipped_execution"] = "--plan-only: 信号已算出但不下纸面单、不写账本"
+        return
+    R.run(["scripts/paper.py", "run", "--orders", f"{W}/sq_orders.json",
+           "--date", a.date, "--coid-prefix", "sq",
+           "--fills-out", f"{W}/sq_fills.json", "--allow-queue",
+           "--queued-out", q], "sq.run", critical=False)
+    if os.path.exists(f"{W}/sq_fills.json"):
+        R.run(["scripts/signals.py", "apply", "--state", led,
+               "--fills", f"{W}/sq_fills.json", "--date", a.date,
+               "--portfolio-value", str(cap)], "sq.apply", critical=False)
+        pl["fills"] = load(f"{W}/sq_fills.json", {}).get("fills")
+    if os.path.exists(q):
+        pl["queued_warning"] = (
+            "⚠️ 有单被排队到次一开盘 → 成交价是**开盘价**而不是收盘价, "
+            "该笔样本**偏离回测口径**, 统计摩擦时须剔除或单独标注")
+
+
 def phase_paper(a, R, plan):
     """挑战者影子验证 + 动量轮动 (全 paper, 失败不影响实盘产出)。"""
     W = a.workdir
@@ -920,6 +1001,14 @@ def main():
                     if eff != "preclose":
                         raise
                     R.anomalies.append(f"收盘前期权信号失败 (正股不受影响, 期权今日不出单): {e}")
+                # SQQQ 短期看跌 (paper): 必须在开市中下单故排 preclose, 但永远排在
+                # 实盘各轨道之后, 且失败只记 anomaly (红线7 的纸面轨道不得影响实盘)。
+                if not a.skip_paper:
+                    try:
+                        phase_sqqq_short(a, R, plan)
+                    except Exception as e:
+                        R.anomalies.append(f"SQQQ 看跌轨道异常 (不影响实盘): {e}")
+                        plan.setdefault("sqqq_short", {})["error"] = str(e)
                 if eff == "full" and not a.skip_paper:
                     phase_paper(a, R, plan)
                 if eff == "full":

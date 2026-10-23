@@ -1,0 +1,11 @@
+{
+ "start_capital": 10000,
+ "strategy_positions": {},
+ "legacy_positions": {},
+ "trades": [],
+ "high_water_mark": 10000,
+ "halted": false,
+ "_track": "sqqq_short (paper_only)",
+ "_created": "2026-10-23",
+ "_note": "SQQQ 短期看跌 QQQ 轨道的纸面账本。start_capital 刻意贴近实盘净值 ($9,816) 让数字可类比。⚠️ 回测是 100% 顺序满仓而本轨道 position_pct=10, 故权益曲线要 ×10 才能与回测的顺序复利对比 (见 strategy/sqqq_short.json 的 _sizing_note)。"
+}

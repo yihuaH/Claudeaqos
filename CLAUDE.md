@@ -96,6 +96,7 @@
 | 挑战者影子验证 | paper | ⚠️ validating 但**指标不可用** (见下) | `learning.json enabled` |
 | 周call 摩擦实测 (深ITM 买call) | paper | ✅ active | `weekly_calls.json enabled` |
 | 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
+| **SQQQ 短期看跌 QQQ** (QQQ 单日 ≥+2.5% → 买 SQQQ → **次日**收盘平) | **paper** | ✅ active·⚠️ 我的结论是「不建议做」, 用户知情下选 paper 先验 | `sqqq_short.json enabled` + `environment:paper_only` |
 | 备兑开仓 overlay | paper | 视开关 | `options.json enabled` |
 | 隔夜参数学习 A/B | paper | ⏸ 暂停 (2026-07-21) | `learning_overnight.json paused` |
 | 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
@@ -130,6 +131,7 @@
 | `strategy/weekly_calls.json` / `weekly_calls_live.json` | 周期权 paper 摩擦实测 / 实盘实验仓 |
 | `strategy/qqq_leap.json` | **QQQ LEAP call 轨道 (实盘)**: 入场跌≥2%+牛市过滤 / **三档梯子 `contract.ladder` = 148/85/330 DTE 各 1 张** (列表顺序即资金优先级, 用户可重排; 空则回落单档) / delta 0.30 带[0.25,0.40] / 止盈 +20% (bid ≥ 入场ask×1.20) / 20 交易日时间止损 / 不设价格止损 / 不设并持上限 / `funding_priority:1`。每字段的回测来源见文件内注释与 `strategy/proposals/qqq-leap-call.md` |
 | `strategy/learning.json` / `learning_overnight.json` | 自学习边界、搜索网格、晋级标准 |
+| `strategy/sqqq_short.json` | **SQQQ 短期看跌轨道 (仅 paper)**: 入场 QQQ 单日 ≥+2.5% / 无趋势过滤 / 出场持满 **1 交易日无条件平** / `position_pct=10` / `environment:paper_only`。每个字段的回测来源见文件内注释与 `strategy/proposals/sqqq-short-qqq.py` |
 | `strategy/momentum.json` / `options.json` / `stocks.json` / `overnight.json` | 各实验轨道参数 |
 | `strategy/tracks.md` | 驱动器已接管轨道的**手工回退**完整命令 (平时不用) |
 | `strategy/routines.md` | Routine 唤醒词原文与注意点 |
@@ -151,6 +153,7 @@
 | `qqq_leap.py` | **QQQ LEAP 轨道引擎** (`window`/`signal`/`apply`) | **两段式**: `window` 纯本地判信号+列出该取哪些合约; `signal` 需会话用 `--leap-chain` 传入**含 delta 的券商期权报价** (`integrations.py chains` 只落 {bid,ask} 无 delta)。**取数归会话、选档归引擎** (红线2)。止盈线在 `apply` 里按**实际成交价**重算 |
 | `paper.py` | Alpaca 纸面执行器 (**仅 paper 环境**, 红线7) | 下单被拒逐单捕获**绝不中断整批**; 排队清单 `try/finally` 无论如何落盘; 同日卖+买冲突**保留卖单**; `_clamp_sell_qty` 防转空闸 |
 | `overnight.py` / `momentum.py` / `options_overlay.py` | 隔夜 / 动量轮动 / 备兑开仓引擎 | 后两者仅 paper |
+| `sqqq_short.py` | **SQQQ 短期看跌 QQQ 引擎** (`signal`) | **仅 paper**: `environment != paper_only` 即拒跑 (红线7 硬闸)。**信号源是 QQQ 不是 SQQQ** (第一版回测就错在这)。持有期 **1 个交易日无条件平**, 无止损无止盈。⚠️ 排在 **preclose** 而非 wrapup —— 口径是收盘买/次日收盘卖, 盘后下单会被排到次日开盘, 口径全错 |
 | `learn.py` / `learn_overnight.py` | 参数学习器 (搜索/验证/晋级) | 红线8 边界内才可动 |
 
 ### 状态账本 (引擎回写, 会话不得手工改仓位数据)
@@ -164,6 +167,7 @@
 | `state/learning.json` + `paper_positions.json` | 挑战者冠军/挑战者状态 + 纸面账本 |
 | `state/weekly_call_*positions.json` | 周期权双轨账本 (`round_trips` / `skip_log` 是摩擦数据, 勿删) |
 | `state/qqq_leap_positions.json` | **QQQ LEAP 轨道账本** (`positions` / `trades` / `round_trips` / `skip_log`); 当日信号产出在 `state/qqq_leap_last_orders.json` (`apply --context` 要用它) |
+| `state/sqqq_short_positions.json` | **SQQQ 看跌轨道纸面账本** (与其他 paper 轨道同构, 回写复用 `signals.py apply`); `start_capital=10000` 刻意贴近实盘净值让数字可类比。⚠️ 回测是 100% 顺序满仓而本轨道 `position_pct=10`, **权益曲线要 ×10 才能与回测对比** |
 | `state/momentum_positions.json` / `overnight_positions.json` / `stock_positions.json` | 各轨道独立账本 |
 | `state/oneshot_tasks.json` | 一次性任务队列, `session.py brief` 会高亮 pending 项 |
 | `journal/` | 每日运行日志 (git 记录, **即完整审计链**) |
