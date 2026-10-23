@@ -1,39 +1,47 @@
 {
-  "date": "2026-10-22",
+  "date": "2026-10-23",
   "halted": false,
   "sells": [],
   "buys": [],
   "skips": [
     {
-      "symbol": "MSFT",
+      "symbol": "AMZN",
       "reason": "earnings_blackout(dte=6)",
-      "rsi2": 9.53
+      "rsi2": 9.05
     },
     {
       "symbol": "META",
-      "reason": "spread_too_wide(best=3.27%)",
-      "rsi2": 2.92,
-      "spot": 640.36
+      "reason": "spread_too_wide(best=3.02%)",
+      "rsi2": 3.04,
+      "spot": 645.84
     }
   ],
   "warnings": [],
   "near_signals": [
     {
-      "symbol": "QQQ",
-      "rsi2_now": 17.33,
-      "scenario": "2d_-1%x2",
-      "spot": 703.62,
+      "symbol": "DIA",
+      "rsi2_now": 22.46,
+      "scenario": "1d_-1%",
+      "spot": 522.09,
       "structure": "single",
-      "est_premium_usd": 7129
+      "est_premium_usd": 5285
+    },
+    {
+      "symbol": "QQQ",
+      "rsi2_now": 20.67,
+      "scenario": "2d_-1%x2",
+      "spot": 704.95,
+      "structure": "single",
+      "est_premium_usd": 7141
     },
     {
       "symbol": "SPY",
-      "rsi2_now": 21.82,
-      "scenario": "2d_-1%x2",
-      "spot": 762.49,
+      "rsi2_now": 15.91,
+      "scenario": "1d_-1%",
+      "spot": 760.55,
       "structure": "single",
-      "est_premium_usd": 7719
+      "est_premium_usd": 7699
     }
   ],
-  "suggested_reserve_usd": 7129.0
+  "suggested_reserve_usd": 5285.0
 }

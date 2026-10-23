@@ -1,79 +1,114 @@
 {
-  "trade_date": "2026-10-22",
-  "generated_by": "scripts/daily.py --phase preclose + scripts/qqq_leap.py signal (会话按 playbook 4A/4B-auto/4D 执行)",
-  "record_kind": "execution_log",
-  "status": "executed",
-  "_kind_note": "auto_buys 下本文件是执行记录, 不是待执行清单 (红线9)。今日无单被分类器拦截, 故无 4B-failsafe pending。",
-  "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
-  "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
-  "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
-  "exec_day": "same_day_then_next_session",
-  "funding": {
-    "cap_rule": "实时 min(buying_power, cash); 超 cap 整单跳过不缩量; 绝不动用借来的钱 (红线9 防杠杆闸)",
-    "cash_before": 3715.22,
-    "buying_power_before": 3715.22,
-    "unleveraged_equals_bp": true,
-    "cross_track_priority": "① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 (2026-10-19 用户定)",
-    "leap_reserve_usd": 2439.0,
-    "equity_cap_after_leap": 1276.18,
-    "cash_after": 293.53
+ "trade_date": "2026-10-23",
+ "generated_by": "scripts/daily.py --phase preclose + scripts/qqq_leap.py signal (会话按 playbook 4A/4B-auto 执行)",
+ "record_kind": "execution_log",
+ "status": "executed",
+ "_kind_note": "auto_buys 下本文件是执行记录, 不是待执行清单 (红线9)。今日无单被分类器拦截, 故无 4B-failsafe pending。",
+ "valid_until": "当日 15:55 ET; 未执行则**顺延**至次一交易日 15:55 ET (执行窗: 当日 15:30-15:55 → 次日 09:45-15:55; 2026-09-11 用户选「顺延」)",
+ "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
+ "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
+ "exec_day": "same_day_then_next_session",
+ "funding": {
+  "cap_rule": "实时 min(buying_power, cash); 超 cap 整单跳过不缩量; 绝不动用借来的钱 (红线9 防杠杆闸)",
+  "cash_before": 293.53,
+  "buying_power_before": 293.53,
+  "unleveraged_equals_bp": true,
+  "cross_track_priority": "① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 (2026-10-19 用户定)",
+  "leap_reserve_usd": 0.0,
+  "_leap_note": "QQQ LEAP 今日无入场信号 (+0.07% 未达 ≤-2%), 故对股票 cap 零扣减",
+  "option_reserve_usd": 0.0,
+  "_option_note": "实盘周期权今日零开仓 (AMZN 财报黑窗 dte=6 / META 点差 3.02% > 闸)",
+  "cash_after_exit_fill": 1276.4,
+  "_exit_funded_note": "CSCO 出场回款 $982.87 即时可用 (limited margin), 买单 cap 由 $293.53 升到 $1,276.40 —— 每笔下单前都重取实时 min(buying_power, cash)",
+  "cap_at_meta": 1276.4,
+  "cap_at_vlo": 287.41,
+  "cash_after": 4.12
+ },
+ "filled": [
+  {
+   "track": "rsi2",
+   "symbol": "CSCO",
+   "action": "sell",
+   "reason": "exit_strength",
+   "bucket": "strategy",
+   "order_type": "market",
+   "market_hours": "regular_hours",
+   "qty": 9.240992,
+   "fill_price": 106.3618,
+   "fees_usd": 0.02,
+   "proceeds_usd": 982.87,
+   "order_id": "6adbb515-ea08-445b-a53b-4ea235940f14",
+   "state": "filled",
+   "filled_at_et": "2026-10-23 15:27:17",
+   "_round_trip": "买 2026-10-20 @106.4799 ($983.98) → 卖 @106.3618 净 $982.87; 已实现 -$1.11 (-0.11%), 持 3 个交易日"
   },
-  "filled": [
-    {
-      "track": "qqq_leap",
-      "occ": "QQQ270917C00830000",
-      "action": "buy_to_open",
-      "structure": "single",
-      "contracts": 1,
-      "order_type": "limit",
-      "limit_price": 24.4,
-      "fill_price": 24.39,
-      "premium_usd": 2439.0,
-      "fees_usd": 0.04,
-      "delta": 0.2971,
-      "dte": 330,
-      "spread_pct": 7.263,
-      "order_id": "6ada63b1-f083-4877-973d-ba149445531c",
-      "state": "filled",
-      "filled_at_et": "2026-10-22 15:27:45",
-      "broker_alert": "OPTION_WIDE_BID_ASK_SPREAD (价差 $1.69 = 7.26%)",
-      "_alert_note": "该告警属用户今日刚参数化的那道闸 (max_spread_pct 6.0→8.0), 引擎判 7.263% ≤ 8.0% 通过; 红线9 授权单腿开仓自动执行。报告义务要求点名, 见战报。"
-    },
-    {
-      "track": "rsi2",
-      "symbol": "MPC",
-      "action": "buy",
-      "reason": "rsi2_entry",
-      "order_type": "market",
-      "market_hours": "regular_hours",
-      "dollar_amount": 982.65,
-      "qty": 2.141303,
-      "fill_price": 458.9028,
-      "fees_usd": 0.0,
-      "rsi2": 4.98,
-      "order_id": "6ada63cc-087c-468a-8012-6d4a6d001e94",
-      "state": "filled",
-      "filled_at_et": "2026-10-22 15:28:13"
-    }
-  ],
-  "skipped": [
-    {
-      "track": "rsi2",
-      "symbol": "AME",
-      "reason": "rsi2_entry",
-      "rsi2": 9.78,
-      "engine_dollar_amount": 982.65,
-      "skip_reason": "insufficient_cap_whole_order_skipped",
-      "_why": "LEAP 按跨轨道优先级先占 $2,439 → 股票 cap = $1,276.18; MPC $982.65 过闸后余 $293.53 < $982.65 → **整单跳过不缩量** (红线9)",
-      "_not_scaled_note": "⚠️ 为写 preclose 标记而用成交后现金 $293.53 重跑驱动器时, 引擎把 AME 重算为 $288.53。**该缩量版未下单** —— 今日决策的权威输入是成交前现金 $3,715.22 那一次跑, 其输出是 $982.65, 协议对超 cap 的处置是整单跳过而非缩量。"
-    }
-  ],
-  "no_exits": "今日出场链无单 (RSI-2 无出场信号; QQQ LEAP 三张全部 hold, bid 均低于各自止盈线)",
-  "ledger_writeback": {
-    "rsi2": "signals.py apply 已回写 state/positions.json (MPC 入账)",
-    "qqq_leap": "⚠️ **未回写, 按红线6 停手** —— 见 anomaly: qqq_leap.py:474 的 positions[occ] 是直接赋值, 无 lot 合并/collision 守卫, 而账本已有同一 OCC (今早 @24.74)。照跑会把那张覆盖成 1 张 @24.39, 丢掉 $2,474 成本基准。等用户发话修引擎后再回写。"
+  {
+   "track": "rsi2",
+   "symbol": "META",
+   "action": "buy",
+   "reason": "rsi2_entry",
+   "order_type": "market",
+   "market_hours": "regular_hours",
+   "dollar_amount": 988.99,
+   "qty": 1.531726,
+   "fill_price": 645.67,
+   "fees_usd": 0.0,
+   "rsi2": 3.04,
+   "order_id": "6adbb52d-d812-4c1d-8f25-d61baab0ebf5",
+   "state": "filled",
+   "filled_at_et": "2026-10-23 15:27:41",
+   "_earnings_note": "10-20 曾因财报黑窗 (next=2026-10-21, dte=1) 被拦; 财报已于 10-21 发布, 缓存已刷新为 next=2027-01-27 → 本次黑窗不适用"
   },
-  "anomalies": [
-    "QQQ LEAP 账本无法表示同一 OCC 的第二笔 lot → 新买的 1 张 QQQ270917C00830000 @24.39 **目前不在账本里**, 其 20 交易日时间止损与 +20% 止盈 **暂不被引擎管理**"
-  ]
+  {
+   "track": "rsi2",
+   "symbol": "VLO",
+   "action": "buy",
+   "reason": "rsi2_entry",
+   "order_type": "market",
+   "market_hours": "regular_hours",
+   "dollar_amount": 283.29,
+   "qty": 0.674339,
+   "fill_price": 420.1,
+   "fees_usd": 0.0,
+   "rsi2": 7.49,
+   "order_id": "6adbb53b-7d88-4505-ac24-dbb98dedcfe7",
+   "state": "filled",
+   "filled_at_et": "2026-10-23 15:27:55",
+   "_size_note": "该单金额非满档 (净值 10% = $988.99), 是引擎按剩余 cap 定的档 —— 逐字段照抄, 未经会话缩量 (红线2)"
+  }
+ ],
+ "skipped": [
+  {
+   "track": "rsi2",
+   "symbol": "PSX",
+   "reason": "rsi2_entry",
+   "rsi2": 5.77,
+   "skip_reason": "earnings_blackout",
+   "_why": "next=2026-10-28, dte=5 ≤ earnings_blackout_days(7) → 防御性跳过入场 (引擎 warnings 点名, 2026-10-20 修复后不再静默)"
+  },
+  {
+   "track": "weekly_calls_live",
+   "symbol": "AMZN",
+   "rsi2": 9.05,
+   "skip_reason": "earnings_blackout(dte=6)"
+  },
+  {
+   "track": "weekly_calls_live",
+   "symbol": "META",
+   "rsi2": 3.04,
+   "skip_reason": "spread_too_wide(best=3.02%)",
+   "_why": "期权轨道点差闸 ≤2.25%; 正股买单不受此闸约束, 故同一标的股票买了、期权没买"
+  }
+ ],
+ "no_pending": "今日零单被平台分类器拦截 → 无 4B-failsafe 待执行清单, 用户无需回复「执行」",
+ "leap": {
+  "entry_signal": false,
+  "entry_block_reasons": ["drop_too_small(+0.07%)"],
+  "held": [
+   {"occ": "QQQ270115C00755000", "contracts": 1, "entry_fill": 12.11, "tp_line": 14.532, "bid": 11.8, "dte": 84, "held_trading_days": 1, "action": "hold"},
+   {"occ": "QQQ270319C00775000", "contracts": 1, "entry_fill": 16.2, "tp_line": 19.44, "bid": 16.03, "dte": 147, "held_trading_days": 1, "action": "hold"},
+   {"occ": "QQQ270917C00830000", "contracts": 2, "entry_fill": 24.565, "tp_line": 29.478, "bid": 23.83, "dte": 329, "held_trading_days": 1, "action": "hold"}
+  ],
+  "_chain_note": "券商期权报价 (含 delta) 已取并跑完 signal → 止盈/时间止损本次已判定, 驱动器的「未提供 --leap-chain」anomaly 已消解"
+ }
 }

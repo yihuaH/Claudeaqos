@@ -2,18 +2,25 @@
   "high_water_mark": 10438.52,
   "halted": false,
   "strategy_positions": {
-    "CSCO": {
-      "qty": 9.240992,
-      "entry_price": 106.4799,
-      "entry_date": "2026-10-20",
-      "cost": 983.98,
-      "tranches": 1
-    },
     "MPC": {
       "qty": 2.141303,
       "entry_price": 458.9028,
       "entry_date": "2026-10-22",
       "cost": 982.65,
+      "tranches": 1
+    },
+    "META": {
+      "qty": 1.531726,
+      "entry_price": 645.67,
+      "entry_date": "2026-10-23",
+      "cost": 988.99,
+      "tranches": 1
+    },
+    "VLO": {
+      "qty": 0.674339,
+      "entry_price": 420.1,
+      "entry_date": "2026-10-23",
+      "cost": 283.29,
       "tranches": 1
     }
   },
@@ -2689,6 +2696,33 @@
       "side": "buy",
       "qty": 2.141303,
       "price": 458.9028,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "CSCO",
+      "side": "sell",
+      "qty": 9.240992,
+      "price": 106.359636,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "META",
+      "side": "buy",
+      "qty": 1.531726,
+      "price": 645.67,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-23",
+      "symbol": "VLO",
+      "side": "buy",
+      "qty": 0.674339,
+      "price": 420.1,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
