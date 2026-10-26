@@ -32,13 +32,6 @@
       "cost": 1296.25,
       "tranches": 1
     },
-    "CSCO": {
-      "qty": 33.0,
-      "entry_price": 105.97,
-      "entry_date": "2026-10-20",
-      "cost": 3497.01,
-      "tranches": 1
-    },
     "META": {
       "qty": 5.0,
       "entry_price": 640.61,
@@ -51,6 +44,13 @@
       "entry_price": 461.95,
       "entry_date": "2026-10-23",
       "cost": 3233.65,
+      "tranches": 1
+    },
+    "VLO": {
+      "qty": 8.0,
+      "entry_price": 422.0,
+      "entry_date": "2026-10-26",
+      "cost": 3376.0,
       "tranches": 1
     }
   },
@@ -566,6 +566,24 @@
       "side": "buy",
       "qty": 7.0,
       "price": 461.95,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "CSCO",
+      "side": "sell",
+      "qty": 33.0,
+      "price": 108.21,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "VLO",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 422.0,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }
