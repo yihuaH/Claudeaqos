@@ -1,14 +1,7 @@
 {
-  "high_water_mark": 10438.52,
+  "high_water_mark": 10505.04,
   "halted": false,
   "strategy_positions": {
-    "MPC": {
-      "qty": 2.141303,
-      "entry_price": 458.9028,
-      "entry_date": "2026-10-22",
-      "cost": 982.65,
-      "tranches": 1
-    },
     "META": {
       "qty": 1.531726,
       "entry_price": 645.67,
@@ -21,6 +14,13 @@
       "entry_price": 420.1,
       "entry_date": "2026-10-23",
       "cost": 283.29,
+      "tranches": 1
+    },
+    "MCK": {
+      "qty": 1.015877,
+      "entry_price": 991.99,
+      "entry_date": "2026-10-26",
+      "cost": 1007.74,
       "tranches": 1
     }
   },
@@ -2723,6 +2723,24 @@
       "side": "buy",
       "qty": 0.674339,
       "price": 420.1,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "MPC",
+      "side": "sell",
+      "qty": 2.141303,
+      "price": 470.890658,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "MCK",
+      "side": "buy",
+      "qty": 1.015877,
+      "price": 991.99,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

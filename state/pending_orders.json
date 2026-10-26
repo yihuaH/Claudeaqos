@@ -1,5 +1,5 @@
 {
- "trade_date": "2026-10-23",
+ "trade_date": "2026-10-26",
  "generated_by": "scripts/daily.py --phase preclose + scripts/qqq_leap.py signal (会话按 playbook 4A/4B-auto 执行)",
  "record_kind": "execution_log",
  "status": "executed",
@@ -10,105 +10,129 @@
  "exec_day": "same_day_then_next_session",
  "funding": {
   "cap_rule": "实时 min(buying_power, cash); 超 cap 整单跳过不缩量; 绝不动用借来的钱 (红线9 防杠杆闸)",
-  "cash_before": 293.53,
-  "buying_power_before": 293.53,
+  "cash_before": 4.12,
+  "buying_power_before": 4.12,
   "unleveraged_equals_bp": true,
   "cross_track_priority": "① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 (2026-10-19 用户定)",
   "leap_reserve_usd": 0.0,
-  "_leap_note": "QQQ LEAP 今日无入场信号 (+0.07% 未达 ≤-2%), 故对股票 cap 零扣减",
+  "_leap_note": "QQQ LEAP 无入场信号 (+1.32% 未达 ≤-2%), 对股票 cap 零扣减",
   "option_reserve_usd": 0.0,
-  "_option_note": "实盘周期权今日零开仓 (AMZN 财报黑窗 dte=6 / META 点差 3.02% > 闸)",
-  "cash_after_exit_fill": 1276.4,
-  "_exit_funded_note": "CSCO 出场回款 $982.87 即时可用 (limited margin), 买单 cap 由 $293.53 升到 $1,276.40 —— 每笔下单前都重取实时 min(buying_power, cash)",
-  "cap_at_meta": 1276.4,
-  "cap_at_vlo": 287.41,
-  "cash_after": 4.12
+  "_option_note": "实盘周期权零开仓 (META 点差 5.23% > 闸 2.25%)",
+  "cash_after_exit_fill": 1012.44,
+  "_exit_funded_note": "起跑现金仅 $4.12 —— MCK 这张 $1,007.74 完全靠 MPC 出场回款 $1,008.31 即时到账 (limited margin) 才过得了 cap。无回款则整单跳过。",
+  "cap_at_mck": 1012.44,
+  "cash_after": 4.7
  },
  "filled": [
   {
    "track": "rsi2",
-   "symbol": "CSCO",
+   "symbol": "MPC",
    "action": "sell",
    "reason": "exit_strength",
    "bucket": "strategy",
    "order_type": "market",
    "market_hours": "regular_hours",
-   "qty": 9.240992,
-   "fill_price": 106.3618,
+   "qty": 2.141303,
+   "fill_price": 470.9,
    "fees_usd": 0.02,
-   "proceeds_usd": 982.87,
-   "order_id": "6adbb515-ea08-445b-a53b-4ea235940f14",
+   "proceeds_usd": 1008.32,
+   "order_id": "6adfa8b2-f9af-4b76-9e77-70487e9e82f5",
    "state": "filled",
-   "filled_at_et": "2026-10-23 15:27:17",
-   "_round_trip": "买 2026-10-20 @106.4799 ($983.98) → 卖 @106.3618 净 $982.87; 已实现 -$1.11 (-0.11%), 持 3 个交易日"
+   "filled_at_et": "2026-10-26 15:23:30",
+   "_round_trip": "买 2026-10-22 @458.9028 ($982.65) → 卖 @470.90 净 $1,008.32; 已实现 **+$25.67 (+2.61%)**, 持 3 个交易日"
   },
   {
    "track": "rsi2",
-   "symbol": "META",
+   "symbol": "MCK",
    "action": "buy",
    "reason": "rsi2_entry",
    "order_type": "market",
    "market_hours": "regular_hours",
-   "dollar_amount": 988.99,
-   "qty": 1.531726,
-   "fill_price": 645.67,
+   "dollar_amount": 1007.74,
+   "qty": 1.015877,
+   "fill_price": 991.99,
    "fees_usd": 0.0,
-   "rsi2": 3.04,
-   "order_id": "6adbb52d-d812-4c1d-8f25-d61baab0ebf5",
+   "rsi2": 8.95,
+   "order_id": "6adfa8da-5a3e-4fef-9023-62c2550c1417",
    "state": "filled",
-   "filled_at_et": "2026-10-23 15:27:41",
-   "_earnings_note": "10-20 曾因财报黑窗 (next=2026-10-21, dte=1) 被拦; 财报已于 10-21 发布, 缓存已刷新为 next=2027-01-27 → 本次黑窗不适用"
-  },
-  {
-   "track": "rsi2",
-   "symbol": "VLO",
-   "action": "buy",
-   "reason": "rsi2_entry",
-   "order_type": "market",
-   "market_hours": "regular_hours",
-   "dollar_amount": 283.29,
-   "qty": 0.674339,
-   "fill_price": 420.1,
-   "fees_usd": 0.0,
-   "rsi2": 7.49,
-   "order_id": "6adbb53b-7d88-4505-ac24-dbb98dedcfe7",
-   "state": "filled",
-   "filled_at_et": "2026-10-23 15:27:55",
-   "_size_note": "该单金额非满档 (净值 10% = $988.99), 是引擎按剩余 cap 定的档 —— 逐字段照抄, 未经会话缩量 (红线2)"
+   "filled_at_et": "2026-10-26 15:24:10",
+   "_earnings": "next=2026-11-04, **dte=9** → 过 7 日黑窗闸但只余 2 天; 若本周未出场, 10-28 起它将进入黑窗 (届时只影响加仓, 不影响已持仓的出场)"
   }
  ],
  "skipped": [
   {
    "track": "rsi2",
-   "symbol": "PSX",
-   "reason": "rsi2_entry",
-   "rsi2": 5.77,
+   "symbol": "PYPL",
+   "rsi2": 4.96,
    "skip_reason": "earnings_blackout",
-   "_why": "next=2026-10-28, dte=5 ≤ earnings_blackout_days(7) → 防御性跳过入场 (引擎 warnings 点名, 2026-10-20 修复后不再静默)"
+   "_why": "next=2026-10-27, dte=1"
   },
   {
-   "track": "weekly_calls_live",
-   "symbol": "AMZN",
-   "rsi2": 9.05,
-   "skip_reason": "earnings_blackout(dte=6)"
+   "track": "rsi2",
+   "symbol": "EBAY",
+   "rsi2": 7.88,
+   "skip_reason": "earnings_blackout",
+   "_why": "next=2026-10-28, dte=2"
+  },
+  {
+   "track": "rsi2",
+   "symbol": "MRK",
+   "rsi2": 7.32,
+   "skip_reason": "earnings_blackout",
+   "_why": "next=2026-10-29, dte=3"
+  },
+  {
+   "track": "rsi2",
+   "symbol": "META",
+   "rsi2": 1.78,
+   "skip_reason": "held_no_scale_in",
+   "_why": "当日 rsi2 最低 (1.78) 但已持仓, 加仓需收盘 ≤ 加权均价×0.97 = $626.30, 实际 $633.31 → 未触发加仓, 非被闸拦"
   },
   {
    "track": "weekly_calls_live",
    "symbol": "META",
-   "rsi2": 3.04,
-   "skip_reason": "spread_too_wide(best=3.02%)",
-   "_why": "期权轨道点差闸 ≤2.25%; 正股买单不受此闸约束, 故同一标的股票买了、期权没买"
+   "rsi2": 1.78,
+   "skip_reason": "spread_too_wide(best=5.23%)"
   }
  ],
  "no_pending": "今日零单被平台分类器拦截 → 无 4B-failsafe 待执行清单, 用户无需回复「执行」",
  "leap": {
   "entry_signal": false,
-  "entry_block_reasons": ["drop_too_small(+0.07%)"],
-  "held": [
-   {"occ": "QQQ270115C00755000", "contracts": 1, "entry_fill": 12.11, "tp_line": 14.532, "bid": 11.8, "dte": 84, "held_trading_days": 1, "action": "hold"},
-   {"occ": "QQQ270319C00775000", "contracts": 1, "entry_fill": 16.2, "tp_line": 19.44, "bid": 16.03, "dte": 147, "held_trading_days": 1, "action": "hold"},
-   {"occ": "QQQ270917C00830000", "contracts": 2, "entry_fill": 24.565, "tp_line": 29.478, "bid": 23.83, "dte": 329, "held_trading_days": 1, "action": "hold"}
+  "entry_block_reasons": [
+   "drop_too_small(+1.32%)"
   ],
-  "_chain_note": "券商期权报价 (含 delta) 已取并跑完 signal → 止盈/时间止损本次已判定, 驱动器的「未提供 --leap-chain」anomaly 已消解"
+  "held": [
+   {
+    "occ": "QQQ270115C00755000",
+    "contracts": 1,
+    "bid": 12.96,
+    "tp_line": 14.532,
+    "gap_pct": 12.1,
+    "dte": 81,
+    "held_trading_days": 2,
+    "action": "hold"
+   },
+   {
+    "occ": "QQQ270319C00775000",
+    "contracts": 1,
+    "bid": 17.44,
+    "tp_line": 19.44,
+    "gap_pct": 11.5,
+    "dte": 144,
+    "held_trading_days": 2,
+    "action": "hold"
+   },
+   {
+    "occ": "QQQ270917C00830000",
+    "contracts": 2,
+    "bid": 25.49,
+    "tp_line": 29.478,
+    "gap_pct": 15.6,
+    "dte": 326,
+    "held_trading_days": 2,
+    "action": "hold"
+   }
+  ],
+  "_chain_note": "券商期权报价 (含 delta) 已取并跑完 signal → 驱动器「未提供 --leap-chain」anomaly 已消解"
  }
 }

@@ -2,25 +2,7 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "NVDA261030C00190000": {
-      "underlying": "NVDA",
-      "strike": 190.0,
-      "expiry": "2026-10-30",
-      "contracts": 1,
-      "entry_premium": 25.95,
-      "entry_date": "2026-10-16",
-      "entry_underlying": 214.97,
-      "entry_rsi2": 4.32,
-      "entry_quote": {
-        "bid": 25.49,
-        "ask": 25.64,
-        "mid": 25.565,
-        "spread_pct": 0.587
-      },
-      "model_price": 25.3316
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -347,6 +329,15 @@
       "price": 25.95,
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call"
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "NVDA261030C00190000",
+      "side": "sell",
+      "qty": 1,
+      "price": 26.6,
+      "bucket": "weekly_calls",
+      "reason": "exit_strength"
     }
   ],
   "round_trips": [
@@ -673,6 +664,25 @@
       "entry_mid": 27.275,
       "exit_mid": 15.44,
       "model_price": 26.7855
+    },
+    {
+      "occ": "NVDA261030C00190000",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "NVDA",
+      "entry_date": "2026-10-16",
+      "exit_date": "2026-10-26",
+      "entry_premium": 25.95,
+      "exit_premium": 26.6,
+      "pnl_pct": 2.5,
+      "pnl_usd": 65.0,
+      "reason": "exit_strength",
+      "entry_spread_pct": 0.587,
+      "exit_spread_pct": 5.689,
+      "entry_mid": 25.565,
+      "exit_mid": 27.42,
+      "model_price": 25.3316
     }
   ],
   "skip_log": [
@@ -1094,6 +1104,13 @@
       "reason": "spread_too_wide(best=3.02%)",
       "rsi2": 3.04,
       "spot": 645.84
+    },
+    {
+      "date": "2026-10-26",
+      "symbol": "META",
+      "reason": "spread_too_wide(best=5.23%)",
+      "rsi2": 1.78,
+      "spot": 633.31
     }
   ],
   "assignments": [

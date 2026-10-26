@@ -1,47 +1,32 @@
 {
-  "date": "2026-10-23",
+  "date": "2026-10-26",
   "halted": false,
-  "sells": [],
+  "sells": [
+    {
+      "symbol": "NVDA261030C00190000",
+      "qty": 1,
+      "position_intent": "sell_to_close",
+      "bucket": "weekly_calls",
+      "reason": "exit_strength",
+      "est_price": 27.42,
+      "exit_quote": {
+        "bid": 26.64,
+        "ask": 28.2,
+        "mid": 27.42,
+        "spread_pct": 5.689
+      }
+    }
+  ],
   "buys": [],
   "skips": [
     {
-      "symbol": "AMZN",
-      "reason": "earnings_blackout(dte=6)",
-      "rsi2": 9.05
-    },
-    {
       "symbol": "META",
-      "reason": "spread_too_wide(best=3.02%)",
-      "rsi2": 3.04,
-      "spot": 645.84
+      "reason": "spread_too_wide(best=5.23%)",
+      "rsi2": 1.78,
+      "spot": 633.31
     }
   ],
   "warnings": [],
-  "near_signals": [
-    {
-      "symbol": "DIA",
-      "rsi2_now": 22.46,
-      "scenario": "1d_-1%",
-      "spot": 522.09,
-      "structure": "single",
-      "est_premium_usd": 5285
-    },
-    {
-      "symbol": "QQQ",
-      "rsi2_now": 20.67,
-      "scenario": "2d_-1%x2",
-      "spot": 704.95,
-      "structure": "single",
-      "est_premium_usd": 7141
-    },
-    {
-      "symbol": "SPY",
-      "rsi2_now": 15.91,
-      "scenario": "1d_-1%",
-      "spot": 760.55,
-      "structure": "single",
-      "est_premium_usd": 7699
-    }
-  ],
-  "suggested_reserve_usd": 5285.0
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }

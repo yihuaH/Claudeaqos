@@ -1,36 +1,6 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
   "entries": {
-    "NVDA261023C00200000": {
-      "symbol": "NVDA261023C00200000",
-      "qty": 1,
-      "position_intent": "buy_to_open",
-      "bucket": "weekly_calls",
-      "reason": "rsi2_entry_call",
-      "est_price": 27.27,
-      "underlying": "NVDA",
-      "strike": 200.0,
-      "expiry": "2026-10-23",
-      "dte": 11,
-      "spot": 226.534,
-      "rsi2": 4.53,
-      "model_price": 26.7855,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 27.275,
-        "model_flat": 26.7855,
-        "model_surface": 27.0274,
-        "ratio_flat_pct": 98.2,
-        "ratio_surface_pct": 99.1
-      },
-      "entry_quote": {
-        "bid": 27.1,
-        "ask": 27.45,
-        "mid": 27.275,
-        "spread_pct": 1.283
-      }
-    },
     "NVDA261030C00190000": {
       "symbol": "NVDA261030C00190000",
       "qty": 1,
@@ -62,5 +32,5 @@
       }
     }
   },
-  "updated": "2026-10-23"
+  "updated": "2026-10-26"
 }
