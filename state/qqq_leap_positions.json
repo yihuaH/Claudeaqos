@@ -31,22 +31,6 @@
         }
       ]
     },
-    "QQQ270115C00755000": {
-      "underlying": "QQQ",
-      "strike": 755.0,
-      "expiry": "2027-01-15",
-      "contracts": 1,
-      "entry_date": "2026-10-22",
-      "entry_fill_price": 12.11,
-      "entry_cost_usd": 1211.0,
-      "entry_delta": 0.29366,
-      "entry_dte": 85,
-      "entry_spread_pct": 0.745,
-      "entry_spot": 705.28,
-      "entry_day_return_pct": -2.747,
-      "take_profit_line": 14.532,
-      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)"
-    },
     "QQQ270319C00775000": {
       "underlying": "QQQ",
       "strike": 775.0,
@@ -100,10 +84,35 @@
       "price": 24.39,
       "bucket": "qqq_leap",
       "reason": "rsi2_none"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "QQQ270115C00755000",
+      "side": "sell",
+      "qty": 1,
+      "price": 15.52,
+      "bucket": "qqq_leap",
+      "reason": "user_manual_sell_take_profit"
     }
   ],
-  "round_trips": [],
+  "round_trips": [
+    {
+      "occ": "QQQ270115C00755000",
+      "underlying": "QQQ",
+      "structure": "single",
+      "entry_date": "2026-10-22",
+      "exit_date": "2026-10-27",
+      "entry_premium": 12.11,
+      "exit_premium": 15.52,
+      "contracts": 1,
+      "pnl_pct": 28.16,
+      "pnl_usd": 341.0,
+      "reason": "user_manual_sell_take_profit",
+      "held_trading_days": null,
+      "entry_delta": 0.29366
+    }
+  ],
   "skip_log": [],
-  "updated": "2026-10-22",
+  "updated": "2026-10-27",
   "_note": "QQQ LEAP call 轨道账本 (实盘)。引擎 scripts/qqq_leap.py, 参数 strategy/qqq_leap.json。round_trips/skip_log 是摩擦与战绩数据, 勿删。会话不得手工改仓位数据 (CLAUDE.md)。"
 }
