@@ -450,9 +450,26 @@ def cmd_signal(a):
     #   外移到 ≈-8.4%, 这是加仓收益的一部分); 时间止损时钟**不因加仓重置**, 仍从首次入场起算。
     # 敞口: 单票上限 = position_pct × max_tranches (红线3 的上限, 只能由用户改)。
     # 加仓单同属买入, 2026-10-12 起随 auto_buys 自动执行 (红线9); 仍受 VIX 风控 —— risk_off 时上面已 return, 不会加仓。
+    # --- 单日暂停实盘股票买入 (用户一票, date-scoped) ---
+    # 用户 2026-10-27「今天暂停买股票」。设计要点:
+    #   · **按日期生效**, 不是长期开关 —— 列表里没有当天日期就完全等同于没这个字段,
+    #     所以**不可能泄漏到次日** (长期开关忘了删会把买入永久关掉, 那是真实失败模式)。
+    #   · 只关**股票买入** (rsi2_entry 新开仓 + rsi2_scale_in 加仓), 出场/止损/换仓/
+    #     加速清理**一律不受影响** —— 用户说的是「买」。
+    #   · 期权轨道 (qqq_leap / weekly_calls) 由各自 config 管, 不读这个字段。
+    #   · 纸面轨道走 learn.py 生成的配置, 该流程会剥离本字段 (与 overnight 的
+    #     live_entries_paused 同一处理), 验证序列不被污染。
+    # 恢复: 从列表里删掉该日期 (或留着, 过了那天自然失效)。
+    _paused_dates = cfg.get("live_stock_buys_paused_dates") or []
+    buys_paused = a.date in _paused_dates
+    if buys_paused:
+        warnings.append(
+            f"live_stock_buys_paused_dates 含 {a.date}: 实盘股票买入 (新开仓+加仓) "
+            "本日全部暂停 (用户一票), 出场/止损/换仓不受影响")
+
     si = cfg.get("scale_in") or {}
     adds = []
-    if si.get("enabled"):
+    if si.get("enabled") and not buys_paused:
         drop = float(si["trigger_drop_pct"]) / 100.0
         max_tr = int(si["max_tranches"])
         for sym in sorted(held):
@@ -491,6 +508,8 @@ def cmd_signal(a):
 
     slots = max(0, min(cfg["sizing"]["max_strategy_positions"] - len(held),
                        cfg["sizing"]["max_new_entries_per_day"]))
+    if buys_paused:
+        slots = 0
 
     # 行业上限: 已持仓 + 今日已选 计数
     sec_map = (defense or {}).get("sectors", {})

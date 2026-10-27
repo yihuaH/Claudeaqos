@@ -121,5 +121,9 @@
       "_invariants": "sizing/风控不受影响: 金额仍逐字段照抄引擎输出, cap 仍取实时 min(buying_power, cash), 超 cap 整单跳过不缩量 (红线2/9); 限价基准必须是引擎 est_price 而非实时价"
     }
   },
-  "etf_universe_note": "2026-07-22: SPLG 剔除 (Robinhood 查无 symbol + Alpaca 历史K线自 2025-10-30 断供, 双源异常无法交易)。标普广谱暴露由 universe.json 100 只大盘股覆盖; 若需 S&P500 ETF, SPY 可交易但每股~$630 仅当日市价窗口可买 (盘外整股限价不足一股)。池现为 8 ETF + 100 股。"
+  "etf_universe_note": "2026-07-22: SPLG 剔除 (Robinhood 查无 symbol + Alpaca 历史K线自 2025-10-30 断供, 双源异常无法交易)。标普广谱暴露由 universe.json 100 只大盘股覆盖; 若需 S&P500 ETF, SPY 可交易但每股~$630 仅当日市价窗口可买 (盘外整股限价不足一股)。池现为 8 ETF + 100 股。",
+  "live_stock_buys_paused_dates": [
+    "2026-10-27"
+  ],
+  "live_stock_buys_paused_note": "单日暂停实盘股票买入 (用户一票)。2026-10-27 用户「今天暂停买股票」。**按日期生效**: 列表里没有运行日就完全等同于没这个字段, 故不会泄漏到次日 —— 这是刻意选择, 长期开关一旦忘删会把买入永久关掉。范围: 只关 rsi2_entry (新开仓) 与 rsi2_scale_in (加仓); 出场/止损/时间止损/换仓/加速清理**一律照常** (用户说的是「买」)。期权轨道 (qqq_leap / weekly_calls_live) 不读本字段, 由各自 config 管。恢复: 删掉该日期, 或直接留着 (过了那天自然失效)。"
 }

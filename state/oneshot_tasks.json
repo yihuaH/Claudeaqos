@@ -2,6 +2,16 @@
  "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
  "tasks": [
   {
+   "id": "stock-buys-paused-2026-10-27",
+   "title": "⛔ 今日 (2026-10-27) 实盘股票买入已暂停 — 用户一票",
+   "window": "**仅 2026-10-27**。当日 15:20 收盘前主跑与 17:45 收尾窗各看一次即可; 过了这天本条自动失效",
+   "runbook": "journal/2026-10-27-morning.md 的「追记 3」",
+   "note": "用户 2026-10-27 12:0x 指示「今天暂停买股票」。已落为 strategy/config.json 的 `live_stock_buys_paused_dates: [\"2026-10-27\"]`, signals.py 按 --date 匹配生效。⚠️ **不需要会话额外做任何事** —— 引擎自己会出 buys=0 并带 warning, 照常跑 daily.py 即可; **不要**手工删买单 (那会变成会话改引擎输出, 违红线2)。范围: 只关 rsi2_entry + rsi2_scale_in; 出场/止损/时间止损/换仓/加速清理照常; 期权轨道 (qqq_leap / weekly_calls_live) 不受影响, 由各自 config 管; 纸面轨道不受影响。⚠️ 次日 (10-28) 起自动恢复买入 —— 若用户想延长必须再说一次。",
+   "status": "pending",
+   "created": "2026-10-27",
+   "authorized_by": "用户 2026-10-27 「今天暂停买股票」"
+  },
+  {
    "id": "platform-layer-test-2026-10",
    "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
    "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
