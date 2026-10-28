@@ -139,6 +139,23 @@ def collect_symbols(cfg, uni, plan):
                                    | set(sqled.get("strategy_positions") or {}))
                             if sq.get("enabled") else [])
 
+    # LEAP 轨道 (实盘, 可多条): underlying 与账本持仓都必须进 allsyms, 否则 qqq_leap.py 的
+    # `_derive` 会 SystemExit ("日线里没有 X" / "当日报价里没有 X: 本轨道拒跑")。
+    # ⚠️ 不能依赖 GOOGL 恰好在 100 股池里 —— 周度刷池可能把它刷出去, 那会让本轨道在
+    #    有持仓的情况下整条挂掉, 止盈/时间止损静默失效 (红线6)。故显式并进来。
+    leap = []
+    for cname, lname in (("qqq_leap.json", "qqq_leap_positions.json"),
+                         ("googl_leap.json", "googl_leap_positions.json")):
+        lc = load(f"{REPO}/strategy/{cname}", {})
+        if not lc.get("enabled"):
+            continue
+        if lc.get("underlying"):
+            leap.append(lc["underlying"])
+        L = load(f"{REPO}/state/{lname}", {})
+        leap += [p["underlying"] for p in (L.get("positions") or {}).values()
+                 if p.get("underlying")]
+    groups["leap"] = sorted(set(leap))
+
     allsyms = sorted({s for g in groups.values() for s in g})
     plan["symbol_groups"] = {k: len(v) for k, v in groups.items()}
     plan["symbols_total"] = len(allsyms)
@@ -512,8 +529,13 @@ def phase_spread_probe(a, R, plan):
     }
 
 
-def phase_qqq_leap(a, R, plan):
-    """QQQ LEAP call 轨道 (实盘; `strategy/qqq_leap.json`, 引擎 `scripts/qqq_leap.py`)。
+def phase_qqq_leap(a, R, plan, cfg_name="qqq_leap.json",
+                   led_name="qqq_leap_positions.json", key="qqq_leap",
+                   label="QQQ LEAP", chain_attr="leap_chain"):
+    """LEAP call 轨道 (实盘)。**可被多条轨道复用** —— 引擎 `scripts/qqq_leap.py` 的
+    underlying 由 config 驱动, 出场逻辑 (止盈/时间止损/force_exit_dte) 完全通用,
+    只读账本 + 链, 零 QQQ 特定代码。2026-10-28 为 GOOGL 梯子参数化, 默认实参与改动前
+    逐字相同 → **QQQ 轨道行为完全不变**。
 
     **两段式, 这是设计而不是将就**:
       · `window` **永远跑** —— 纯本地无网络, 判当日有无入场信号 + 列出需要取报价的合约区间。
@@ -524,24 +546,25 @@ def phase_qqq_leap(a, R, plan):
     绝大多数交易日 (无持仓且无信号) `window` 一跑就结束, 不给会话加任何活。
     """
     W = a.workdir
-    cfg = load(f"{REPO}/strategy/qqq_leap.json", {})
+    chain = getattr(a, chain_attr, None)
+    cfg = load(f"{REPO}/strategy/{cfg_name}", {})
     if not cfg.get("enabled"):
-        plan["qqq_leap"] = {"skipped": "qqq_leap.json enabled=false"}
+        plan[key] = {"skipped": f"{cfg_name} enabled=false"}
         return
-    led_path = "state/qqq_leap_positions.json"
+    led_path = f"state/{led_name}"
     led = load(f"{REPO}/{led_path}", {})
     # --plan-only: 与周call 同约定 —— 信号产出改写 workdir, 绝不碰 state/ (干跑不留痕)
-    leap_ctx = (f"{W}/leap_last_orders.json" if a.plan_only
-                else "state/qqq_leap_last_orders.json")
-    base = ["--config", "strategy/qqq_leap.json", "--ledger", led_path,
+    leap_ctx = (f"{W}/{key}_last_orders.json" if a.plan_only
+                else f"state/{key}_last_orders.json")
+    base = ["--config", f"strategy/{cfg_name}", "--ledger", led_path,
             "--historicals", f"{W}/bars.json", "--quotes", f"{W}/quotes.json",
             "--date", a.date]
-    out = R.run(["scripts/qqq_leap.py", "window"] + base + ["--out", f"{W}/leap_window.json"],
-                "leap.window", critical=False)
+    out = R.run(["scripts/qqq_leap.py", "window"] + base + ["--out", f"{W}/{key}_window.json"],
+                f"{key}.window", critical=False)
     if out is None:
-        plan["qqq_leap"] = {"error": "window 失败, 见 anomalies; 本轨道今日不出单"}
+        plan[key] = {"error": "window 失败, 见 anomalies; 本轨道今日不出单"}
         return
-    win = load(f"{W}/leap_window.json", {})
+    win = load(f"{W}/{key}_window.json", {})
     held = win.get("held_occs") or []
     ql = {"funding_priority": cfg.get("funding_priority"), "halted": bool(led.get("halted")),
           "entry_signal": win.get("entry_signal"),
@@ -550,23 +573,24 @@ def phase_qqq_leap(a, R, plan):
           "sma200": win.get("sma200"), "above_sma200": win.get("above_sma200"),
           "held_occs": held, "need_chain": win.get("need_chain")}
 
-    if not a.leap_chain and not (held or win.get("entry_signal")):
+    if not chain and not (held or win.get("entry_signal")):
         ql["resolved"] = "no_action"
         ql["_note"] = "无持仓且无入场信号 → 既不需要取链也不需要出单 (本轨道今日彻底无事)"
-        plan["qqq_leap"] = ql
+        plan[key] = ql
         return
 
-    if not a.leap_chain:
+    if not chain:
         ql["resolved"] = "needs_session_chain"
         ql["session_action_required"] = {
             "step1": ("会话取**券商**期权报价 (get_option_instruments → get_option_quotes, "
                       "**必须含 delta**): 持仓合约 " + (", ".join(held) or "(无)") +
                       ("; 入场候选见 need_chain 区间" if win.get("entry_signal") else "")),
-            "step2": ('原样落盘为 {"QQQ": {OCC: {bid, ask, delta, ...}}} 后跑: '
-                      "python3 scripts/qqq_leap.py signal --chain <该文件> "
+            "step2": (f'原样落盘为 {{"{cfg.get("underlying", "QQQ")}": {{OCC: {{bid, ask, delta, ...}}}}}} 后跑: '
+                      f"python3 scripts/qqq_leap.py signal --config strategy/{cfg_name} "
+                      f"--ledger {led_path} --chain <该文件> "
                       "--historicals <bars> --quotes <quotes> --date " + a.date +
                       " --portfolio-value <PV> --buying-power <BP> --cash <CASH> "
-                      "--out state/qqq_leap_last_orders.json"),
+                      f"--out {leap_ctx}"),
             "step3": ("按输出 place: sells (出场类, 全自动) 与 buys (单腿开仓, 2026-10-12 起自动) "
                       "均直接 review → place; 成交后 qqq_leap.py apply --context "
                       "state/qqq_leap_last_orders.json 回写"),
@@ -577,34 +601,35 @@ def phase_qqq_leap(a, R, plan):
             ql["warning"] = ("⚠️ 有持仓但本次没传 --leap-chain → **本轨道的止盈/时间止损本次没有判定**。"
                              "缺报价会让时间止损静默失效 (红线6), 必须补链重跑 signal。")
             R.anomalies.append(
-                f"QQQ LEAP 轨道有 {len(held)} 个持仓但未提供 --leap-chain: "
+                f"{label} 轨道有 {len(held)} 个持仓但未提供 --{chain_attr.replace('_', '-')}: "
                 "本次未判定止盈/时间止损, 补券商期权报价后跑 qqq_leap.py signal")
-        plan["qqq_leap"] = ql
+        plan[key] = ql
         return
 
     args = ["scripts/qqq_leap.py", "signal"] + base + [
-        "--chain", a.leap_chain, "--portfolio-value", str(a.portfolio_value),
+        "--chain", chain, "--portfolio-value", str(a.portfolio_value),
         "--buying-power", str(a.buying_power), "--out", leap_ctx]
     if a.cash is not None:
         args += ["--cash", str(a.cash)]
-    if R.run(args, "leap.signal", critical=False) is None:
+    if R.run(args, f"{key}.signal", critical=False) is None:
         ql["resolved"] = "signal_failed"
-        plan["qqq_leap"] = ql
+        plan[key] = ql
         return
     o = load(leap_ctx if leap_ctx.startswith("/") else f"{REPO}/{leap_ctx}", {})
     # 独立订单桶: 与周call 不共用 —— 两条轨道的 apply 引擎与账本都不同 (§7.3 同理)
-    plan["place_now"]["leap_option_sells"] = o.get("sells", [])
-    plan["place_now"]["leap_option_buys"] = o.get("buys", [])
+    plan["place_now"][f"{key}_option_sells"] = o.get("sells", [])
+    plan["place_now"][f"{key}_option_buys"] = o.get("buys", [])
     ql.update({"resolved": "signaled",
                "buys": len(o.get("buys", [])), "sells": len(o.get("sells", [])),
                "skips": o.get("skips", []), "warnings": o.get("warnings", []),
                "chain_diag": o.get("chain_diag"), "funding_gate": o.get("funding_gate"),
                "reserve_usd": round(sum(float(b["total_cost_usd"]) for b in o.get("buys", [])), 2),
-               "_apply": ("成交后: python3 scripts/qqq_leap.py apply --fills <fills> "
-                          "--context " + leap_ctx + " --date " + a.date)})
+               "_apply": ("成交后: python3 scripts/qqq_leap.py apply "
+                          f"--config strategy/{cfg_name} --ledger {led_path} "
+                          "--fills <fills> --context " + leap_ctx + " --date " + a.date)})
     for w in o.get("warnings", []):
-        R.anomalies.append(f"QQQ LEAP: {w}")
-    plan["qqq_leap"] = ql
+        R.anomalies.append(f"{label}: {w}")
+    plan[key] = ql
 
 
 def phase_options(a, R, plan):
@@ -899,6 +924,10 @@ def main():
     p.add_argument("--leap-chain",
                    help="QQQ LEAP 轨道的券商期权报价 (**必须含 delta**); 不传则只跑 window, "
                         "有持仓时会记 anomaly 提示补链")
+    p.add_argument("--googl-leap-chain",
+                   help="GOOGL LEAP 轨道 (strategy/googl_leap.json) 的券商期权报价 "
+                        "(**必须含 delta**); 与 --leap-chain 同理。两条轨道的链**必须分开传** —— "
+                        "合在一个文件里会让引擎按 underlying 取子字典时拿错标的")
     p.add_argument("--cash", type=float,
                    help="实时现金; 传了则 LEAP 防杠杆闸用 min(buying_power, cash), 缺省同 buying-power")
     p.add_argument("--broker-closes",
@@ -989,6 +1018,17 @@ def main():
             except Exception as e:
                 R.anomalies.append(f"QQQ LEAP 轨道失败 (正股与周call 不受影响): {e}")
                 plan["qqq_leap"] = {"error": str(e)}
+            # GOOGL LEAP 轨道 (2026-10-28 用户指示新建; `entries_paused=true` → **只出场**)。
+            # 排在 QQQ LEAP 之后、正股之前, 但它 funding_priority=null 且不开仓,
+            # 故**不参与资金竞争、不扣减任何 cap** —— 位置只影响报告顺序。
+            # 同样整段 try 包住: 它失败绝不能拖垮 QQQ LEAP / 周call / 正股。
+            try:
+                phase_qqq_leap(a, R, plan, cfg_name="googl_leap.json",
+                               led_name="googl_leap_positions.json", key="googl_leap",
+                               label="GOOGL LEAP", chain_attr="googl_leap_chain")
+            except Exception as e:
+                R.anomalies.append(f"GOOGL LEAP 轨道失败 (其余轨道不受影响): {e}")
+                plan["googl_leap"] = {"error": str(e)}
             o = phase_stock_signal(a, R, plan)
             if o.get("halted") or o.get("circuit_breaker_triggered"):
                 plan["stopped"] = "halted/熔断触发 — 只读结束, 通知用户"

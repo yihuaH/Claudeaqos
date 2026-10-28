@@ -89,7 +89,16 @@ def _derive(cfg, hist_paths, quotes_path, underlying, today):
 
 
 def _entry_signal(cfg, d):
-    """§7.1 入场: 当日跌幅 ≥2% (日收益 ≤ −2.0%) 且 close > SMA200 (牛市过滤)。"""
+    """§7.1 入场: 当日跌幅 ≥2% (日收益 ≤ −2.0%) 且 close > SMA200 (牛市过滤)。
+
+    ⚠️ `entries_paused: true` → **恒返回 False**, 本轨道只跑出场 (止盈/时间止损/force_exit_dte)。
+    加这个开关的起因是 2026-10-28 的 GOOGL 梯子: 用户要「开仓就买」(手工开仓, 不要入场信号),
+    但出场要引擎管。**与 `enabled: false` 的区别是关键** —— 后者按红线4 把**出场也一起关掉**,
+    那会让已有持仓失去止盈与时间止损保护。命名与 `overnight.json` 的 `live_entries_paused`
+    同族 (沿用仓库既有惯例, 非自创)。
+    """
+    if cfg.get("entries_paused"):
+        return False, ["entries_paused(config)"]
     e = cfg["entry"]
     reasons = []
     if d["sma"] is None:
@@ -101,6 +110,35 @@ def _entry_signal(cfg, d):
     if not ok_bull:
         reasons.append("below_sma200")
     return (not reasons), reasons
+
+
+def _time_stop_limit(ex, pos):
+    """时间止损阈值 (交易日)。两种写法, 二选一:
+
+      · `max_holding_trading_days: 20`   —— 固定值 (QQQ 轨道沿用, 来自回测)
+      · `max_holding_pct_of_dte: 0.30`   —— **按入场时 DTE 的比例**, 用户 2026-10-28「DTE的30%」
+
+    比例模式的三个口径选择, 都是有意的:
+      ① 用 **`entry_dte`** (入场当时的 DTE) 而不是剩余 DTE —— 后者会让阈值随时间漂移成移动靶。
+      ② DTE 是**日历日**, 而本引擎的 `_held_trading_days` 数**交易日**, 故乘 5/7 换算。
+         选择在"阈值"侧换算而不是改计数侧, 是为了**全引擎只有一套计数基准** ——
+         两套基准混用正是本仓库反复踩过的静默 bug 来源。
+      ③ 至少 1 个交易日, 避免极短 DTE 下阈值取整成 0 → 入场当日即被时间止损卖出。
+
+    `entry_dte` 缺失 (老仓位或 apply 时没传 context) 时回落到固定值; 两者都缺则 SystemExit,
+    因为"没有时间止损"是静默失效 (红线6), 不能默认放行。
+    """
+    pct = ex.get("max_holding_pct_of_dte")
+    fixed = ex.get("max_holding_trading_days")
+    edte = pos.get("entry_dte")
+    if pct and edte:
+        return max(1, round(float(edte) * float(pct) * 5.0 / 7.0))
+    if fixed is not None:
+        return int(fixed)
+    raise SystemExit(
+        f"时间止损阈值无法确定: exit 里既没有可用的 max_holding_pct_of_dte"
+        f"(需配合仓位的 entry_dte, 本仓位 entry_dte={edte}) 也没有 max_holding_trading_days。"
+        "拒绝在无时间止损的情况下继续 (红线6: 静默失效不可接受)")
 
 
 def _held_trading_days(trading_dates, entry_date, today):
@@ -320,21 +358,27 @@ def cmd_signal(a):
         bid = q.get("bid")
         bid = float(bid) if bid is not None else None
         tp_line = round(float(pos["entry_fill_price"]) * float(ex["take_profit_mult"]), 4)
+        ts_limit = _time_stop_limit(ex, pos)
         base = {"occ": occ, "contracts": int(pos["contracts"]),
                 "entry_date": pos["entry_date"], "entry_fill_price": pos["entry_fill_price"],
                 "held_trading_days": held, "dte": dleft,
+                "time_stop_limit_trading_days": ts_limit,
+                "_time_stop_basis": (
+                    f"entry_dte {pos.get('entry_dte')} × {ex.get('max_holding_pct_of_dte')} × 5/7"
+                    if ex.get("max_holding_pct_of_dte") and pos.get("entry_dte")
+                    else f"固定 {ex.get('max_holding_trading_days')} 交易日"),
                 "take_profit_line": tp_line, "current_bid": bid}
         if bid is None:
             out["warnings"].append(
                 f"{occ}: 链里没有当前 bid → **本次无法判定止盈/时间止损**。"
-                f"已持 {held} 个交易日 (上限 {ex['max_holding_trading_days']})。"
+                f"已持 {held} 个交易日 (上限 {ts_limit})。"
                 "必须补该合约的券商报价后重跑 —— 缺报价会让时间止损静默失效 (红线6)")
             out["skips"].append({**base, "reason": "no_bid_cannot_evaluate_exit"})
             continue
         reason = None
         if bid >= tp_line:
             reason = "take_profit"
-        elif held >= int(ex["max_holding_trading_days"]):
+        elif held >= ts_limit:
             reason = "time_stop"
         elif dleft is not None and dleft <= int(ex["force_exit_dte_lte"]):
             reason = "force_exit_dte"
@@ -349,7 +393,7 @@ def cmd_signal(a):
         else:
             out["skips"].append({**base, "reason": "hold",
                                  "_why": f"bid {bid:.2f} < 止盈线 {tp_line:.2f}; "
-                                         f"已持 {held}/{ex['max_holding_trading_days']} 交易日"})
+                                         f"已持 {held}/{ts_limit} 交易日"})
 
     # ---------------- 入场 ----------------
     sig_ok, why = _entry_signal(cfg, d)

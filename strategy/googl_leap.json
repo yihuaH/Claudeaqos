@@ -1,0 +1,74 @@
+{
+  "enabled": true,
+  "paper_only": false,
+  "_enabled_note": "🔴 **实盘**。起因: 用户 2026-10-28 指示「买Google期权」→「call 0.3」→「79 142 233各买一张」→「止盈20% 20天止损」→「DTE的30%」。本轨道**只负责出场**, 开仓由用户指示会话手工下单 (见 entries_paused)。",
+
+  "underlying": "GOOGL",
+  "_underlying_note": "**GOOGL (Class A) 不是 GOOG (Class C)**。两者经济权益相同、日收益相关系数 0.99646, 只差投票权 (1 票 vs 0 票; 真正的控制权在不公开交易的 Class B 10 票)。选 GOOGL 的实测理由: ① 只有 GOOGL 在 weekly_calls_live.json 的池内; ② 2026-11-20 $300 call 实测未平仓量 1,642 vs GOOG 1,087 (多 51%), 点差 6.38% vs 7.37%。⚠️ 311 个交易日实测「GOOGL 有投票权所以更贵」基本是噪声: 溢价中位仅 +0.074%, 且 46.0% 的交易日 GOOG 反而更贵。",
+
+  "entries_paused": true,
+  "_entries_paused_note": "🔴 **本轨道永不自己开仓** (用户 2026-10-28「开仓就买」= 开仓是手工动作, 不要入场信号)。`_entry_signal` 见此开关即恒返回 False, 故下面 entry 段**全部惰性**, 保留只为结构完整 + 万一日后启用时有据可循。\n⚠️ **为什么不用 `enabled: false`**: 那会按红线4 把**出场也一起关掉**, 已有持仓会失去止盈与时间止损保护 —— 与本轨道存在的唯一目的正好相反。\n⚠️ GOOGL 若真要自动开仓, 现行入场条件 (单日 ≤ −2% + close>SMA200) 对它并无回测依据 —— QQQ 那套参数来自 `strategy/proposals/qqq-leap-call.md` 的 QQQ 回测, **不可直接搬到个股** (个股单票风险、财报跳空、无指数分散)。要启用须先做 GOOGL 口径回测 (红线2/8)。",
+
+  "funding_priority": null,
+  "_funding_priority_note": "entries_paused=true → 本轨道不消耗任何现金, 故不参与跨轨道资金优先级排序 (现行次序 ① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 不受影响)。日后若启用开仓, 必须由用户明确给定优先级 (红线3), 不得由引擎自排。",
+
+  "entry": {
+    "daily_return_pct_max": -2.0,
+    "require_close_above_sma200": true,
+    "sma_period": 200,
+    "_inert": "entries_paused=true 时本段不被读取 (守卫在 _entry_signal 开头就 return)"
+  },
+
+  "contract": {
+    "structure": "single",
+    "type": "call",
+    "dte_target_calendar": 141,
+    "dte_band_calendar": [120, 190],
+    "ladder": [
+      {"target_dte_calendar": 78,  "dte_band_calendar": [60, 110]},
+      {"target_dte_calendar": 141, "dte_band_calendar": [120, 190]},
+      {"target_dte_calendar": 231, "dte_band_calendar": [200, 280]}
+    ],
+    "_ladder_note": "三档对应用户 2026-10-28「79 142 233各买一张」, 按券商实际挂牌匹配为 **2027-01-15 / 2027-03-19 / 2027-06-17** (自 2026-10-29 起 78/141/231 个日历日)。⚠️ 233 档券商挂的是 **06-17** 而非按「6 月第三个周五」推的 06-18 —— 以 get_option_chains 的真实列表为准。带宽互不重叠 (111~119 与 191~199 的空档是故意的), 以避开引擎的 `duplicate_occ_across_rungs` 守卫。**本段同样惰性** (entries_paused), 仅记录开仓意图。",
+    "prefer_standard_monthly": true,
+    "delta_target": 0.3,
+    "delta_band": [0.25, 0.4],
+    "_delta_note": "用户 2026-10-28「call 0.3」。容差带 [0.25, 0.40] **照抄 qqq_leap.json 的 delta_band**, 未自创。",
+    "max_spread_pct": 8.0,
+    "min_bid": 0.05,
+    "_spread_note": "照抄 qqq_leap.json 的 8.0。⚠️ 实测 GOOGL 2026-11-20 $300 call 点差 **6.38%** (16:00 收盘快照, 盘中更紧), 长期档按 365d 实测中位 **7.47%** → 贴着这道闸。本段惰性 (entries_paused), 但若日后启用开仓, 这个数值很可能成为实际瓶颈。"
+  },
+
+  "exit": {
+    "take_profit_mult": 1.2,
+    "take_profit_basis": "bid_ge_entry_ask_times_mult",
+    "_take_profit_note": "用户 2026-10-28「止盈20%」。⚠️ **已向用户明确告知的代价**: 规则按 **bid** 判而买在 **ask**, 故实需**公允价**涨幅 = 1.20×(1+h)/(1−h)。按 GOOGL 实测点差: 短档 6.38% → 需 **+27.9%**; 长档 7.47% → 需 **+29.3%**。对照 QQQ 实盘: 148 档点差 2.43% 需 +22.9% → 实现 +22.96% ✅; 330 档点差 8.71% 需 +30.9% → 只到 +12.68% 就被用户手工了结 ❌。**用户在知情下保留 +20%。**",
+
+    "max_holding_pct_of_dte": 0.30,
+    "max_holding_trading_days": 20,
+    "_time_stop_note": "🔴 **现行是比例模式**: 用户 2026-10-28 先说「20天止损」, 我指出 `231 DTE + 20 交易日` 自相矛盾 (20 交易日 ≈ 28 日历日, 231 DTE 档出场时还剩 88% 寿命未用, 等于买了一堆用不到的时间价值且点差更宽), 用户随即改为 **「DTE的30%」**。\n换算 = `round(entry_dte × 0.30 × 5/7)` 交易日 (DTE 是日历日, 引擎数交易日): **78→17 / 141→30 / 231→50** 交易日, 三档均在约 70% 寿命处出场, 口径一致。\n`max_holding_trading_days: 20` **保留为回落值** —— 仅当某仓位缺 `entry_dte` 时生效 (见 `_time_stop_limit` docstring); 比例模式下它不参与判定。",
+
+    "price_stop_pct": null,
+    "_price_stop_note": "⚠️ **无价格止损** (用户 2026-10-28 未要求, 已明确告知)。长 call 可亏 **100% 权利金**, 唯一兜底是上面的时间止损。要加 (如 −50%) 须用户发话 (红线3)。",
+
+    "force_exit_dte_lte": 30,
+    "roll": false,
+    "evaluate_at": "preclose_window_once_per_trading_day"
+  },
+
+  "sizing": {
+    "position_pct_of_portfolio": 20,
+    "max_single_position_pct_of_portfolio": null,
+    "max_premium_per_contract_usd": null,
+    "max_concurrent_positions": null,
+    "_inert": "entries_paused=true → 本段不参与任何判定。数值照抄 qqq_leap.json 以便对照, **不代表已授权的额度**。日后启用开仓前必须由用户重新确认 (红线3)。"
+  },
+
+  "circuit_breaker": {
+    "halt_on_cumulative_realized_loss_pct_of_portfolio": 50,
+    "_note": "照抄 qqq_leap.json。累计已实现亏损 ≥ 净值×50% → halted, 届时连出场也停 (红线4), 由用户处置。"
+  },
+
+  "_provenance": "用户指令链 2026-10-28: 「买Google期权」→ 我问参数 → 「call 0.3」→ 我给 DTE 菜单 → 「79 142 233各买一张」→ 「止盈20% 20天止损」→ 我指出 231DTE 与 20 天矛盾 → 「DTE的30%」。开仓方式「开盘就买」(09:30 ET; 盘前不可能 —— GOOGL 链 extended_hours_state=disabled 且非指数链)。详见 journal/2026-10-28-googl-call-ladder-ordered.md。",
+  "_not_backtested": "🔴 **本轨道的参数没有 GOOGL 口径的回测支撑。** +20% 止盈与梯子结构来自 QQQ 轨道 (`strategy/proposals/qqq-leap-call.md`), DTE 30% 与三个期限由用户指定。本文件记录的是**用户在知情下的选择**, 不是回测结论。不得把它当成已验证策略。"
+}

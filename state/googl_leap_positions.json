@@ -1,0 +1,9 @@
+{
+  "_what": "GOOGL LEAP call 轨道账本 (实盘, 只出场)。引擎 scripts/qqq_leap.py (underlying 由 config 驱动), 配置 strategy/googl_leap.json。开仓由用户指示会话手工下单后用 qqq_leap.py apply 回写; 出场由引擎自动判定 (止盈 +20% / 时间止损 DTE 30%)。",
+  "start_capital": null,
+  "halted": false,
+  "positions": {},
+  "trades": [],
+  "round_trips": [],
+  "skip_log": []
+}
