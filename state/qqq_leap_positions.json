@@ -2,36 +2,7 @@
   "track": "qqq_leap",
   "start_capital": null,
   "halted": false,
-  "positions": {
-    "QQQ270917C00830000": {
-      "underlying": "QQQ",
-      "strike": 830.0,
-      "expiry": "2027-09-17",
-      "contracts": 2,
-      "entry_date": "2026-10-22",
-      "entry_fill_price": 24.565,
-      "entry_cost_usd": 4913.0,
-      "entry_delta": 0.301,
-      "entry_dte": 330,
-      "entry_spread_pct": 6.454,
-      "entry_spot": 705.65,
-      "entry_day_return_pct": -2.696,
-      "take_profit_line": 29.478,
-      "_tp_note": "⚠️ 本仓位含多笔成交, 止盈线按**加权均价**算 (用户 2026-10-22 选 C); 逐笔明细见 _lots 与 trades[]。",
-      "_lots": [
-        {
-          "date": "2026-10-22",
-          "contracts": 1,
-          "fill_price": 24.74
-        },
-        {
-          "date": "2026-10-22",
-          "contracts": 1,
-          "fill_price": 24.39
-        }
-      ]
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-10-22",
@@ -86,6 +57,15 @@
       "price": 19.92,
       "bucket": "qqq_leap",
       "reason": "user_manual_sell_take_profit"
+    },
+    {
+      "date": "2026-10-28",
+      "symbol": "QQQ270917C00830000",
+      "side": "sell",
+      "qty": 2,
+      "price": 27.68,
+      "bucket": "qqq_leap",
+      "reason": "user_manual_sell_below_tp_line"
     }
   ],
   "round_trips": [
@@ -118,9 +98,24 @@
       "reason": "user_manual_sell_take_profit",
       "held_trading_days": null,
       "entry_delta": 0.299203
+    },
+    {
+      "occ": "QQQ270917C00830000",
+      "underlying": "QQQ",
+      "structure": "single",
+      "entry_date": "2026-10-22",
+      "exit_date": "2026-10-28",
+      "entry_premium": 24.565,
+      "exit_premium": 27.68,
+      "contracts": 2,
+      "pnl_pct": 12.68,
+      "pnl_usd": 623.0,
+      "reason": "user_manual_sell_below_tp_line",
+      "held_trading_days": null,
+      "entry_delta": 0.301
     }
   ],
   "skip_log": [],
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "_note": "QQQ LEAP call 轨道账本 (实盘)。引擎 scripts/qqq_leap.py, 参数 strategy/qqq_leap.json。round_trips/skip_log 是摩擦与战绩数据, 勿删。会话不得手工改仓位数据 (CLAUDE.md)。"
 }
