@@ -1,60 +1,62 @@
 {
- "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
- "tasks": [
-  {
-   "id": "stock-buys-paused-2026-10-27",
-   "title": "⛔ 今日 (2026-10-27) 实盘股票买入已暂停 — 用户一票",
-   "window": "**仅 2026-10-27**。当日 15:20 收盘前主跑与 17:45 收尾窗各看一次即可; 过了这天本条自动失效",
-   "runbook": "journal/2026-10-27-morning.md 的「追记 3」",
-   "note": "用户 2026-10-27 12:0x 指示「今天暂停买股票」。已落为 strategy/config.json 的 `live_stock_buys_paused_dates: [\"2026-10-27\"]`, signals.py 按 --date 匹配生效。⚠️ **不需要会话额外做任何事** —— 引擎自己会出 buys=0 并带 warning, 照常跑 daily.py 即可; **不要**手工删买单 (那会变成会话改引擎输出, 违红线2)。范围: 只关 rsi2_entry + rsi2_scale_in; 出场/止损/时间止损/换仓/加速清理照常; 期权轨道 (qqq_leap / weekly_calls_live) 不受影响, 由各自 config 管; 纸面轨道不受影响。⚠️ 次日 (10-28) 起自动恢复买入 —— 若用户想延长必须再说一次。",
-   "status": "pending",
-   "created": "2026-10-27",
-   "authorized_by": "用户 2026-10-27 「今天暂停买股票」"
-  },
-  {
-   "id": "platform-layer-test-2026-10",
-   "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
-   "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
-   "runbook": "journal/2026-10-09-platform-layer-test-plan.md",
-   "note": "⚠️ 非引擎订单 (基础设施测试, 同 2026-07-20 先例)。XLU 1 整股限价 $20.00 (约市价一半, 结构上不可成交) → place → 核实 → **立刻撤单** → 核实 state=cancelled 且 cumulative_quantity=0。**只测一次**, 无论通过或被拦都不重试 (playbook: 不要反复尝试下单)。在有人值守窗口里跑**没有意义**, 不要在用户对话中执行。",
-   "status": "done",
-   "created": "2026-10-09",
-   "authorized_by": "用户 2026-10-09 「做一次平台层测试」",
-   "done_at": "2026-10-12 10:48 ET",
-   "result": "place **未被拦截** — order 6accf31f-3ee4-44ea-9437-3c90d3555a2f, state unconfirmed → cancelled, cumulative_quantity 0, 零成交零费用, 存活 6.8 秒。详见 journal/2026-10-12-morning.md"
-  },
-  {
-   "id": "earnings-input-every-run-2026-10",
-   "title": "每次主跑必须喂 --earnings (财报黑窗静默失效的真正根因 = 取数漏做, 不是代码缺陷)",
-   "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
-   "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
-   "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
-   "status": "pending",
-   "created": "2026-10-12",
-   "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
-  },
-  {
-   "id": "qqq-leap-first-live-run-2026-10",
-   "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
-   "window": "**顺延中**: 原定 2026-10-20 两窗已跑完 (见 progress_2026_10_20), 但未遇真实信号日 → 继续顺延到首个 entry_signal=true 的交易日, 届时盯完 window → 取链 → signal → place → apply 全链路再标 done",
-   "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
-   "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
-   "status": "done",
-   "created": "2026-10-20",
-   "authorized_by": "用户 2026-10-20「明天盯着跑」",
-   "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。",
-   "done_at": "2026-10-22 13:13 ET",
-   "result": "✅ **全链路首次实战走通**: window (entry_signal true, QQQ 705.65 / −2.696%, SMA200 676.90 之上) → **会话取券商期权链含 delta** (此前只用合成链测过) → signal 选定 QQQ270917C00830000 (delta 0.301, 限价 24.79 = ask×1.0) → review (返回 OPTION_WIDE_BID_ASK_SPREAD 预警, 按工具规定先给用户看并取得确认) → **place 零拦截** → **成交 $24.74** (优于限价 5 分) → apply 回写账本, 止盈线按实际成交价重算 29.688。详见 journal/2026-10-22-leap-first-signal.md。"
-  },
-  {
-   "id": "pool-entrant-earnings-2026-10",
-   "title": "周度股票池刷新 finalize 后: 新进池标的逐只 get_earnings_results 取 next+past",
-   "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
-   "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
-   "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
-   "status": "pending",
-   "created": "2026-10-21",
-   "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
-  }
- ]
+  "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
+  "tasks": [
+    {
+      "id": "stock-buys-paused-2026-10-27",
+      "title": "⛔ 今日 (2026-10-27) 实盘股票买入已暂停 — 用户一票",
+      "window": "**仅 2026-10-27**。当日 15:20 收盘前主跑与 17:45 收尾窗各看一次即可; 过了这天本条自动失效",
+      "runbook": "journal/2026-10-27-morning.md 的「追记 3」",
+      "note": "用户 2026-10-27 12:0x 指示「今天暂停买股票」。已落为 strategy/config.json 的 `live_stock_buys_paused_dates: [\"2026-10-27\"]`, signals.py 按 --date 匹配生效。⚠️ **不需要会话额外做任何事** —— 引擎自己会出 buys=0 并带 warning, 照常跑 daily.py 即可; **不要**手工删买单 (那会变成会话改引擎输出, 违红线2)。范围: 只关 rsi2_entry + rsi2_scale_in; 出场/止损/时间止损/换仓/加速清理照常; 期权轨道 (qqq_leap / weekly_calls_live) 不受影响, 由各自 config 管; 纸面轨道不受影响。⚠️ 次日 (10-28) 起自动恢复买入 —— 若用户想延长必须再说一次。",
+      "status": "done",
+      "created": "2026-10-27",
+      "authorized_by": "用户 2026-10-27 「今天暂停买股票」",
+      "closed_at": "2026-10-28",
+      "outcome": "按本条自身约定「过了这天本条自动失效」关闭。2026-10-27 当日实际效果已核实: 引擎产出 buys=0 并带 warning 原文 「live_stock_buys_paused_dates 含 2026-10-27: 实盘股票买入 (新开仓+加仓) 本日全部暂停 (用户一票), 出场/止损/换仓不受影响」, 会话未手工删改任何买单 (红线2 守住)。⚠️ 买入暂停已于 10-28 自动恢复, 但 sizing.min_cash_reserve_usd = 5300 仍长期有效, 它单独就足以让 RSI-2 股票轨道零出单 —— 两者不要混为一谈。strategy/config.json 里 live_stock_buys_paused_dates 的 \"2026-10-27\" 刻意保留为审计记录: signals.py 按 --date 精确匹配, 过期日期完全惰性。"
+    },
+    {
+      "id": "platform-layer-test-2026-10",
+      "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
+      "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
+      "runbook": "journal/2026-10-09-platform-layer-test-plan.md",
+      "note": "⚠️ 非引擎订单 (基础设施测试, 同 2026-07-20 先例)。XLU 1 整股限价 $20.00 (约市价一半, 结构上不可成交) → place → 核实 → **立刻撤单** → 核实 state=cancelled 且 cumulative_quantity=0。**只测一次**, 无论通过或被拦都不重试 (playbook: 不要反复尝试下单)。在有人值守窗口里跑**没有意义**, 不要在用户对话中执行。",
+      "status": "done",
+      "created": "2026-10-09",
+      "authorized_by": "用户 2026-10-09 「做一次平台层测试」",
+      "done_at": "2026-10-12 10:48 ET",
+      "result": "place **未被拦截** — order 6accf31f-3ee4-44ea-9437-3c90d3555a2f, state unconfirmed → cancelled, cumulative_quantity 0, 零成交零费用, 存活 6.8 秒。详见 journal/2026-10-12-morning.md"
+    },
+    {
+      "id": "earnings-input-every-run-2026-10",
+      "title": "每次主跑必须喂 --earnings (财报黑窗静默失效的真正根因 = 取数漏做, 不是代码缺陷)",
+      "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
+      "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
+      "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
+      "status": "pending",
+      "created": "2026-10-12",
+      "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
+    },
+    {
+      "id": "qqq-leap-first-live-run-2026-10",
+      "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
+      "window": "**顺延中**: 原定 2026-10-20 两窗已跑完 (见 progress_2026_10_20), 但未遇真实信号日 → 继续顺延到首个 entry_signal=true 的交易日, 届时盯完 window → 取链 → signal → place → apply 全链路再标 done",
+      "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
+      "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
+      "status": "done",
+      "created": "2026-10-20",
+      "authorized_by": "用户 2026-10-20「明天盯着跑」",
+      "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。",
+      "done_at": "2026-10-22 13:13 ET",
+      "result": "✅ **全链路首次实战走通**: window (entry_signal true, QQQ 705.65 / −2.696%, SMA200 676.90 之上) → **会话取券商期权链含 delta** (此前只用合成链测过) → signal 选定 QQQ270917C00830000 (delta 0.301, 限价 24.79 = ask×1.0) → review (返回 OPTION_WIDE_BID_ASK_SPREAD 预警, 按工具规定先给用户看并取得确认) → **place 零拦截** → **成交 $24.74** (优于限价 5 分) → apply 回写账本, 止盈线按实际成交价重算 29.688。详见 journal/2026-10-22-leap-first-signal.md。"
+    },
+    {
+      "id": "pool-entrant-earnings-2026-10",
+      "title": "周度股票池刷新 finalize 后: 新进池标的逐只 get_earnings_results 取 next+past",
+      "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
+      "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
+      "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
+      "status": "pending",
+      "created": "2026-10-21",
+      "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
+    }
+  ]
 }
