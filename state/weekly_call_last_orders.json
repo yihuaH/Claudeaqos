@@ -1,32 +1,35 @@
 {
-  "date": "2026-10-26",
+  "date": "2026-10-29",
   "halted": false,
-  "sells": [
-    {
-      "symbol": "NVDA261030C00190000",
-      "qty": 1,
-      "position_intent": "sell_to_close",
-      "bucket": "weekly_calls",
-      "reason": "exit_strength",
-      "est_price": 27.42,
-      "exit_quote": {
-        "bid": 26.64,
-        "ask": 28.2,
-        "mid": 27.42,
-        "spread_pct": 5.689
-      }
-    }
-  ],
+  "sells": [],
   "buys": [],
-  "skips": [
+  "skips": [],
+  "warnings": [],
+  "near_signals": [
     {
-      "symbol": "META",
-      "reason": "spread_too_wide(best=5.23%)",
-      "rsi2": 1.78,
-      "spot": 633.31
+      "symbol": "NVDA",
+      "rsi2_now": 22.5,
+      "scenario": "2d_-1%x2",
+      "spot": 212.88,
+      "structure": "single",
+      "est_premium_usd": 2190
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 25.83,
+      "scenario": "1d_-1%",
+      "spot": 521.98,
+      "structure": "single",
+      "est_premium_usd": 5284
+    },
+    {
+      "symbol": "MSFT",
+      "rsi2_now": 26.55,
+      "scenario": "1d_-1%",
+      "spot": 528.39,
+      "structure": "single",
+      "est_premium_usd": 5355
     }
   ],
-  "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "suggested_reserve_usd": 2190.0
 }

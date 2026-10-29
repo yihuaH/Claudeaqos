@@ -1,21 +1,7 @@
 {
-  "high_water_mark": 10505.04,
+  "high_water_mark": 11051.614826805,
   "halted": false,
   "strategy_positions": {
-    "META": {
-      "qty": 1.531726,
-      "entry_price": 645.67,
-      "entry_date": "2026-10-23",
-      "cost": 988.99,
-      "tranches": 1
-    },
-    "VLO": {
-      "qty": 0.674339,
-      "entry_price": 420.1,
-      "entry_date": "2026-10-23",
-      "cost": 283.29,
-      "tranches": 1
-    },
     "MCK": {
       "qty": 1.015877,
       "entry_price": 991.99,
@@ -2743,6 +2729,24 @@
       "price": 991.99,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-29",
+      "symbol": "META",
+      "side": "sell",
+      "qty": 1.531726,
+      "price": 628.1101,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-29",
+      "symbol": "VLO",
+      "side": "sell",
+      "qty": 0.674339,
+      "price": 379.83,
+      "bucket": "strategy",
+      "reason": "stop_loss"
     }
   ],
   "corporate_actions": [

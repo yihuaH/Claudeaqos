@@ -1,6 +1,6 @@
 {
- "trade_date": "2026-10-26",
- "generated_by": "scripts/daily.py --phase preclose + scripts/qqq_leap.py signal (会话按 playbook 4A/4B-auto 执行)",
+ "trade_date": "2026-10-29",
+ "generated_by": "scripts/daily.py --phase preclose (会话按 playbook 4A/4B-auto 执行)",
  "record_kind": "execution_log",
  "status": "executed",
  "_kind_note": "auto_buys 下本文件是执行记录, 不是待执行清单 (红线9)。今日无单被分类器拦截, 故无 4B-failsafe pending。",
@@ -8,131 +8,110 @@
  "order_valid_until": "same_session_1555_et_then_next_session_1555_et",
  "exec_window_et": "当日 15:30-15:55 → 次日 09:45-15:55",
  "exec_day": "same_day_then_next_session",
+ "_gate_note": "⚠️ **本次是 position_check 连续 4 次拦跑后第一次放行** (10-27 / 10-28×2 / 10-29 晨间均因券商多出 SQQQ 10 股而停跑)。用户 10-29 盘中自行平掉那 10 股 → 券商 3 只 vs 账本 3 只, verdict=ok (3/3 matched)。因此 VLO 的 −7% 止损卖单自 10-27 首次触发以来**第一次下得出去**。",
  "funding": {
   "cap_rule": "实时 min(buying_power, cash); 超 cap 整单跳过不缩量; 绝不动用借来的钱 (红线9 防杠杆闸)",
-  "cash_before": 4.12,
-  "buying_power_before": 4.12,
+  "cash_before": 6687.51,
+  "buying_power_before": 6687.51,
   "unleveraged_equals_bp": true,
   "cross_track_priority": "① QQQ LEAP → ② 实盘周期权 → ③ RSI-2 正股 (2026-10-19 用户定)",
   "leap_reserve_usd": 0.0,
-  "_leap_note": "QQQ LEAP 无入场信号 (+1.32% 未达 ≤-2%), 对股票 cap 零扣减",
+  "_leap_note": "QQQ LEAP 无入场信号 (QQQ −1.70% 未达 ≤−2%), 对股票 cap 零扣减",
   "option_reserve_usd": 0.0,
-  "_option_note": "实盘周期权零开仓 (META 点差 5.23% > 闸 2.25%)",
-  "cash_after_exit_fill": 1012.44,
-  "_exit_funded_note": "起跑现金仅 $4.12 —— MCK 这张 $1,007.74 完全靠 MPC 出场回款 $1,008.31 即时到账 (limited margin) 才过得了 cap。无回款则整单跳过。",
-  "cap_at_mck": 1012.44,
-  "cash_after": 4.7
+  "_option_note": "实盘周期权零开仓 (三只 near_signal 的 rsi2 均 >10, 未触发)",
+  "cash_after": 7905.71,
+  "_no_buy_note": "今日零买单 —— 不是资金不够, 是**引擎没给买单**: 4 个 candidates 里 3 个被标的级防御层拦 (FTNT/DT/HUM), 第 4 个 (VLO) 是在手持仓且当日触发止损。现金 $6,687.51 全程充裕, cap 未起作用。"
  },
  "filled": [
   {
    "track": "rsi2",
-   "symbol": "MPC",
+   "symbol": "META",
    "action": "sell",
    "reason": "exit_strength",
    "bucket": "strategy",
    "order_type": "market",
    "market_hours": "regular_hours",
-   "qty": 2.141303,
-   "fill_price": 470.9,
+   "qty": 1.531726,
+   "fill_price": 628.1101,
    "fees_usd": 0.02,
-   "proceeds_usd": 1008.32,
-   "order_id": "6adfa8b2-f9af-4b76-9e77-70487e9e82f5",
+   "proceeds_usd": 962.07,
+   "order_id": "6ae39e93-f709-42fb-8502-ac4d36bacb8b",
    "state": "filled",
-   "filled_at_et": "2026-10-26 15:23:30",
-   "_round_trip": "买 2026-10-22 @458.9028 ($982.65) → 卖 @470.90 净 $1,008.32; 已实现 **+$25.67 (+2.61%)**, 持 3 个交易日"
+   "filled_at_et": "2026-10-29 15:29:24",
+   "_round_trip": "买 2026-10-21 @645.67 ($988.93) → 卖 @628.1101 净 $962.07; 已实现 **−$26.86 (−2.72%)**",
+   "_note": "META 当日 +2.56% (612.49→628.11) 却走 exit_strength —— 出场是 rsi2 回到强势区所致, 与当日涨跌无关。"
   },
   {
    "track": "rsi2",
-   "symbol": "MCK",
-   "action": "buy",
-   "reason": "rsi2_entry",
+   "symbol": "VLO",
+   "action": "sell",
+   "reason": "stop_loss",
+   "bucket": "strategy",
    "order_type": "market",
    "market_hours": "regular_hours",
-   "dollar_amount": 1007.74,
-   "qty": 1.015877,
-   "fill_price": 991.99,
+   "qty": 0.674339,
+   "fill_price": 379.83,
    "fees_usd": 0.0,
-   "rsi2": 8.95,
-   "order_id": "6adfa8da-5a3e-4fef-9023-62c2550c1417",
+   "proceeds_usd": 256.11,
+   "order_id": "6ae39e94-c0fb-4650-b93a-7f85482698b1",
    "state": "filled",
-   "filled_at_et": "2026-10-26 15:24:10",
-   "_earnings": "next=2026-11-04, **dte=9** → 过 7 日黑窗闸但只余 2 天; 若本周未出场, 10-28 起它将进入黑窗 (届时只影响加仓, 不影响已持仓的出场)"
+   "filled_at_et": "2026-10-29 15:29:24",
+   "_round_trip": "买 2026-10-23 @420.10 ($283.29) → 卖 @379.83 净 $256.11; 已实现 **−$27.17 (−9.59%)**",
+   "_delay_cost": "⚠️ 该止损线 (390.693 = 420.10×0.93) **10-27 即已跌破**, 但 position_check 闸连拦 3 个交易日。10-27 收盘 388.85 → 今日成交 379.83, 延迟期间多亏 **−$6.08 / −2.32个百分点**。这是闸门代价的实测数字, 不是估算。"
   }
  ],
  "skipped": [
   {
    "track": "rsi2",
-   "symbol": "PYPL",
-   "rsi2": 4.96,
-   "skip_reason": "earnings_blackout",
-   "_why": "next=2026-10-27, dte=1"
+   "symbol": "FTNT",
+   "rsi2": 2.96,
+   "skip_reason": "max_daily_move",
+   "_why": "近20日有单日异动 ≥8.0% —— 就是**今天** (2026-10-29 −21.9%, 174.08→135.96, 财报后崩盘)"
   },
   {
    "track": "rsi2",
-   "symbol": "EBAY",
-   "rsi2": 7.88,
+   "symbol": "DT",
+   "rsi2": 3.37,
    "skip_reason": "earnings_blackout",
-   "_why": "next=2026-10-28, dte=2"
+   "_why": "next=2026-11-04, dte=6 (闸=7 日)"
   },
   {
    "track": "rsi2",
-   "symbol": "MRK",
-   "rsi2": 7.32,
-   "skip_reason": "earnings_blackout",
-   "_why": "next=2026-10-29, dte=3"
+   "symbol": "HUM",
+   "rsi2": 4.05,
+   "skip_reason": "max_daily_move",
+   "_why": "近20日有单日异动 ≥8.0% (2026-10-09 +11.6%); 该异动是上涨, 但 earnings_gap_up_exempt 需 past 命中才豁免, 本次未命中"
   },
   {
    "track": "rsi2",
-   "symbol": "META",
-   "rsi2": 1.78,
-   "skip_reason": "held_no_scale_in",
-   "_why": "当日 rsi2 最低 (1.78) 但已持仓, 加仓需收盘 ≤ 加权均价×0.97 = $626.30, 实际 $633.31 → 未触发加仓, 非被闸拦"
-  },
-  {
-   "track": "weekly_calls_live",
-   "symbol": "META",
-   "rsi2": 1.78,
-   "skip_reason": "spread_too_wide(best=5.23%)"
+   "symbol": "VLO",
+   "rsi2": 7.51,
+   "skip_reason": "held_and_exiting",
+   "_why": "rsi2 7.51 < 10 本构成入场信号, 但 entry_signal_ok 含标的级防御层 —— VLO 近20日有 −9.24% 异动 (2026-10-27) → entry 侧判 False → **不构成「有卖有买就不卖」冲突**, 故 stop_loss 照常执行。这正是 10-27 我预判错的那一点 (当时以为冲突规则会取消止损)。"
   }
  ],
- "no_pending": "今日零单被平台分类器拦截 → 无 4B-failsafe 待执行清单, 用户无需回复「执行」",
+ "no_pending": "今日零单被平台分类器拦截, 且零买单 → 无 4B-failsafe 待执行清单, 用户无需回复「执行」",
  "leap": {
-  "entry_signal": false,
-  "entry_block_reasons": [
-   "drop_too_small(+1.32%)"
-  ],
-  "held": [
-   {
-    "occ": "QQQ270115C00755000",
-    "contracts": 1,
-    "bid": 12.96,
-    "tp_line": 14.532,
-    "gap_pct": 12.1,
-    "dte": 81,
-    "held_trading_days": 2,
-    "action": "hold"
-   },
-   {
-    "occ": "QQQ270319C00775000",
-    "contracts": 1,
-    "bid": 17.44,
-    "tp_line": 19.44,
-    "gap_pct": 11.5,
-    "dte": 144,
-    "held_trading_days": 2,
-    "action": "hold"
-   },
-   {
-    "occ": "QQQ270917C00830000",
-    "contracts": 2,
-    "bid": 25.49,
-    "tp_line": 29.478,
-    "gap_pct": 15.6,
-    "dte": 326,
-    "held_trading_days": 2,
-    "action": "hold"
-   }
-  ],
-  "_chain_note": "券商期权报价 (含 delta) 已取并跑完 signal → 驱动器「未提供 --leap-chain」anomaly 已消解"
+  "qqq": {
+   "entry_signal": false,
+   "entry_block_reasons": ["drop_too_small(-1.70%)"],
+   "spot": 713.261,
+   "sma200": 679.1542,
+   "held": [],
+   "_note": "10-28 用户手动平掉全部 4 张后本轨道空仓; 今日 QQQ −1.70% 差 0.30pp 未触发"
+  },
+  "googl": {
+   "entry_signal": false,
+   "entry_block_reasons": ["entries_paused(config)"],
+   "spot": 282.92,
+   "day_return_pct": -12.918,
+   "sma200": 340.9306,
+   "above_sma200": false,
+   "held": [],
+   "_note": "⚠️ 该轨道按用户「开仓就买」设计为 entries_paused (只跑出场), 故 paused 是设计值不是故障。**但另一个事实值得记下**: GOOGL 今日已跌到 SMA200 **之下** (282.92 vs 340.93), 即便将来解除 paused, 引擎的牛市过滤也会拒绝入场。"
+  }
+ },
+ "user_pending_items": {
+  "googl_call_ladder": "⏳ **仍未下单** —— 等用户回「下」。10-28 选定 K315/K330/K350 各 1 张 (2027-01-15 / 2027-03-19 / 2027-06-17), 当日 11:06 ET 报价 ask 6.75 / 10.20 / 12.80 = $2,975。**该报价已过期**: GOOGL 自那时 324.89 → 282.92 (−12.9%), 三张 call 必然大幅缩水, 下单前必须重取报价重算。现金 $7,905.71 足够。"
  }
 }
