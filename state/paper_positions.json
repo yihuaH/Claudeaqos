@@ -4,32 +4,11 @@
   "high_water_mark": 10218.49,
   "halted": false,
   "strategy_positions": {
-    "NVDA": {
-      "qty": 32.0,
-      "entry_price": 221.6875,
-      "entry_date": "2026-10-12",
-      "cost": 7094.0,
-      "tranches": 2
-    },
-    "XLK": {
-      "qty": 19.0,
-      "entry_price": 186.27,
-      "entry_date": "2026-10-15",
-      "cost": 3539.13,
-      "tranches": 1
-    },
     "QQQM": {
       "qty": 12.0,
       "entry_price": 295.433333,
       "entry_date": "2026-10-15",
       "cost": 3545.2,
-      "tranches": 1
-    },
-    "CDNS": {
-      "qty": 4.0,
-      "entry_price": 324.0625,
-      "entry_date": "2026-10-15",
-      "cost": 1296.25,
       "tranches": 1
     },
     "META": {
@@ -39,18 +18,18 @@
       "cost": 3203.05,
       "tranches": 1
     },
-    "MPC": {
-      "qty": 7.0,
-      "entry_price": 461.95,
-      "entry_date": "2026-10-23",
-      "cost": 3233.65,
-      "tranches": 1
-    },
     "VLO": {
       "qty": 8.0,
       "entry_price": 422.0,
       "entry_date": "2026-10-26",
       "cost": 3376.0,
+      "tranches": 1
+    },
+    "MCK": {
+      "qty": 3.0,
+      "entry_price": 993.85,
+      "entry_date": "2026-10-27",
+      "cost": 2981.55,
       "tranches": 1
     }
   },
@@ -584,6 +563,51 @@
       "side": "buy",
       "qty": 8.0,
       "price": 422.0,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "NVDA",
+      "side": "sell",
+      "qty": 32.0,
+      "price": 218.122813,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "XLK",
+      "side": "sell",
+      "qty": 19.0,
+      "price": 187.723158,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "CDNS",
+      "side": "sell",
+      "qty": 4.0,
+      "price": 326.2875,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "MPC",
+      "side": "sell",
+      "qty": 7.0,
+      "price": 465.29,
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "date": "2026-10-27",
+      "symbol": "MCK",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 993.85,
       "bucket": "strategy",
       "reason": "rsi2_entry"
     }

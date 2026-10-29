@@ -1,65 +1,32 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-26",
+  "date": "2026-10-29",
   "coid_prefix": "cq",
-  "next_open": "2026-10-27T09:30:00-04:00",
+  "next_open": "2026-10-30T09:30:00-04:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-26-NVDA-sell",
-      "order_id": "1478285e-730f-4b73-81bd-fabb99524034",
-      "symbol": "NVDA",
+      "coid": "cq-2026-10-29-VLO-sell",
+      "order_id": "fec513a6-b83e-42e4-aa14-bacb356ea86b",
+      "symbol": "VLO",
       "side": "sell",
       "status": "accepted",
-      "limit_price": "209.52",
-      "qty": "32",
+      "limit_price": "373.03",
+      "qty": "8",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "stop_loss"
     },
     {
-      "coid": "cq-2026-10-26-XLK-sell",
-      "order_id": "9150cc4e-60f4-4260-9d95-1b4275247604",
-      "symbol": "XLK",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "180.73",
-      "qty": "19",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-26-CDNS-sell",
-      "order_id": "2f14ee3e-e842-4878-9691-d36c2d728f48",
-      "symbol": "CDNS",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "312.5",
-      "qty": "4",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-26-MPC-sell",
-      "order_id": "f959e975-0982-4809-b420-bf220880b2d1",
-      "symbol": "MPC",
-      "side": "sell",
-      "status": "accepted",
-      "limit_price": "456.52",
-      "qty": "7",
-      "bucket": "strategy",
-      "reason": "exit_strength"
-    },
-    {
-      "coid": "cq-2026-10-26-MCK-buy",
-      "order_id": "db897665-fd05-4f45-bb83-118cb6159c01",
+      "coid": "cq-2026-10-29-MCK-sell",
+      "order_id": "6cee4013-5e75-4a9c-b628-a9f67d43e28b",
       "symbol": "MCK",
-      "side": "buy",
+      "side": "sell",
       "status": "accepted",
-      "limit_price": "1022.66",
+      "limit_price": "951.45",
       "qty": "3",
       "bucket": "strategy",
-      "reason": "rsi2_entry"
+      "reason": "exit_strength"
     }
   ]
 }
