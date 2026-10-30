@@ -170,6 +170,20 @@
    "progress": "⚠️ **2026-10-30 11:20 ET 用户说「继续今天的动作」→ 手动提前回装, 首轮只成功 2/3**:\n· ✅ `trig_01CtgM6KvCBKywWzEtAEkNia` 晨检 10:45 → enabled\n· ✅ `trig_01W1rzTiiZBaRc2taYzV6tKX` wrapup 17:45 → enabled\n· 🔴 `trig_01PqeuvMEsyXbTKJQ7njyVcR` **收盘前主跑 15:20 → 首轮被平台分类器拒绝** (`Real-World Transactions`)。该任务是唯一会在盘中真实下单的, 分类器因此拦住。当时未绕行、未重试, 照实报告用户。",
    "resolved": "✅ **2026-10-30 12:42 ET 全部回装完成**。用户先退出 auto 模式 (分类器只在 auto 模式下自动拦), 再说「再试一次」→ 同一个 `update_trigger(enabled=true)` **原样重调即通过**。这坐实了 §7.4 的判断: **分类器非确定性 + 只在 auto 模式生效**; 退出 auto 后该调用变成普通权限弹窗, 由用户放行。\n`list_triggers` 核实五条全部 enabled 且 next_run_at 正确:\n· 收盘前主跑 15:20 → **2026-10-30T19:20:00Z = 今天 15:20 ET** ✅\n· wrapup 17:45 → **2026-10-30T21:45:00Z = 今天 17:45 ET** ✅\n· 晨检 10:45 → 2026-11-02T15:45:00Z (= 周一 10:45 EST; 今日该档在停跑期已过, 已于 11:20 手动补跑)\n· 周一刷池 → 2026-11-02T18:09:44Z (= 13:09 EST, 服务端整点偏移)\n· 回装保险 → 2026-11-02T01:00:00Z (已冗余, 幂等, 届时只核对后静默结束)\n📌 **顺带验证了 DST 切换**: 11-02 的 next_run_at 用 EST (UTC−5) 换算后恰为 10:45 / 13:09 ET, 说明 10-23 加的 `CRON_TZ=America/New_York` 前缀在 11-01 夏令时结束后**没有漂**。",
    "status_note": "本条可在周日那次核对后标 done; 在此之前保留 pending 以防 15:20 那条再被关掉。"
+  },
+  {
+   "id": "rsi2-winddown-2026-10-30",
+   "status": "pending",
+   "title": "🔴 RSI-2 正股轨道收尾第二阶段: 最后一股 (MCK) 卖掉后把 config.json enabled 置 false",
+   "window": "**每个主跑窗口都要检查** (15:20 收盘前 + 17:45 wrapup), 直到执行完。`session.py brief` 会把本条高亮出来。",
+   "user_instruction": "用户 2026-10-30 原话: 「正股主策略暂停买入，只卖出最后一股后，就先暂停」",
+   "stage1_done": "✅ 已完成 (2026-10-30): `strategy/config.json` 加 `live_stock_buys_paused: true` → 只关 rsi2_entry 与 rsi2_scale_in, **出场/止损/时间止损/换仓照常**。配套修了 `learn.py cmd_challenger_config` 的字段剥离 (否则纸面挑战者买入也会被关掉, 验证序列报废)。",
+   "stage2_condition": "**条件**: `state/positions.json` 的 `strategy_positions` 变为空 `{}` (即 MCK 已卖出并回写)。",
+   "stage2_action": "把 `strategy/config.json` 的 `enabled` 置 **false**, 并在该字段旁写明: 用户 2026-10-30 指示的第二阶段、何日何因卖出最后一股、恢复方式 (enabled=true + 删 live_stock_buys_paused)。提交推 Main 并通知用户。",
+   "why_two_stages": "⚠️ **现在不能直接 enabled=false** —— 红线4 下 `enabled=false` 会把**出场也一起关掉**, 最后那一股就永远卖不出去了, 与用户「只卖出最后一股后」的指示正相反。故必须先 buys_paused、等仓位空了再 enabled=false。",
+   "expected_exit_date": "📌 **预计 2026-11-03 (下周二) 由引擎自动卖出**: MCK 下次财报 `2026-11-04`, 而 `defense.earnings_exit_days = 1` → `signals.py:318` 在 dte ∈ [0,1] 时产出 `earnings_exit`。11-03 当日 dte=1 即触发。\n其它可能更早触发的出场: 止损线 **922.55** (−7%, 需自 1003 再跌 8.0%) / `exit_strength` (rsi2 ≥ 65 且收盘 > SMA5) / 时间止损第 10 个交易日 = 2026-11-09 (最晚兜底)。\n⚠️ MCK 当前在**财报黑窗内** (dte=5 ≤ 7), 所以即便没有暂停开关, 它也不会被加仓。",
+   "do_not": "🚫 **不要替用户强平 MCK**。用户说的是「只卖出」(= 轨道只剩卖的动作), 不是「现在卖掉它」—— 一张不来自引擎信号的卖单违反红线2, 且用户若想今天就出会直接说。2026-10-30 已在对话里把这个判断和 11-03 的预计出场日一并告知, 由他一票推翻。",
+   "created": "2026-10-30 (盘中 13:1x ET)"
   }
  ]
 }

@@ -126,5 +126,6 @@
   "live_stock_buys_paused_dates": [
     "2026-10-27"
   ],
-  "live_stock_buys_paused_note": "单日暂停实盘股票买入 (用户一票)。2026-10-27 用户「今天暂停买股票」。**按日期生效**: 列表里没有运行日就完全等同于没这个字段, 故不会泄漏到次日 —— 这是刻意选择, 长期开关一旦忘删会把买入永久关掉。范围: 只关 rsi2_entry (新开仓) 与 rsi2_scale_in (加仓); 出场/止损/时间止损/换仓/加速清理**一律照常** (用户说的是「买」)。期权轨道 (qqq_leap / weekly_calls_live) 不读本字段, 由各自 config 管。恢复: 删掉该日期, 或直接留着 (过了那天自然失效)。"
+  "live_stock_buys_paused_note": "🔴 **开放式暂停实盘正股买入** (用户 2026-10-30 原话「正股主策略暂停买入，只卖出最后一股后，就先暂停」)。\n**范围**: 只关 `rsi2_entry` (新开仓) 与 `rsi2_scale_in` (加仓)。**出场/止损/时间止损/换仓/加速清理一律照常** —— 用户说的是「买」, 而且他明确要先把最后一股卖掉。\n**与 `live_stock_buys_paused_dates` 的区别**: 那个按日期生效、过期自动失效; 本字段**一直有效直到删除**。\n⚠️ **开放式开关的已知失败模式 = 忘了删, 买入被永久关掉** —— 这正是日期版当初刻意选 date-scoped 的理由。缓解: ① 本 note 写明恢复条件; ② `signals.py` 每跑必在 warnings 里打一行 `live_stock_buys_paused=true ... 开放式暂停中`, 该行会进 plan.json → journal → 战报, 不可能静默。\n**第二阶段 (用户已指示, 条件触发)**: MCK 卖掉后整条 RSI-2 轨道暂停 = 把本文件的 `enabled` 置 false。⚠️ 现在**不能**置 false —— 红线4 下 `enabled=false` 会把出场也一起关掉, 那最后一股就永远卖不出去了。故必须分两步: 先 buys_paused (本字段), 等 `strategy_positions` 空了再 enabled=false。条件与执行记在 oneshot `rsi2-winddown-2026-10-30`。\n**恢复买入**: 删掉本字段 (与 note)。恢复整轨: 同时把 `enabled` 置回 true。",
+  "live_stock_buys_paused": true
 }

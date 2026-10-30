@@ -261,6 +261,16 @@ def cmd_challenger_config(a):
         if k not in LEARNABLE:
             raise SystemExit(f"挑战者参数 {k} 不在可学白名单内")
         set_path(cfg, k, v)
+    # 实盘专用的买入暂停开关**绝不可带进纸面挑战者配置** —— 否则实盘一暂停, 纸面也停买,
+    # 挑战者验证序列被污染、edge 失去意义 (红线8 的 paper 验证期前提就不成立了)。
+    # 与 learn_overnight.py 对 `live_entries_paused` 的处理同一惯例。
+    # 🔧 2026-10-30 补: signals.py 的注释早就声称这里会剥离, 但**此前并没有 pop** ——
+    # 注释先于实现。date-scoped 版只在列表那天有影响 (10-27 那天 wrapup 被 position_check
+    # 拦停、phase_paper 没跑, 污染侥幸未发生); 而用户同日新加的开放式 `live_stock_buys_paused`
+    # 会**每天**把纸面买入也关掉, 这才逼出本修复。
+    cfg.pop("live_stock_buys_paused", None)
+    cfg.pop("live_stock_buys_paused_dates", None)
+    cfg.pop("live_stock_buys_paused_note", None)  # 惰性字段, 一并剥掉免得误导读者
     cfg["_challenger"] = {"started": ch["started"], "params": ch["params"]}
     save_json(a.out, cfg)
     print(f"挑战者配置已生成: {a.out} ({ch['params']})")

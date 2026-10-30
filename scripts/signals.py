@@ -450,19 +450,35 @@ def cmd_signal(a):
     #   外移到 ≈-8.4%, 这是加仓收益的一部分); 时间止损时钟**不因加仓重置**, 仍从首次入场起算。
     # 敞口: 单票上限 = position_pct × max_tranches (红线3 的上限, 只能由用户改)。
     # 加仓单同属买入, 2026-10-12 起随 auto_buys 自动执行 (红线9); 仍受 VIX 风控 —— risk_off 时上面已 return, 不会加仓。
-    # --- 单日暂停实盘股票买入 (用户一票, date-scoped) ---
-    # 用户 2026-10-27「今天暂停买股票」。设计要点:
-    #   · **按日期生效**, 不是长期开关 —— 列表里没有当天日期就完全等同于没这个字段,
-    #     所以**不可能泄漏到次日** (长期开关忘了删会把买入永久关掉, 那是真实失败模式)。
-    #   · 只关**股票买入** (rsi2_entry 新开仓 + rsi2_scale_in 加仓), 出场/止损/换仓/
-    #     加速清理**一律不受影响** —— 用户说的是「买」。
-    #   · 期权轨道 (qqq_leap / weekly_calls) 由各自 config 管, 不读这个字段。
-    #   · 纸面轨道走 learn.py 生成的配置, 该流程会剥离本字段 (与 overnight 的
-    #     live_entries_paused 同一处理), 验证序列不被污染。
-    # 恢复: 从列表里删掉该日期 (或留着, 过了那天自然失效)。
+    # --- 暂停实盘股票买入 (用户一票) —— 两个独立开关, 任一成立即暂停 ---
+    # ① `live_stock_buys_paused_dates`: **按日期生效** (用户 2026-10-27「今天暂停买股票」)。
+    #    列表里没有当天日期就完全等同于没这个字段, 故**不可能泄漏到次日**。
+    # ② `live_stock_buys_paused`: **开放式布尔** (用户 2026-10-30「正股主策略暂停买入」)。
+    #    一直有效直到用户发话删除。命名与 `overnight.json` 的 `live_entries_paused` 同族。
+    #    ⚠️ 开放式开关的已知失败模式正是「忘了删 → 买入永久关掉」, 这也是 ① 当初刻意选
+    #    date-scoped 的理由。本字段是用户明确要求的长期暂停, 故**必须在 config 里写明恢复条件**,
+    #    且 session.py brief / 主跑告警每次都会把它打出来, 让它不可能静默。
+    # 两者共同口径:
+    #   · 只关**股票买入** (rsi2_entry 新开仓 + rsi2_scale_in 加仓), 出场/止损/时间止损/
+    #     换仓/加速清理**一律不受影响** —— 用户说的是「买」。
+    #   · 期权轨道 (qqq_leap / weekly_calls) 由各自 config 管, 不读这两个字段。
+    #   · 纸面轨道走 learn.py `challenger-config` 生成的配置, 该流程**剥离这两个字段**
+    #     (`cmd_challenger_config` 里 pop, 与 learn_overnight 对 live_entries_paused
+    #     同一处理), 验证序列不被实盘暂停污染。
+    #     🔧 2026-10-30 更正: 此处原注释声称「该流程会剥离本字段」, 但**当时 learn.py 根本
+    #     没有 pop** —— 注释先于实现, 是错的。date-scoped 版只在列表那天有影响 (且 10-27 那天
+    #     wrapup 被 position_check 拦停, phase_paper 没跑, 污染侥幸未发生); 而开放式开关会
+    #     **每天**把纸面买入也关掉, 彻底废掉挑战者验证。故本次同时补上了那个 pop。
+    # 恢复: ① 删掉该日期 (或留着, 过了那天自然失效); ② 删掉 `live_stock_buys_paused` 字段。
     _paused_dates = cfg.get("live_stock_buys_paused_dates") or []
-    buys_paused = a.date in _paused_dates
-    if buys_paused:
+    _paused_openended = bool(cfg.get("live_stock_buys_paused"))
+    buys_paused = _paused_openended or (a.date in _paused_dates)
+    if _paused_openended:
+        warnings.append(
+            "live_stock_buys_paused=true: 实盘股票买入 (新开仓+加仓) **开放式暂停中** "
+            "(用户 2026-10-30「正股主策略暂停买入」); 出场/止损/时间止损/换仓不受影响。"
+            "恢复需用户发话后删除该字段")
+    elif buys_paused:
         warnings.append(
             f"live_stock_buys_paused_dates 含 {a.date}: 实盘股票买入 (新开仓+加仓) "
             "本日全部暂停 (用户一票), 出场/止损/换仓不受影响")
