@@ -2,7 +2,54 @@
   "track": "qqq_leap",
   "start_capital": null,
   "halted": false,
-  "positions": {},
+  "positions": {
+    "QQQ270319C00755000": {
+      "underlying": "QQQ",
+      "strike": 755.0,
+      "expiry": "2027-03-19",
+      "contracts": 1,
+      "entry_date": "2026-10-30",
+      "entry_fill_price": 15.75,
+      "entry_cost_usd": 1575.0,
+      "entry_delta": 0.2995,
+      "entry_dte": 140,
+      "entry_spread_pct": 1.407,
+      "entry_spot": 687.6,
+      "entry_day_return_pct": -3.878,
+      "take_profit_line": 18.9,
+      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
+      "_lots": [
+        {
+          "date": "2026-10-30",
+          "contracts": 1,
+          "fill_price": 15.75
+        }
+      ]
+    },
+    "QQQ270115C00735000": {
+      "underlying": "QQQ",
+      "strike": 735.0,
+      "expiry": "2027-01-15",
+      "contracts": 1,
+      "entry_date": "2026-10-30",
+      "entry_fill_price": 12.21,
+      "entry_cost_usd": 1221.0,
+      "entry_delta": 0.3039,
+      "entry_dte": 77,
+      "entry_spread_pct": 2.569,
+      "entry_spot": 687.6,
+      "entry_day_return_pct": -3.878,
+      "take_profit_line": 14.652,
+      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
+      "_lots": [
+        {
+          "date": "2026-10-30",
+          "contracts": 1,
+          "fill_price": 12.21
+        }
+      ]
+    }
+  },
   "trades": [
     {
       "date": "2026-10-22",
@@ -66,6 +113,24 @@
       "price": 27.68,
       "bucket": "qqq_leap",
       "reason": "user_manual_sell_below_tp_line"
+    },
+    {
+      "date": "2026-10-30",
+      "symbol": "QQQ270319C00755000",
+      "side": "buy",
+      "qty": 1,
+      "price": 15.75,
+      "bucket": "qqq_leap",
+      "reason": "rsi2_none"
+    },
+    {
+      "date": "2026-10-30",
+      "symbol": "QQQ270115C00735000",
+      "side": "buy",
+      "qty": 1,
+      "price": 12.21,
+      "bucket": "qqq_leap",
+      "reason": "rsi2_none"
     }
   ],
   "round_trips": [
@@ -116,6 +181,6 @@
     }
   ],
   "skip_log": [],
-  "updated": "2026-10-28",
+  "updated": "2026-10-30",
   "_note": "QQQ LEAP call 轨道账本 (实盘)。引擎 scripts/qqq_leap.py, 参数 strategy/qqq_leap.json。round_trips/skip_log 是摩擦与战绩数据, 勿删。会话不得手工改仓位数据 (CLAUDE.md)。"
 }
