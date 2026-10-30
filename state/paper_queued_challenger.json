@@ -1,32 +1,87 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "coid_prefix": "cq",
-  "next_open": "2026-10-30T09:30:00-04:00",
+  "next_open": "2026-11-02T09:30:00-05:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-10-29-VLO-sell",
-      "order_id": "fec513a6-b83e-42e4-aa14-bacb356ea86b",
-      "symbol": "VLO",
-      "side": "sell",
+      "coid": "cq-2026-10-30-META-buy",
+      "order_id": "c55a51d8-acae-42d4-b4d1-924ed39e408c",
+      "symbol": "META",
+      "side": "buy",
       "status": "accepted",
-      "limit_price": "373.03",
-      "qty": "8",
+      "limit_price": "633.44",
+      "qty": "5",
       "bucket": "strategy",
-      "reason": "stop_loss"
+      "reason": "rsi2_scale_in"
     },
     {
-      "coid": "cq-2026-10-29-MCK-sell",
-      "order_id": "6cee4013-5e75-4a9c-b628-a9f67d43e28b",
-      "symbol": "MCK",
-      "side": "sell",
+      "coid": "cq-2026-10-30-QQQM-buy",
+      "order_id": "847b5e3e-a7eb-4ea9-8602-af4d9b50b2b0",
+      "symbol": "QQQM",
+      "side": "buy",
       "status": "accepted",
-      "limit_price": "951.45",
-      "qty": "3",
+      "limit_price": "292.87",
+      "qty": "12",
       "bucket": "strategy",
-      "reason": "exit_strength"
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "coid": "cq-2026-10-30-NVDA-buy",
+      "order_id": "df301e9a-2c32-4013-9429-0bccca83b790",
+      "symbol": "NVDA",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "210.78",
+      "qty": "17",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-30-MSFT-buy",
+      "order_id": "8d452d8a-929c-49df-af05-15b8b5339b50",
+      "symbol": "MSFT",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "537.57",
+      "qty": "6",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-30-CSCO-buy",
+      "order_id": "40106ba5-b8f7-4c0c-a1f0-83f434f62f87",
+      "symbol": "CSCO",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "107.65",
+      "qty": "33",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-30-TSM-buy",
+      "order_id": "85f08ae7-82b2-4fd7-8c55-6e33ecf22fca",
+      "symbol": "TSM",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "418.31",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-10-30-XLK-buy",
+      "order_id": "1b1ad4c7-e80b-4f85-862e-1c7756c5ec3c",
+      "symbol": "XLK",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "184.9",
+      "qty": "14",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

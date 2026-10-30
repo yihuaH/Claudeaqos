@@ -1,35 +1,47 @@
 {
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "halted": false,
   "sells": [],
   "buys": [],
-  "skips": [],
-  "warnings": [],
-  "near_signals": [
+  "skips": [
     {
       "symbol": "NVDA",
-      "rsi2_now": 22.5,
-      "scenario": "2d_-1%x2",
-      "spot": 212.88,
-      "structure": "single",
-      "est_premium_usd": 2190
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 25.83,
-      "scenario": "1d_-1%",
-      "spot": 521.98,
-      "structure": "single",
-      "est_premium_usd": 5284
+      "reason": "spread_too_wide(best=3.56%)",
+      "rsi2": 5.35,
+      "spot": 204.64
     },
     {
       "symbol": "MSFT",
-      "rsi2_now": 26.55,
-      "scenario": "1d_-1%",
-      "spot": 528.39,
-      "structure": "single",
-      "est_premium_usd": 5355
+      "reason": "premium_too_large(7313)",
+      "rsi2": 6.51,
+      "spot": 521.91
+    },
+    {
+      "symbol": "DIA",
+      "reason": "premium_too_large(5350)",
+      "rsi2": 7.4,
+      "spot": 517.13
+    },
+    {
+      "symbol": "QQQ",
+      "reason": "premium_too_large(7486)",
+      "rsi2": 8.41,
+      "spot": 690.49
+    },
+    {
+      "symbol": "TSM",
+      "reason": "spread_too_wide(best=4.93%)",
+      "rsi2": 8.77,
+      "spot": 406.13
+    },
+    {
+      "symbol": "SPY",
+      "reason": "premium_too_large(8968)",
+      "rsi2": 9.34,
+      "spot": 755.72
     }
   ],
-  "suggested_reserve_usd": 2190.0
+  "warnings": [],
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }

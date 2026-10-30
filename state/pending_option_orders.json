@@ -1,109 +1,49 @@
 {
-  "trade_date": "2026-10-05",
-  "generated_by": "scripts/daily.py --phase preclose",
-  "status": "executed_filled",
-  "kind": "exit_only",
-  "valid_until": "当日 15:45 ET (执行窗 15:30-15:45, 收盘前主跑产出)",
-  "exec_window_et": "15:30-15:45",
-  "channel_note": "⚠️ agentic 账户不支持多腿 place_option_order (2026-08-15 实测), **出场卖单亦只能走手动 App 通道** —— 会话下不了, 需用户操作 (playbook 4D 既有注记)。",
-  "order": {
-    "structure": "credit_put_spread",
-    "qty": 1,
-    "bucket": "weekly_calls",
-    "reason": "expiry_close",
-    "direction": "debit",
-    "est_price": 0.05,
-    "underlying": "IWM",
-    "expiry": "2026-10-07",
-    "legs": [
-      {
-        "symbol": "IWM261007P00270000",
-        "side": "buy",
-        "position_effect": "close",
-        "strike": 270.0,
-        "quote": {
-          "bid": 0.01,
-          "ask": 0.05
-        }
+  "date": "2026-10-30",
+  "record_kind": "pending_orders",
+  "status": "awaiting_execution",
+  "produced_by": "daily.py --phase wrapup (effective_phase=full, fail-safe 退化)",
+  "orders": [
+    {
+      "symbol": "DIA261113C00465000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 53.5,
+      "underlying": "DIA",
+      "strike": 465.0,
+      "expiry": "2026-11-13",
+      "dte": 14,
+      "spot": 517.13,
+      "rsi2": 7.4,
+      "model_price": 52.8433,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 53.495,
+        "model_flat": 52.8433,
+        "model_surface": 53.8104,
+        "ratio_flat_pct": 98.8,
+        "ratio_surface_pct": 100.6
       },
-      {
-        "symbol": "IWM261007P00245000",
-        "side": "sell",
-        "position_effect": "close",
-        "strike": 245.0,
-        "quote": {
-          "bid": 0,
-          "ask": 0.01
-        }
+      "entry_quote": {
+        "bid": 53.22,
+        "ask": 53.77,
+        "mid": 53.495,
+        "spread_pct": 1.028
       }
-    ],
-    "exit_quote": {
-      "short_ask": 0.05,
-      "long_bid": 0,
-      "net_debit": 0.05,
-      "mid": null,
-      "spread_pct": 133.333,
-      "long_spread_pct": null
     }
-  },
-  "economics": {
-    "entry_credit": 0.61,
-    "exit_net_debit": 0.05,
-    "realized_per_contract_usd": 56.0,
-    "pct_of_max_credit": 91.8,
-    "risk_per_contract_usd": 2439.0,
-    "return_on_risk_pct": 2.3,
-    "collateral_released_usd": 2500.0,
-    "hold_to_expiry_max_usd": 61.0,
-    "note": "到期 2026-10-07 (周三)。不平最多再多赚 $5。"
-  },
-  "prior_attempt": {
-    "order_id": "6ac00e3f-621d-4297-9aca-870efed3e961",
-    "price": 0.07,
-    "state": "cancelled",
-    "cancelled_at_et": "2026-10-02 16:15:32",
-    "by": "非本会话 (会话未调 cancel_option_order)"
-  },
-  "fill": {
-    "order_id": "6ac3fbad-0f93-47e7-8d5f-4ac39ae133e9",
-    "placed_agent": "user",
-    "channel": "手动 App 通道",
-    "placed_at_et": "2026-10-05 15:34:05",
-    "filled_at_et": "2026-10-05 15:35:55",
-    "limit_net_debit": 0.05,
-    "net_debit_filled": 0.05,
-    "processed_premium_usd": 5.0,
-    "legs": [
-      {
-        "symbol": "IWM261007P00270000",
-        "side": "buy",
-        "effect": "close",
-        "price": 0.06
-      },
-      {
-        "symbol": "IWM261007P00245000",
-        "side": "sell",
-        "effect": "close",
-        "price": 0.01
-      }
-    ],
-    "realized_usd": 56.0,
-    "pct_of_max_credit": 91.8,
-    "return_on_risk_pct": 2.3,
-    "prior_try": {
-      "order_id": "6ac3fb87-1a61-46d9-b0fe-4fe34f6088e5",
-      "price": 0.03,
-      "state": "cancelled",
-      "cancelled_at_et": "2026-10-05 15:34:06",
-      "note": "0.03 挂 39 秒未成交, 改 0.05 即成 —— 与会话 15:35 的建议一致 (挂 0.05 按最优价成交且留余量)"
-    },
-    "collateral_released_usd": 2500.0,
-    "ledger_writeback": {
-      "tool": "scripts/weekly_calls.py apply",
-      "round_trip_no": 8,
-      "positions_after": "EMPTY",
-      "pnl_usd": 56.0,
-      "pnl_pct": 2.3
-    }
-  }
+  ],
+  "valid_until": "次一交易日 10:30 ET (推荐执行窗 09:45-10:30, 等开盘点差收窄)",
+  "order_valid_until": "next_session_1030_et",
+  "exec_window_et": "09:45-10:30",
+  "exec_day": "next_session",
+  "channel_note": "开仓走手动通道 (同上)",
+  "spread_note": "避开开盘头 15 分钟的极端点差; 未成交按 4D 处置 (撤单, 绝不改限价追单)",
+  "_note": "由 daily.py 按 effective_phase 产出, 会话**照抄不改写**",
+  "_funding_note_at_generation": "生成时现金/买入力 $6,554.32 (== unleveraged, 无借贷额度), 净值 $11,014.32。DIA 这张 $5,350 = 净值 48.6%。⚠️ **周一执行前必须重取实时 min(buying_power, cash)**, 不得用这里的数; 且跨轨道资金优先级 = QQQ LEAP 优先于周期权 —— 周一若 QQQ 又跌 ≥2% 触发 LEAP 梯子 (用户已裁定「三张都买」约 $6,034), 则 DIA 这张按「超 cap 整单跳过不缩量」应被跳过。",
+  "_why_not_placed_today": "已收盘 (产出时 18:0x ET), 单腿期权开仓虽自 2026-10-12 起自动, 但盘后无法成交; 按 option_pending_template 退到次一交易日 09:45-10:30 ET 窗口。",
+  "_red_line_6_note": "本跑 anomalies=3 (fail-safe 通告 / LEAP 缺 chain 未判出场 / wc.paper.apply 陈旧成交失败), 三条均为已知或预期项, 已逐条核实不影响账本; 但按红线6 已在战报中逐条点名, 由用户事前否决。",
+  "_limit_price_note": "engine est_price=53.50 是生成时的 mid (bid 53.22 / ask 53.77, 点差 1.028%)。**周一不得照抄这个价** —— 须按 4D 用当时券商报价定限价; 未成交则撤单, **绝不改限价追单**。"
 }

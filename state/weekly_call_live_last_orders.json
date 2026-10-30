@@ -1,35 +1,96 @@
 {
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "halted": false,
   "sells": [],
-  "buys": [],
-  "skips": [],
-  "warnings": [],
-  "near_signals": [
+  "buys": [
+    {
+      "symbol": "DIA261113C00465000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 53.5,
+      "underlying": "DIA",
+      "strike": 465.0,
+      "expiry": "2026-11-13",
+      "dte": 14,
+      "spot": 517.13,
+      "rsi2": 7.4,
+      "model_price": 52.8433,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 53.495,
+        "model_flat": 52.8433,
+        "model_surface": 53.8104,
+        "ratio_flat_pct": 98.8,
+        "ratio_surface_pct": 100.6
+      },
+      "entry_quote": {
+        "bid": 53.22,
+        "ask": 53.77,
+        "mid": 53.495,
+        "spread_pct": 1.028
+      }
+    }
+  ],
+  "skips": [
     {
       "symbol": "NVDA",
-      "rsi2_now": 22.5,
-      "scenario": "2d_-1%x2",
-      "spot": 212.88,
-      "structure": "single",
-      "est_premium_usd": 2190
-    },
-    {
-      "symbol": "DIA",
-      "rsi2_now": 25.83,
-      "scenario": "1d_-1%",
-      "spot": 521.98,
-      "structure": "single",
-      "est_premium_usd": 5284
+      "reason": "spread_too_wide(best=3.56%)",
+      "rsi2": 5.35,
+      "spot": 204.64
     },
     {
       "symbol": "MSFT",
-      "rsi2_now": 26.55,
-      "scenario": "1d_-1%",
-      "spot": 528.39,
-      "structure": "single",
-      "est_premium_usd": 5355
+      "reason": "insufficient_buying_power(cost=7313,bp_left=6554)",
+      "rsi2": 6.51,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 73.13,
+        "model_flat": 72.6063,
+        "model_surface": 73.323,
+        "ratio_flat_pct": 99.3,
+        "ratio_surface_pct": 100.3
+      }
+    },
+    {
+      "symbol": "QQQ",
+      "reason": "insufficient_buying_power(cost=7486,bp_left=1205)",
+      "rsi2": 8.41,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 74.86,
+        "model_flat": 71.7406,
+        "model_surface": 73.2528,
+        "ratio_flat_pct": 95.8,
+        "ratio_surface_pct": 97.9
+      }
+    },
+    {
+      "symbol": "TSM",
+      "reason": "spread_too_wide(best=4.93%)",
+      "rsi2": 8.77,
+      "spot": 406.13
+    },
+    {
+      "symbol": "SPY",
+      "reason": "insufficient_buying_power(cost=8968,bp_left=1205)",
+      "rsi2": 9.34,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 89.675,
+        "model_flat": 86.7472,
+        "model_surface": 87.9869,
+        "ratio_flat_pct": 96.7,
+        "ratio_surface_pct": 98.1
+      }
     }
   ],
-  "suggested_reserve_usd": 2190.0
+  "warnings": [],
+  "near_signals": [],
+  "suggested_reserve_usd": 0.0
 }
