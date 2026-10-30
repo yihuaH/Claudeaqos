@@ -249,7 +249,9 @@ def _pick(chain, cfg, spot, today, rung=None):
     """确定性选档: 只认 call, dte 在带内, **delta 在带内**, 点差/最小买价合规。
 
     `rung` 非空时用该档自己的 `target_dte_calendar` / `dte_band_calendar` 覆盖全局值
-    (梯子模式, 用户 2026-10-23「3 个期限各 1 张」); delta 带、点差闸、min_bid 仍是全局的。
+    (梯子模式, 用户 2026-10-23「3 个期限各 1 张」), 并可用该档自己的 `max_spread_pct`
+    覆盖全局点差闸 (用户 2026-10-30「买qqq年的期权 点差10都可以接受」—— 只对年期档放宽,
+    不连 148/85 一起松; 缺省则沿用全局值); delta 带与 min_bid 仍是全局的。
     排序键 (全部确定性, 无会话判断):
       ① |delta − target| 最小  ② 标准月度优先 (prefer_standard_monthly, §4 点差更紧)
       ③ 点差更窄            ④ dte 更接近目标  ⑤ OCC 字典序 (兜底保证可复现)
@@ -259,6 +261,7 @@ def _pick(chain, cfg, spot, today, rung=None):
     tgt = float(cc["delta_target"])
     lo_d, hi_d = (rung["dte_band_calendar"] if rung else cc["dte_band_calendar"])
     dte_tgt = int(rung["target_dte_calendar"] if rung else cc["dte_target_calendar"])
+    max_sp = float((rung or {}).get("max_spread_pct") or cc["max_spread_pct"])
     cands, diag = [], {"n_call": 0, "in_dte": 0, "in_delta": 0, "has_quote": 0, "pass_spread": 0}
     best_spread = None
     for occ, q in chain.items():
@@ -283,7 +286,7 @@ def _pick(chain, cfg, spot, today, rung=None):
         diag["has_quote"] += 1
         sp = _spread_pct(q)
         best_spread = sp if best_spread is None else min(best_spread, sp)
-        if sp > float(cc["max_spread_pct"]):
+        if sp > max_sp:
             continue
         diag["pass_spread"] += 1
         monthly_rank = 0 if (cc.get("prefer_standard_monthly")
