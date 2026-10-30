@@ -1,189 +1,192 @@
 {
- "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
- "tasks": [
-  {
-   "id": "googl-call-ladder-2026-10-29",
-   "status": "cancelled",
-   "title": "🔴 用户指示: 买 GOOGL call delta0.30 三档各 1 张 (2027-01-15 / 2027-03-19 / 2027-06-17)",
-   "window": "**2026-10-29 09:30:00 ET 开盘即下** (用户 2026-10-28「开盘就买」, 重申过一次, 照用户的办)。⚠️ 我提过 09:45-10:30 是协议推荐窗 (等开盘点差收窄), 用户仍选 09:30 → 执行报告里必须**逐档点名实际点差**, 让他看到为此付了多少。盘前不可能: GOOGL 链 extended_hours_state=disabled 且非指数链, 个股期权只有 09:30-16:00。错过开盘 → 当日盘中任意时点补下并说明; 再错过则逐日顺延并每次报告, **不自行放弃也不自行改参数**。定时任务 trig_013DBF9s32s29FdcWcNSyt2B 于 09:27 ET 唤醒。",
-   "runbook": "本条自身即 runbook; 沿革见 journal/2026-10-28-googl-call-ladder-ordered.md",
-   "note": "用户 2026-10-28 16:4x ET 指示, 参数已问全并逐项确认: 标的 **GOOGL** (不是 GOOG —— 只有 GOOGL 在实盘周call 池内, 且 OI 多 51%/点差更紧) · 方向 **call** · **delta 0.30**, 容差带 **[0.25, 0.40]** (照抄 qqq_leap.json delta_band) · 三档 **各 1 张** · 限价 = **实时 ask** (照抄 LEAP 轨道入场口径 entry=ask, 保成交确定性)。\n到期日已向券商核实存在 (get_option_chains GOOGL): **2027-01-15 / 2027-03-19 / 2027-06-17**。⚠️ 233 档券商实际挂 **06-17** 而非我先前估的 06-18, 以券商列表为准。\n执行步骤: ① get_option_chains 确认三个到期仍在挂 → ② 对每个到期 get_option_instruments (type=call) 取候选行权价 → ③ get_option_quotes 拿**含 delta 的实时报价** → ④ 逐档选 delta 最接近 0.30 且落在 [0.25,0.40] 内的那张 → ⑤ 按用户列出的顺序 **79 → 142 → 233** 逐张 review_option_order → place_option_order, **三张独立单** (多腿被 Robinhood API 400 拒; 且独立单在资金不足时是「能买几张买几张」而非一张都不买) → ⑥ 成交后立即发执行报告。\n🛟 资金闸 (红线3 防杠杆闸照常): 下单前重取实时 min(buying_power, cash); 逐档判, **超 cap 整单跳过不缩量, 绝不动用借来的钱**。2026-10-28 收盘时现金 $6,309.06, 三档 BS 估算合计约 $2,949~$3,306, 预计够。\n🛟 若某张 place 被平台分类器拦 → **该张不重试**, 记录并通知用户, 但**其余未尝试过的仍须逐张 place** (2026-10-13 教训)。\n⚠️ **这是用户自主仓, 不是任何引擎轨道**: GOOGL 当日 rsi2 75.31 (需<10) / 收盘低于 SMA200 / 财报黑窗 dte=0 / 20 日异动 -8.64% 下跌跳空 —— 四条里任何一条都足以让引擎拒绝, 没有任何引擎会产出这张单。故 **不写入任何账本、不算策略仓、引擎不提供止盈/止损/时间止损**, 出场完全由用户负责。会话只负责按指示下单与报告。\n⚠️ **行权价必须明早用实时链重算**: 10-28 盘后 GOOGL 325.63 → 297.48 (-8.64%), 用 10-28 的链选出的 delta 0.30 明早只剩 0.10 出头 (实测: K=330 的 delta 从 0.475 掉到 0.165)。**绝不可照抄 10-28 估算出的行权价。**\n\n🔧 **出场已由引擎接管 (2026-10-28 当晚接线完成)**: `strategy/googl_leap.json` + 独立账本 `state/googl_leap_positions.json`, 引擎复用 `scripts/qqq_leap.py` (underlying 由 config 驱动)。止盈 `bid >= 入场成交价 × 1.20`; 时间止损 **`max_holding_pct_of_dte: 0.30`** = `round(entry_dte × 0.30 × 5/7)` 交易日 → **78→17 / 141→30 / 231→50**; 无价格止损。`entries_paused: true` 使本轨道永不自己开仓 (对应「开仓就买」), 但出场照常全自动。\n⚠️ **回写时 context 的 buys 必须带 `dte` 字段** —— `entry_dte` 是时间止损阈值的唯一依据, 缺了会静默回落到固定 20 交易日, 把 231 档的 50 天压成 20 天。\n回写命令: `python3 scripts/qqq_leap.py apply --config strategy/googl_leap.json --ledger state/googl_leap_positions.json --fills <fills> --context <ctx> --date 2026-10-29`",
-   "cancelled": "2026-10-29 盘后, 用户原话「googl不下了」",
-   "cancel_note": "用户撤销, **不要再下、不要顺延、不要在任何报告里再当待执行项点名**。\n撤销时状态: 10-29 09:33 已选档并 review, 三张中两张触发券商 `OPTION_WIDE_BID_ASK_SPREAD` → 按工具契约必须先取确认, 故一张都没下。**零成交、零持仓、零账本记录, 无需任何回写或平仓。**\n⚠️ 若用户日后重新要买 GOOGL call: 行权价与 delta **必须用当时的实时链重算**, 绝不可复用 10-28 选出的 K315/K330/K350 —— GOOGL 自那时 324.89 → 282.92 (−12.9%), 那三个行权价的 delta 早已远离 0.30。"
-  },
-  {
-   "id": "stock-buys-paused-2026-10-27",
-   "title": "⛔ 今日 (2026-10-27) 实盘股票买入已暂停 — 用户一票",
-   "window": "**仅 2026-10-27**。当日 15:20 收盘前主跑与 17:45 收尾窗各看一次即可; 过了这天本条自动失效",
-   "runbook": "journal/2026-10-27-morning.md 的「追记 3」",
-   "note": "用户 2026-10-27 12:0x 指示「今天暂停买股票」。已落为 strategy/config.json 的 `live_stock_buys_paused_dates: [\"2026-10-27\"]`, signals.py 按 --date 匹配生效。⚠️ **不需要会话额外做任何事** —— 引擎自己会出 buys=0 并带 warning, 照常跑 daily.py 即可; **不要**手工删买单 (那会变成会话改引擎输出, 违红线2)。范围: 只关 rsi2_entry + rsi2_scale_in; 出场/止损/时间止损/换仓/加速清理照常; 期权轨道 (qqq_leap / weekly_calls_live) 不受影响, 由各自 config 管; 纸面轨道不受影响。⚠️ 次日 (10-28) 起自动恢复买入 —— 若用户想延长必须再说一次。",
-   "status": "done",
-   "created": "2026-10-27",
-   "authorized_by": "用户 2026-10-27 「今天暂停买股票」",
-   "closed_at": "2026-10-28",
-   "outcome": "按本条自身约定「过了这天本条自动失效」关闭。2026-10-27 当日实际效果已核实: 引擎产出 buys=0 并带 warning 原文 「live_stock_buys_paused_dates 含 2026-10-27: 实盘股票买入 (新开仓+加仓) 本日全部暂停 (用户一票), 出场/止损/换仓不受影响」, 会话未手工删改任何买单 (红线2 守住)。⚠️ 买入暂停已于 10-28 自动恢复, 但 sizing.min_cash_reserve_usd = 5300 仍长期有效, 它单独就足以让 RSI-2 股票轨道零出单 —— 两者不要混为一谈。strategy/config.json 里 live_stock_buys_paused_dates 的 \"2026-10-27\" 刻意保留为审计记录: signals.py 按 --date 精确匹配, 过期日期完全惰性。"
-  },
-  {
-   "id": "platform-layer-test-2026-10",
-   "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
-   "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
-   "runbook": "journal/2026-10-09-platform-layer-test-plan.md",
-   "note": "⚠️ 非引擎订单 (基础设施测试, 同 2026-07-20 先例)。XLU 1 整股限价 $20.00 (约市价一半, 结构上不可成交) → place → 核实 → **立刻撤单** → 核实 state=cancelled 且 cumulative_quantity=0。**只测一次**, 无论通过或被拦都不重试 (playbook: 不要反复尝试下单)。在有人值守窗口里跑**没有意义**, 不要在用户对话中执行。",
-   "status": "done",
-   "created": "2026-10-09",
-   "authorized_by": "用户 2026-10-09 「做一次平台层测试」",
-   "done_at": "2026-10-12 10:48 ET",
-   "result": "place **未被拦截** — order 6accf31f-3ee4-44ea-9437-3c90d3555a2f, state unconfirmed → cancelled, cumulative_quantity 0, 零成交零费用, 存活 6.8 秒。详见 journal/2026-10-12-morning.md"
-  },
-  {
-   "id": "earnings-input-every-run-2026-10",
-   "title": "每次主跑必须喂 --earnings (财报黑窗静默失效的真正根因 = 取数漏做, 不是代码缺陷)",
-   "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
-   "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
-   "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
-   "status": "pending",
-   "created": "2026-10-12",
-   "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
-  },
-  {
-   "id": "qqq-leap-first-live-run-2026-10",
-   "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
-   "window": "**顺延中**: 原定 2026-10-20 两窗已跑完 (见 progress_2026_10_20), 但未遇真实信号日 → 继续顺延到首个 entry_signal=true 的交易日, 届时盯完 window → 取链 → signal → place → apply 全链路再标 done",
-   "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
-   "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
-   "status": "done",
-   "created": "2026-10-20",
-   "authorized_by": "用户 2026-10-20「明天盯着跑」",
-   "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。",
-   "done_at": "2026-10-22 13:13 ET",
-   "result": "✅ **全链路首次实战走通**: window (entry_signal true, QQQ 705.65 / −2.696%, SMA200 676.90 之上) → **会话取券商期权链含 delta** (此前只用合成链测过) → signal 选定 QQQ270917C00830000 (delta 0.301, 限价 24.79 = ask×1.0) → review (返回 OPTION_WIDE_BID_ASK_SPREAD 预警, 按工具规定先给用户看并取得确认) → **place 零拦截** → **成交 $24.74** (优于限价 5 分) → apply 回写账本, 止盈线按实际成交价重算 29.688。详见 journal/2026-10-22-leap-first-signal.md。"
-  },
-  {
-   "id": "pool-entrant-earnings-2026-10",
-   "title": "周度股票池刷新 finalize 后: 新进池标的逐只 get_earnings_results 取 next+past",
-   "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
-   "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
-   "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
-   "status": "pending",
-   "created": "2026-10-21",
-   "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
-  },
-  {
-   "id": "qqq-leap-open-gap-2026-10-30",
-   "status": "superseded",
-   "title": "🔴 用户指示: 2026-10-30 开盘若比昨收低 ≥2.5% → 买 QQQ LEAP 三档梯子",
-   "window": "**2026-10-30 09:30:00 ET 开盘判定, 成立即下**。定时任务 09:27 ET 唤醒 (盘前先把链和行权价清单拿好, 开盘后只补 delta 报价)。错过开盘 → 当日盘中补判并说明 (但判的仍是**开盘价**, 不是补判时的价); 若当日未执行则**作废不顺延** —— 用户说的是「明天开盘」, 不是「跌到就买」。",
-   "trigger": {
-    "_rule": "用户 2026-10-29 16:5x ET 原话: 「明天开盘比昨收低于2.5 就买」",
-    "metric": "QQQ 2026-10-30 官方开盘价 (opening print) ÷ 2026-10-29 官方收盘价 − 1",
-    "threshold_pct": -2.5,
-    "fire_if": "day_open_return_pct <= -2.5",
-    "prev_close_estimate": 715.28,
-    "trigger_price_estimate": 697.398,
-    "_prev_close_note": "715.28 是 10-29 15:59:59 ET 的 last_trade_price, **不是官方收盘** (券商 T 日收盘次日才发布)。明早必须用券商 get_equity_quotes 的 `previous_close` / `close` 字段 (届时应已是 10-29 的官方收盘) 重算触发价, **不要用 715.28 硬算**。10-28 刚实测过 last_trade 与收盘竞价可差 ~20bp。",
-    "_open_price_note": "开盘价取当日日线 bar 的 `open` (get_equity_historicals / integrations.py historicals), 以实时 quote 交叉核对。不用 09:3x 的现价当开盘价。"
-   },
-   "what_to_buy": {
-    "instrument": "QQQ LEAP call 三档梯子 —— **完全照 strategy/qqq_leap.json**: ladder 148/85/330 DTE 各 1 张, delta_target 0.30 带 [0.25,0.40], 顺序 148 → 85 → 330, 三张独立订单",
-    "selection_by": "引擎 (红线2): `qqq_leap.py window` → 取含 delta 的券商期权报价 → `qqq_leap.py signal` → place → `apply` 回写 state/qqq_leap_positions.json",
-    "_override": "⚠️ 引擎自带的入场闸是**收盘**跌 ≥2.0% (`entry.daily_return_pct_max = -2.0`), 与用户这条规则 (**开盘**跌 ≥2.5%) 不同。做法: **仓库里的 strategy/qqq_leap.json 一个字不改**, 改用 scratchpad 里的临时副本把 `entry.daily_return_pct_max` 置 -2.5, 并把 `--quotes` 传成 `{\"QQQ\": <开盘价>}` —— 这样引擎算出的 day_return 正好是「开盘 vs 昨收」, 而**选档与定量仍然全部由引擎做**。只覆盖触发条件, 不碰选档逻辑。",
-    "_why_not_edit_config": "用户说的是「明天开盘」, 一天的指示; 把 config 的收盘闸从 -2.0 改成 -2.5 会**永久改掉引擎每天的收盘规则**, 那不是他要的。"
-   },
-   "gates_that_still_apply": [
-    "🛟 资金闸 (红线9 防杠杆闸): 下单前重取实时 min(buying_power, cash), **逐档判**, 超 cap 该档整单跳过不缩量, 绝不动用借来的钱。",
-    "🛟 牛市过滤 `require_close_above_sma200: true` 仍在: SMA200 ≈ 679.15 (10-29)。开盘价若低于它, **引擎会拒绝入场** —— 此时不买, 写报告说明。用户只说了跌幅, 没说要拆这道闸, 不自行拆 (红线3)。",
-    "🛟 点差闸 `max_spread_pct: 8.0` 仍在。**开盘是全天点差最烂的时刻** (10-23 实测 330 档收盘前就已 7.26%), 某档被点差闸跳掉是**真实可能**, 不是异常。逐档点名实际点差。",
-    "🛟 若 `review_option_order` 返回**非空 order_checks** (如 10-29 早 GOOGL 两腿的 `OPTION_WIDE_BID_ASK_SPREAD`), 按工具契约**必须先呈报并取得用户确认**, 该档不得直接 place。这条压过 10-29 的「开仓自动」—— 券商自己报了警, 不能替用户吞掉。",
-    "🛟 某张 place 被平台分类器拦 → 该张不重试, 记录并通知, 但**其余未尝试的仍须逐张 place** (2026-10-13 教训)。"
-   ],
-   "exits": "✅ 与 GOOGL 手动仓**不同**: 本仓是 QQQ LEAP 轨道的正规持仓, 回写 `state/qqq_leap_positions.json` 后**出场全自动** —— 止盈 bid ≥ 入场 ask × 1.20, 20 交易日时间止损 (时钟不因加仓重置), 无价格止损, force_exit_dte_lte 30。",
-   "open_questions_for_user": [
-    "❓**15:20 会不会再买一次 (双入场)**: 引擎自带的收盘闸照常在 15:20 跑。若明日开盘跌 ≥2.5% (我早上买一套) **且**收盘又比今收跌 ≥2% (收 ≤ ~700.97), 引擎会**再买一套**。`sizing.max_concurrent_positions = null` 是用户 2026-10-19 明确设的「并持不设上限」, 故这**不违反任何闸**, 系统照配置就是会这么做。粗算: 一套约 $5,000, 早上买完剩约 $2,900, 下午还能再吃 1~2 张 → 单日 QQQ call 敞口可达净值 ~68%。⚠️ 另一面: config 的 sizing 注释引回测称「任何显式上限都是逆向选择, 被上限跳掉的 33 笔均值 +23.96%」, 即**挡掉下午那套在历史上是亏钱的**。故我**不自行加闸**, 等用户发话。未发话 = 两套都照跑。",
-    "✅ **已消解 (2026-10-29 盘后)**: 原问题「QQQ 梯子 vs GOOGL 梯子谁先拿钱」—— 用户撤销 GOOGL (「googl不下了」), 明早**只有 QQQ 一个要钱**, 全部现金 $7,905.71 可用, 不存在争抢。"
-   ],
-   "runbook": "本条自身即 runbook; 沿革见 journal/2026-10-29-qqq-open-gap-rule.md",
-   "created": "2026-10-29 (收盘后, 用户消息)",
-   "superseded": "2026-10-29 盘后, 用户原话「明天先别跑了，明天等我起床后看看情况再说吧」",
-   "supersede_note": "🚫 **本条作废, 不执行、不顺延。** 规则是用户为 **10-30 一天**定的 (「明天开盘比昨收低于2.5 就买」), 随后同一晚他改口要先停跑看情况 —— 后一句取代前一句。\n定时任务 `trig_01961sNiuVQSLRkq4C62Y2sH` 已 enabled=false。\n⚠️ 若用户日后重提这条规则: **触发价必须按当时的昨收重算**, 10-29 估的 $697.40 (= 715.28×0.975) 只对 10-30 那一天有效。"
-  },
-  {
-   "id": "expiring-options-2026-10-30",
-   "status": "done",
-   "title": "🔴 2026-10-30 到期的两张手动期权 —— 用户尚未答复处置方式, 15:30 ET 硬期限",
-   "window": "**2026-10-30 全天, 最晚 15:30 ET** (券商 `sellout_datetime` = 2026-10-30T19:30:00Z 两张同)。任何在该日运行的会话 (09:27 跳空任务 / 10:45 晨检 / 15:20 主跑) 看到本条且用户仍未答复, **必须在报告里再点一次名**, 尤其 15:20 主跑 —— 它是 15:30 前最后一个窗口。",
-   "positions": [
+  "_what": "一次性任务队列。只被 scripts/session.py brief 读取并打印 (纯展示, 不产生任何订单/决策 — 红线2)。做完把 status 改成 done 并写 journal。",
+  "tasks": [
     {
-     "occ_desc": "TSLA $405 call exp 2026-10-30",
-     "option_id": "fd0836e8-7c14-48ee-9ad7-7702c19ad51c",
-     "contracts": 1,
-     "cost_usd": 524,
-     "mark_1029": 2.68,
-     "value_usd": 268,
-     "pnl_usd": -256,
-     "pnl_pct": -48.9,
-     "moneyness": "价外 $1.71 (TSLA 收 403.29, 盘后 397.92)",
-     "delta": 0.4278,
-     "theta": -1.8378,
-     "if_left_alone": "价外到期 → **归零**, 损失残值 $268。theta −1.84/天 而全张只值 $2.68 → 明日 TSLA 不上 405 就是零。券商会在 15:30 强平 (若那时价内且付不起行权款)。"
+      "id": "googl-call-ladder-2026-10-29",
+      "status": "cancelled",
+      "title": "🔴 用户指示: 买 GOOGL call delta0.30 三档各 1 张 (2027-01-15 / 2027-03-19 / 2027-06-17)",
+      "window": "**2026-10-29 09:30:00 ET 开盘即下** (用户 2026-10-28「开盘就买」, 重申过一次, 照用户的办)。⚠️ 我提过 09:45-10:30 是协议推荐窗 (等开盘点差收窄), 用户仍选 09:30 → 执行报告里必须**逐档点名实际点差**, 让他看到为此付了多少。盘前不可能: GOOGL 链 extended_hours_state=disabled 且非指数链, 个股期权只有 09:30-16:00。错过开盘 → 当日盘中任意时点补下并说明; 再错过则逐日顺延并每次报告, **不自行放弃也不自行改参数**。定时任务 trig_013DBF9s32s29FdcWcNSyt2B 于 09:27 ET 唤醒。",
+      "runbook": "本条自身即 runbook; 沿革见 journal/2026-10-28-googl-call-ladder-ordered.md",
+      "note": "用户 2026-10-28 16:4x ET 指示, 参数已问全并逐项确认: 标的 **GOOGL** (不是 GOOG —— 只有 GOOGL 在实盘周call 池内, 且 OI 多 51%/点差更紧) · 方向 **call** · **delta 0.30**, 容差带 **[0.25, 0.40]** (照抄 qqq_leap.json delta_band) · 三档 **各 1 张** · 限价 = **实时 ask** (照抄 LEAP 轨道入场口径 entry=ask, 保成交确定性)。\n到期日已向券商核实存在 (get_option_chains GOOGL): **2027-01-15 / 2027-03-19 / 2027-06-17**。⚠️ 233 档券商实际挂 **06-17** 而非我先前估的 06-18, 以券商列表为准。\n执行步骤: ① get_option_chains 确认三个到期仍在挂 → ② 对每个到期 get_option_instruments (type=call) 取候选行权价 → ③ get_option_quotes 拿**含 delta 的实时报价** → ④ 逐档选 delta 最接近 0.30 且落在 [0.25,0.40] 内的那张 → ⑤ 按用户列出的顺序 **79 → 142 → 233** 逐张 review_option_order → place_option_order, **三张独立单** (多腿被 Robinhood API 400 拒; 且独立单在资金不足时是「能买几张买几张」而非一张都不买) → ⑥ 成交后立即发执行报告。\n🛟 资金闸 (红线3 防杠杆闸照常): 下单前重取实时 min(buying_power, cash); 逐档判, **超 cap 整单跳过不缩量, 绝不动用借来的钱**。2026-10-28 收盘时现金 $6,309.06, 三档 BS 估算合计约 $2,949~$3,306, 预计够。\n🛟 若某张 place 被平台分类器拦 → **该张不重试**, 记录并通知用户, 但**其余未尝试过的仍须逐张 place** (2026-10-13 教训)。\n⚠️ **这是用户自主仓, 不是任何引擎轨道**: GOOGL 当日 rsi2 75.31 (需<10) / 收盘低于 SMA200 / 财报黑窗 dte=0 / 20 日异动 -8.64% 下跌跳空 —— 四条里任何一条都足以让引擎拒绝, 没有任何引擎会产出这张单。故 **不写入任何账本、不算策略仓、引擎不提供止盈/止损/时间止损**, 出场完全由用户负责。会话只负责按指示下单与报告。\n⚠️ **行权价必须明早用实时链重算**: 10-28 盘后 GOOGL 325.63 → 297.48 (-8.64%), 用 10-28 的链选出的 delta 0.30 明早只剩 0.10 出头 (实测: K=330 的 delta 从 0.475 掉到 0.165)。**绝不可照抄 10-28 估算出的行权价。**\n\n🔧 **出场已由引擎接管 (2026-10-28 当晚接线完成)**: `strategy/googl_leap.json` + 独立账本 `state/googl_leap_positions.json`, 引擎复用 `scripts/qqq_leap.py` (underlying 由 config 驱动)。止盈 `bid >= 入场成交价 × 1.20`; 时间止损 **`max_holding_pct_of_dte: 0.30`** = `round(entry_dte × 0.30 × 5/7)` 交易日 → **78→17 / 141→30 / 231→50**; 无价格止损。`entries_paused: true` 使本轨道永不自己开仓 (对应「开仓就买」), 但出场照常全自动。\n⚠️ **回写时 context 的 buys 必须带 `dte` 字段** —— `entry_dte` 是时间止损阈值的唯一依据, 缺了会静默回落到固定 20 交易日, 把 231 档的 50 天压成 20 天。\n回写命令: `python3 scripts/qqq_leap.py apply --config strategy/googl_leap.json --ledger state/googl_leap_positions.json --fills <fills> --context <ctx> --date 2026-10-29`",
+      "cancelled": "2026-10-29 盘后, 用户原话「googl不下了」",
+      "cancel_note": "用户撤销, **不要再下、不要顺延、不要在任何报告里再当待执行项点名**。\n撤销时状态: 10-29 09:33 已选档并 review, 三张中两张触发券商 `OPTION_WIDE_BID_ASK_SPREAD` → 按工具契约必须先取确认, 故一张都没下。**零成交、零持仓、零账本记录, 无需任何回写或平仓。**\n⚠️ 若用户日后重新要买 GOOGL call: 行权价与 delta **必须用当时的实时链重算**, 绝不可复用 10-28 选出的 K315/K330/K350 —— GOOGL 自那时 324.89 → 282.92 (−12.9%), 那三个行权价的 delta 早已远离 0.30。"
     },
     {
-     "occ_desc": "SQQQ $37.50 call exp 2026-10-30",
-     "option_id": "33a647be-a147-431c-b146-c8eba23c88cf",
-     "contracts": 1,
-     "cost_usd": 83,
-     "mark_1029": 0.775,
-     "value_usd": 77.5,
-     "pnl_usd": -5.5,
-     "pnl_pct": -6.6,
-     "moneyness": "**价内 $0.34** (SQQQ 收 37.84, 盘后 39.41 → 价内扩到 $1.91)",
-     "delta": 0.5992,
-     "if_left_alone": "🔴 **价内到期 → OCC 自动行权**: 扣现金 **$3,750**, 账户多出 **100 股 SQQQ**。$3,750 用户付得起 (现金 $7,905.71), 所以**券商不会替他强平** —— 强平只在付不起时发生。⚠️ **后果 = 重新制造账本外正股**, 正是 10-27~10-29 让 position_check 连拦四次、VLO 止损多亏 $5.07 的同一个坑, 只是金额 15 倍。"
+      "id": "stock-buys-paused-2026-10-27",
+      "title": "⛔ 今日 (2026-10-27) 实盘股票买入已暂停 — 用户一票",
+      "window": "**仅 2026-10-27**。当日 15:20 收盘前主跑与 17:45 收尾窗各看一次即可; 过了这天本条自动失效",
+      "runbook": "journal/2026-10-27-morning.md 的「追记 3」",
+      "note": "用户 2026-10-27 12:0x 指示「今天暂停买股票」。已落为 strategy/config.json 的 `live_stock_buys_paused_dates: [\"2026-10-27\"]`, signals.py 按 --date 匹配生效。⚠️ **不需要会话额外做任何事** —— 引擎自己会出 buys=0 并带 warning, 照常跑 daily.py 即可; **不要**手工删买单 (那会变成会话改引擎输出, 违红线2)。范围: 只关 rsi2_entry + rsi2_scale_in; 出场/止损/时间止损/换仓/加速清理照常; 期权轨道 (qqq_leap / weekly_calls_live) 不受影响, 由各自 config 管; 纸面轨道不受影响。⚠️ 次日 (10-28) 起自动恢复买入 —— 若用户想延长必须再说一次。",
+      "status": "done",
+      "created": "2026-10-27",
+      "authorized_by": "用户 2026-10-27 「今天暂停买股票」",
+      "closed_at": "2026-10-28",
+      "outcome": "按本条自身约定「过了这天本条自动失效」关闭。2026-10-27 当日实际效果已核实: 引擎产出 buys=0 并带 warning 原文 「live_stock_buys_paused_dates 含 2026-10-27: 实盘股票买入 (新开仓+加仓) 本日全部暂停 (用户一票), 出场/止损/换仓不受影响」, 会话未手工删改任何买单 (红线2 守住)。⚠️ 买入暂停已于 10-28 自动恢复, 但 sizing.min_cash_reserve_usd = 5300 仍长期有效, 它单独就足以让 RSI-2 股票轨道零出单 —— 两者不要混为一谈。strategy/config.json 里 live_stock_buys_paused_dates 的 \"2026-10-27\" 刻意保留为审计记录: signals.py 按 --date 精确匹配, 过期日期完全惰性。"
+    },
+    {
+      "id": "platform-layer-test-2026-10",
+      "title": "平台层测试: 无人值守会话能否 place 实盘买单 (用户 2026-10-09 批准)",
+      "window": "下一个**无人值守**窗口且**市场开市**时 — 首选 2026-10-12 (周一) 10:45 ET 晨检",
+      "runbook": "journal/2026-10-09-platform-layer-test-plan.md",
+      "note": "⚠️ 非引擎订单 (基础设施测试, 同 2026-07-20 先例)。XLU 1 整股限价 $20.00 (约市价一半, 结构上不可成交) → place → 核实 → **立刻撤单** → 核实 state=cancelled 且 cumulative_quantity=0。**只测一次**, 无论通过或被拦都不重试 (playbook: 不要反复尝试下单)。在有人值守窗口里跑**没有意义**, 不要在用户对话中执行。",
+      "status": "done",
+      "created": "2026-10-09",
+      "authorized_by": "用户 2026-10-09 「做一次平台层测试」",
+      "done_at": "2026-10-12 10:48 ET",
+      "result": "place **未被拦截** — order 6accf31f-3ee4-44ea-9437-3c90d3555a2f, state unconfirmed → cancelled, cumulative_quantity 0, 零成交零费用, 存活 6.8 秒。详见 journal/2026-10-12-morning.md"
+    },
+    {
+      "id": "earnings-input-every-run-2026-10",
+      "title": "每次主跑必须喂 --earnings (财报黑窗静默失效的真正根因 = 取数漏做, 不是代码缺陷)",
+      "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
+      "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
+      "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
+      "status": "pending",
+      "created": "2026-10-12",
+      "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
+    },
+    {
+      "id": "qqq-leap-first-live-run-2026-10",
+      "title": "盯 QQQ LEAP 轨道的首次真实运行 (用户 2026-10-20「明天盯着跑」)",
+      "window": "**顺延中**: 原定 2026-10-20 两窗已跑完 (见 progress_2026_10_20), 但未遇真实信号日 → 继续顺延到首个 entry_signal=true 的交易日, 届时盯完 window → 取链 → signal → place → apply 全链路再标 done",
+      "runbook": "journal/2026-10-19-design-qqq-leap.md 末尾「daily.py 接线完成」一节 + strategy/proposals/qqq-leap-call.md §7",
+      "note": "⚠️ **昨天只跑过 --plan-only 干跑, 今天 15:20 是 phase_qqq_leap 的首次真实 (非 plan-only) 运行。** 要逐项看 plan.json 的 qqq_leap 段: ① resolved 是不是预期值 (无持仓无信号 → no_action); ② command_log 里 leap.window 是否在 signals.signal **之前** (funding_priority=1); ③ LEAP 有没有产生 anomaly; ④ 正股与周call 产出是否不受影响。**唯一未经实战的环节 = 首个真实信号日的「会话按 session_action_required 取券商期权链」** —— 真来信号那天必须盯着它走完 window → 取链 → signal → place → apply 全链路。⚠️ 纯观察 + 按既有协议执行, 不改任何参数 (红线2/3)。",
+      "status": "done",
+      "created": "2026-10-20",
+      "authorized_by": "用户 2026-10-20「明天盯着跑」",
+      "progress_2026_10_20": "✅ 四项盯跑点全部通过 (15:20 preclose, 首次非 plan-only 真实运行): ① resolved=no_action (QQQ 717.50 当日 -0.12%, drop_too_small; SMA200 675.95 在下方, 牛市过滤本身通过); ② command_log 第 6 位 leap.window 在第 7 位 signals.signal **之前** (funding_priority=1 排序成立); ③ 无任何 LEAP 相关 anomaly; ④ 正股 (2 卖 2 买全成) 与周call 两轨产出不受影响。⚠️ **仍 pending**: 今日无入场信号 → 「会话取券商期权链 → signal 选档 → place → apply」整段未走到, 至今只用合成链测过。17:45 wrapup 不跑本轨道 (daily.py:845 的 eff=='wrapup' 分支只跑纸面与行情核对), 故 LEAP 的出场判定一天只在 15:20 评估一次 —— 与本轨道按日收盘判 TP/时间止损的口径一致, 非缺陷; 若 wrapup 退化为 fail-safe 完整主跑 (eff 变 full), LEAP 会随 else 分支一起跑, 兜底覆盖到。",
+      "done_at": "2026-10-22 13:13 ET",
+      "result": "✅ **全链路首次实战走通**: window (entry_signal true, QQQ 705.65 / −2.696%, SMA200 676.90 之上) → **会话取券商期权链含 delta** (此前只用合成链测过) → signal 选定 QQQ270917C00830000 (delta 0.301, 限价 24.79 = ask×1.0) → review (返回 OPTION_WIDE_BID_ASK_SPREAD 预警, 按工具规定先给用户看并取得确认) → **place 零拦截** → **成交 $24.74** (优于限价 5 分) → apply 回写账本, 止盈线按实际成交价重算 29.688。详见 journal/2026-10-22-leap-first-signal.md。"
+    },
+    {
+      "id": "pool-entrant-earnings-2026-10",
+      "title": "周度股票池刷新 finalize 后: 新进池标的逐只 get_earnings_results 取 next+past",
+      "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
+      "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
+      "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
+      "status": "pending",
+      "created": "2026-10-21",
+      "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
+    },
+    {
+      "id": "qqq-leap-open-gap-2026-10-30",
+      "status": "superseded",
+      "title": "🔴 用户指示: 2026-10-30 开盘若比昨收低 ≥2.5% → 买 QQQ LEAP 三档梯子",
+      "window": "**2026-10-30 09:30:00 ET 开盘判定, 成立即下**。定时任务 09:27 ET 唤醒 (盘前先把链和行权价清单拿好, 开盘后只补 delta 报价)。错过开盘 → 当日盘中补判并说明 (但判的仍是**开盘价**, 不是补判时的价); 若当日未执行则**作废不顺延** —— 用户说的是「明天开盘」, 不是「跌到就买」。",
+      "trigger": {
+        "_rule": "用户 2026-10-29 16:5x ET 原话: 「明天开盘比昨收低于2.5 就买」",
+        "metric": "QQQ 2026-10-30 官方开盘价 (opening print) ÷ 2026-10-29 官方收盘价 − 1",
+        "threshold_pct": -2.5,
+        "fire_if": "day_open_return_pct <= -2.5",
+        "prev_close_estimate": 715.28,
+        "trigger_price_estimate": 697.398,
+        "_prev_close_note": "715.28 是 10-29 15:59:59 ET 的 last_trade_price, **不是官方收盘** (券商 T 日收盘次日才发布)。明早必须用券商 get_equity_quotes 的 `previous_close` / `close` 字段 (届时应已是 10-29 的官方收盘) 重算触发价, **不要用 715.28 硬算**。10-28 刚实测过 last_trade 与收盘竞价可差 ~20bp。",
+        "_open_price_note": "开盘价取当日日线 bar 的 `open` (get_equity_historicals / integrations.py historicals), 以实时 quote 交叉核对。不用 09:3x 的现价当开盘价。"
+      },
+      "what_to_buy": {
+        "instrument": "QQQ LEAP call 三档梯子 —— **完全照 strategy/qqq_leap.json**: ladder 148/85/330 DTE 各 1 张, delta_target 0.30 带 [0.25,0.40], 顺序 148 → 85 → 330, 三张独立订单",
+        "selection_by": "引擎 (红线2): `qqq_leap.py window` → 取含 delta 的券商期权报价 → `qqq_leap.py signal` → place → `apply` 回写 state/qqq_leap_positions.json",
+        "_override": "⚠️ 引擎自带的入场闸是**收盘**跌 ≥2.0% (`entry.daily_return_pct_max = -2.0`), 与用户这条规则 (**开盘**跌 ≥2.5%) 不同。做法: **仓库里的 strategy/qqq_leap.json 一个字不改**, 改用 scratchpad 里的临时副本把 `entry.daily_return_pct_max` 置 -2.5, 并把 `--quotes` 传成 `{\"QQQ\": <开盘价>}` —— 这样引擎算出的 day_return 正好是「开盘 vs 昨收」, 而**选档与定量仍然全部由引擎做**。只覆盖触发条件, 不碰选档逻辑。",
+        "_why_not_edit_config": "用户说的是「明天开盘」, 一天的指示; 把 config 的收盘闸从 -2.0 改成 -2.5 会**永久改掉引擎每天的收盘规则**, 那不是他要的。"
+      },
+      "gates_that_still_apply": [
+        "🛟 资金闸 (红线9 防杠杆闸): 下单前重取实时 min(buying_power, cash), **逐档判**, 超 cap 该档整单跳过不缩量, 绝不动用借来的钱。",
+        "🛟 牛市过滤 `require_close_above_sma200: true` 仍在: SMA200 ≈ 679.15 (10-29)。开盘价若低于它, **引擎会拒绝入场** —— 此时不买, 写报告说明。用户只说了跌幅, 没说要拆这道闸, 不自行拆 (红线3)。",
+        "🛟 点差闸 `max_spread_pct: 8.0` 仍在。**开盘是全天点差最烂的时刻** (10-23 实测 330 档收盘前就已 7.26%), 某档被点差闸跳掉是**真实可能**, 不是异常。逐档点名实际点差。",
+        "🛟 若 `review_option_order` 返回**非空 order_checks** (如 10-29 早 GOOGL 两腿的 `OPTION_WIDE_BID_ASK_SPREAD`), 按工具契约**必须先呈报并取得用户确认**, 该档不得直接 place。这条压过 10-29 的「开仓自动」—— 券商自己报了警, 不能替用户吞掉。",
+        "🛟 某张 place 被平台分类器拦 → 该张不重试, 记录并通知, 但**其余未尝试的仍须逐张 place** (2026-10-13 教训)。"
+      ],
+      "exits": "✅ 与 GOOGL 手动仓**不同**: 本仓是 QQQ LEAP 轨道的正规持仓, 回写 `state/qqq_leap_positions.json` 后**出场全自动** —— 止盈 bid ≥ 入场 ask × 1.20, 20 交易日时间止损 (时钟不因加仓重置), 无价格止损, force_exit_dte_lte 30。",
+      "open_questions_for_user": [
+        "❓**15:20 会不会再买一次 (双入场)**: 引擎自带的收盘闸照常在 15:20 跑。若明日开盘跌 ≥2.5% (我早上买一套) **且**收盘又比今收跌 ≥2% (收 ≤ ~700.97), 引擎会**再买一套**。`sizing.max_concurrent_positions = null` 是用户 2026-10-19 明确设的「并持不设上限」, 故这**不违反任何闸**, 系统照配置就是会这么做。粗算: 一套约 $5,000, 早上买完剩约 $2,900, 下午还能再吃 1~2 张 → 单日 QQQ call 敞口可达净值 ~68%。⚠️ 另一面: config 的 sizing 注释引回测称「任何显式上限都是逆向选择, 被上限跳掉的 33 笔均值 +23.96%」, 即**挡掉下午那套在历史上是亏钱的**。故我**不自行加闸**, 等用户发话。未发话 = 两套都照跑。",
+        "✅ **已消解 (2026-10-29 盘后)**: 原问题「QQQ 梯子 vs GOOGL 梯子谁先拿钱」—— 用户撤销 GOOGL (「googl不下了」), 明早**只有 QQQ 一个要钱**, 全部现金 $7,905.71 可用, 不存在争抢。"
+      ],
+      "runbook": "本条自身即 runbook; 沿革见 journal/2026-10-29-qqq-open-gap-rule.md",
+      "created": "2026-10-29 (收盘后, 用户消息)",
+      "superseded": "2026-10-29 盘后, 用户原话「明天先别跑了，明天等我起床后看看情况再说吧」",
+      "supersede_note": "🚫 **本条作废, 不执行、不顺延。** 规则是用户为 **10-30 一天**定的 (「明天开盘比昨收低于2.5 就买」), 随后同一晚他改口要先停跑看情况 —— 后一句取代前一句。\n定时任务 `trig_01961sNiuVQSLRkq4C62Y2sH` 已 enabled=false。\n⚠️ 若用户日后重提这条规则: **触发价必须按当时的昨收重算**, 10-29 估的 $697.40 (= 715.28×0.975) 只对 10-30 那一天有效。"
+    },
+    {
+      "id": "expiring-options-2026-10-30",
+      "status": "done",
+      "title": "🔴 2026-10-30 到期的两张手动期权 —— 用户尚未答复处置方式, 15:30 ET 硬期限",
+      "window": "**2026-10-30 全天, 最晚 15:30 ET** (券商 `sellout_datetime` = 2026-10-30T19:30:00Z 两张同)。任何在该日运行的会话 (09:27 跳空任务 / 10:45 晨检 / 15:20 主跑) 看到本条且用户仍未答复, **必须在报告里再点一次名**, 尤其 15:20 主跑 —— 它是 15:30 前最后一个窗口。",
+      "positions": [
+        {
+          "occ_desc": "TSLA $405 call exp 2026-10-30",
+          "option_id": "fd0836e8-7c14-48ee-9ad7-7702c19ad51c",
+          "contracts": 1,
+          "cost_usd": 524,
+          "mark_1029": 2.68,
+          "value_usd": 268,
+          "pnl_usd": -256,
+          "pnl_pct": -48.9,
+          "moneyness": "价外 $1.71 (TSLA 收 403.29, 盘后 397.92)",
+          "delta": 0.4278,
+          "theta": -1.8378,
+          "if_left_alone": "价外到期 → **归零**, 损失残值 $268。theta −1.84/天 而全张只值 $2.68 → 明日 TSLA 不上 405 就是零。券商会在 15:30 强平 (若那时价内且付不起行权款)。"
+        },
+        {
+          "occ_desc": "SQQQ $37.50 call exp 2026-10-30",
+          "option_id": "33a647be-a147-431c-b146-c8eba23c88cf",
+          "contracts": 1,
+          "cost_usd": 83,
+          "mark_1029": 0.775,
+          "value_usd": 77.5,
+          "pnl_usd": -5.5,
+          "pnl_pct": -6.6,
+          "moneyness": "**价内 $0.34** (SQQQ 收 37.84, 盘后 39.41 → 价内扩到 $1.91)",
+          "delta": 0.5992,
+          "if_left_alone": "🔴 **价内到期 → OCC 自动行权**: 扣现金 **$3,750**, 账户多出 **100 股 SQQQ**。$3,750 用户付得起 (现金 $7,905.71), 所以**券商不会替他强平** —— 强平只在付不起时发生。⚠️ **后果 = 重新制造账本外正股**, 正是 10-27~10-29 让 position_check 连拦四次、VLO 止损多亏 $5.07 的同一个坑, 只是金额 15 倍。"
+        }
+      ],
+      "my_recommendation": "① SQQQ 那张**卖掉平仓**别让它行权 —— 理由不是看空 SQQQ, 是避免 $3,750 现金被锁 + 重造账本不一致; 想要 SQQQ 敞口就直接买正股并记进账本。② TSLA 那张是方向性赌注, $268 残值, 我无观点。",
+      "spread_warning": "⚠️ 到期日开盘点差最宽: 10-29 收盘时 TSLA 那张 bid/ask 2.65/2.71 = **2.2%**, SQQQ 0.74/0.81 = **9.0%**。SQQQ 只值 $77, 9% 点差 = $7 = 残值一成。想少付点差挂 10:00 之后; 想确定性就开盘办。",
+      "action_rule": "⚠️ **用户未明确发话前一律不动** —— 这三张都是账本外的用户自主仓, 没有任何引擎覆盖它们, 会话不得自行平仓 (红线2/红线6)。只负责按指示执行 + 到期前提醒。",
+      "created": "2026-10-29 (盘后, 用户问「明天到期的期权什么时候平」)",
+      "halt_context": "⚠️ **2026-10-29 盘后追记**: 用户说「明天先别跑了」, 10-30 的四个定时任务已全部关闭 → **那天不会有任何会话主动提醒他**。而本条的 15:30 ET 期限**不受停跑影响**:\n· TSLA $405 call 价外到期 → 归零, 无需任何动作, 无账本后果。\n· 🔴 **SQQQ $37.50 call 价内到期 → OCC 自动行权**, 扣现金 $3,750 + 账户多出 100 股 SQQQ。**停跑不会阻止这件事** —— 它由 OCC 执行, 与本系统是否运行无关。\n· 后果: 多出的 100 股 SQQQ 是账本外正股 → 下一次跑 (最早周一 11-02) 的 `position_check` 会判不一致并**停跑** (10-27~10-29 已因同样原因连拦四次, 当时只有 10 股)。\n· 届时按红线6: 停手、报告用户、等他决定, **不要自行 --force、不要自行改账本**。\n已在 10-29 对话里当面告知用户这一点 (包含「停跑不保护你」这句)。",
+      "user_decision": "✅ **2026-10-29 盘后用户分两次定了, 两张都要提醒**:\n> 「sqqq期权我明天起来手动卖 提醒我」\n> 「TSLA $405 call 10-30 明天也提醒我」\n· **两张都由用户自己在 App 里 Sell to Close**。会话**不代下单**, 只负责提醒 (除非他当场明确让会话代下); **不给方向性建议** —— 方向判断是用户自己的事。\n· 已建两个一次性提醒任务 (均唤醒本常驻会话, 均**必须发 PushNotification 手机推送**, 因为 10-30 四个日常任务全关、且他在睡觉时对话里的字够不到他):\n  - `trig_01RfKrT1yscpUdyAPLkvuecG` 2026-10-30T13:45:00Z = **09:45 ET** 第一次, 平铺事实不催\n  - `trig_015dgVStZMnMYg2Ddc7ZJNLg` 2026-10-30T18:45:00Z = **14:45 ET** last call (距 15:30 强平 45 分钟; **先查 quantity**, 已卖的只用一行确认成交价与盈亏、不再推送)\n· 两条都要求**两张分开写**, 因为风险性质完全不同 (见 `_two_risks_differ`)。\n· 🔴 **误操作风险是真的**: 用户手上两张 TSLA 同为 **$405 call**, 只差到期日。两条提醒都明示 App 里**按到期日**确认, 别碰 `65e0e56f-...` = TSLA $405 call **exp 2026-11-27** (成本 $1,800, 完全不同的仓位, 用户从未说要动它)。\n· **15:30 之后不再推送**; 若 SQQQ 真行权多出 100 股, 周一开跑前 position_check 会自然暴露, 届时按红线6 停手报告, 不自行 --force 不自行改账本。",
+      "_two_risks_differ": {
+        "SQQQ $37.50 call": "风险是**会变成股票**。价内到期 → OCC 自动行权 → 扣 $3,750 + 多出 100 股 SQQQ。⚠️ $3,750 用户付得起 ($7,905.71), 所以**券商不会替他强平** —— 强平只在付不起行权款时发生。这是账本外正股, 会让下次主跑停跑。",
+        "TSLA $405 call": "风险是**会变成零**, 性质完全不同。10-29 收盘价外 $1.71, theta −1.84/天而全张只值 $2.68 → TSLA 不上 405 就归零, 残值 $268 全没, 但**不扣款、不多出股票、无账本后果**。⚠️ 若转为价内: 行权要 100×$405 = **$40,500** ≫ 现金 → **券商会在 15:30 替他强平**。即 **TSLA 这张有券商兜底, SQQQ 那张没有** —— 两张的处置紧迫性因此不同, 报告必须分开写不能合并。"
+      },
+      "outcome": "✅ **2026-10-30 用户本人在 App 里把两张都平了** (`placed_agent: user`, 限价单, 均 filled):\n· **SQQQ $37.50 call** 11:11:52 ET @ **$3.35** → 收 $335, 成本 $83 → **+$252 / +303.6%**\n· **TSLA $405 call** 11:12:47 ET @ **$1.03** → 收 $103, 成本 $524 → **−$421 / −80.3%**\n· 两张合计: 收 $438 vs 成本 $607 → **−$169 / −27.8%**\n✅ **15:30 风险全部解除**: SQQQ 不会行权, 不会多出 100 股账本外正股, position_check 不会因此停跑。TSLA 不会归零 (捞回 $103)。\n📌 **TSLA 卖价远好于我 09:47 报的 $15**: 当时 TSLA 393.79 / 该 call bid 0.15。到 11:12 TSLA 已反弹到约 400, 该 call 回到 $1.03。**我那个报价在当时是准的, 是行情动了**, 不是我报错 —— 也说明到期日期权的残值对正股几个百分点的波动极其敏感 (当时 delta 0.055 但 gamma 0.016 且剩 6 小时)。\n📌 另有一张 10-29 17:19 ET 下的 TSLA 限价卖单 @ $2.65 被用户于 17:28 自行撤销 (盘后挂单未成交)。\n· 账本影响: **零** —— 这三张都是账本外自主仓, 从未进任何 ledger, 无需回写。\n· 14:45 的 last-call 提醒任务 `trig_015dgVStZMnMYg2Ddc7ZJNLg` 已 disabled (工作已完成, 免得白响一次)。"
+    },
+    {
+      "id": "rearm-daily-routines-2026-11-02",
+      "status": "partially_done",
+      "title": "⏰ 回装: 周日 20:00 ET 重新启用三个每日 Routine (10:45 / 15:20 / 17:45)",
+      "window": "定时任务 `trig_01PGJVjSFdZEV2TQ9ow3T3PN` 于 **2026-11-02T01:00:00Z = 2026-11-01 (周日) 20:00 ET** 唤醒。若用户 10-30 期间就让我手动回装, 本条提前标 done 即可。",
+      "why": "用户 10-29 说的是「**明天**先别跑了」= 只停 10-30 一天。但被关的三个是 `* * 1-5` 的**循环** Routine, 关掉等于**下周也不跑**。本条是防止这件事被忘掉导致系统静默停摆的保险。",
+      "to_enable": [
+        "trig_01CtgM6KvCBKywWzEtAEkNia (晨检 10:45)",
+        "trig_01PqeuvMEsyXbTKJQ7njyVcR (收盘前主跑 15:20)",
+        "trig_01W1rzTiiZBaRc2taYzV6tKX (wrapup 17:45)"
+      ],
+      "do_not_enable": "🚫 `trig_01961sNiuVQSLRkq4C62Y2sH` (QQQ 开盘跌≥2.5%) —— 那条只为 10-30 一天而设, 已 superseded。要重做须用户重新发话。",
+      "untouched": "周一刷池 `trig_01PvM5Mj89pokXgPwkMECZrd` 从未关闭 (它周五不触发), 不用动。",
+      "cautions": "⚠️ 只改 `enabled`, **别碰 cron** —— 那三个的 `CRON_TZ=America/New_York` 前缀是 10-23 用户授权加的, 而 11-01 当天刚切换成 EST, 动了会漂一小时。",
+      "created": "2026-10-29 (盘后)",
+      "progress": "⚠️ **2026-10-30 11:20 ET 用户说「继续今天的动作」→ 手动提前回装, 首轮只成功 2/3**:\n· ✅ `trig_01CtgM6KvCBKywWzEtAEkNia` 晨检 10:45 → enabled\n· ✅ `trig_01W1rzTiiZBaRc2taYzV6tKX` wrapup 17:45 → enabled\n· 🔴 `trig_01PqeuvMEsyXbTKJQ7njyVcR` **收盘前主跑 15:20 → 首轮被平台分类器拒绝** (`Real-World Transactions`)。该任务是唯一会在盘中真实下单的, 分类器因此拦住。当时未绕行、未重试, 照实报告用户。",
+      "resolved": "✅ **2026-10-30 12:42 ET 全部回装完成**。用户先退出 auto 模式 (分类器只在 auto 模式下自动拦), 再说「再试一次」→ 同一个 `update_trigger(enabled=true)` **原样重调即通过**。这坐实了 §7.4 的判断: **分类器非确定性 + 只在 auto 模式生效**; 退出 auto 后该调用变成普通权限弹窗, 由用户放行。\n`list_triggers` 核实五条全部 enabled 且 next_run_at 正确:\n· 收盘前主跑 15:20 → **2026-10-30T19:20:00Z = 今天 15:20 ET** ✅\n· wrapup 17:45 → **2026-10-30T21:45:00Z = 今天 17:45 ET** ✅\n· 晨检 10:45 → 2026-11-02T15:45:00Z (= 周一 10:45 EST; 今日该档在停跑期已过, 已于 11:20 手动补跑)\n· 周一刷池 → 2026-11-02T18:09:44Z (= 13:09 EST, 服务端整点偏移)\n· 回装保险 → 2026-11-02T01:00:00Z (已冗余, 幂等, 届时只核对后静默结束)\n📌 **顺带验证了 DST 切换**: 11-02 的 next_run_at 用 EST (UTC−5) 换算后恰为 10:45 / 13:09 ET, 说明 10-23 加的 `CRON_TZ=America/New_York` 前缀在 11-01 夏令时结束后**没有漂**。",
+      "status_note": "本条可在周日那次核对后标 done; 在此之前保留 pending 以防 15:20 那条再被关掉。"
+    },
+    {
+      "id": "rsi2-winddown-2026-10-30",
+      "status": "done",
+      "title": "🔴 RSI-2 正股轨道收尾第二阶段: 最后一股 (MCK) 卖掉后把 config.json enabled 置 false",
+      "window": "**每个主跑窗口都要检查** (15:20 收盘前 + 17:45 wrapup), 直到执行完。`session.py brief` 会把本条高亮出来。",
+      "user_instruction": "用户 2026-10-30 原话: 「正股主策略暂停买入，只卖出最后一股后，就先暂停」",
+      "stage1_done": "✅ 已完成 (2026-10-30): `strategy/config.json` 加 `live_stock_buys_paused: true` → 只关 rsi2_entry 与 rsi2_scale_in, **出场/止损/时间止损/换仓照常**。配套修了 `learn.py cmd_challenger_config` 的字段剥离 (否则纸面挑战者买入也会被关掉, 验证序列报废)。",
+      "stage2_condition": "**条件**: `state/positions.json` 的 `strategy_positions` 变为空 `{}` (即 MCK 已卖出并回写)。",
+      "stage2_action": "把 `strategy/config.json` 的 `enabled` 置 **false**, 并在该字段旁写明: 用户 2026-10-30 指示的第二阶段、何日何因卖出最后一股、恢复方式 (enabled=true + 删 live_stock_buys_paused)。提交推 Main 并通知用户。",
+      "why_two_stages": "⚠️ **现在不能直接 enabled=false** —— 红线4 下 `enabled=false` 会把**出场也一起关掉**, 最后那一股就永远卖不出去了, 与用户「只卖出最后一股后」的指示正相反。故必须先 buys_paused、等仓位空了再 enabled=false。",
+      "expected_exit_date": "📌 **预计 2026-11-03 (下周二) 由引擎自动卖出**: MCK 下次财报 `2026-11-04`, 而 `defense.earnings_exit_days = 1` → `signals.py:318` 在 dte ∈ [0,1] 时产出 `earnings_exit`。11-03 当日 dte=1 即触发。\n其它可能更早触发的出场: 止损线 **922.55** (−7%, 需自 1003 再跌 8.0%) / `exit_strength` (rsi2 ≥ 65 且收盘 > SMA5) / 时间止损第 10 个交易日 = 2026-11-09 (最晚兜底)。\n⚠️ MCK 当前在**财报黑窗内** (dte=5 ≤ 7), 所以即便没有暂停开关, 它也不会被加仓。",
+      "do_not": "🚫 **不要替用户强平 MCK**。用户说的是「只卖出」(= 轨道只剩卖的动作), 不是「现在卖掉它」—— 一张不来自引擎信号的卖单违反红线2, 且用户若想今天就出会直接说。2026-10-30 已在对话里把这个判断和 11-03 的预计出场日一并告知, 由他一票推翻。",
+      "created": "2026-10-30 (盘中 13:1x ET)",
+      "stage2_done": "✅ 已完成 (2026-10-30 15:3x ET): MCK 1.015877 股于 15:28 ET 由引擎 `exit_strength` 信号卖出 @991.0801 (fees $0.03, 回款 $1,006.79, 对成本 991.99 = −0.09% / −$0.95), `signals.py apply` 回写后 `strategy_positions` 变空 {} → stage2 条件达成 → `strategy/config.json` 的 `enabled` 置 false, 并在 `_enabled_note` 写明沿革与恢复方式。",
+      "stage2_actual_vs_expected": "⚠️ **比预计提前 2 个交易日**: 原预计 2026-11-03 由 `earnings_exit` (MCK 财报 11-04, dte=1) 触发; 实际 2026-10-30 就走了 `exit_strength` (rsi2 ≥ 65 或收盘 > SMA5)。仍是引擎自身信号, 未违红线2。记此以备日后校准「预计出场日」的推断方法 —— 当时只算了财报与止损两条路径, 漏了 exit_strength 在反弹日随时可能先触发。",
+      "restore": "恢复实盘正股轨道需**两处都改**: ① `enabled` 置回 true; ② 删除 `live_stock_buys_paused` 字段。只改其一会变成「跑但不买」。"
     }
-   ],
-   "my_recommendation": "① SQQQ 那张**卖掉平仓**别让它行权 —— 理由不是看空 SQQQ, 是避免 $3,750 现金被锁 + 重造账本不一致; 想要 SQQQ 敞口就直接买正股并记进账本。② TSLA 那张是方向性赌注, $268 残值, 我无观点。",
-   "spread_warning": "⚠️ 到期日开盘点差最宽: 10-29 收盘时 TSLA 那张 bid/ask 2.65/2.71 = **2.2%**, SQQQ 0.74/0.81 = **9.0%**。SQQQ 只值 $77, 9% 点差 = $7 = 残值一成。想少付点差挂 10:00 之后; 想确定性就开盘办。",
-   "action_rule": "⚠️ **用户未明确发话前一律不动** —— 这三张都是账本外的用户自主仓, 没有任何引擎覆盖它们, 会话不得自行平仓 (红线2/红线6)。只负责按指示执行 + 到期前提醒。",
-   "created": "2026-10-29 (盘后, 用户问「明天到期的期权什么时候平」)",
-   "halt_context": "⚠️ **2026-10-29 盘后追记**: 用户说「明天先别跑了」, 10-30 的四个定时任务已全部关闭 → **那天不会有任何会话主动提醒他**。而本条的 15:30 ET 期限**不受停跑影响**:\n· TSLA $405 call 价外到期 → 归零, 无需任何动作, 无账本后果。\n· 🔴 **SQQQ $37.50 call 价内到期 → OCC 自动行权**, 扣现金 $3,750 + 账户多出 100 股 SQQQ。**停跑不会阻止这件事** —— 它由 OCC 执行, 与本系统是否运行无关。\n· 后果: 多出的 100 股 SQQQ 是账本外正股 → 下一次跑 (最早周一 11-02) 的 `position_check` 会判不一致并**停跑** (10-27~10-29 已因同样原因连拦四次, 当时只有 10 股)。\n· 届时按红线6: 停手、报告用户、等他决定, **不要自行 --force、不要自行改账本**。\n已在 10-29 对话里当面告知用户这一点 (包含「停跑不保护你」这句)。",
-   "user_decision": "✅ **2026-10-29 盘后用户分两次定了, 两张都要提醒**:\n> 「sqqq期权我明天起来手动卖 提醒我」\n> 「TSLA $405 call 10-30 明天也提醒我」\n· **两张都由用户自己在 App 里 Sell to Close**。会话**不代下单**, 只负责提醒 (除非他当场明确让会话代下); **不给方向性建议** —— 方向判断是用户自己的事。\n· 已建两个一次性提醒任务 (均唤醒本常驻会话, 均**必须发 PushNotification 手机推送**, 因为 10-30 四个日常任务全关、且他在睡觉时对话里的字够不到他):\n  - `trig_01RfKrT1yscpUdyAPLkvuecG` 2026-10-30T13:45:00Z = **09:45 ET** 第一次, 平铺事实不催\n  - `trig_015dgVStZMnMYg2Ddc7ZJNLg` 2026-10-30T18:45:00Z = **14:45 ET** last call (距 15:30 强平 45 分钟; **先查 quantity**, 已卖的只用一行确认成交价与盈亏、不再推送)\n· 两条都要求**两张分开写**, 因为风险性质完全不同 (见 `_two_risks_differ`)。\n· 🔴 **误操作风险是真的**: 用户手上两张 TSLA 同为 **$405 call**, 只差到期日。两条提醒都明示 App 里**按到期日**确认, 别碰 `65e0e56f-...` = TSLA $405 call **exp 2026-11-27** (成本 $1,800, 完全不同的仓位, 用户从未说要动它)。\n· **15:30 之后不再推送**; 若 SQQQ 真行权多出 100 股, 周一开跑前 position_check 会自然暴露, 届时按红线6 停手报告, 不自行 --force 不自行改账本。",
-   "_two_risks_differ": {
-    "SQQQ $37.50 call": "风险是**会变成股票**。价内到期 → OCC 自动行权 → 扣 $3,750 + 多出 100 股 SQQQ。⚠️ $3,750 用户付得起 ($7,905.71), 所以**券商不会替他强平** —— 强平只在付不起行权款时发生。这是账本外正股, 会让下次主跑停跑。",
-    "TSLA $405 call": "风险是**会变成零**, 性质完全不同。10-29 收盘价外 $1.71, theta −1.84/天而全张只值 $2.68 → TSLA 不上 405 就归零, 残值 $268 全没, 但**不扣款、不多出股票、无账本后果**。⚠️ 若转为价内: 行权要 100×$405 = **$40,500** ≫ 现金 → **券商会在 15:30 替他强平**。即 **TSLA 这张有券商兜底, SQQQ 那张没有** —— 两张的处置紧迫性因此不同, 报告必须分开写不能合并。"
-   },
-   "outcome": "✅ **2026-10-30 用户本人在 App 里把两张都平了** (`placed_agent: user`, 限价单, 均 filled):\n· **SQQQ $37.50 call** 11:11:52 ET @ **$3.35** → 收 $335, 成本 $83 → **+$252 / +303.6%**\n· **TSLA $405 call** 11:12:47 ET @ **$1.03** → 收 $103, 成本 $524 → **−$421 / −80.3%**\n· 两张合计: 收 $438 vs 成本 $607 → **−$169 / −27.8%**\n✅ **15:30 风险全部解除**: SQQQ 不会行权, 不会多出 100 股账本外正股, position_check 不会因此停跑。TSLA 不会归零 (捞回 $103)。\n📌 **TSLA 卖价远好于我 09:47 报的 $15**: 当时 TSLA 393.79 / 该 call bid 0.15。到 11:12 TSLA 已反弹到约 400, 该 call 回到 $1.03。**我那个报价在当时是准的, 是行情动了**, 不是我报错 —— 也说明到期日期权的残值对正股几个百分点的波动极其敏感 (当时 delta 0.055 但 gamma 0.016 且剩 6 小时)。\n📌 另有一张 10-29 17:19 ET 下的 TSLA 限价卖单 @ $2.65 被用户于 17:28 自行撤销 (盘后挂单未成交)。\n· 账本影响: **零** —— 这三张都是账本外自主仓, 从未进任何 ledger, 无需回写。\n· 14:45 的 last-call 提醒任务 `trig_015dgVStZMnMYg2Ddc7ZJNLg` 已 disabled (工作已完成, 免得白响一次)。"
-  },
-  {
-   "id": "rearm-daily-routines-2026-11-02",
-   "status": "partially_done",
-   "title": "⏰ 回装: 周日 20:00 ET 重新启用三个每日 Routine (10:45 / 15:20 / 17:45)",
-   "window": "定时任务 `trig_01PGJVjSFdZEV2TQ9ow3T3PN` 于 **2026-11-02T01:00:00Z = 2026-11-01 (周日) 20:00 ET** 唤醒。若用户 10-30 期间就让我手动回装, 本条提前标 done 即可。",
-   "why": "用户 10-29 说的是「**明天**先别跑了」= 只停 10-30 一天。但被关的三个是 `* * 1-5` 的**循环** Routine, 关掉等于**下周也不跑**。本条是防止这件事被忘掉导致系统静默停摆的保险。",
-   "to_enable": [
-    "trig_01CtgM6KvCBKywWzEtAEkNia (晨检 10:45)",
-    "trig_01PqeuvMEsyXbTKJQ7njyVcR (收盘前主跑 15:20)",
-    "trig_01W1rzTiiZBaRc2taYzV6tKX (wrapup 17:45)"
-   ],
-   "do_not_enable": "🚫 `trig_01961sNiuVQSLRkq4C62Y2sH` (QQQ 开盘跌≥2.5%) —— 那条只为 10-30 一天而设, 已 superseded。要重做须用户重新发话。",
-   "untouched": "周一刷池 `trig_01PvM5Mj89pokXgPwkMECZrd` 从未关闭 (它周五不触发), 不用动。",
-   "cautions": "⚠️ 只改 `enabled`, **别碰 cron** —— 那三个的 `CRON_TZ=America/New_York` 前缀是 10-23 用户授权加的, 而 11-01 当天刚切换成 EST, 动了会漂一小时。",
-   "created": "2026-10-29 (盘后)",
-   "progress": "⚠️ **2026-10-30 11:20 ET 用户说「继续今天的动作」→ 手动提前回装, 首轮只成功 2/3**:\n· ✅ `trig_01CtgM6KvCBKywWzEtAEkNia` 晨检 10:45 → enabled\n· ✅ `trig_01W1rzTiiZBaRc2taYzV6tKX` wrapup 17:45 → enabled\n· 🔴 `trig_01PqeuvMEsyXbTKJQ7njyVcR` **收盘前主跑 15:20 → 首轮被平台分类器拒绝** (`Real-World Transactions`)。该任务是唯一会在盘中真实下单的, 分类器因此拦住。当时未绕行、未重试, 照实报告用户。",
-   "resolved": "✅ **2026-10-30 12:42 ET 全部回装完成**。用户先退出 auto 模式 (分类器只在 auto 模式下自动拦), 再说「再试一次」→ 同一个 `update_trigger(enabled=true)` **原样重调即通过**。这坐实了 §7.4 的判断: **分类器非确定性 + 只在 auto 模式生效**; 退出 auto 后该调用变成普通权限弹窗, 由用户放行。\n`list_triggers` 核实五条全部 enabled 且 next_run_at 正确:\n· 收盘前主跑 15:20 → **2026-10-30T19:20:00Z = 今天 15:20 ET** ✅\n· wrapup 17:45 → **2026-10-30T21:45:00Z = 今天 17:45 ET** ✅\n· 晨检 10:45 → 2026-11-02T15:45:00Z (= 周一 10:45 EST; 今日该档在停跑期已过, 已于 11:20 手动补跑)\n· 周一刷池 → 2026-11-02T18:09:44Z (= 13:09 EST, 服务端整点偏移)\n· 回装保险 → 2026-11-02T01:00:00Z (已冗余, 幂等, 届时只核对后静默结束)\n📌 **顺带验证了 DST 切换**: 11-02 的 next_run_at 用 EST (UTC−5) 换算后恰为 10:45 / 13:09 ET, 说明 10-23 加的 `CRON_TZ=America/New_York` 前缀在 11-01 夏令时结束后**没有漂**。",
-   "status_note": "本条可在周日那次核对后标 done; 在此之前保留 pending 以防 15:20 那条再被关掉。"
-  },
-  {
-   "id": "rsi2-winddown-2026-10-30",
-   "status": "pending",
-   "title": "🔴 RSI-2 正股轨道收尾第二阶段: 最后一股 (MCK) 卖掉后把 config.json enabled 置 false",
-   "window": "**每个主跑窗口都要检查** (15:20 收盘前 + 17:45 wrapup), 直到执行完。`session.py brief` 会把本条高亮出来。",
-   "user_instruction": "用户 2026-10-30 原话: 「正股主策略暂停买入，只卖出最后一股后，就先暂停」",
-   "stage1_done": "✅ 已完成 (2026-10-30): `strategy/config.json` 加 `live_stock_buys_paused: true` → 只关 rsi2_entry 与 rsi2_scale_in, **出场/止损/时间止损/换仓照常**。配套修了 `learn.py cmd_challenger_config` 的字段剥离 (否则纸面挑战者买入也会被关掉, 验证序列报废)。",
-   "stage2_condition": "**条件**: `state/positions.json` 的 `strategy_positions` 变为空 `{}` (即 MCK 已卖出并回写)。",
-   "stage2_action": "把 `strategy/config.json` 的 `enabled` 置 **false**, 并在该字段旁写明: 用户 2026-10-30 指示的第二阶段、何日何因卖出最后一股、恢复方式 (enabled=true + 删 live_stock_buys_paused)。提交推 Main 并通知用户。",
-   "why_two_stages": "⚠️ **现在不能直接 enabled=false** —— 红线4 下 `enabled=false` 会把**出场也一起关掉**, 最后那一股就永远卖不出去了, 与用户「只卖出最后一股后」的指示正相反。故必须先 buys_paused、等仓位空了再 enabled=false。",
-   "expected_exit_date": "📌 **预计 2026-11-03 (下周二) 由引擎自动卖出**: MCK 下次财报 `2026-11-04`, 而 `defense.earnings_exit_days = 1` → `signals.py:318` 在 dte ∈ [0,1] 时产出 `earnings_exit`。11-03 当日 dte=1 即触发。\n其它可能更早触发的出场: 止损线 **922.55** (−7%, 需自 1003 再跌 8.0%) / `exit_strength` (rsi2 ≥ 65 且收盘 > SMA5) / 时间止损第 10 个交易日 = 2026-11-09 (最晚兜底)。\n⚠️ MCK 当前在**财报黑窗内** (dte=5 ≤ 7), 所以即便没有暂停开关, 它也不会被加仓。",
-   "do_not": "🚫 **不要替用户强平 MCK**。用户说的是「只卖出」(= 轨道只剩卖的动作), 不是「现在卖掉它」—— 一张不来自引擎信号的卖单违反红线2, 且用户若想今天就出会直接说。2026-10-30 已在对话里把这个判断和 11-03 的预计出场日一并告知, 由他一票推翻。",
-   "created": "2026-10-30 (盘中 13:1x ET)"
-  }
- ]
+  ]
 }

@@ -1,15 +1,7 @@
 {
   "high_water_mark": 11051.614826805,
   "halted": false,
-  "strategy_positions": {
-    "MCK": {
-      "qty": 1.015877,
-      "entry_price": 991.99,
-      "entry_date": "2026-10-26",
-      "cost": 1007.74,
-      "tranches": 1
-    }
-  },
+  "strategy_positions": {},
   "legacy_positions": {},
   "trades": [
     {
@@ -2747,6 +2739,15 @@
       "price": 379.83,
       "bucket": "strategy",
       "reason": "stop_loss"
+    },
+    {
+      "date": "2026-10-30",
+      "symbol": "MCK",
+      "side": "sell",
+      "qty": 1.015877,
+      "price": 991.0801,
+      "bucket": "strategy",
+      "reason": "exit_strength"
     }
   ],
   "corporate_actions": [
