@@ -167,7 +167,9 @@
    "untouched": "周一刷池 `trig_01PvM5Mj89pokXgPwkMECZrd` 从未关闭 (它周五不触发), 不用动。",
    "cautions": "⚠️ 只改 `enabled`, **别碰 cron** —— 那三个的 `CRON_TZ=America/New_York` 前缀是 10-23 用户授权加的, 而 11-01 当天刚切换成 EST, 动了会漂一小时。",
    "created": "2026-10-29 (盘后)",
-   "progress": "⚠️ **2026-10-30 11:20 ET 用户说「继续今天的动作」→ 手动提前回装, 但只成功 2/3**:\n· ✅ `trig_01CtgM6KvCBKywWzEtAEkNia` 晨检 10:45 → enabled (next 2026-11-02 15:45Z)\n· ✅ `trig_01W1rzTiiZBaRc2taYzV6tKX` wrapup 17:45 → enabled (next 2026-10-30 21:45Z, **今天就跑**)\n· 🔴 `trig_01PqeuvMEsyXbTKJQ7njyVcR` **收盘前主跑 15:20 → 回装被平台分类器拒绝** (`Real-World Transactions`)。该 Routine 是唯一会在盘中真实下单的, 分类器因此拦住。\n  **未绕行** —— 另建等效触发器只是换个名字做同一件事, 违背该拒绝的本意。已报告用户由他决定 (他可在 Routines 界面自行开回, 或在 15:20 前给本会话发一条消息唤醒我手动跑)。\n· 故周日 20:00 ET 这条任务**仍需运行**, 专门把 15:20 那个补上; 届时若仍被拒, 照样报告不绕行。"
+   "progress": "⚠️ **2026-10-30 11:20 ET 用户说「继续今天的动作」→ 手动提前回装, 首轮只成功 2/3**:\n· ✅ `trig_01CtgM6KvCBKywWzEtAEkNia` 晨检 10:45 → enabled\n· ✅ `trig_01W1rzTiiZBaRc2taYzV6tKX` wrapup 17:45 → enabled\n· 🔴 `trig_01PqeuvMEsyXbTKJQ7njyVcR` **收盘前主跑 15:20 → 首轮被平台分类器拒绝** (`Real-World Transactions`)。该任务是唯一会在盘中真实下单的, 分类器因此拦住。当时未绕行、未重试, 照实报告用户。",
+   "resolved": "✅ **2026-10-30 12:42 ET 全部回装完成**。用户先退出 auto 模式 (分类器只在 auto 模式下自动拦), 再说「再试一次」→ 同一个 `update_trigger(enabled=true)` **原样重调即通过**。这坐实了 §7.4 的判断: **分类器非确定性 + 只在 auto 模式生效**; 退出 auto 后该调用变成普通权限弹窗, 由用户放行。\n`list_triggers` 核实五条全部 enabled 且 next_run_at 正确:\n· 收盘前主跑 15:20 → **2026-10-30T19:20:00Z = 今天 15:20 ET** ✅\n· wrapup 17:45 → **2026-10-30T21:45:00Z = 今天 17:45 ET** ✅\n· 晨检 10:45 → 2026-11-02T15:45:00Z (= 周一 10:45 EST; 今日该档在停跑期已过, 已于 11:20 手动补跑)\n· 周一刷池 → 2026-11-02T18:09:44Z (= 13:09 EST, 服务端整点偏移)\n· 回装保险 → 2026-11-02T01:00:00Z (已冗余, 幂等, 届时只核对后静默结束)\n📌 **顺带验证了 DST 切换**: 11-02 的 next_run_at 用 EST (UTC−5) 换算后恰为 10:45 / 13:09 ET, 说明 10-23 加的 `CRON_TZ=America/New_York` 前缀在 11-01 夏令时结束后**没有漂**。",
+   "status_note": "本条可在周日那次核对后标 done; 在此之前保留 pending 以防 15:20 那条再被关掉。"
   }
  ]
 }
