@@ -190,7 +190,7 @@
     },
     {
       "id": "preclose-handoff-options-2026-10-30",
-      "status": "partially_done",
+      "status": "done",
       "title": "🔴 10-30 收盘前未下的两张期权单交 17:45 wrapup (QQQ LEAP 三档 + MSFT 周call)",
       "window": "2026-10-30 17:45 wrapup (fail-safe 会自动退化为完整主跑); 若当晚仍未完成则顺延到 2026-11-02 (周一) 主跑",
       "why": "10-30 收盘前主跑 15:24 才获批开跑 (plan mode 拦了 15:20 定时任务), 到 15:30 取 LEAP 期权链时发现三档合计 70+ 合约、还需 4+ 批取 delta, 而期权执行窗 15:30-15:45 只剩 15 分钟 → 按唤醒词「跑一半更危险」刻意停手, 一张未下。",
@@ -211,7 +211,8 @@
       "still_todo": [
         "17:45 跑前补齐 21 只过期财报日 (逐只 get_earnings_results, 禁用 get_earnings_calendar)",
         "纸面轨道 / 行情核对 / journal / 战报"
-      ]
+      ],
+      "closed_2026_10_30": "✅ 收口: LEAP 部分已成交两档 (148 $1,575 / 85 $1,221); 330 档被引擎点差闸否决, 后续按 oneshot qqq-leap-yearly-rung-2026-11-02 等下一个信号日。周call 部分: 17:45 fail-safe 产出 DIA261113C00465000 $5,350 写了 pending, 但执行窗 09:45-10:30 无定时任务覆盖 → 用户 2026-10-30「完了再说吧 周一重算」, 让其自然过期, 周一 15:20 重算。本条无剩余动作。"
     },
     {
       "id": "qqq-leap-yearly-rung-2026-11-02",
