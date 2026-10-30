@@ -187,6 +187,24 @@
       "stage2_done": "✅ 已完成 (2026-10-30 15:3x ET): MCK 1.015877 股于 15:28 ET 由引擎 `exit_strength` 信号卖出 @991.0801 (fees $0.03, 回款 $1,006.79, 对成本 991.99 = −0.09% / −$0.95), `signals.py apply` 回写后 `strategy_positions` 变空 {} → stage2 条件达成 → `strategy/config.json` 的 `enabled` 置 false, 并在 `_enabled_note` 写明沿革与恢复方式。",
       "stage2_actual_vs_expected": "⚠️ **比预计提前 2 个交易日**: 原预计 2026-11-03 由 `earnings_exit` (MCK 财报 11-04, dte=1) 触发; 实际 2026-10-30 就走了 `exit_strength` (rsi2 ≥ 65 或收盘 > SMA5)。仍是引擎自身信号, 未违红线2。记此以备日后校准「预计出场日」的推断方法 —— 当时只算了财报与止损两条路径, 漏了 exit_strength 在反弹日随时可能先触发。",
       "restore": "恢复实盘正股轨道需**两处都改**: ① `enabled` 置回 true; ② 删除 `live_stock_buys_paused` 字段。只改其一会变成「跑但不买」。"
+    },
+    {
+      "id": "preclose-handoff-options-2026-10-30",
+      "status": "pending",
+      "title": "🔴 10-30 收盘前未下的两张期权单交 17:45 wrapup (QQQ LEAP 三档 + MSFT 周call)",
+      "window": "2026-10-30 17:45 wrapup (fail-safe 会自动退化为完整主跑); 若当晚仍未完成则顺延到 2026-11-02 (周一) 主跑",
+      "why": "10-30 收盘前主跑 15:24 才获批开跑 (plan mode 拦了 15:20 定时任务), 到 15:30 取 LEAP 期权链时发现三档合计 70+ 合约、还需 4+ 批取 delta, 而期权执行窗 15:30-15:45 只剩 15 分钟 → 按唤醒词「跑一半更危险」刻意停手, 一张未下。",
+      "deliberately_not_done": "🚫 我算出 delta 0.30 约在 148档≈755 / 85档≈735 / 330档≈805, 本可只取这三个窄带把时间压下来 —— **没有这么做**。选档是引擎按券商 delta 决定的 (红线2「取数归会话、选档归引擎」), 用我的 BS 模型把候选集从 23 档砍到 5 档等于替引擎做选择。时间紧不是违红线2 的理由。",
+      "authorization_settled": "✅ **授权范围已裁定, 勿再问**: 会话当日把 config.json 的 enabled 置 false (正股收尾第二阶段) 后, 发现与 authorization.revoke 及红线4 的字面意思冲突 (那两处读起来 = 撤销全部实盘授权)。已问用户, 用户答 **「只停正股, 期权照下」**。故 LEAP 与实盘周call 在 enabled=false 下**仍然授权出单**。",
+      "todo": [
+        "跑前先补齐 21 只过期财报日 (next < 运行日): AMZN APH BIIB DXCM FCX GEV GILD ILMN INTC JCI KLAC LLY LNG MA MDLZ MO MRK MSI ROKU SBUX TT。逐只 get_earnings_results 取 next+past, **禁用 get_earnings_calendar** (窗口外会记 null → 闸门静默 fail-open 且过期扫描抓不到)",
+        "QQQ LEAP: daily.py 的 phase_qqq_leap 出 need_chain 三档 → get_option_instruments + get_option_quotes (**必须含 delta**) → 原样落盘 {\"QQQ\":{OCC:{bid,ask,delta,...}}} → qqq_leap.py signal → place → qqq_leap.py apply 回写",
+        "MSFT 周call: 按跨轨道资金优先级 (LEAP 先留抵押) 判 cap, 超 cap **整单跳过不缩量**",
+        "三档是**三张独立订单**, cap 不足时按 ladder 顺序 148→85→330 逐档判「能买几张买几张」, 不是三张一起归零"
+      ],
+      "funding_math_at_preclose": "收盘前实测: 现金/买入力 $9,350.40 (== unleveraged, 无借贷额度), 净值 $10,928.40。LEAP 三档约 $5,000-6,000 + MSFT $6,725 ≈ $11,700-12,700 > 可用 → **MSFT 那张大概率整单跳过**。⚠️ 17:45 必须重取实时资金, 不得用这里的数。",
+      "cost_of_delay": "⚠️ 期权买单按 option_pending_template 的收盘后形态 = **次一交易日 10:30 ET** (推荐 09:45-10:30 等点差收窄) → 实际落到 2026-11-02 (周一)。QQQ 10-30 收在 −3.88%, 周一开盘价与此不同 —— 这是延后的真实代价, 不是零成本。",
+      "created": "2026-10-30 15:3x ET"
     }
   ]
 }
