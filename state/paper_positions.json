@@ -5,17 +5,52 @@
   "halted": false,
   "strategy_positions": {
     "QQQM": {
-      "qty": 12.0,
-      "entry_price": 295.433333,
+      "qty": 24.0,
+      "entry_price": 290.7767,
       "entry_date": "2026-10-15",
-      "cost": 3545.2,
-      "tranches": 1
+      "cost": 6978.64,
+      "tranches": 2
     },
     "META": {
-      "qty": 5.0,
-      "entry_price": 640.61,
+      "qty": 10.0,
+      "entry_price": 628.136,
       "entry_date": "2026-10-23",
-      "cost": 3203.05,
+      "cost": 6281.36,
+      "tranches": 2
+    },
+    "NVDA": {
+      "qty": 17.0,
+      "entry_price": 207.68,
+      "entry_date": "2026-11-02",
+      "cost": 3530.56,
+      "tranches": 1
+    },
+    "MSFT": {
+      "qty": 6.0,
+      "entry_price": 523.7,
+      "entry_date": "2026-11-02",
+      "cost": 3142.2,
+      "tranches": 1
+    },
+    "CSCO": {
+      "qty": 33.0,
+      "entry_price": 104.72,
+      "entry_date": "2026-11-02",
+      "cost": 3455.76,
+      "tranches": 1
+    },
+    "TSM": {
+      "qty": 8.0,
+      "entry_price": 411.0775,
+      "entry_date": "2026-11-02",
+      "cost": 3288.62,
+      "tranches": 1
+    },
+    "XLK": {
+      "qty": 14.0,
+      "entry_price": 179.765714,
+      "entry_date": "2026-11-02",
+      "cost": 2516.72,
       "tranches": 1
     }
   },
@@ -614,6 +649,69 @@
       "price": 1001.76,
       "bucket": "strategy",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "META",
+      "side": "buy",
+      "qty": 5.0,
+      "price": 615.662,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "QQQM",
+      "side": "buy",
+      "qty": 12.0,
+      "price": 286.12,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "NVDA",
+      "side": "buy",
+      "qty": 17.0,
+      "price": 207.68,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "MSFT",
+      "side": "buy",
+      "qty": 6.0,
+      "price": 523.7,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "CSCO",
+      "side": "buy",
+      "qty": 33.0,
+      "price": 104.72,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "TSM",
+      "side": "buy",
+      "qty": 8.0,
+      "price": 411.0775,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-11-02",
+      "symbol": "XLK",
+      "side": "buy",
+      "qty": 14.0,
+      "price": 179.765714,
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }
