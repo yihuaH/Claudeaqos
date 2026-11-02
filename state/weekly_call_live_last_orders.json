@@ -1,92 +1,77 @@
 {
-  "date": "2026-10-30",
+  "date": "2026-11-02",
   "halted": false,
   "sells": [],
   "buys": [
     {
-      "symbol": "DIA261113C00465000",
+      "symbol": "MSFT261113C00450000",
       "qty": 1,
       "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call",
-      "est_price": 53.5,
-      "underlying": "DIA",
-      "strike": 465.0,
+      "est_price": 62.73,
+      "underlying": "MSFT",
+      "strike": 450.0,
       "expiry": "2026-11-13",
-      "dte": 14,
-      "spot": 517.13,
-      "rsi2": 7.4,
-      "model_price": 52.8433,
+      "dte": 11,
+      "spot": 512.45,
+      "rsi2": 2.21,
+      "model_price": 62.9998,
       "model_edge": {
         "reference": "flat",
         "direction": "debit",
-        "est": 53.495,
-        "model_flat": 52.8433,
-        "model_surface": 53.8104,
-        "ratio_flat_pct": 98.8,
-        "ratio_surface_pct": 100.6
+        "est": 62.725,
+        "model_flat": 62.9998,
+        "model_surface": 63.4869,
+        "ratio_flat_pct": 100.4,
+        "ratio_surface_pct": 101.2
       },
       "entry_quote": {
-        "bid": 53.22,
-        "ask": 53.77,
-        "mid": 53.495,
-        "spread_pct": 1.028
+        "bid": 62.24,
+        "ask": 63.21,
+        "mid": 62.725,
+        "spread_pct": 1.546
       }
     }
   ],
   "skips": [
     {
-      "symbol": "NVDA",
-      "reason": "spread_too_wide(best=3.56%)",
-      "rsi2": 5.35,
-      "spot": 204.64
-    },
-    {
-      "symbol": "MSFT",
-      "reason": "insufficient_buying_power(cost=7313,bp_left=6554)",
-      "rsi2": 6.51,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 73.13,
-        "model_flat": 72.6063,
-        "model_surface": 73.323,
-        "ratio_flat_pct": 99.3,
-        "ratio_surface_pct": 100.3
-      }
+      "symbol": "AMD",
+      "reason": "earnings_blackout(dte=1)",
+      "rsi2": 6.64
     },
     {
       "symbol": "QQQ",
-      "reason": "insufficient_buying_power(cost=7486,bp_left=1205)",
-      "rsi2": 8.41,
+      "reason": "insufficient_buying_power(cost=8462,bp_left=63)",
+      "rsi2": 6.45,
       "model_edge": {
         "reference": "flat",
         "direction": "debit",
-        "est": 74.86,
-        "model_flat": 71.7406,
-        "model_surface": 73.2528,
-        "ratio_flat_pct": 95.8,
-        "ratio_surface_pct": 97.9
+        "est": 84.62,
+        "model_flat": 85.9788,
+        "model_surface": 86.2275,
+        "ratio_flat_pct": 101.6,
+        "ratio_surface_pct": 101.9
       }
     },
     {
       "symbol": "TSM",
-      "reason": "spread_too_wide(best=4.93%)",
-      "rsi2": 8.77,
-      "spot": 406.13
+      "reason": "spread_too_wide(best=3.50%)",
+      "rsi2": 7.29,
+      "spot": 402.82
     },
     {
       "symbol": "SPY",
-      "reason": "insufficient_buying_power(cost=8968,bp_left=1205)",
-      "rsi2": 9.34,
+      "reason": "insufficient_buying_power(cost=9605,bp_left=63)",
+      "rsi2": 8.72,
       "model_edge": {
         "reference": "flat",
         "direction": "debit",
-        "est": 89.675,
-        "model_flat": 86.7472,
-        "model_surface": 87.9869,
-        "ratio_flat_pct": 96.7,
-        "ratio_surface_pct": 98.1
+        "est": 96.05,
+        "model_flat": 95.6984,
+        "model_surface": 95.8973,
+        "ratio_flat_pct": 99.6,
+        "ratio_surface_pct": 99.8
       }
     }
   ],
