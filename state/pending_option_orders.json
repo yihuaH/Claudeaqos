@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-30",
+  "trade_date": "2026-10-30",
+  "generated_by": "daily.py --phase wrapup (effective_phase=full, fail-safe 退化)",
   "record_kind": "pending_orders",
-  "status": "awaiting_execution",
-  "produced_by": "daily.py --phase wrapup (effective_phase=full, fail-safe 退化)",
+  "status": "expired",
   "orders": [
     {
       "symbol": "DIA261113C00465000",
@@ -47,5 +47,7 @@
   "_red_line_6_note": "本跑 anomalies=3 (fail-safe 通告 / LEAP 缺 chain 未判出场 / wc.paper.apply 陈旧成交失败), 三条均为已知或预期项, 已逐条核实不影响账本; 但按红线6 已在战报中逐条点名, 由用户事前否决。",
   "_limit_price_note": "engine est_price=53.50 是生成时的 mid (bid 53.22 / ask 53.77, 点差 1.028%)。**周一不得照抄这个价** —— 须按 4D 用当时券商报价定限价; 未成交则撤单, **绝不改限价追单**。",
   "_user_decision_2026_10_30": "🔴 **用户 2026-10-30 18:3x 决定: 「完了再说吧 周一重算」** —— 不为这张单新建一次性任务、不手工在 App 下单, **让它按时效自然过期**。\n📌 **给 2026-11-02 10:45 晨间核查的指示**: 发现本清单 `awaiting_execution` 且已过 10:30 ET 时, 照 session.py:290 把 `status` 改 `expired` 并 commit, **静默处理即可, 不要再就这张单询问或提醒用户** —— 过期是用户知情选择的结果, 不是异常。\n⚠️ **这不是 `vetoed_by_user`**: 用户否决的是「周一早盘补这一张」这个动作, **不是否决 DIA 这个标的**。周一 15:20 主跑若用周一价格重新算出 DIA (或任何别的) 周期权信号, 照常出单, 不受本条影响。",
-  "_why_expire_is_acceptable": "期权执行窗 09:45-10:30 ET 无定时任务覆盖 (周一最早是 10:45), 且期权盘前无法成交 (DIA 是 ETF 链, 不支持 CURB 时段), 故该窗口本就无人可执行。让它过期 → 周一 15:20 用**周一的**价格与 rsi2 重算, 数据更新且不需为这条例外路径新增零件。代价: 周一早盘若强反弹, 信号可能消失。"
+  "_why_expire_is_acceptable": "期权执行窗 09:45-10:30 ET 无定时任务覆盖 (周一最早是 10:45), 且期权盘前无法成交 (DIA 是 ETF 链, 不支持 CURB 时段), 故该窗口本就无人可执行。让它过期 → 周一 15:20 用**周一的**价格与 rsi2 重算, 数据更新且不需为这条例外路径新增零件。代价: 周一早盘若强反弹, 信号可能消失。",
+  "_expired_2026_11_02": "2026-11-02 11:40 ET 晨间核查按 session.py:290「pending_option_orders 仍 awaiting_execution 且已过 10:30 ET → status=expired」标记过期。**用户 2026-10-30 已知情决定「完了再说吧 周一重算」**, 故静默处理, 未就此单询问或提醒。该单一张未下、零成交、零账本影响。DIA 这个标的本身未被否决 —— 今日 15:20 主跑若用今日价格重新算出周期权信号, 照常出单。",
+  "_field_name_fix_2026-11-02": "⚠️ 本文件 2026-10-30 生成时字段名写错了: 用了 `date` / `produced_by`, 而 `pending_orders.json` 的既定约定与 `session.py:160 pending_state()` 读的都是 `trade_date` / `generated_by`。后果: 11-02 晨检 brief 把清单日显示成 `None`, 使晨检协议的主判据「清单日 + status」(session.py:296) 失去依据 —— 今日因 status 与 10:30 规则已足够判定, 未造成误判, 但属真实缺陷。本次已改正。**以后写 pending 文件照抄 pending_orders.json 的字段名, 不要自创。**"
 }

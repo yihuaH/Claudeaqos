@@ -27,9 +27,19 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ET = timezone(timedelta(hours=-4))          # 美东夏令时 (EDT)
+# 🔴 **必须是 ZoneInfo 不能写死偏移** (2026-11-02 实测踩中): 原先是
+# `timezone(timedelta(hours=-4))` 写死 EDT, 于是 **2026-11-01 夏令时结束后本脚本比真实 ET
+# 快整一小时**。后果不是显示错而是**会跳过交易**: 真实 15:20 被算成 16:20 → 收盘前主跑的
+# 时段自检「已过 15:40 就不要开跑」判定成立 → **整个主跑被跳过**; 且 4C 执行窗 09:45-15:55
+# 被判为已关 → 买单退化成盘外整股限价 (实测多付 0.55%)。若没发现, 会一直错到 2027-03-08
+# 夏令时重启 (约 4.5 个月)。
+# ⚠️ 这与 2026-10-23 给定时任务加 `CRON_TZ=America/New_York` 是**两件事**: 那次修的是
+# 「任务几点触发」(已生效, 11-02 实测没漂), 本行修的是「脚本自己以为现在几点」—— 当时漏了这半。
+# 📌 同款正确写法仓库里本来就有: `scripts/paper.py:75`。
+ET = ZoneInfo("America/New_York")       # 自动处理 EDT/EST 切换, 勿改回固定偏移
 
 
 def load(path, default=None):
