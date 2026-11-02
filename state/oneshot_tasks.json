@@ -232,6 +232,78 @@
         "入场信号是**当日**条件 (entry.daily_return_pct_max=−2.0, qqq_leap.py:106), 不能顺延。无信号日**不得**为补档下单 (违红线2)。周一没信号就继续等, 历史频率约 8.4 次/年。",
         "资金仍按实时 min(buying_power, cash) 判, 逐档 148→85→330 顺序, 超 cap 的那档整单跳过不缩量, 绝不动用借来的钱 (红线3)。三张不一定都成, 取决于当日现金。"
       ]
+    },
+    {
+      "id": "option-tp20-gtc-2026-11-02",
+      "title": "🔴 非 LEAP 期权 +20% 止盈: 4 张 GTC 限价卖单已常驻券商, 每窗口核对状态",
+      "window": "**每个**窗口 (10:45 / 15:20 / 17:45), 直到 4 张单全部成交或被用户撤销",
+      "user_instruction": "用户 2026-11-02 原话: 「明天盯盘除了qqq Leapcall，其他期权全部达到20%就卖出」",
+      "status": "pending",
+      "created": "2026-11-02",
+      "authorized_by": "用户 2026-11-02 明确指示 + AskUserQuestion 三选: 机制「挂 GTC 限价卖单」· 口径「bid」· 「排除 SQQQ 34P」",
+      "_why_gtc_not_polling": "用户说的是「盯盘」, 但会话**做不到连续盯盘** —— 一天只醒 3 次, 10:45→15:20 有 4h35m 盲区, 而 4 张里有 2 张本周到期。已把这个限制如实告知, 用户选了 GTC 常驻单: 券商侧 7×24 挂着, 盘中任何时刻触价即成, 不依赖会话醒着, 零盲区。",
+      "_threshold_basis": "限价 = **入场成本 × 1.20, 向上进位到 tick** (>$3 用 0.05, <$3 用 0.01; 进位保证成交 ≥ +20%)。\n口径是 **bid** —— 与 QQQ LEAP 轨道 take_profit_line 的现有约定一致 (bid >= 线才触发), 两边口径不漂移。GTC 限价卖单天然就是这个口径: 它等买方出到那个价。\n📌 限价卖单**保底不封顶**: 若跳空更高, 成交价会高于限价, 不会被锁死在 +20%。",
+      "orders_placed": [
+        {
+          "occ_desc": "TSLA 405C 2026-11-27",
+          "option_id": "65e0e56f-21da-40cd-9336-f30996af057b",
+          "order_id": "6ae908ef-b409-4c1a-bb0d-af54c16ce8ff",
+          "cost": 18.0,
+          "limit": 21.6,
+          "pct": "+20.0%",
+          "bid_at_place": 19.0,
+          "expiry_days": 25
+        },
+        {
+          "occ_desc": "AAPL 300P 2026-12-04",
+          "option_id": "082c78f5-5f57-40bc-9677-ba4c2c30a5af",
+          "order_id": "6ae908ef-4407-465e-b83e-1b3b1612cd18",
+          "cost": 2.19,
+          "limit": 2.63,
+          "pct": "+20.1%",
+          "bid_at_place": 2.17,
+          "expiry_days": 32
+        },
+        {
+          "occ_desc": "AAPL 300P 2026-11-04",
+          "option_id": "2265a48a-1f8a-4dbb-b8f4-55a36a3cefc3",
+          "order_id": "6ae908f0-ae70-45d9-b911-7e30ba92c360",
+          "cost": 0.57,
+          "limit": 0.69,
+          "pct": "+21.1%",
+          "bid_at_place": 0.67,
+          "expiry_days": 2,
+          "_flag": "⚠️ 下单时 mark 0.685 已 = +20.2%, bid 0.67 = +17.5% (差一个 tick)。2 天到期 · delta −0.058 (AAPL 338.88 / 行权 300, 价外 11.5%) · IV 109% · **theta −0.80/天** · AAPL 11-02 当日发财报 → 明天开盘要么大幅过线要么快速归零。"
+        },
+        {
+          "occ_desc": "SQQQ 47.5C 2026-11-06",
+          "option_id": "bfab825c-51da-462d-8180-aeb2e890e6b1",
+          "order_id": "6ae908f1-71c0-48d4-adea-9c3a17b1eb0a",
+          "cost": 0.95,
+          "limit": 1.14,
+          "pct": "+20.0%",
+          "bid_at_place": 0.94,
+          "expiry_days": 4
+        }
+      ],
+      "_all_queued_at": "2026-11-02 22:04:31~33Z (= 17:04 ET, 收盘后) · state=queued · placed_agent=agentic · agent_initiated=true · 4 张 review 的 order_checks 均为 {} · 费 $0.04/张 · collateral 0 (长期权无抵押)",
+      "excluded": {
+        "qqq_leap": [
+          "QQQ270319C00755000 (148档 @15.75)",
+          "QQQ270115C00735000 (85档 @12.21)"
+        ],
+        "_leap_why": "用户明确排除。LEAP 的止盈仍由 `qqq_leap.py` 按自己的 take_profit_mult=1.20 与 20 交易日时间止损判定 (止盈线 18.90 / 14.652) —— **不要给 LEAP 挂 GTC 单**, 那会绕过引擎的时间止损与账本回写 (红线2)。",
+        "sqqq_34p": "SQQQ 34P 2026-11-06 (c4eaec8b-6f37-408a-84ff-91ec10050f8e, 成本 $3)",
+        "_sqqq_why": "用户选择排除: bid 0.01 / ask 0.05 点差 133% 实际无法成交; 且 0.01 的 tick 下 +20% 线 0.036 进位后是 0.04 = 实际 +33% 门槛。任其到期归零, 最大损失 = 已付 $3。"
+      },
+      "每窗口要做的": [
+        "get_option_orders(account, state=queued) 确认 4 张仍在; 有成交的用 get_option_orders 取实际成交价",
+        "成交的在当日 journal 记一笔 (实际价 / vs 限价 / 盈亏), 并在报告里点名",
+        "⚠️ **不要写进任何轨道账本** —— 这 4 张都在引擎账本之外 (TSLA 是存量, 另 3 张是用户手动买的), `signals.py apply` / `weekly_calls.py apply` / `qqq_leap.py apply` 一个都不要调",
+        "⚠️ 若某张到期前仍未成交: 本规则**只有止盈没有止损**, 按用户规则任其到期 (不要自行补止损单, 红线2/3)"
+      ],
+      "_no_downside_rule": "⚠️ 用户只给了上行规则。3 张本周/下周到期的 (AAPL 11-04 两天 · SQQQ 47.5C 四天) 若不触价会显著衰减甚至归零 —— 这是规则如实的后果, 已告知用户。**会话不得自行添加止损**。",
+      "_how_to_cancel": "用户要取消: cancel_option_order(order_id) 或自己在 App 里撤。"
     }
   ]
 }
