@@ -115,7 +115,7 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
 | └ 拆分式双段跑: 15:20 `--phase preclose` / 17:45 `--phase wrapup` | 实盘 | ✅ active | Routine `trig_01PqeuvMEsyXbTKJQ7njyVcR` |
 | 隔夜均值回归 — **入场** | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
 | 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (暂停只停入场) | 同上 |
-| **周度期权实盘实验仓** | 实盘 | ✅ active·机会主义 | `weekly_calls_live.json enabled` |
+| **周度期权实盘实验仓** | 实盘 | ✅ active·机会主义·**🧪 用户知情下按实验仓跑 (期望为负, 见下)** | `weekly_calls_live.json enabled` |
 | **QQQ LEAP call 梯子** (跌≥2% → **148/85/330 DTE 各买 1 张** delta 0.30) | 实盘 | ✅ active·**资金优先级最高** | `qqq_leap.json enabled` + `funding_priority:1` + `contract.ladder` |
 | 挑战者影子验证 | paper | ⚠️ validating 但**指标不可用** (见下) | `learning.json enabled` |
 | 周call 摩擦实测 (深ITM 买call) | paper | ✅ active | `weekly_calls.json enabled` |
@@ -136,6 +136,17 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
   `min(buying_power, cash)` + 熔断。长 call 可亏 100% 权利金, 而**现在没有任何闸按金额拦单** —— 唯一拦得住的是钱不够 (`insufficient_buying_power`)。
   当前账户规模下该形态**仍近乎零出单** (深ITM call 每张数千美元 vs 千元级可用现金), 即取消 $5,000 这一步**当下不改变出单与否**, 改变的是「一旦现金够, 单笔可以有多大」。
   前形态 credit_put_spread 战绩 8 回合 8 胜 / +$573.00, 参数留档在 `contract._retired_credit_put_spread`, 一键可回退。
+  🧪 **该形态期望为负, 用户 2026-11-03 知情下选择「当作实验」—— 不再反复询问**:
+  `moneyness = 0.9` **不是回测优化出来的**, 是 10-12 用户「期权也只买单腿吧」后从 paper 轨道**逐字段照抄**的
+  (`contract._single_params_note` 原文「未自行发明数值」)。而 2026-10-30 的 delta 回测 (2,982 笔) 实测:
+  深ITM 0.90 **均值 −1.82%** / 中位 +2.42% / 胜率 56.8% / **去掉最好 5% 后 −4.30%**;
+  对比 delta 0.50 均值 +3.85%、实盘正股 (109 笔) 均值 +0.168% 且**去掉最好 5% 仍为正**。
+  当日原文结论: 「三种期权形态**全部**在去掉最好 5% 后转负, 正股轨道不然」(`journal/2026-10-30-research-rsi2-delta30.md`)。
+  会话 11-03 给出三选 (换 delta 0.50 档 / `enabled=false` / 照旧当实验), **用户选「当作实验吧」**。
+  => **`moneyness` 与 `enabled` 一个都不改** (红线3); 出单照旧按报告义务点名, 但**不要再就「换档还是关掉」征询**。
+  摩擦与战绩继续累积在账本 `trades`/`round_trips`/`skip_log`, 用户将来想复评时现成可用。
+  📌 首单: 2026-11-03 PLTR261113C00157500 ×1 @20.25 = $2,025 (净值 19.2%); 是 11-02 月度复核收编 PLTR 的直接结果 —— 
+  在此之前该轨道**自 2026-09-29 起无新开仓**, 因为深ITM call 每张数千美元而现金千元级。
 - ⚠️ **挑战者 edge 仍不可用于晋级** (红线8), 但**不是**原先写的"分母按 3.8×账本 start_capital"
   —— evaluate 用的是 TWR, 分母已与各自 sizing 基准一致 (2026-10-14 查实)。真正的不可比是
   **实盘现金部署率远低于纸面** (受 cap 整单跳过) + **纸面整股向下取整**, 详见「已知未修的问题」第 5 条。
