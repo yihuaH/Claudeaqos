@@ -2,7 +2,7 @@
   "trade_date": "2026-11-02",
   "generated_by": "daily.py --phase preclose",
   "record_kind": "pending_orders",
-  "status": "rejected_by_spread_gate",
+  "status": "expired",
   "orders": [
     {
       "symbol": "MSFT261113C00450000",
@@ -48,5 +48,6 @@
   "_independent_corroboration": "📌 **纸面期权轨道把同一张拒了**: `options.paper.skips` 记 `MSFT premium_too_large(6272)` (QQQ 同理 8462)。纸面有 max_premium_per_contract_usd、实盘没有 → 两轨对同一候选处置相反, 这是配置差异不是 bug (与 2026-10-30 的 DIA/MSFT 同一机制)。",
   "_funding_note_at_generation": "15:21 ET 净值 $10,903.28 → 15:29 ET $10,830.28; 现金 $6,335.28, buying_power $6,335.28 == unleveraged_buying_power (**无借贷额度**, 防杠杆闸满足)。",
   "_user_override": "用户若要无视点差闸下这张, 请明确发话。会话**不会自行放宽** `max_spread_pct` —— 改风控参数只能由用户决定 (红线3)。",
-  "_session_error_disclosed": "⚠️ 本次排查中会话先在**错误的合约**上做了两次点差采样: 干跑 (15:24) 引擎选的是 strike **452.5** (est 61.99), 真跑 (15:29) 引擎重取期权链后改选 strike **450.0** (est 62.73), 而会话最初按干跑那张取了报价。已在正确合约上重做全部采样, 上面的数字均来自 strike 450。\n📌 附带澄清: 「open_interest=0 / volume=0 从未成交」是 **strike 452.5** 那张的属性, **不适用于**本单 (450 有 OI 44 / vol 17)。"
+  "_session_error_disclosed": "⚠️ 本次排查中会话先在**错误的合约**上做了两次点差采样: 干跑 (15:24) 引擎选的是 strike **452.5** (est 61.99), 真跑 (15:29) 引擎重取期权链后改选 strike **450.0** (est 62.73), 而会话最初按干跑那张取了报价。已在正确合约上重做全部采样, 上面的数字均来自 strike 450。\n📌 附带澄清: 「open_interest=0 / volume=0 从未成交」是 **strike 452.5** 那张的属性, **不适用于**本单 (450 有 OI 44 / vol 17)。",
+  "_closed_2026_11_03_morning": "晨检收口: 该单的执行窗 (11-02 15:30-15:45 ET) 已过, 置 expired。\n⚠️ **不是 `vetoed_by_user`, 也不是 `cancelled_unfilled`** —— 这单**从未下出去**, 是被点差闸 + 券商 OPTION_WIDE_BID_ASK_SPREAD 告警在 place 之前拦下的 (见 _why_not_placed)。\n按 4D spread_note「窗口内未成交 → 次日主跑以新数据重评, 绝不追价」, **今日 (11-03) 15:20 主跑会用新报价重新评估 MSFT**, 不顺延本单、不沿用 11-02 的限价。"
 }
