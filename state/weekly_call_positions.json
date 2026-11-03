@@ -2,7 +2,25 @@
   "_purpose": "周call 摩擦实测轨道账本 (仅 paper); 见 strategy/weekly_calls.json 与 playbook §7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "PLTR261113C00157500": {
+      "underlying": "PLTR",
+      "strike": 157.5,
+      "expiry": "2026-11-13",
+      "contracts": 1,
+      "entry_premium": 20.2,
+      "entry_date": "2026-11-03",
+      "entry_underlying": 175.905,
+      "entry_rsi2": 0.68,
+      "entry_quote": {
+        "bid": 20.23,
+        "ask": 20.4,
+        "mid": 20.315,
+        "spread_pct": 0.837
+      },
+      "model_price": 19.849
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -338,6 +356,15 @@
       "price": 26.6,
       "bucket": "weekly_calls",
       "reason": "exit_strength"
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "PLTR261113C00157500",
+      "side": "buy",
+      "qty": 1,
+      "price": 20.2,
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call"
     }
   ],
   "round_trips": [
@@ -1187,6 +1214,20 @@
       "reason": "premium_too_large(9605)",
       "rsi2": 8.72,
       "spot": 755.12
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=2.85%)",
+      "rsi2": 6.27,
+      "spot": 331.44
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=2.77%)",
+      "rsi2": 6.27,
+      "spot": 331.44
     }
   ],
   "assignments": [

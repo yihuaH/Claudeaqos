@@ -1,5 +1,36 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
-  "entries": {},
-  "updated": "2026-11-02"
+  "entries": {
+    "PLTR261113C00157500": {
+      "symbol": "PLTR261113C00157500",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 20.31,
+      "underlying": "PLTR",
+      "strike": 157.5,
+      "expiry": "2026-11-13",
+      "dte": 10,
+      "spot": 175.905,
+      "rsi2": 0.68,
+      "model_price": 19.849,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 20.315,
+        "model_flat": 19.849,
+        "model_surface": 19.1143,
+        "ratio_flat_pct": 97.7,
+        "ratio_surface_pct": 94.1
+      },
+      "entry_quote": {
+        "bid": 20.23,
+        "ask": 20.4,
+        "mid": 20.315,
+        "spread_pct": 0.837
+      }
+    }
+  },
+  "updated": "2026-11-03"
 }

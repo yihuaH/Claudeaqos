@@ -2,7 +2,25 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {},
+  "positions": {
+    "PLTR261113C00157500": {
+      "underlying": "PLTR",
+      "strike": 157.5,
+      "expiry": "2026-11-13",
+      "contracts": 1,
+      "entry_premium": 20.25,
+      "entry_date": "2026-11-03",
+      "entry_underlying": 175.905,
+      "entry_rsi2": 0.68,
+      "entry_quote": {
+        "bid": 19.71,
+        "ask": 19.99,
+        "mid": 19.85,
+        "spread_pct": 1.411
+      },
+      "model_price": 19.849
+    }
+  },
   "trades": [
     {
       "date": "2026-08-17",
@@ -138,6 +156,15 @@
       "price": 0.05,
       "bucket": "weekly_calls",
       "reason": "expiry_close"
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "PLTR261113C00157500",
+      "side": "buy",
+      "qty": 1,
+      "price": 20.25,
+      "bucket": "weekly_calls",
+      "reason": ""
     }
   ],
   "round_trips": [
@@ -411,6 +438,13 @@
         "ratio_flat_pct": 105.5,
         "ratio_surface_pct": 116.3
       }
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=2.77%)",
+      "rsi2": 6.27,
+      "spot": 331.44
     }
   ]
 }

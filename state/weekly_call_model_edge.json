@@ -176,6 +176,22 @@
       "model_surface": 25.7341,
       "ratio_flat_pct": 99.1,
       "ratio_surface_pct": 100.7
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "PLTR",
+      "outcome": "order",
+      "reason": "rsi2_entry_call",
+      "est_price": 20.31,
+      "spot": 175.905,
+      "rsi2": 0.68,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 20.315,
+      "model_flat": 19.849,
+      "model_surface": 19.1143,
+      "ratio_flat_pct": 97.7,
+      "ratio_surface_pct": 94.1
     }
   ]
 }

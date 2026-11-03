@@ -1,81 +1,65 @@
 {
-  "date": "2026-11-02",
+  "date": "2026-11-03",
   "halted": false,
   "sells": [],
   "buys": [
     {
-      "symbol": "MSFT261113C00450000",
+      "symbol": "PLTR261113C00157500",
       "qty": 1,
       "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
       "reason": "rsi2_entry_call",
-      "est_price": 62.73,
-      "underlying": "MSFT",
-      "strike": 450.0,
+      "est_price": 19.85,
+      "underlying": "PLTR",
+      "strike": 157.5,
       "expiry": "2026-11-13",
-      "dte": 11,
-      "spot": 512.45,
-      "rsi2": 2.21,
-      "model_price": 62.9998,
+      "dte": 10,
+      "spot": 175.905,
+      "rsi2": 0.68,
+      "model_price": 19.849,
       "model_edge": {
         "reference": "flat",
         "direction": "debit",
-        "est": 62.725,
-        "model_flat": 62.9998,
-        "model_surface": 63.4869,
-        "ratio_flat_pct": 100.4,
-        "ratio_surface_pct": 101.2
+        "est": 19.85,
+        "model_flat": 19.849,
+        "model_surface": 19.1143,
+        "ratio_flat_pct": 100.0,
+        "ratio_surface_pct": 96.3
       },
       "entry_quote": {
-        "bid": 62.24,
-        "ask": 63.21,
-        "mid": 62.725,
-        "spread_pct": 1.546
+        "bid": 19.71,
+        "ask": 19.99,
+        "mid": 19.85,
+        "spread_pct": 1.411
       }
     }
   ],
   "skips": [
     {
-      "symbol": "AMD",
-      "reason": "earnings_blackout(dte=1)",
-      "rsi2": 6.64
-    },
-    {
-      "symbol": "QQQ",
-      "reason": "insufficient_buying_power(cost=8462,bp_left=63)",
-      "rsi2": 6.45,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 84.62,
-        "model_flat": 85.9788,
-        "model_surface": 86.2275,
-        "ratio_flat_pct": 101.6,
-        "ratio_surface_pct": 101.9
-      }
-    },
-    {
-      "symbol": "TSM",
-      "reason": "spread_too_wide(best=3.50%)",
-      "rsi2": 7.29,
-      "spot": 402.82
-    },
-    {
-      "symbol": "SPY",
-      "reason": "insufficient_buying_power(cost=9605,bp_left=63)",
-      "rsi2": 8.72,
-      "model_edge": {
-        "reference": "flat",
-        "direction": "debit",
-        "est": 96.05,
-        "model_flat": 95.6984,
-        "model_surface": 95.8973,
-        "ratio_flat_pct": 99.6,
-        "ratio_surface_pct": 99.8
-      }
+      "symbol": "AAPL",
+      "reason": "spread_too_wide(best=2.77%)",
+      "rsi2": 6.27,
+      "spot": 331.44
     }
   ],
   "warnings": [],
-  "near_signals": [],
-  "suggested_reserve_usd": 0.0
+  "near_signals": [
+    {
+      "symbol": "XLE",
+      "rsi2_now": 17.76,
+      "scenario": "2d_-1%x2",
+      "spot": 66.86,
+      "structure": "single",
+      "est_premium_usd": 683
+    },
+    {
+      "symbol": "DIA",
+      "rsi2_now": 23.78,
+      "scenario": "1d_-1%",
+      "spot": 517.06,
+      "structure": "single",
+      "est_premium_usd": 5234
+    }
+  ],
+  "suggested_reserve_usd": 683.0
 }

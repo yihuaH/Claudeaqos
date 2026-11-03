@@ -1,63 +1,36 @@
 {
   "_purpose": "跨日开仓 context 暂存 (排队单次日成交时补位); 只增量累积, 成交或过期即删; 不参与任何交易判定",
   "entries": {
-    "IWM261007P00270000": {
-      "structure": "credit_put_spread",
+    "PLTR261113C00157500": {
+      "symbol": "PLTR261113C00157500",
       "qty": 1,
+      "position_intent": "buy_to_open",
       "bucket": "weekly_calls",
-      "reason": "rsi2_entry_put_credit",
-      "legs": [
-        {
-          "symbol": "IWM261007P00270000",
-          "side": "sell",
-          "position_effect": "open",
-          "strike": 270.0,
-          "quote": {
-            "bid": 0.68,
-            "ask": 0.7
-          },
-          "spread_pct": 2.899
-        },
-        {
-          "symbol": "IWM261007P00245000",
-          "side": "buy",
-          "position_effect": "open",
-          "strike": 245.0,
-          "quote": {
-            "bid": 0.01,
-            "ask": 0.03
-          },
-          "spread_pct": 100.0
-        }
-      ],
-      "est_price": 0.65,
-      "direction": "credit",
-      "underlying": "IWM",
-      "expiry": "2026-10-07",
-      "dte": 8,
-      "spot": 278.81,
-      "rsi2": 5.8,
-      "model_price": 0.1845,
+      "reason": "rsi2_entry_call",
+      "est_price": 19.85,
+      "underlying": "PLTR",
+      "strike": 157.5,
+      "expiry": "2026-11-13",
+      "dte": 10,
+      "spot": 175.905,
+      "rsi2": 0.68,
+      "model_price": 19.849,
       "model_edge": {
         "reference": "flat",
-        "direction": "credit",
-        "est": 0.65,
-        "model_flat": 0.1845,
-        "model_surface": 0.7682,
-        "ratio_flat_pct": 352.3,
-        "ratio_surface_pct": 84.6
+        "direction": "debit",
+        "est": 19.85,
+        "model_flat": 19.849,
+        "model_surface": 19.1143,
+        "ratio_flat_pct": 100.0,
+        "ratio_surface_pct": 96.3
       },
       "entry_quote": {
-        "mid": 0.67,
-        "spread_pct": 2.899,
-        "long_spread_pct": 100.0,
-        "net_credit_conservative": 0.65
-      },
-      "risk_per_contract": 24.35,
-      "max_value_per_contract": 25.0,
-      "max_loss_usd": 2435.0,
-      "max_gain_usd": 65.0
+        "bid": 19.71,
+        "ask": 19.99,
+        "mid": 19.85,
+        "spread_pct": 1.411
+      }
     }
   },
-  "updated": "2026-10-05"
+  "updated": "2026-11-03"
 }
