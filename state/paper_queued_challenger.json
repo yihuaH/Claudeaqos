@@ -1,21 +1,43 @@
 {
   "queued_when": "market_closed",
-  "date": "2026-11-02",
+  "date": "2026-11-03",
   "coid_prefix": "cq",
-  "next_open": "2026-11-03T09:30:00-05:00",
+  "next_open": "2026-11-04T09:30:00-05:00",
   "skipped": [],
   "failed": [],
   "orders": [
     {
-      "coid": "cq-2026-11-02-MSFT-buy",
-      "order_id": "d24e56ff-f8b6-4c13-9e2b-4cc494562277",
-      "symbol": "MSFT",
+      "coid": "cq-2026-11-03-META-sell",
+      "order_id": "bc9ebfed-56fa-421f-a29a-93ebc9d0cd1d",
+      "symbol": "META",
+      "side": "sell",
+      "status": "accepted",
+      "limit_price": "602.4",
+      "qty": "10",
+      "bucket": "strategy",
+      "reason": "exit_strength"
+    },
+    {
+      "coid": "cq-2026-11-03-PLTR-buy",
+      "order_id": "43085061-b402-47bc-946b-10ba18279413",
+      "symbol": "PLTR",
       "side": "buy",
       "status": "accepted",
-      "limit_price": "522.33",
-      "qty": "3",
+      "limit_price": "180.66",
+      "qty": "19",
       "bucket": "strategy",
-      "reason": "rsi2_scale_in"
+      "reason": "rsi2_entry"
+    },
+    {
+      "coid": "cq-2026-11-03-PANW-buy",
+      "order_id": "7b02594c-fbaa-4df7-bec1-493412e57044",
+      "symbol": "PANW",
+      "side": "buy",
+      "status": "accepted",
+      "limit_price": "360.71",
+      "qty": "8",
+      "bucket": "strategy",
+      "reason": "rsi2_entry"
     }
   ]
 }

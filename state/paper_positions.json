@@ -26,11 +26,11 @@
       "tranches": 1
     },
     "MSFT": {
-      "qty": 6.0,
-      "entry_price": 523.7,
+      "qty": 9.0,
+      "entry_price": 519.2733,
       "entry_date": "2026-11-02",
-      "cost": 3142.2,
-      "tranches": 1
+      "cost": 4673.46,
+      "tranches": 2
     },
     "CSCO": {
       "qty": 33.0,
@@ -712,6 +712,15 @@
       "price": 179.765714,
       "bucket": "strategy",
       "reason": "rsi2_entry"
+    },
+    {
+      "date": "2026-11-03",
+      "symbol": "MSFT",
+      "side": "buy",
+      "qty": 3.0,
+      "price": 510.42,
+      "bucket": "strategy",
+      "reason": "rsi2_scale_in"
     }
   ]
 }
