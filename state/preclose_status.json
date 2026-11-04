@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-03",
-  "status": "completed",
-  "generated_at": "2026-11-03T20:24:16+00:00",
+  "date": "2026-11-04",
+  "status": "incomplete",
+  "generated_at": "2026-11-04T20:26:56+00:00",
   "fatal": null,
-  "stopped": null,
+  "stopped": "halted/熔断触发 — 只读结束, 通知用户",
   "equity_sells_placed_to_session": 0,
   "equity_buys_to_pending": 0,
-  "anomalies": 0,
+  "anomalies": 1,
   "_note": "由 daily.py --phase preclose 写; wrapup 读它判断是否 fail-safe 回退完整主跑"
 }

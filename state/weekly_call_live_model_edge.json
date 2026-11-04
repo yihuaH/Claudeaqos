@@ -624,6 +624,22 @@
       "model_surface": 19.1143,
       "ratio_flat_pct": 97.7,
       "ratio_surface_pct": 94.1
+    },
+    {
+      "date": "2026-11-04",
+      "symbol": "TSLA",
+      "outcome": "order",
+      "reason": "rsi2_entry_call",
+      "est_price": 43.41,
+      "spot": 386.33,
+      "rsi2": 8.41,
+      "reference": "flat",
+      "direction": "debit",
+      "est": 43.415,
+      "model_flat": 42.3514,
+      "model_surface": 42.2647,
+      "ratio_flat_pct": 97.6,
+      "ratio_surface_pct": 97.4
     }
   ]
 }
