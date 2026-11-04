@@ -48,5 +48,40 @@
     }
   ],
   "sells": [],
-  "_exit_judgement": "同一次跑的出场结论: PLTR261113C00157500 五个条件全未触发 → sells 0。underlying_stop 167.11 vs 现价 172.18 (高 3.03%); SMA5 触发价 183.57 vs 172.18; rsi2 0.38 vs 需 ≥65; 持 1/10 交易日; DTE 9 vs 需 ≤2。"
+  "_exit_judgement": "同一次跑的出场结论: PLTR261113C00157500 五个条件全未触发 → sells 0。underlying_stop 167.11 vs 现价 172.18 (高 3.03%); SMA5 触发价 183.57 vs 172.18; rsi2 0.38 vs 需 ≥65; 持 1/10 交易日; DTE 9 vs 需 ≤2。",
+  "_intraday_vs_close_proof": "⚠️ 同一天两次跑, 引擎选出的合约就不同 —— 这是「本记录不可照搬」的实证: 15:40 ET 出 TSLA261113C00345000 @est 43.41 ($4,341); 收盘后出 TSLA261113C00342500 @est 44.56 ($4,456)。正股 386.33 → 385.31, moneyness 0.9 的档位跟着挪了一档, 行权价 345 → 342.5, 权利金差 $115。熔断解除后必须重跑引擎取当次输出 (红线2)。",
+  "orders_at_close": [
+    {
+      "symbol": "TSLA261113C00342500",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 44.56,
+      "underlying": "TSLA",
+      "strike": 342.5,
+      "expiry": "2026-11-13",
+      "dte": 9,
+      "spot": 385.31,
+      "rsi2": 7.93,
+      "entry_quote": {
+        "spread_pct": 1.144
+      },
+      "model_edge": {
+        "ratio_flat_pct": 98.2
+      },
+      "_size_note": "$4,456 = 收盘净值 $9,511.92 的 46.8% / 可用现金 $5,275.92 的 84.5%",
+      "_status": "not_placed_awaiting_user_decision (同熔断)"
+    }
+  ],
+  "skips_at_close": [
+    {
+      "symbol": "XLE",
+      "reason": "spread_too_wide(best=36.48%)",
+      "rsi2": 4.54,
+      "spot": 63.53,
+      "_note": "盘后点差崩开; 15:40 时为 8.39%"
+    }
+  ],
+  "_exit_judgement_at_close": "收盘重判: PLTR261113C00157500 五个条件仍全未触发 → sells 0。underlying_stop 167.11 vs 收盘 171.66 (高 2.72%); SMA5 触发价 183.57 vs 171.66; rsi2 0.35 vs 需 ≥65; 持 1/10 交易日; DTE 9 vs 需 ≤2。⚠️ 该合约收盘 bid 14.20 / ask 17.00 = 点差 17.9% (OI 22, 当日成交 0), 中点 mark 15.60 偏乐观。"
 }
