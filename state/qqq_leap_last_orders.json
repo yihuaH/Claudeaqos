@@ -18,9 +18,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 14.652,
-      "current_bid": 4.08,
+      "current_bid": 3.78,
       "reason": "hold",
-      "_why": "bid 4.08 < 止盈线 14.65; 已持 4/20 交易日"
+      "_why": "bid 3.78 < 止盈线 14.65; 已持 4/20 交易日"
     },
     {
       "occ": "QQQ270129C00710000",
@@ -32,9 +32,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 16.596,
-      "current_bid": 10.86,
+      "current_bid": 10.1,
       "reason": "hold",
-      "_why": "bid 10.86 < 止盈线 16.60; 已持 0/20 交易日"
+      "_why": "bid 10.10 < 止盈线 16.60; 已持 0/20 交易日"
     },
     {
       "occ": "QQQ270319C00725000",
@@ -46,9 +46,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 19.344,
-      "current_bid": 13.5,
+      "current_bid": 12.69,
       "reason": "hold",
-      "_why": "bid 13.50 < 止盈线 19.34; 已持 0/20 交易日"
+      "_why": "bid 12.69 < 止盈线 19.34; 已持 0/20 交易日"
     },
     {
       "occ": "QQQ270319C00755000",
@@ -60,9 +60,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.9,
-      "current_bid": 7.05,
+      "current_bid": 6.66,
       "reason": "hold",
-      "_why": "bid 7.05 < 止盈线 18.90; 已持 4/20 交易日"
+      "_why": "bid 6.66 < 止盈线 18.90; 已持 4/20 交易日"
     },
     {
       "occ": "QQQ270917C00770000",
@@ -74,9 +74,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 29.856,
-      "current_bid": 22.08,
+      "current_bid": 20.08,
       "reason": "hold",
-      "_why": "bid 22.08 < 止盈线 29.86; 已持 0/20 交易日"
+      "_why": "bid 20.08 < 止盈线 29.86; 已持 0/20 交易日"
     },
     {
       "stage": "entry",
@@ -119,9 +119,9 @@
     }
   ],
   "warnings": [],
-  "spot": 651.8311,
-  "day_return_pct": -5.798,
-  "sma200": 680.7332,
+  "spot": 647.77,
+  "day_return_pct": -6.385,
+  "sma200": 680.7129,
   "above_sma200": false,
   "entry_signal": true,
   "funding_gate": {
