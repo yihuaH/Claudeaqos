@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "paper_only": true,
   "covered_call": {
     "otm_pct": 3.0,
@@ -8,5 +8,6 @@
     "min_premium_bid": 0.05,
     "close_when_dte_lte": 1
   },
-  "note": "备兑开仓实验 (仅 paper 账户): 挑战者持仓满 100 股整手时, 卖出虚值 3% 以上、7-21 天到期的备兑 call (每 100 股 1 张)。正股触发出场当日先买回 call 再卖正股; 到期剩 ≤1 天强制买回, 避免行权/指派。期权盈亏单独记账 (bucket=options), 不计入挑战者参数验证用的 equity_ex_options。实盘接入需用户另行决定, 且实盘账户须能持有 100 股整手。"
+  "note": "备兑开仓实验 (仅 paper 账户): 挑战者持仓满 100 股整手时, 卖出虚值 3% 以上、7-21 天到期的备兑 call (每 100 股 1 张)。正股触发出场当日先买回 call 再卖正股; 到期剩 ≤1 天强制买回, 避免行权/指派。期权盈亏单独记账 (bucket=options), 不计入挑战者参数验证用的 equity_ex_options。实盘接入需用户另行决定, 且实盘账户须能持有 100 股整手。",
+  "_retired_2026_11_05": "🔴 **已退役 (用户 2026-11-05「以后只买qqq了 之前的rsi 不要了」)**。\n本轨道由 RSI-2 均值回归驱动, 属用户指令中「之前的rsi」范围, 故置 enabled=false。\n⚠️ 这是**用户指令的轨道级退役**, 不是风控触发、不是自学习 (红线8)、也不是暂停 —— 与 2026-07-21 那批 `paused` 性质不同。\n📌 退役时本轨道**空仓**, 无需平仓。沿革与回测依据仍留在 `strategy/archive/track-rationale.md` 与 journal。\n🔁 **恢复**: 把 enabled 置回 true 即可; 引擎代码一行未改, 账本与历史战绩完整保留。\n📌 备兑开仓 overlay 是**覆盖正股仓位**的 overlay —— RSI-2 正股轨道退役后永远没有可备兑的标的。"
 }

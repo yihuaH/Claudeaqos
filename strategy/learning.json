@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "auto_promote": true,
   "paper_account": "PA3QW78QT1O7",
   "paper_authorization": {
@@ -7,16 +7,46 @@
     "granted": "2026-07-15 (用户对话确认)"
   },
   "learnable_bounds": {
-    "entry.rsi2_max": [5.0, 15.0],
-    "exit.rsi2_min": [55.0, 80.0],
-    "exit.stop_loss_pct": [3.0, 8.0],
-    "exit.max_holding_days": [5, 15]
+    "entry.rsi2_max": [
+      5.0,
+      15.0
+    ],
+    "exit.rsi2_min": [
+      55.0,
+      80.0
+    ],
+    "exit.stop_loss_pct": [
+      3.0,
+      8.0
+    ],
+    "exit.max_holding_days": [
+      5,
+      15
+    ]
   },
   "search_grid": {
-    "entry.rsi2_max": [5.0, 7.5, 10.0, 12.5, 15.0],
-    "exit.rsi2_min": [55.0, 65.0, 75.0],
-    "exit.stop_loss_pct": [3.0, 5.0, 8.0],
-    "exit.max_holding_days": [5, 10, 15]
+    "entry.rsi2_max": [
+      5.0,
+      7.5,
+      10.0,
+      12.5,
+      15.0
+    ],
+    "exit.rsi2_min": [
+      55.0,
+      65.0,
+      75.0
+    ],
+    "exit.stop_loss_pct": [
+      3.0,
+      5.0,
+      8.0
+    ],
+    "exit.max_holding_days": [
+      5,
+      10,
+      15
+    ]
   },
   "walk_forward": {
     "folds": 3,
@@ -30,5 +60,6 @@
     "min_edge_vs_champion_pct": 0.0,
     "max_paper_drawdown_pct": 10.0
   },
-  "note": "学习器只允许修改 learnable_bounds 列出的 entry/exit 参数且必须在边界内; sizing/circuit_breaker/macro/legacy 等风控永不自学习。挑战者必须先在 Alpaca paper 账户跑完验证期并通过 evaluate 才能晋级; 每次晋级/否决写 journal 并通知用户。"
+  "note": "学习器只允许修改 learnable_bounds 列出的 entry/exit 参数且必须在边界内; sizing/circuit_breaker/macro/legacy 等风控永不自学习。挑战者必须先在 Alpaca paper 账户跑完验证期并通过 evaluate 才能晋级; 每次晋级/否决写 journal 并通知用户。",
+  "_retired_2026_11_05": "🔴 **已退役 (用户 2026-11-05「以后只买qqq了 之前的rsi 不要了」)**。\n本轨道由 RSI-2 均值回归驱动, 属用户指令中「之前的rsi」范围, 故置 enabled=false。\n⚠️ 这是**用户指令的轨道级退役**, 不是风控触发、不是自学习 (红线8)、也不是暂停 —— 与 2026-07-21 那批 `paused` 性质不同。\n📌 退役时本轨道**空仓**, 无需平仓。沿革与回测依据仍留在 `strategy/archive/track-rationale.md` 与 journal。\n🔁 **恢复**: 把 enabled 置回 true 即可; 引擎代码一行未改, 账本与历史战绩完整保留。\n📌 挑战者影子验证的职责是「验证 RSI-2 参数变体能否晋级」(红线8 的晋级流程)。RSI-2 退役后无验证对象。\n⚠️ 顺带说明: 红线8 的「自学习边界」从此**无作用对象** —— 没有在跑的轨道会被 learn.py 改参数。"
 }

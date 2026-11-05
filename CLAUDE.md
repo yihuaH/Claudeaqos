@@ -6,7 +6,7 @@
 ## 硬性红线 (任何情况下不得违反)
 
 1. 只允许操作账户 **802095265** (nickname "Agentic", agentic_allowed=true)。绝不触碰其他账户。
-2. 所有买卖必须来自确定性引擎的输出: 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 备兑来自 `scripts/options_overlay.py`, 周call 双轨 (paper 摩擦实测 `weekly_calls.json` + 实盘实验仓 `weekly_calls_live.json`, 后者用户 2026-08-04 授权「接受全赔、后续追加投资」) 均来自 `scripts/weekly_calls.py`, paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
+2. 所有买卖必须来自确定性引擎的输出 (🔴 **2026-11-05 起只剩 QQQ LEAP 一条在跑**, 其余均 `enabled=false`; 下列清单保留作口径定义与恢复参照): 实盘 RSI-2 与 paper 正股来自 `scripts/signals.py`, 实盘隔夜轨道来自 `scripts/overnight.py` (用户 2026-07-15 授权直接上实盘), paper 备兑来自 `scripts/options_overlay.py`, 周call 双轨 (paper 摩擦实测 `weekly_calls.json` + 实盘实验仓 `weekly_calls_live.json`, 后者用户 2026-08-04 授权「接受全赔、后续追加投资」) 均来自 `scripts/weekly_calls.py`, paper 动量轮动来自 `scripts/momentum.py`。不得基于自己的市场观点新增、放大或修改订单。
 3. `strategy/config.json` 的风控限制 (仓位上限、单量上限、熔断) 是上限, 不是建议。
 4. `enabled=false` 或 `halted=true` 时只允许读数据和写日志。
 5. API 密钥、secret 一律不得写入本仓库 (用户提供的 Alpaca/FRED 密钥只存在会话环境中)。
@@ -110,21 +110,38 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
 
 状态以各 config 的开关字段为准; **沿革与回测依据见 `strategy/archive/track-rationale.md`**。
 
+🔴 **2026-11-05 轨道大幅收缩 (用户「以后只买qqq了 之前的rsi 不要了」)**:
+**唯一在跑的实盘买入轨道 = QQQ LEAP call 梯子。** 所有 RSI-2 族轨道 (实盘与纸面) 一律 `enabled=false`。
+退役时各 RSI-2 轨道**均空仓**, 无需平仓; 引擎代码一行未改, 账本与战绩完整保留, 置回 `true` 即可恢复。
+⚠️ **这是用户指令的轨道级退役**, 不是风控触发、不是自学习 (红线8)、也不是 2026-07-21 那种 `paused`。
+
 | 轨道 | 环境 | 状态 | 开关 |
 |---|---|---|---|
-| **RSI-2 均值回归** (主策略, ETF+个股) | 实盘 | ✅ active | `config.json enabled` + `scale_in.enabled` |
-| └ 拆分式双段跑: 15:20 `--phase preclose` / 17:45 `--phase wrapup` | 实盘 | ✅ active | Routine `trig_01PqeuvMEsyXbTKJQ7njyVcR` |
-| 隔夜均值回归 — **入场** | 实盘 | ⏸ 暂停 (2026-07-21) | `overnight.json live_entries_paused` |
-| 隔夜均值回归 — 出场/兜底 | 实盘 | ✅ active (暂停只停入场) | 同上 |
-| **周度期权实盘实验仓** | 实盘 | ✅ active·机会主义·**🧪 用户知情下按实验仓跑 (期望为负, 见下)** | `weekly_calls_live.json enabled` |
-| **QQQ LEAP call 梯子** (跌≥2% → **148/85/330 DTE 各买 1 张** delta 0.30) | 实盘 | ✅ active·**资金优先级最高** | `qqq_leap.json enabled` + `funding_priority:1` + `contract.ladder` |
-| 挑战者影子验证 | paper | ⚠️ validating 但**指标不可用** (见下) | `learning.json enabled` |
-| 周call 摩擦实测 (深ITM 买call) | paper | ✅ active | `weekly_calls.json enabled` |
-| 周度动量轮动 | paper | ✅ active | `momentum.json enabled` |
-| **SQQQ 短期看跌 QQQ** (QQQ 单日 ≥+2.5% → 买 SQQQ → **次日**收盘平) | **paper** | ✅ active·⚠️ 我的结论是「不建议做」, 用户知情下选 paper 先验 | `sqqq_short.json enabled` + `environment:paper_only` |
-| 备兑开仓 overlay | paper | 视开关 | `options.json enabled` |
+| **QQQ LEAP call 梯子** (跌≥2% → **148/85/330 DTE 各买 1 张** delta 0.30) | 实盘 | ✅ **active —— 唯一在跑的买入轨道** | `qqq_leap.json enabled` + `funding_priority:1` + `contract.ladder` |
+| └ ⚠️ 牛市过滤已关 (2026-11-05 用户「照改照买」) | 实盘 | 入场只剩「单日跌 ≥2%」一个条件 | `qqq_leap.json entry.require_close_above_sma200=false` |
+| RSI-2 均值回归 (主策略, ETF+个股) | 实盘 | 🔴 **已退役 2026-11-05** | `config.json enabled=false` |
+| 周度期权实盘实验仓 (RSI-2 驱动) | 实盘 | 🔴 **已退役 2026-11-05** | `weekly_calls_live.json enabled=false` |
+| 隔夜均值回归 (入场/出场全停) | 实盘 | 🔴 **已退役 2026-11-05** | `overnight.json enabled=false` |
+| 挑战者影子验证 | paper | 🔴 **已退役 2026-11-05** (RSI-2 退役后无验证对象) | `learning.json enabled=false` |
+| 周call 摩擦实测 | paper | 🔴 **已退役 2026-11-05** (实盘周call 退役后无服务对象) | `weekly_calls.json enabled=false` |
+| 备兑开仓 overlay | paper | 🔴 **已退役 2026-11-05** (无正股仓可备兑) | `options.json enabled=false` |
+| 个股防御实验 | paper | 🔴 已退役 (2026-07-21 起 false, 11-05 补记归因) | `stocks.json enabled=false` |
 | 隔夜参数学习 A/B | paper | ⏸ 暂停 (2026-07-21) | `learning_overnight.json paused` |
-| 个股防御实验 | paper | ⏸ 暂停 (2026-07-21, 已并入实盘) | `stocks.json enabled` |
+| 周度动量轮动 | paper | ⚠️ **仍 active —— 用户指令未覆盖** (非 RSI-2 也不买 QQQ), 待裁定 | `momentum.json enabled` |
+| **SQQQ 短期看跌 QQQ** | **paper** | ⚠️ **仍 active —— 用户指令未覆盖** (信号源是 QQQ 但买 SQQQ), 待裁定 | `sqqq_short.json enabled` + `environment:paper_only` |
+
+### ⚠️ RSI-2 退役**没有**连带移除的东西 (极易误判, 必读)
+
+1. **熔断仍然生效**: `circuit_breaker.max_drawdown_pct_from_hwm = 10.0` 住在 `config.json` 里,
+   但它由 `daily.py` 的 `phase_stock_signal` 计算, 与该文件的 `enabled` **无关**。它继续闸住
+   `phase_options` / `phase_sqqq_short` / `phase_paper`, **但闸不住 `phase_qqq_leap`** (排在它之前)。
+   => 即「RSI-2 关了但熔断还在, 且唯一在跑的 LEAP 轨道恰好不受它管」。
+2. **`execution.mode = auto_buys` (红线9) 仍然生效** —— 它是全系统的下单模式声明, 不属 RSI-2。
+3. **周一 13:00 股票池刷新 Routine (`trig_01PvM5Mj89pokXgPwkMECZrd`) 已无消费者** ——
+   `universe.json` 只被 RSI-2 读。该定时任务仍会每周一跑并写文件, 但没有轨道会用它。**待用户裁定是否停掉。**
+4. **财报缓存 (`state/earnings_cache.json`) 的两道闸也随之无作用对象** ——
+   `earnings_blackout_days` / `earnings_exit_days` 都只在 `signals.py` / `weekly_calls.py` 里起作用。
+   QQQ LEAP 标的是 ETF, 本来就没有财报日。=> 每个主跑窗口补财报日的 oneshot 可以停了, **待裁定**。
 
 ### 会改变当日操作的告警 (必读)
 
