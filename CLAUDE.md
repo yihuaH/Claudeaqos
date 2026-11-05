@@ -126,6 +126,7 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
 | 周call 摩擦实测 | paper | 🔴 **已退役 2026-11-05** (实盘周call 退役后无服务对象) | `weekly_calls.json enabled=false` |
 | 备兑开仓 overlay | paper | 🔴 **已退役 2026-11-05** (无正股仓可备兑) | `options.json enabled=false` |
 | 个股防御实验 | paper | 🔴 已退役 (2026-07-21 起 false, 11-05 补记归因) | `stocks.json enabled=false` |
+| GOOGL LEAP call (复用 `qqq_leap.py`, 只出场不开仓) | 实盘 | 🔴 已退役 (2026-10-28 接线 `e2a1a7e` → **10-30 用户指示去掉** `9429447`; 11-05 补进本表) | `googl_leap.json enabled=false` |
 | 隔夜参数学习 A/B | paper | ⏸ 暂停 (2026-07-21) | `learning_overnight.json paused` |
 | 周度动量轮动 | paper | 🔴 **已退役 2026-11-05** (用户「123都做」第①项, 性能动机) | `momentum.json enabled=false` |
 | SQQQ 短期看跌 QQQ | paper | 🔴 **已退役 2026-11-05** (同上) | `sqqq_short.json enabled=false` |
