@@ -30,7 +30,37 @@
         "mid": 19.85,
         "spread_pct": 1.411
       }
+    },
+    "PLTR261113C00135000": {
+      "symbol": "PLTR261113C00135000",
+      "qty": 1,
+      "position_intent": "buy_to_open",
+      "bucket": "weekly_calls",
+      "reason": "rsi2_entry_call",
+      "est_price": 21.07,
+      "underlying": "PLTR",
+      "strike": 135.0,
+      "expiry": "2026-11-13",
+      "dte": 8,
+      "spot": 154.205,
+      "rsi2": 0.07,
+      "model_price": 20.2252,
+      "model_edge": {
+        "reference": "flat",
+        "direction": "debit",
+        "est": 21.07,
+        "model_flat": 20.2252,
+        "model_surface": 19.558,
+        "ratio_flat_pct": 96.0,
+        "ratio_surface_pct": 92.8
+      },
+      "entry_quote": {
+        "bid": 20.92,
+        "ask": 21.22,
+        "mid": 21.07,
+        "spread_pct": 1.424
+      }
     }
   },
-  "updated": "2026-11-03"
+  "updated": "2026-11-05"
 }

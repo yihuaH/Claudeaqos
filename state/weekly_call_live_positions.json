@@ -2,25 +2,7 @@
   "_purpose": "周call 实盘实验仓账本 (账户 802095265); 见 strategy/weekly_calls_live.json 与 playbook §4D/§7C",
   "halted": false,
   "started": "2026-08-04",
-  "positions": {
-    "PLTR261113C00157500": {
-      "underlying": "PLTR",
-      "strike": 157.5,
-      "expiry": "2026-11-13",
-      "contracts": 1,
-      "entry_premium": 20.25,
-      "entry_date": "2026-11-03",
-      "entry_underlying": 175.905,
-      "entry_rsi2": 0.68,
-      "entry_quote": {
-        "bid": 19.71,
-        "ask": 19.99,
-        "mid": 19.85,
-        "spread_pct": 1.411
-      },
-      "model_price": 19.849
-    }
-  },
+  "positions": {},
   "trades": [
     {
       "date": "2026-08-17",
@@ -163,6 +145,15 @@
       "side": "buy",
       "qty": 1,
       "price": 20.25,
+      "bucket": "weekly_calls",
+      "reason": ""
+    },
+    {
+      "date": "2026-11-05",
+      "symbol": "PLTR261113C00157500",
+      "side": "sell",
+      "qty": 1,
+      "price": 5.95,
       "bucket": "weekly_calls",
       "reason": ""
     }
@@ -334,6 +325,25 @@
       "entry_mid": 0.67,
       "exit_mid": null,
       "model_price": 0.1845
+    },
+    {
+      "occ": "PLTR261113C00157500",
+      "structure": "single",
+      "short_occ": null,
+      "long_occ": null,
+      "underlying": "PLTR",
+      "entry_date": "2026-11-03",
+      "exit_date": "2026-11-05",
+      "entry_premium": 20.25,
+      "exit_premium": 5.95,
+      "pnl_pct": -70.62,
+      "pnl_usd": -1430.0,
+      "reason": "underlying_stop",
+      "entry_spread_pct": 1.411,
+      "exit_spread_pct": 5.357,
+      "entry_mid": 19.85,
+      "exit_mid": 5.6,
+      "model_price": 19.849
     }
   ],
   "skip_log": [
