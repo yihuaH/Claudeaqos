@@ -2,7 +2,7 @@
   "trade_date": "2026-11-04",
   "generated_by": "scripts/weekly_calls.py signal (会话手动跑, 非 daily.py —— 驱动器的 phase_options 被熔断整段挡住)",
   "record_kind": "blocked_by_circuit_breaker",
-  "status": "not_placed_awaiting_user_decision",
+  "status": "superseded_by_new_session",
   "_why_not_placed": "🔴 熔断触发: 回撤 13.96% ≥ config.json circuit_breaker.max_drawdown_pct_from_hwm = 10.0 (HWM $11,051.61 / PV $9,508.92)。引擎原文「停止一切交易, 等待用户人工决定」。按红线3 (风控限制是上限不是建议) 与红线6 (停止交易→写日志→通知用户, 不要即兴发挥), 会话**未 review、未 place**, 也未去放宽任何阈值。",
   "_not_a_classifier_block": "⚠️ 这**不是** 4B/4D fail-safe 那种「place 被平台分类器拦」—— 本单从未被提交给券商。故**不走**「退回 pending 等用户回执行」的时效机制; 它不是待执行清单, 是一条被风控拦下的记录。",
   "_how_it_becomes_actionable": "两条路, 都**只能由用户决定**: ① 等 PV 回到 $9,946.45 (= HWM×0.90) 以上, 熔断自动解除, 届时引擎重算当日信号 —— 信号可能已不同, **不得照搬本单**; ② 用户明确授权单日越过熔断。⚠️ 任一路径都必须**重跑引擎取当日新输出**, 本记录仅作审计, 不可作为执行依据 (红线2: 订单逐字段来自引擎当次输出)。",
@@ -83,5 +83,6 @@
       "_note": "盘后点差崩开; 15:40 时为 8.39%"
     }
   ],
-  "_exit_judgement_at_close": "收盘重判: PLTR261113C00157500 五个条件仍全未触发 → sells 0。underlying_stop 167.11 vs 收盘 171.66 (高 2.72%); SMA5 触发价 183.57 vs 171.66; rsi2 0.35 vs 需 ≥65; 持 1/10 交易日; DTE 9 vs 需 ≤2。⚠️ 该合约收盘 bid 14.20 / ask 17.00 = 点差 17.9% (OI 22, 当日成交 0), 中点 mark 15.60 偏乐观。"
+  "_exit_judgement_at_close": "收盘重判: PLTR261113C00157500 五个条件仍全未触发 → sells 0。underlying_stop 167.11 vs 收盘 171.66 (高 2.72%); SMA5 触发价 183.57 vs 171.66; rsi2 0.35 vs 需 ≥65; 持 1/10 交易日; DTE 9 vs 需 ≤2。⚠️ 该合约收盘 bid 14.20 / ask 17.00 = 点差 17.9% (OI 22, 当日成交 0), 中点 mark 15.60 偏乐观。",
+  "_superseded_note": "2026-11-05 晨间核查标记。新交易日到达, 且 TSLA 自 385.19 跌到 346.71 (−9.99%), 昨日两个候选行权价 (345 / 342.5) 的 moneyness 已完全改变 → 本记录连参考价值也只剩沿革。本来就不是待执行清单 (record_kind=blocked_by_circuit_breaker, 从未提交给券商), 熔断若解除必须重跑引擎取当次输出 (红线2)。"
 }
