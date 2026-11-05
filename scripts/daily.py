@@ -108,10 +108,22 @@ def parse_json_out(text):
 # ---------- 符号收集 ----------
 
 def collect_symbols(cfg, uni, plan):
-    """一次性收齐所有引擎需要的标的 — 含持仓中已被剔出股池者 (2026-08-05 教训)。"""
+    """一次性收齐所有引擎需要的标的 — 含持仓中已被剔出股池者 (2026-08-05 教训)。
+
+    ⚡ **2026-11-05 性能修**: `etf` 与 `stock_pool` 原先**无条件**并入, 于是 RSI-2 轨道
+    `enabled=false` 后仍要为 108 只已无人读的标的取报价 —— 实测 allsyms 126 只, 而唯一在跑的
+    QQQ LEAP 只需要 1 只。会话每个窗口要分 7 批调 `get_equity_quotes`, `bars` 也拉 126 只 (13.4s)。
+    现按 `config.json enabled` 门控这两组。
+
+    📐 **为什么安全**: 这两组是**入场候选池**, 只被 `signals.py` 的选股循环读; `enabled=false` 时
+    该循环本就不产出订单。**持仓是另外几组且一律无条件并入** (`live_holdings` / `overnight_holdings`
+    / 各轨道账本), 所以**出场永远有报价**, 不会出现「轨道关了但持仓卖不掉」(红线6)。
+    ⚠️ 推论: 把 `enabled` 置回 true, 这两组自动回来, 无需再改代码。
+    """
     groups = {}
-    groups["etf"] = list(cfg.get("etf_universe", []))
-    groups["stock_pool"] = list(uni.get("symbols", []))
+    rsi2_on = bool(cfg.get("enabled"))
+    groups["etf"] = list(cfg.get("etf_universe", [])) if rsi2_on else []
+    groups["stock_pool"] = list(uni.get("symbols", [])) if rsi2_on else []
     live = load(f"{REPO}/state/positions.json", {})
     groups["live_holdings"] = sorted(set(live.get("strategy_positions", {}))
                                      | set(live.get("legacy_positions", {})))
