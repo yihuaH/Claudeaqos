@@ -74,7 +74,7 @@
 | 时刻 (ET) | 窗口 | 干什么 | Routine |
 |---|---|---|---|
 | 10:45 | 晨间核查 | 残单回收 + **T+1 官方收盘核对** (券商 T 日收盘次日才发布); 只有昨日走了 4B-failsafe 留下 pending 才需用户「执行」, 正常日无事静默 | `trig_01CtgM6KvCBKywWzEtAEkNia` |
-| **13:00 周一** | 周度股票池刷新 | 刷 `universe.json` 100 只 | `trig_01PvM5Mj89pokXgPwkMECZrd` |
+| ~~13:00 周一~~ | ~~周度股票池刷新~~ | 🔴 **已停用 2026-11-05** (`enabled=false`) —— `universe.json` 的唯一消费者 `signals.py` 已退役, 该任务纯空转 | `trig_01PvM5Mj89pokXgPwkMECZrd` |
 | **15:20** | **收盘前主跑** | 关键路径: 信号 + 出场即时成交 + 当日 pending | `trig_01PqeuvMEsyXbTKJQ7njyVcR` |
 | 17:45 | 收盘后收尾 wrapup **+ 战报** | 纸面轨道 + 行情核对 + journal + 账本回写, **并发当日战报** | `trig_01W1rzTiiZBaRc2taYzV6tKX` |
 
@@ -127,8 +127,8 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
 | 备兑开仓 overlay | paper | 🔴 **已退役 2026-11-05** (无正股仓可备兑) | `options.json enabled=false` |
 | 个股防御实验 | paper | 🔴 已退役 (2026-07-21 起 false, 11-05 补记归因) | `stocks.json enabled=false` |
 | 隔夜参数学习 A/B | paper | ⏸ 暂停 (2026-07-21) | `learning_overnight.json paused` |
-| 周度动量轮动 | paper | ⚠️ **仍 active —— 用户指令未覆盖** (非 RSI-2 也不买 QQQ), 待裁定 | `momentum.json enabled` |
-| **SQQQ 短期看跌 QQQ** | **paper** | ⚠️ **仍 active —— 用户指令未覆盖** (信号源是 QQQ 但买 SQQQ), 待裁定 | `sqqq_short.json enabled` + `environment:paper_only` |
+| 周度动量轮动 | paper | 🔴 **已退役 2026-11-05** (用户「123都做」第①项, 性能动机) | `momentum.json enabled=false` |
+| SQQQ 短期看跌 QQQ | paper | 🔴 **已退役 2026-11-05** (同上) | `sqqq_short.json enabled=false` |
 
 ### ⚠️ RSI-2 退役**没有**连带移除的东西 (极易误判, 必读)
 
@@ -137,11 +137,31 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
    `phase_options` / `phase_sqqq_short` / `phase_paper`, **但闸不住 `phase_qqq_leap`** (排在它之前)。
    => 即「RSI-2 关了但熔断还在, 且唯一在跑的 LEAP 轨道恰好不受它管」。
 2. **`execution.mode = auto_buys` (红线9) 仍然生效** —— 它是全系统的下单模式声明, 不属 RSI-2。
-3. **周一 13:00 股票池刷新 Routine (`trig_01PvM5Mj89pokXgPwkMECZrd`) 已无消费者** ——
-   `universe.json` 只被 RSI-2 读。该定时任务仍会每周一跑并写文件, 但没有轨道会用它。**待用户裁定是否停掉。**
-4. **财报缓存 (`state/earnings_cache.json`) 的两道闸也随之无作用对象** ——
-   `earnings_blackout_days` / `earnings_exit_days` 都只在 `signals.py` / `weekly_calls.py` 里起作用。
-   QQQ LEAP 标的是 ETF, 本来就没有财报日。=> 每个主跑窗口补财报日的 oneshot 可以停了, **待裁定**。
+3. ✅ **周一 13:00 刷池 Routine 已停用** (2026-11-05 用户「123都做」第③项,
+   `trig_01PvM5Mj89pokXgPwkMECZrd enabled=false`)。⚠️ **恢复 RSI-2 时必须一并启用它**, 否则
+   `universe.json` 会越来越旧 (最后一次刷新 2026-11-02)。
+4. ✅ **每窗口补财报日的 oneshot 已标 done** (同上第②项)。理由不是「放弃一道风控」, 是
+   「该风控保护的轨道已不在跑」—— 两道闸只在 `signals.py` / `weekly_calls.py` 里起作用, 而 QQQ 是 ETF 无财报日。
+   ⚠️⚠️ **恢复 RSI-2 或周call 时必须把 `earnings-input-every-run-2026-10` 与
+   `pool-entrant-earnings-2026-10` 两条 oneshot 都改回 `pending`**, 否则财报黑窗回到 2026-10-08 DAL /
+   10-09 TSM 那种静默 fail-open。`state/earnings_cache.json` 不删, 147 个标的键原样留存。
+
+### ⚡ 每窗口开销 (2026-11-05 性能精简后)
+
+| 项 | 精简前 | 现在 |
+|---|---|---|
+| `allsyms` 标的数 | 126 | **9** |
+| 券商报价批次 (≤20/批) | 7 | **1** |
+| `daily.py` 全程 | 18.4s | **约 5s** |
+| └ `bars` | 13.4s | 1.7s |
+| `integrations.py chains` (期权链) | 最长 240s 预算 | **不再执行** (两条周call 轨道已关 → `phase_options` 提前返回) |
+| 每窗口 `get_earnings_results` | 若干次 | **0 次** |
+
+📐 改动只有一处代码: `collect_symbols` 里 `etf` 与 `stock_pool` 两组按 `config.json enabled` 门控
+(原先无条件并入)。**持仓派生的组一律仍无条件并入** —— 出场永远有报价, 不会「轨道关了但持仓卖不掉」(红线6)。
+⚠️ 现存 9 只里有 8 只 (`paper_holdings` 7 + `option` 1) 来自**已退役轨道的账本持仓**, 是持仓派生组故保留;
+反正 9 ≤ 20 仍是 1 批, 零边际成本。
+🔁 `config.json enabled` 置回 `true` → 标的数自动回到 126, **无需改代码** (已验证)。
 
 ### 会改变当日操作的告警 (必读)
 

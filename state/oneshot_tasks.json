@@ -41,9 +41,10 @@
       "window": "**每一个** 15:20 收盘前窗 + 17:45 收尾窗, 直到做成肌肉记忆后把本条标 done",
       "runbook": "journal/2026-10-12-wrapup.md 的「财报数据今日首次补全」一节",
       "note": "跑 daily.py 前必须逐只 get_earnings_results → 存新格式 {\"SYM\":{\"next\":...,\"past\":[...]}} → 传 --earnings。取数范围 = 实盘持仓 + 当日 RSI2<10 候选 (先 --plan-only 看 plan.json 的 stock.candidates)。缺这个文件则 defense.earnings_blackout_days=7 与 earnings_exit_days=1 两道用户设定的保护**全部静默失效** (allow_unknown_earnings=true 会放行)。已造成实际损害: DAL 2026-10-08 在财报前 1 日入场、TSM 2026-10-09 在 6 日黑窗内入场。⚠️ 纯取数步骤, 不改任何参数、不新增任何订单 (红线2/3)。",
-      "status": "pending",
+      "status": "done",
       "created": "2026-10-12",
-      "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒"
+      "authorized_by": "runbook 既有要求 (session.py 窗口清单第 1 步「财报」), 本条只是把漏做的步骤变成高亮提醒",
+      "closed_2026_11_05": "🔴 用户 2026-11-05「123都做」第②项: 停掉每窗口补财报日。\n**为什么可以停**: `earnings_blackout_days` / `earnings_exit_days` 两道闸只在 `signals.py` 与\n`weekly_calls.py` 里起作用, 这两条轨道 2026-11-05 已全部 `enabled=false` → **闸已无作用对象**。\n而唯一在跑的 QQQ LEAP 标的是 **QQQ (ETF), 本来就没有财报日**。\n📌 故本条不是「放弃一道风控」, 是「该风控保护的轨道已不在跑」。\n⚠️⚠️ **恢复 RSI-2 或周call 轨道时必须同时把本条改回 pending** —— 否则财报黑窗会回到\n2026-10-08 DAL / 10-09 TSM 那种静默 fail-open 状态 (allow_unknown_earnings 放行)。\n`state/earnings_cache.json` 不删, 147 个标的键原样留存, 恢复时直接可用 (但要先按 _refresh_policy 扫过期)。"
     },
     {
       "id": "qqq-leap-first-live-run-2026-10",
@@ -64,9 +65,10 @@
       "window": "**每个**周一 13:00 股票池刷新窗口的 finalize 之后, 直到做成肌肉记忆再标 done",
       "runbook": "strategy/screen.json 的 _post_finalize_required + state/earnings_cache.json 的 _new_pool_entrant_rule",
       "note": "❌ 不要用 get_earnings_calendar (窗口制, 窗口外记 next=null)。个股的 next=null 会让财报黑窗闸**静默 fail-open**, 且因 null 不带到期日而**无法被 _refresh_policy 的过期扫描发现**。2026-10-19 就是这么埋进去 12 只的 (CAH DVN EOG MNST MRSH MTD OXY ROST SU SWKS TJX WAT), 10-21 查出时距最早出事日 (SU/SWKS/WAT 黑窗应闭合于 10-27) 只剩 4 个交易日; 零实际损害纯属运气好 —— 那两天它们恰好都没出信号。⚠️ 纯取数, 不改参数不新增订单 (红线2/3)。",
-      "status": "pending",
+      "status": "done",
       "created": "2026-10-21",
-      "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」"
+      "authorized_by": "用户 2026-10-21「补 17 只 + 堵住周度刷新 (推荐)」",
+      "closed_2026_11_05": "🔴 用户 2026-11-05「123都做」第③项的连带: 周一刷池 Routine 已停用\n(trig_01PvM5Mj89pokXgPwkMECZrd enabled=false) → **不再有「新进池标的」这回事**, 本条无触发条件。\n⚠️ 恢复刷池 Routine 时必须把本条改回 pending —— 2026-10-19 用 get_earnings_calendar 给\n19 只新进池标的取数, 窗口外的记成 next=null, 埋了 12 只静默 fail-open (10-21 查出)。那条教训仍然有效。"
     },
     {
       "id": "qqq-leap-open-gap-2026-10-30",
@@ -307,5 +309,6 @@
       "_INCIDENT_2026_11_02_all_cancelled": "🔴 **4 张单在 17:35~17:41 ET 全部变 cancelled, 无一成交** (processed_quantity 0 / canceled_quantity 1), 即挂上后约 31~37 分钟。**会话没有撤过任何单。**\n`get_option_orders` 不带撤单原因也不带撤单发起方, 故无法判定。两种可能:\n  A) 用户手动撤的 —— 当日 15:04~15:43 一直在 App 手动交易; 时间形态支持 (17:41:09→:21→:32 间隔 12s/11s, 像人逐个点)。\n  B) 券商侧批量撤的 —— 4 张是**收盘后 17:04** 挂的 GTC 期权单, 期权市场已关, 券商 EOD 可能不接受盘后挂的 GTC 期权单过夜; 集中在一个窄窗也支持这个解释。\n⚠️ **未重挂** (红线6): 若是 A, 重挂等于推翻用户明确动作; 若是 B, 盘后重挂会被再撤一次。\n✅ **决定性验证**: 等用户确认后**在盘中窗口重挂** (10:45 或 15:20, 市场开着)。能常驻 → 假设B 成立, 此规则以后一律改在盘中挂; 又被撤 → 另查。\n📌 在用户回答前, 本 oneshot 的「每窗口核对」= 只核对状态并报告, **不自动重挂**。",
       "_RESOLVED_2026_11_02": "✅ **结案: 用户确认「是我撕的 —— 别重挂」** (2026-11-02 盘后)。\n→ 4 张 GTC 止盈单**不重挂**; 「非 LEAP 期权 +20% 就卖」这条规则**作废**。\n→ 本条 oneshot 不再需要每窗口核对, 状态置 cancelled_by_user。\n📌 **假设B (券商撤盘后 GTC 期权单) 因此未被证实, 也未被证伪** —— 不要把它当成已知限制。\n✅ 反而留下一个**有用的正面数据点**: 收盘后 17:04 挂的 GTC 单在券商侧**正常常驻了 31~37 分钟** (一直是 queued), 直到用户手动撤销。即**盘后挂 GTC 期权单这条路本身是通的**, 下次若再需要这类常驻止盈单, 机制可用, 不必改成盘中挂。\n⚠️ 7 张期权持仓**一张都没动**, 账户状态与战报一致 (当日会话成交 0 笔)。"
     }
-  ]
+  ],
+  "_closed_note_2026_11_05": "2026-11-05 用户「123都做」后, 两条长期 pending 的财报类 oneshot 同时标 done ——\n原因都是**保护对象已不在跑**, 不是判断那两道纪律错了。恢复任何 RSI-2 族轨道或周一刷池 Routine 时,\n**必须把对应条目改回 pending**, 各条目的 closed_2026_11_05 里写了具体理由与历史事故编号。"
 }
