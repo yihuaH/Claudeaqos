@@ -1,7 +1,7 @@
 {
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "status": "incomplete",
-  "generated_at": "2026-11-05T20:23:19+00:00",
+  "generated_at": "2026-11-06T20:21:21+00:00",
   "fatal": null,
   "stopped": "halted/熔断触发 — 只读结束, 通知用户",
   "equity_sells_placed_to_session": 0,

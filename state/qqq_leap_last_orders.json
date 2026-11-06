@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "track": "qqq_leap",
   "underlying": "QQQ",
   "enabled": true,
@@ -13,146 +13,83 @@
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 12.21,
-      "held_trading_days": 4,
-      "dte": 71,
+      "held_trading_days": 5,
+      "dte": 70,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 14.652,
-      "current_bid": 3.78,
+      "current_bid": 4.42,
       "reason": "hold",
-      "_why": "bid 3.78 < 止盈线 14.65; 已持 4/20 交易日"
+      "_why": "bid 4.42 < 止盈线 14.65; 已持 5/20 交易日"
     },
     {
       "occ": "QQQ270129C00710000",
       "contracts": 1,
       "entry_date": "2026-11-05",
       "entry_fill_price": 13.83,
-      "held_trading_days": 0,
-      "dte": 85,
+      "held_trading_days": 1,
+      "dte": 84,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 16.596,
-      "current_bid": 10.1,
+      "current_bid": 12.04,
       "reason": "hold",
-      "_why": "bid 10.10 < 止盈线 16.60; 已持 0/20 交易日"
+      "_why": "bid 12.04 < 止盈线 16.60; 已持 1/20 交易日"
     },
     {
       "occ": "QQQ270319C00725000",
       "contracts": 1,
       "entry_date": "2026-11-05",
       "entry_fill_price": 16.12,
-      "held_trading_days": 0,
-      "dte": 134,
+      "held_trading_days": 1,
+      "dte": 133,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 19.344,
-      "current_bid": 12.69,
+      "current_bid": 15.14,
       "reason": "hold",
-      "_why": "bid 12.69 < 止盈线 19.34; 已持 0/20 交易日"
+      "_why": "bid 15.14 < 止盈线 19.34; 已持 1/20 交易日"
     },
     {
       "occ": "QQQ270319C00755000",
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 15.75,
-      "held_trading_days": 4,
-      "dte": 134,
+      "held_trading_days": 5,
+      "dte": 133,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.9,
-      "current_bid": 6.66,
+      "current_bid": 8.01,
       "reason": "hold",
-      "_why": "bid 6.66 < 止盈线 18.90; 已持 4/20 交易日"
+      "_why": "bid 8.01 < 止盈线 18.90; 已持 5/20 交易日"
     },
     {
       "occ": "QQQ270917C00770000",
       "contracts": 1,
       "entry_date": "2026-11-05",
       "entry_fill_price": 24.88,
-      "held_trading_days": 0,
-      "dte": 316,
+      "held_trading_days": 1,
+      "dte": 315,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 29.856,
-      "current_bid": 20.08,
+      "current_bid": 24.0,
       "reason": "hold",
-      "_why": "bid 20.08 < 止盈线 29.86; 已持 0/20 交易日"
+      "_why": "bid 24.00 < 止盈线 29.86; 已持 1/20 交易日"
     },
     {
       "stage": "entry",
-      "rung": "dte~148",
-      "reason": "no_contract_in_delta_band",
-      "chain_diag": {
-        "n_call": 5,
-        "in_dte": 2,
-        "in_delta": 0,
-        "has_quote": 0,
-        "pass_spread": 0
-      },
-      "_why": "有入场信号但该档选不出合规合约; **不放宽带宽** (§7.1③)"
-    },
-    {
-      "stage": "entry",
-      "rung": "dte~85",
-      "reason": "no_contract_in_delta_band",
-      "chain_diag": {
-        "n_call": 5,
-        "in_dte": 2,
-        "in_delta": 0,
-        "has_quote": 0,
-        "pass_spread": 0
-      },
-      "_why": "有入场信号但该档选不出合规合约; **不放宽带宽** (§7.1③)"
-    },
-    {
-      "stage": "entry",
-      "rung": "dte~330",
-      "reason": "no_contract_in_delta_band",
-      "chain_diag": {
-        "n_call": 5,
-        "in_dte": 1,
-        "in_delta": 0,
-        "has_quote": 0,
-        "pass_spread": 0
-      },
-      "_why": "有入场信号但该档选不出合规合约; **不放宽带宽** (§7.1③)"
+      "reason": "no_entry_signal",
+      "detail": [
+        "drop_too_small(+1.81%)"
+      ]
     }
   ],
   "warnings": [],
-  "spot": 647.77,
-  "day_return_pct": -6.385,
-  "sma200": 680.7129,
+  "spot": 658.79,
+  "day_return_pct": 1.814,
+  "sma200": 680.8994,
   "above_sma200": false,
-  "entry_signal": true,
-  "funding_gate": {
-    "buying_power": 88.48,
-    "cash": 88.48,
-    "reserved_usd": 0.0,
-    "available": 88.48,
-    "_note": "cap = min(buying_power, cash) − reserved; **每档单笔**超 cap 则该档整单跳过不缩量, 绝不动用借来的钱; 已出单的档会扣减后续档的 cap",
-    "_ladder_order_note": "列表顺序即资金优先级, 由 contract.ladder 声明"
-  },
-  "chain_diag": {
-    "dte~148": {
-      "n_call": 5,
-      "in_dte": 2,
-      "in_delta": 0,
-      "has_quote": 0,
-      "pass_spread": 0
-    },
-    "dte~85": {
-      "n_call": 5,
-      "in_dte": 2,
-      "in_delta": 0,
-      "has_quote": 0,
-      "pass_spread": 0
-    },
-    "dte~330": {
-      "n_call": 5,
-      "in_dte": 1,
-      "in_delta": 0,
-      "has_quote": 0,
-      "pass_spread": 0
-    }
-  }
+  "entry_signal": false
 }
