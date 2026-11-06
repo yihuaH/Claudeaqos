@@ -202,6 +202,18 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
     11-05 这条是**用户主动改立场、范围正好覆盖 LEAP**, 不是重挂那批。详见
     `journal/2026-11-05-gtc-takeprofit.md` 与 `journal/2026-11-05-gtc-blocks-exit.md`。
 
+- 🏦 **券商会自动平掉临到期的长期权 —— `placed_agent: expiring_option`** (2026-11-06 实测记录):
+  到期日 `sellout_datetime` (实测 = 15:30 ET) 一到, Robinhood **自己**给在手的长期权挂一张
+  `sell`+`close`+限价 **0.01** 的单。实测三张 SQQQ put 的三种结局:
+  ① 46P **成交** → 收回 $1 (成本 $117); ② 45.5P 挂出但**无人接 → `cancelled`** → 归零;
+  ③ 34P **连单都没挂** (bid 已是 0.00) → 归零。
+  ⚠️ **读单必须认得出它**: 这种单是 `placed_agent: "expiring_option"` + `agent_initiated: false`,
+  **既不是用户手动下的、也不是会话下的**。晨检/wrapup 扫残单时**不要**把它误记成用户交易或
+  会话交易, 也不要当成异常。
+  📐 **对 LEAP 轨道的意义**: 理论上碰不到 (`exit.force_exit_dte_lte = 30` 会在 DTE≤30 先平),
+  但若那道兜底因故没执行, 最终接盘的是券商这个机制 —— 而它的价格是 **0.01, 不是公允价**。
+  即「兜底失效」的代价是整张权利金, 不是一点滑点。
+
 - 🛟 **双段跑 fail-safe**: 当日无 `state/preclose_status.json` 的 completed 标记 → 17:45 wrapup
   **自动退化为完整主跑** (出场照下, 买单按 fail-safe 形态)。故收盘前挂掉最坏只退回改动前行为。
 - 🔴 **期权实盘仓**: 2026-10-12 换 `single` (深ITM 买 call, moneyness 0.90), **同日起开仓/平仓均由会话
