@@ -137,11 +137,21 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
    但它由 `daily.py` 的 `phase_stock_signal` 计算, 与该文件的 `enabled` **无关**。它继续闸住
    `phase_options` / `phase_sqqq_short` / `phase_paper`, **但闸不住 `phase_qqq_leap`** (排在它之前)。
    => 即「RSI-2 关了但熔断还在, 且唯一在跑的 LEAP 轨道恰好不受它管」。
-2. **`execution.mode = auto_buys` (红线9) 仍然生效** —— 它是全系统的下单模式声明, 不属 RSI-2。
-3. ✅ **周一 13:00 刷池 Routine 已停用** (2026-11-05 用户「123都做」第③项,
+2. 🔴 **VIX 宏观闸也仍然生效, 且同样管不到 LEAP** (2026-11-07 查实, 与第 1 条同一种拓扑错配):
+   `config.json macro.vix_no_new_entries_above = 30.0` 是**真闸不是展示** ——
+   `integrations.py:93` 注释原文「**引擎仅读 macro["vix"] 做熔断**, 下列字段仅供战报展示」,
+   实现在 `signals.py:385-403` (另有 `vix_max_staleness_days: 5` 防用过旧数据)。
+   ⚠️ 但 **`qqq_leap.py` 根本不读 vix/macro** (grep 为空), `daily.py` 也没把 `--macro` 传给
+   `phase_qqq_leap` (只传给 `signals.py` 与挑战者)。`plan["macro_vix"]` 纯报告字段。
+   => **VIX ≥ 30 不会拦住 LEAP 买入**。恢复 RSI-2 时该闸自动复活; 若想让它也管 LEAP, 属改引擎。
+   📌 **FRED `VIXCLS` 有一个交易日发布滞后** (2026-11-05/06 两日实测坐实: 11-05 那个 QQQ −6.39%
+   的日子里字段是 **16.61** = 11-04 的值, 次日才变成 **28.18** = 11-05 的值)。
+   故**战报里不要把当日 `macro_vix` 当当日恐慌读数**; `vix_max_staleness_days: 5` 容得下这个滞后。
+3. **`execution.mode = auto_buys` (红线9) 仍然生效** —— 它是全系统的下单模式声明, 不属 RSI-2。
+4. ✅ **周一 13:00 刷池 Routine 已停用** (2026-11-05 用户「123都做」第③项,
    `trig_01PvM5Mj89pokXgPwkMECZrd enabled=false`)。⚠️ **恢复 RSI-2 时必须一并启用它**, 否则
    `universe.json` 会越来越旧 (最后一次刷新 2026-11-02)。
-4. ✅ **每窗口补财报日的 oneshot 已标 done** (同上第②项)。理由不是「放弃一道风控」, 是
+5. ✅ **每窗口补财报日的 oneshot 已标 done** (同上第②项)。理由不是「放弃一道风控」, 是
    「该风控保护的轨道已不在跑」—— 两道闸只在 `signals.py` / `weekly_calls.py` 里起作用, 而 QQQ 是 ETF 无财报日。
    ⚠️⚠️ **恢复 RSI-2 或周call 时必须把 `earnings-input-every-run-2026-10` 与
    `pool-entrant-earnings-2026-10` 两条 oneshot 都改回 `pending`**, 否则财报黑窗回到 2026-10-08 DAL /
