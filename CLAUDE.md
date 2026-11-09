@@ -185,6 +185,15 @@ plan mode 禁一切非只读且 supercedes 其它指令, 定时任务**跑不了
   - 🔴 **每个窗口 (10:45 / 15:20 / 17:45) 必须查 `get_option_orders` + `get_option_positions`**:
     GTC 可能在两个窗口之间成交 → 账本会与券商不一致。发现成交就用 `qqq_leap.py apply`
     按**实际成交价**回写 round_trip (**不得手工改账本仓位数据**)。
+    ⚠️⚠️ **查询陷阱 (2026-11-09 差点因此漏掉一笔真成交)**: **绝不可用 `created_at_gte=今天`
+    去找 GTC 成交** —— GTC 的 `created_at` 是**挂单那天**, 成交只改 `updated_at`。
+    当日 725C 止盈成交 (order `6aecbcc0`, 挂于 11-05、成交于 11-09 09:56 ET), 用
+    `created_at_gte=2026-11-07` 查**完全看不到它**, 是靠「持仓少了一张 + 现金正好多 $1,935」
+    反推才发现的。
+    📐 **正确做法**: ① 用 `get_option_positions nonzero=true` 与账本**逐张比对张数** (最可靠);
+    ② 或 `get_option_orders state=filled` (不带 created_at_gte); ③ 或按已知 order_id 逐张查
+    (`order_id=<id>`)。**判成交只看 `state` / `processed_quantity`, 不看 `updated_at`**
+    —— 券商每个交易时段开盘会把常驻 GTC 的 `updated_at` 刷成当日 08:30 ET (那是重新确认, 不是成交)。
   - ⚠️ **代价是口径偏移, 用户知情**: 回测是逐日收盘循环, GTC 会在回测没测过的时点成交;
     且同段注释写着 `+20% 不是 edge 的承重墙` (§18.4), 即抓盘中尖峰大概不是钱的来源。
   - 🔴🔴 **常驻 GTC 会锁住合约, 挡掉引擎自己的出场 —— 2026-11-05 当晚 review 实测证实, 必须按下方协议处置**:
