@@ -48,52 +48,6 @@
           "fill_price": 12.21
         }
       ]
-    },
-    "QQQ270129C00710000": {
-      "underlying": "QQQ",
-      "strike": 710.0,
-      "expiry": "2027-01-29",
-      "contracts": 1,
-      "entry_date": "2026-11-05",
-      "entry_fill_price": 13.83,
-      "entry_cost_usd": 1383.0,
-      "entry_delta": 0.3056,
-      "entry_dte": 85,
-      "entry_spread_pct": 2.786,
-      "entry_spot": 660.73,
-      "entry_day_return_pct": -4.512,
-      "take_profit_line": 16.596,
-      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
-      "_lots": [
-        {
-          "date": "2026-11-05",
-          "contracts": 1,
-          "fill_price": 13.83
-        }
-      ]
-    },
-    "QQQ270917C00770000": {
-      "underlying": "QQQ",
-      "strike": 770.0,
-      "expiry": "2027-09-17",
-      "contracts": 1,
-      "entry_date": "2026-11-05",
-      "entry_fill_price": 24.88,
-      "entry_cost_usd": 2488.0,
-      "entry_delta": 0.3111,
-      "entry_dte": 316,
-      "entry_spread_pct": 8.361,
-      "entry_spot": 657.09,
-      "entry_day_return_pct": -5.038,
-      "take_profit_line": 29.856,
-      "_tp_note": "止盈线按**实际成交价**重算 (不是 signal 里按 ask 估的那个)",
-      "_lots": [
-        {
-          "date": "2026-11-05",
-          "contracts": 1,
-          "fill_price": 24.88
-        }
-      ]
     }
   },
   "trades": [
@@ -213,6 +167,24 @@
       "price": 19.35,
       "bucket": "qqq_leap",
       "reason": "take_profit"
+    },
+    {
+      "date": "2026-11-09",
+      "symbol": "QQQ270129C00710000",
+      "side": "sell",
+      "qty": 1,
+      "price": 16.6,
+      "bucket": "qqq_leap",
+      "reason": "take_profit"
+    },
+    {
+      "date": "2026-11-09",
+      "symbol": "QQQ270917C00770000",
+      "side": "sell",
+      "qty": 1,
+      "price": 29.86,
+      "bucket": "qqq_leap",
+      "reason": "take_profit"
     }
   ],
   "round_trips": [
@@ -275,6 +247,36 @@
       "reason": "take_profit",
       "held_trading_days": 2,
       "entry_delta": 0.3017
+    },
+    {
+      "occ": "QQQ270129C00710000",
+      "underlying": "QQQ",
+      "structure": "single",
+      "entry_date": "2026-11-05",
+      "exit_date": "2026-11-09",
+      "entry_premium": 13.83,
+      "exit_premium": 16.6,
+      "contracts": 1,
+      "pnl_pct": 20.03,
+      "pnl_usd": 277.0,
+      "reason": "take_profit",
+      "held_trading_days": 2,
+      "entry_delta": 0.3056
+    },
+    {
+      "occ": "QQQ270917C00770000",
+      "underlying": "QQQ",
+      "structure": "single",
+      "entry_date": "2026-11-05",
+      "exit_date": "2026-11-09",
+      "entry_premium": 24.88,
+      "exit_premium": 29.86,
+      "contracts": 1,
+      "pnl_pct": 20.02,
+      "pnl_usd": 498.0,
+      "reason": "take_profit",
+      "held_trading_days": 2,
+      "entry_delta": 0.3111
     }
   ],
   "skip_log": [],
