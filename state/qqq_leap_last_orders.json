@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-11",
+  "date": "2026-11-12",
   "track": "qqq_leap",
   "underlying": "QQQ",
   "enabled": true,
@@ -13,41 +13,41 @@
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 12.21,
-      "held_trading_days": 8,
-      "dte": 65,
+      "held_trading_days": 9,
+      "dte": 64,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 14.652,
-      "current_bid": 8.88,
+      "current_bid": 8.58,
       "reason": "hold",
-      "_why": "bid 8.88 < 止盈线 14.65; 已持 8/20 交易日"
+      "_why": "bid 8.58 < 止盈线 14.65; 已持 9/20 交易日"
     },
     {
       "occ": "QQQ270319C00755000",
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 15.75,
-      "held_trading_days": 8,
-      "dte": 128,
+      "held_trading_days": 9,
+      "dte": 127,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.9,
-      "current_bid": 13.61,
+      "current_bid": 13.69,
       "reason": "hold",
-      "_why": "bid 13.61 < 止盈线 18.90; 已持 8/20 交易日"
+      "_why": "bid 13.69 < 止盈线 18.90; 已持 9/20 交易日"
     },
     {
       "stage": "entry",
       "reason": "no_entry_signal",
       "detail": [
-        "drop_too_small(+2.31%)"
+        "drop_too_small(-0.39%)"
       ]
     }
   ],
   "warnings": [],
-  "spot": 690.38,
-  "day_return_pct": 2.315,
-  "sma200": 681.7119,
+  "spot": 687.6669,
+  "day_return_pct": -0.393,
+  "sma200": 681.9841,
   "above_sma200": true,
   "entry_signal": false
 }
