@@ -1,11 +1,42 @@
 {
-  "date": "2026-11-13",
+  "date": "2026-11-16",
   "track": "qqq_leap",
   "underlying": "QQQ",
   "enabled": true,
   "halted": false,
   "funding_priority": 1,
-  "buys": [],
+  "buys": [
+    {
+      "occ": "QQQ270319C00725000",
+      "action": "buy_to_open",
+      "structure": "single",
+      "rung": "dte~148",
+      "contracts": 1,
+      "underlying": "QQQ",
+      "strike": 725.0,
+      "expiry": "2027-03-19",
+      "delta": 0.3006,
+      "dte": 123,
+      "spread_pct": 2.383,
+      "bid": 15.34,
+      "ask": 15.71,
+      "mid": 15.525,
+      "per_contract_usd": 1571.0,
+      "total_cost_usd": 1571.0,
+      "pct_of_portfolio": 46.8,
+      "order_type": "limit",
+      "time_in_force": "gfd",
+      "est_price": 15.71,
+      "limit_price": 15.71,
+      "_limit_note": "limit = ask × 1.0 (单腿; 多腿被 Robinhood API 400 拒)",
+      "take_profit_line": 18.852,
+      "_tp_note": "止盈判定口径 = **当前 bid ≥ 入场 ask 成交价 × 1.2**, 双边点差已扣的净口径, **不是 mid 对 mid**",
+      "entry_spot": 661.15,
+      "entry_day_return_pct": -2.756,
+      "sizing_note": "梯子模式: 本档固定 1 张 (用户 2026-10-23「3 个期限各 1 张」); **sizing.position_pct_of_portfolio 在本模式下不参与定量**",
+      "cap_remaining_after": 556.07
+    }
+  ],
   "sells": [],
   "skips": [
     {
@@ -13,41 +44,97 @@
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 12.21,
-      "held_trading_days": 10,
-      "dte": 63,
+      "held_trading_days": 11,
+      "dte": 60,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 14.652,
-      "current_bid": 6.11,
+      "current_bid": 3.99,
       "reason": "hold",
-      "_why": "bid 6.11 < 止盈线 14.65; 已持 10/20 交易日"
+      "_why": "bid 3.99 < 止盈线 14.65; 已持 11/20 交易日"
     },
     {
       "occ": "QQQ270319C00755000",
       "contracts": 1,
       "entry_date": "2026-10-30",
       "entry_fill_price": 15.75,
-      "held_trading_days": 10,
-      "dte": 126,
+      "held_trading_days": 11,
+      "dte": 123,
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.9,
-      "current_bid": 10.57,
+      "current_bid": 8.14,
       "reason": "hold",
-      "_why": "bid 10.57 < 止盈线 18.90; 已持 10/20 交易日"
+      "_why": "bid 8.14 < 止盈线 18.90; 已持 11/20 交易日"
     },
     {
       "stage": "entry",
-      "reason": "no_entry_signal",
-      "detail": [
-        "drop_too_small(-1.20%)"
-      ]
+      "rung": "dte~85",
+      "occ": "QQQ270115C00700000",
+      "reason": "insufficient_buying_power(cost=1238,avail=556)",
+      "funding_gate": {
+        "buying_power": 2127.07,
+        "cash": 2127.07,
+        "reserved_usd": 0.0,
+        "available": 2127.07,
+        "_note": "cap = min(buying_power, cash) − reserved; **每档单笔**超 cap 则该档整单跳过不缩量, 绝不动用借来的钱; 已出单的档会扣减后续档的 cap",
+        "_ladder_order_note": "列表顺序即资金优先级, 由 contract.ladder 声明",
+        "available_at_this_rung": 556.07
+      },
+      "_why": "红线3/红线9③: 超出本档可用 cap → 整单跳过, **不缩量**。梯子模式下后续档仍各自判 cap (能买几张买几张)"
+    },
+    {
+      "stage": "entry",
+      "rung": "dte~330",
+      "occ": "QQQ270917C00760000",
+      "reason": "insufficient_buying_power(cost=2889,avail=556)",
+      "funding_gate": {
+        "buying_power": 2127.07,
+        "cash": 2127.07,
+        "reserved_usd": 0.0,
+        "available": 2127.07,
+        "_note": "cap = min(buying_power, cash) − reserved; **每档单笔**超 cap 则该档整单跳过不缩量, 绝不动用借来的钱; 已出单的档会扣减后续档的 cap",
+        "_ladder_order_note": "列表顺序即资金优先级, 由 contract.ladder 声明",
+        "available_at_this_rung": 556.07
+      },
+      "_why": "红线3/红线9③: 超出本档可用 cap → 整单跳过, **不缩量**。梯子模式下后续档仍各自判 cap (能买几张买几张)"
     }
   ],
   "warnings": [],
-  "spot": 679.9,
-  "day_return_pct": -1.202,
-  "sma200": 682.239,
+  "spot": 661.15,
+  "day_return_pct": -2.756,
+  "sma200": 682.4353,
   "above_sma200": false,
-  "entry_signal": false
+  "entry_signal": true,
+  "funding_gate": {
+    "buying_power": 2127.07,
+    "cash": 2127.07,
+    "reserved_usd": 0.0,
+    "available": 2127.07,
+    "_note": "cap = min(buying_power, cash) − reserved; **每档单笔**超 cap 则该档整单跳过不缩量, 绝不动用借来的钱; 已出单的档会扣减后续档的 cap",
+    "_ladder_order_note": "列表顺序即资金优先级, 由 contract.ladder 声明"
+  },
+  "chain_diag": {
+    "dte~148": {
+      "n_call": 16,
+      "in_dte": 9,
+      "in_delta": 6,
+      "has_quote": 6,
+      "pass_spread": 6
+    },
+    "dte~85": {
+      "n_call": 16,
+      "in_dte": 4,
+      "in_delta": 3,
+      "has_quote": 3,
+      "pass_spread": 3
+    },
+    "dte~330": {
+      "n_call": 16,
+      "in_dte": 3,
+      "in_delta": 3,
+      "has_quote": 3,
+      "pass_spread": 3
+    }
+  }
 }
