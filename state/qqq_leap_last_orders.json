@@ -18,9 +18,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 14.652,
-      "current_bid": 3.46,
+      "current_bid": 3.65,
       "reason": "hold",
-      "_why": "bid 3.46 < 止盈线 14.65; 已持 12/20 交易日"
+      "_why": "bid 3.65 < 止盈线 14.65; 已持 12/20 交易日"
     },
     {
       "occ": "QQQ270319C00725000",
@@ -32,9 +32,9 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.6,
-      "current_bid": 14.03,
+      "current_bid": 14.69,
       "reason": "hold",
-      "_why": "bid 14.03 < 止盈线 18.60; 已持 1/20 交易日"
+      "_why": "bid 14.69 < 止盈线 18.60; 已持 1/20 交易日"
     },
     {
       "occ": "QQQ270319C00755000",
@@ -46,22 +46,22 @@
       "time_stop_limit_trading_days": 20,
       "_time_stop_basis": "固定 20 交易日",
       "take_profit_line": 18.9,
-      "current_bid": 7.47,
+      "current_bid": 7.83,
       "reason": "hold",
-      "_why": "bid 7.47 < 止盈线 18.90; 已持 12/20 交易日"
+      "_why": "bid 7.83 < 止盈线 18.90; 已持 12/20 交易日"
     },
     {
       "stage": "entry",
       "reason": "no_entry_signal",
       "detail": [
-        "drop_too_small(-1.33%)"
+        "drop_too_small(-0.72%)"
       ]
     }
   ],
   "warnings": [],
-  "spot": 652.94,
-  "day_return_pct": -1.331,
-  "sma200": 682.5723,
+  "spot": 657.0,
+  "day_return_pct": -0.718,
+  "sma200": 682.5926,
   "above_sma200": false,
   "entry_signal": false
 }
