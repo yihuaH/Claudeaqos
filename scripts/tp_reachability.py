@@ -113,16 +113,46 @@ def load_chain(path, underlying):
     return raw.get(underlying, raw)
 
 
+def missing_trading_days(last_bar, today):
+    """last_bar 之后、today 之前的交易日 (跳周末与 _HOLIDAYS)。非空 = 日线文件过期。"""
+    d = _date.fromisoformat(last_bar)
+    end = _date.fromisoformat(today)
+    out = []
+    while True:
+        d += timedelta(days=1)
+        if d >= end:
+            break
+        if d.weekday() < 5 and d.isoformat() not in _HOLIDAYS:
+            out.append(d.isoformat())
+    return out
+
+
 def load_bars(path, today):
     """返回 (closes, highs, trading_dates, span)。
-    `trading_dates` 与 `qqq_leap._load_hist` 同口径: **不含当日** —— 该函数靠这一点给当日 +1。"""
+    `trading_dates` 与 `qqq_leap._load_hist` 同口径: **不含当日** —— 该函数靠这一点给当日 +1。
+
+    🔴 **过期日线硬闸 (2026-11-18 实测踩到后加)**: 本工具复用引擎的 `_held_trading_days`
+    来保证交易日口径不漂移, 但**那个函数的输入是这里给的 `trading_dates`** ——
+    喂一个过期的日线文件, 它会**静默少数交易日**, 于是 `trading_days_left` 偏大、
+    时间止损日往后错。当日实测: 用 11-16 拉的文件跑 11-18, 算出剩 8/19/8 日、
+    止损日 2026-12-01/12-16/12-01; 换成当日文件后是 **7/18/7 日、11-30/12-15/11-30**
+    (与引擎及 CLAUDE.md 记录一致)。**1 天的误差落在出场那一天, 不可接受。**
+    故这里直接 `SystemExit`, 不给"警告后继续"的选项。"""
     raw = json.load(open(path))
     res = raw["data"]["results"] if "data" in raw else raw["results"]
     bars = res[0]["bars"]
+    last = bars[-1]["begins_at"][:10]
+    miss = missing_trading_days(last, today)
+    if miss:
+        raise SystemExit(
+            f"日线文件过期: 最后一根 bar 是 {last}, 但 {today} 之前还有 "
+            f"{len(miss)} 个交易日未覆盖 {miss}。\n"
+            f"→ 交易日计数会偏少, 时间止损日会往后错。请重新拉日线后再跑:\n"
+            f"   python3 scripts/integrations.py bars --symbols QQQ --start 2016-01-01 --out <新文件>")
     cl = [float(b["close_price"]) for b in bars]
     hi = [float(b.get("high_price") or b["close_price"]) for b in bars]
     td = [b["begins_at"][:10] for b in bars if b["begins_at"][:10] < today]
-    return cl, hi, td, f"{bars[0]['begins_at'][:10]} ~ {bars[-1]['begins_at'][:10]} ({len(cl)} 个交易日)"
+    return cl, hi, td, f"{bars[0]['begins_at'][:10]} ~ {last} ({len(cl)} 个交易日)"
 
 
 def main():
