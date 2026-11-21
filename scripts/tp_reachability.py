@@ -189,7 +189,14 @@ def main():
         bid, ask = float(q["bid"]), float(q["ask"])
         mark = (bid + ask) / 2.0
         d_now = dte(meta["expiry"], a.date)
-        tp = float(pos["take_profit_line"])
+        # 🔴 **必须与引擎同样"按 config 实时重算", 不能读账本存的 take_profit_line**
+        # (2026-11-21 改 take_profit_mult 1.2→1.1 时当场暴露)。
+        # `qqq_leap.py:363` 判定用的是 `entry_fill_price × exit.take_profit_mult`;
+        # 账本里的 `take_profit_line` 只是**开仓那一刻的快照**, 改了 mult 之后它就是陈旧值。
+        # 之前两者一直相等纯属巧合 (快照是用同一个 mult 写的), 所以这个错一直没显形。
+        # 读快照会让战报显示的止盈线与引擎真正判定的线不一致 —— 对一个专门用来回答
+        # "还差多少"的报告工具, 这是直接误导。故这里复用引擎的算式。
+        tp = round(float(pos["entry_fill_price"]) * float(cfg["exit"]["take_profit_mult"]), 4)
         half = mark - bid                      # 判定口径是 bid, 故 mark 要高出半点差
         target_mark = tp + half
         iv = implied_vol(mark, a.spot, K, d_now / 365.0)
